@@ -5,7 +5,7 @@ import LoginModal from './LoginModal';
 import SignupModal from './SignupModal';
 
 const MainHeader: React.FC = () => {
-  const [isLoginModalOpen, setLoginModalOpen] = useState(true);
+  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setSignupModalOpen] = useState(false);
 
   const handleOpenSignupModal = () => {
