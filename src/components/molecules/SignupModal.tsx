@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { supabase } from '../../supabase/client'; // supabase 클라이언트 임포트
 
-const SignupModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+interface SignupModalProps {
+  onClose: () => void;
+  onSignupSuccess: () => void;
+}
+
+const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [nickname, setNickname] = useState('');
@@ -39,8 +44,9 @@ const SignupModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           .select();
         if (profileError) throw profileError;
 
-        // 회원가입과 프로필 정보 추가가 모두 성공하면 모달 닫기
+        // 회원가입과 프로필 정보 추가가 모두 성공하면 모달 닫기 및 성공 콜백 호출
         onClose();
+        onSignupSuccess();
         return { authData, profileData };
       }
     } catch (error) {

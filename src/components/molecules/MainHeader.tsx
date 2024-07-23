@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import LoginModal from './LoginModal';
 import SignupModal from './SignupModal';
+import { supabase } from '../../supabase/client';
 
 const MainHeader: React.FC = () => {
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
@@ -11,6 +12,20 @@ const MainHeader: React.FC = () => {
   const handleOpenSignupModal = () => {
     setLoginModalOpen(false);
     setSignupModalOpen(true);
+  };
+
+  const handleSignupSuccess = () => {
+    setSignupModalOpen(false);
+    setLoginModalOpen(true);
+  };
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error('로그아웃 실패:', error);
+    } else {
+      window.location.reload(); // 페이지 새로고침
+    }
   };
 
   return (
@@ -23,6 +38,9 @@ const MainHeader: React.FC = () => {
         >
           로그인
         </button>
+        <button className="px-4 py-2 bg-red-500 rounded hover:bg-red-700" onClick={handleLogout}>
+          로그아웃
+        </button>
         <button
           className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
           onClick={() => setSignupModalOpen(true)}
@@ -33,7 +51,9 @@ const MainHeader: React.FC = () => {
       {isLoginModalOpen && (
         <LoginModal onClose={() => setLoginModalOpen(false)} onSignupClick={handleOpenSignupModal} />
       )}
-      {isSignupModalOpen && <SignupModal onClose={() => setSignupModalOpen(false)} />}
+      {isSignupModalOpen && (
+        <SignupModal onClose={() => setSignupModalOpen(false)} onSignupSuccess={handleSignupSuccess} />
+      )}
     </header>
   );
 };
