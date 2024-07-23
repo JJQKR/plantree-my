@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useStore } from '@/stores/sidebar.store';
 import Header from '@/components/molecules/Header';
 import Sidebar from '@/components/molecules/Sidebar';
@@ -10,14 +10,21 @@ import Sidebar from '@/components/molecules/Sidebar';
 // 클라이언트 컴포넌트로 분리한게 이 ClientLayout.tsx
 
 const ClientLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { sidebarOpen, toggleSidebar } = useStore(); // 사이드바 열림 상태와 토글 함수 가져오기
+  const { sidebarOpen, toggleSidebar } = useStore();
+  const [isSorted, setIsSorted] = useState(false);
+
+  const handleSort = () => {
+    setIsSorted(!isSorted);
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header toggleSidebar={toggleSidebar} />
+      <Header toggleSidebar={toggleSidebar} handleSort={handleSort} />
       <div className="flex flex-grow">
         {sidebarOpen && <Sidebar onClose={toggleSidebar} />}
-        <main className={`flex-grow transition-all duration-300 ${sidebarOpen ? 'ml-0' : ''}`}>{children}</main>
+        <main className={`flex-grow transition-all duration-300 ${sidebarOpen ? 'ml-0' : ''}`}>
+          {React.cloneElement(children as React.ReactElement<any>, { handleSort, isSorted })}
+        </main>
       </div>
     </div>
   );

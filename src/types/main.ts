@@ -1,16 +1,19 @@
 export type MainHeaderProps = {
-  toggleSidebar: () => void; // 사이드바 토글 함수
+  toggleSidebar: () => void;
+  handleSort: () => void;
 };
 
 export type MainSidebarProps = {
-  onClose: () => void; // 사이드바 닫기 함수
+  onClose: () => void;
 };
 
 export type SideButtonProps = {
-  onClick: () => void; // 클릭 이벤트 핸들러
-  children: React.ReactNode; // 버튼 내용
+  onClick: () => void;
+  children: React.ReactNode;
 };
 
 export type MainDiaryCaseProps = {
-  sidebarOpen: boolean; // 사이드바 열림 상태
+  sidebarOpen: boolean;
+  handleSort?: () => void;
+  isSorted?: boolean;
 };

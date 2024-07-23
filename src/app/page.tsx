@@ -1,19 +1,24 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useStore } from '@/stores/sidebar.store';
 import DiaryCase from '@/components/templates/DiaryCase';
 
 const HomePage = () => {
-  const { sidebarOpen } = useStore(); // 사이드바 열림 상태를 가져옵니다.
+  const { sidebarOpen } = useStore();
+  const [isSorted, setIsSorted] = useState(false);
+
+  const handleSort = () => {
+    setIsSorted(!isSorted);
+  };
 
   return (
     <div
       className={`bg-gray-400 ${
         sidebarOpen ? 'w-[764px]' : 'w-full'
-      } h-[930px] flex items-center justify-center transition-all duration-300`} // 사이드바 상태에 따라 넓이가 달라집니다.
+      } h-[930px] flex items-center justify-center transition-all duration-300`}
     >
-      <DiaryCase sidebarOpen={sidebarOpen} />
+      <DiaryCase sidebarOpen={sidebarOpen} handleSort={handleSort} isSorted={isSorted} />
     </div>
   );
 };
