@@ -4,25 +4,25 @@ import React, { useState } from 'react';
 import Card from '@/components/atoms/Card';
 import { MainDiaryCaseProps } from '@/types/main';
 
-const cards = ['Card 1', 'Card 2', 'Card 3'];
+const cards = ['Card 1', 'Card 2', 'Card 3']; // 카드 데이터
 
-const DiaryCase: React.FC<MainDiaryCaseProps> = ({ sidebarOpen, handleSort, isSorted }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+const DiaryCase: React.FC<MainDiaryCaseProps> = ({ sidebarOpen, isSorted }) => {
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태
 
+  // 페이지 변경 핸들러
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  // 카드 크기와 간격 조절
-  const cardWidth = isSorted ? 300 : 380; // 정렬 상태에 따라 카드 너비 변경
+  const cardWidth = isSorted ? 300 : 380; // 카드 너비 설정
   const cardGap = 20; // 카드 간격
-
   const containerWidth = cardWidth + cardGap * 2; // 컨테이너 너비 설정
 
+  // 카드 렌더링 함수
   const renderCards = () => {
-    const sortedCards = isSorted ? [...cards].sort() : cards;
+    const sortedCards = isSorted ? [...cards].sort() : cards; // 정렬된 카드 데이터
     const index = currentPage - 1;
-    const translateX = index * cardWidth; // 페이지에 따라 카드 위치 조정
+    const translateX = index * cardWidth; // 카드 이동 거리
 
     return (
       <div className="relative overflow-hidden" style={{ width: `${containerWidth}px`, height: 'auto' }}>
