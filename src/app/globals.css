@@ -2,9 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body,
+#__next {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   width: 1024px;
   height: 1024px;
   margin: 0 auto; /* 화면 중앙에 배치 */
-  //overflow: hidden; /* 스크롤바 숨기기 */
+  background: #eee;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #000;
+}
+
+#app {
+  height: 100%;
+}
+
+.swiper {
+  width: 100%;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.mySwiper {
+  width: 380px;
+  height: 570px;
+}
+
+.swiper-slide {
+  display: flex;
+  align-items: center; /* 카드 내부의 내용 중앙 정렬 */
+  justify-content: center;
+  padding: 0 20px; /* 슬라이드 사이의 간격 조정 */
 }
