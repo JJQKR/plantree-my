@@ -1,0 +1,26 @@
+'use client';
+
+import React from 'react';
+import { useStore } from '@/stores/sidebar.store';
+import Header from '@/components/molecules/Header';
+import Sidebar from '@/components/molecules/Sidebar';
+
+// Next.js에서는 use client 지시어가 있는 컴포넌트에서 metadata를 내보내는 것이 허용되지 않습니다.
+// 이 문제를 해결하기 위해서는 layout.tsx 파일을 클라이언트 컴포넌트와 서버 컴포넌트로 분리
+// 클라이언트 컴포넌트로 분리한게 이 ClientLayout.tsx
+
+const ClientLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { sidebarOpen, toggleSidebar } = useStore(); // 사이드바 열림 상태와 토글 함수 가져오기
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Header toggleSidebar={toggleSidebar} />
+      <div className="flex flex-grow">
+        {sidebarOpen && <Sidebar onClose={toggleSidebar} />}
+        <main className={`flex-grow transition-all duration-300 ${sidebarOpen ? 'ml-0' : ''}`}>{children}</main>
+      </div>
+    </div>
+  );
+};
+
+export default ClientLayout;

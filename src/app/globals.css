@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  width: 1024px;
+  height: 1024px;
+  margin: 0 auto; /* 화면 중앙에 배치 */
+  //overflow: hidden; /* 스크롤바 숨기기 */
+}
