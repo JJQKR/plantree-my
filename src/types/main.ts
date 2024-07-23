@@ -14,9 +14,8 @@ export type SideButtonProps = {
   children: React.ReactNode;
 };
 
-// DiaryCase 템플릿 컴포넌트에 전달되는 props 타입
-export type MainDiaryCaseProps = {
-  sidebarOpen: boolean;
-  handleSort: () => void;
-  isSorted: boolean;
+// DiaryCard 타입 정의
+export type DiaryCard = {
+  id: number;
+  content: string;
 };
