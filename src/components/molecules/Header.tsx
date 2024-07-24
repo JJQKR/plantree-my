@@ -2,11 +2,13 @@
 
 import React, { useState } from 'react';
 import SideButton from '../atoms/SideButton';
+import GridToggleButton from '../atoms/GridToggleButton';
 import LoginModal from './LoginModal';
 import SignupModal from './SignupModal';
 import { supabase } from '../../supabase/client';
 import { MainHeaderProps } from '@/types/main';
 
+const Header: React.FC<MainHeaderProps> = ({ toggleSidebar, toggleGrid }) => {
 const Header: React.FC<MainHeaderProps> = ({ toggleSidebar }) => {
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setSignupModalOpen] = useState(false);
@@ -36,6 +38,7 @@ const Header: React.FC<MainHeaderProps> = ({ toggleSidebar }) => {
       <div className="flex-grow flex justify-center">
         <h1 className="text-2xl font-bold">Logo</h1>
       </div>
+      <GridToggleButton onClick={toggleGrid} />
       <div className="flex gap-4">
         <button
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
