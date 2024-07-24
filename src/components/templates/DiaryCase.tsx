@@ -10,9 +10,9 @@ import CreateDiaryButton from '../atoms/CreateDiaryButton';
 
 // 다이어리 카드 데이터를 하드코딩한 배열 (테스트를 위한 것)
 const cards: DiaryCard[] = [
-  { id: 1, content: 'Card 1' },
-  { id: 2, content: 'Card 2' },
-  { id: 3, content: 'Card 3' }
+  { id: 1, content: 'Card 1', name: '영수의 책장' },
+  { id: 2, content: 'Card 2', name: '보영의 책장' },
+  { id: 3, content: 'Card 3', name: '재훈의 책장' }
 ];
 
 const handleCreateDiary = () => {
@@ -61,7 +61,8 @@ const DiaryCase: React.FC = () => {
           >
             {limitedCards.map((card) => (
               <SwiperSlide key={card.id}>
-                <div className="flex items-center justify-center p-4 bg-white rounded shadow-md w-[380px] h-[570px]">
+                <h2 className="text-xl font-bold mb-2 text-center">{card.name}</h2>
+                <div className="flex items-center justify-center p-4 bg-white rounded shadow-md w-[350px] h-[570px]">
                   <p className="text-center">{card.content}</p>
                 </div>
               </SwiperSlide>

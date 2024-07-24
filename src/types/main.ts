@@ -15,6 +15,7 @@ export type SideButtonProps = {
 export type DiaryCard = {
   id: number;
   content: string; // 다이어리 카드의 내용
+  name: string;
 };
 
 export type CreateDiaryButtonProps = {
