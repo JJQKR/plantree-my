@@ -16,3 +16,7 @@ export type DiaryCard = {
   id: number;
   content: string; // 다이어리 카드의 내용
 };
+
+export type CreateDiaryButtonProps = {
+  onClick?: () => void; // 클릭 이벤트 핸들러
+};
