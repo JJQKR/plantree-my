@@ -1,8 +1,8 @@
 'use client';
 
-import useMyModalStore from '@/stores/my.modal.store';
 import React from 'react';
-import BasicModal from './BasicModal';
+import useMyModalStore from '@/stores/my.modal.store';
+import BadgeModal from './BadgeModal';
 
 const MyPage: React.FC = () => {
   const { isBadgeModalOpen, toggleBadgeModal } = useMyModalStore((state) => state);
@@ -16,9 +16,9 @@ const MyPage: React.FC = () => {
       <div>myPage</div>
       <div>
         <button className="bg-purple-400" onClick={handleToggleBadgeModal}>
-          배지 모달 버튼
+          배지 전체 보기
         </button>
-        {isBadgeModalOpen && <BasicModal />}
+        {isBadgeModalOpen && <BadgeModal />}
         {/* 
         <button onClick={toggleNicknameModal}>Toggle Nickname Modal</button>
         {isNicknameModalOpen && <div>Nickname Modal Content</div>}

@@ -1,15 +1,15 @@
 import useMyModalStore from '@/stores/my.modal.store';
 import React from 'react';
 
-const BasicModal = () => {
+const BadgeModal: React.FC = () => {
   const { isBadgeModalOpen, toggleBadgeModal } = useMyModalStore((state) => state);
 
   return (
     <>
       <div className="bg-slate-500" onClick={toggleBadgeModal}></div>
-      <div onDoubleClick={(e) => e.stopPropagation}>BasicModal</div>
+      <div onClick={(e) => e.stopPropagation}>BadgeModal</div>
     </>
   );
 };
 
-export default BasicModal;
+export default BadgeModal;
