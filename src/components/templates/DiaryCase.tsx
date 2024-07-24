@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -34,11 +36,11 @@ const DiaryCase: React.FC = () => {
         {gridView ? (
           <div className="grid grid-cols-3 gap-4 max-w-full">
             {limitedCards.map((card) => (
-              <div
-                key={card.id}
-                className="p-4 bg-white flex items-center justify-center rounded shadow-md w-[180px] h-[270px]"
-              >
-                <p className="text-center">{card.content}</p>
+              <div key={card.id} className="flex flex-col items-center">
+                <h2 className="mb-2 text-center text-lg font-bold">{card.name}</h2>
+                <div className="p-4 bg-white flex items-center justify-center rounded shadow-md w-[180px] h-[270px]">
+                  <p className="text-center">{card.content}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -78,3 +80,4 @@ const DiaryCase: React.FC = () => {
 };
 
 export default DiaryCase;
+export { cards }; // cards를 export하여 Sidebar에서 사용 가능하게 함

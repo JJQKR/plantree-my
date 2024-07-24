@@ -24,4 +24,5 @@ export type CreateDiaryButtonProps = {
 
 export type GridToggleButtonProps = {
   onClick: () => void; // 클릭 이벤트 핸들러
+  gridView: boolean; // 그리드 뷰 상태
 };
