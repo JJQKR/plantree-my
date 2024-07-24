@@ -5,9 +5,9 @@ import Timetable from './Timetable';
 
 const TenMinPlaner = () => {
   return (
-    <div className="w-10/12 h-5/6 border-2 border-red-400">
+    <div className="w-3/4 custom-height border-2 border-red-400 flex flex-col gap-4">
       <div className="flex gap-2">
-        <div>
+        <div className="w-1/3">
           <ParchmentInput identity="tenMinPlanerRegular" label="date" id="date" />
         </div>
         <div>
@@ -17,16 +17,16 @@ const TenMinPlaner = () => {
           <ParchmentInput identity="tenMinPlanerRegular" label="goal" id="goal" />
         </div>
       </div>
-      <div>
-        <div>
+      <div className="flex flex-row bg-slate-400 gap-4 ">
+        <div className="w-1/2">
           <Todolist />
         </div>
-        <div>
+        <div className="w-1/2">
           <Timetable />
         </div>
       </div>
       <div>
-        <ParchmentInput identity="tenMinPlanerRegular" label="memo" id="memo" />
+        <ParchmentInput identity="tenMinPlanerRegular" label="memo" id="memo" innerClassName="h-40" />
       </div>
     </div>
   );
