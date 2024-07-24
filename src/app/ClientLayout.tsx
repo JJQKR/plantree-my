@@ -10,11 +10,11 @@ import Sidebar from '@/components/molecules/Sidebar';
 // 클라이언트 컴포넌트로 분리한게 이 ClientLayout.tsx
 
 const ClientLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { sidebarOpen, toggleSidebar } = useStore(); // 사이드바 상태와 토글 함수 가져오기
+  const { sidebarOpen, toggleSidebar, toggleGrid } = useStore(); // 상태와 상태 변경 함수 가져오기
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header toggleSidebar={toggleSidebar} />
+      <Header toggleSidebar={toggleSidebar} toggleGrid={toggleGrid} />
       <div className="flex flex-grow">
         {sidebarOpen && <Sidebar onClose={toggleSidebar} />}
         <main className={`flex-grow transition-all duration-300 ${sidebarOpen ? 'ml-0' : ''}`}>{children}</main>
