@@ -1,16 +1,14 @@
+import { GridToggleButtonProps } from '@/types/main';
 import React from 'react';
-
-type GridToggleButtonProps = {
-  onClick: () => void;
-};
+import { AiFillAppstore } from 'react-icons/ai';
 
 const GridToggleButton: React.FC<GridToggleButtonProps> = ({ onClick }) => {
   return (
     <button
       onClick={onClick}
-      className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700 transition duration-300"
+      className="p-2 bg-transparent border-none outline-none hover:bg-gray-700 rounded transition duration-300"
     >
-      Toggle Grid
+      <AiFillAppstore className="text-2xl" />
     </button>
   );
 };

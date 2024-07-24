@@ -20,3 +20,7 @@ export type DiaryCard = {
 export type CreateDiaryButtonProps = {
   onClick?: () => void; // 클릭 이벤트 핸들러
 };
+
+export type GridToggleButtonProps = {
+  onClick: () => void; // 클릭 이벤트 핸들러
+};
