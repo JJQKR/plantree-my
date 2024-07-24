@@ -5,6 +5,9 @@ import useMyModalStore from '@/stores/my.modal.store';
 import BadgeModal from '../../components/molecules/BadgeModal';
 import Garden from '@/components/templates/Garden';
 import BadgeCollection from '@/components/templates/BadgeCollection';
+import NicknameButton from '@/components/atoms/NicknameButton';
+import AccountBar from '@/components/molecules/AccountBar';
+import WithdrawalButton from '@/components/atoms/WithdrawalButton';
 
 const MyPage: React.FC = () => {
   const { isBadgeModalOpen, toggleBadgeModal } = useMyModalStore((state) => state);
@@ -32,6 +35,11 @@ const MyPage: React.FC = () => {
           </div>
         </BadgeCollection>
       </div>
+      <NicknameButton />
+      <AccountBar>
+        <div>내가 account bar의 자식이다!!!!!!</div>
+      </AccountBar>
+      <WithdrawalButton />
 
       {/* 
         <button onClick={toggleNicknameModal}>Toggle Nickname Modal</button>

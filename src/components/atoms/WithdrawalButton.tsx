@@ -1,7 +1,7 @@
 import React from 'react';
 
 const WithdrawalButton = () => {
-  return <div>WithdrawalButton</div>;
+  return <button>WithdrawalButton</button>;
 };
 
 export default WithdrawalButton;
