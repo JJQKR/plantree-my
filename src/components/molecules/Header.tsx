@@ -7,11 +7,15 @@ import LoginModal from './LoginModal';
 import SignupModal from './SignupModal';
 import { supabase } from '../../supabase/client';
 import { MainHeaderProps } from '@/types/main';
+import { useStore } from '@/stores/sidebar.store'; // 상태 가져오기
 
 const Header: React.FC<MainHeaderProps> = ({ toggleSidebar, toggleGrid }) => {
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setSignupModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // 상태 가져오기
+  const { gridView } = useStore();
 
   useEffect(() => {
     const checkUser = async () => {
@@ -50,7 +54,7 @@ const Header: React.FC<MainHeaderProps> = ({ toggleSidebar, toggleGrid }) => {
       <div className="flex-grow flex justify-center">
         <h1 className="text-2xl font-bold">Logo</h1>
       </div>
-      <GridToggleButton onClick={toggleGrid} />
+      <GridToggleButton onClick={toggleGrid} gridView={gridView} />
       <div className="flex gap-4">
         {isLoggedIn ? (
           <button className="px-4 py-2 bg-red-500 rounded hover:bg-red-700" onClick={handleLogout}>
