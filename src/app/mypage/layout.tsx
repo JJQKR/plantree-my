@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 
-const MyLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const MyLayout = ({ children }: PropsWithChildren) => {
   return <div>{children}</div>;
 };
 

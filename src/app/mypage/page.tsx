@@ -12,7 +12,6 @@ const MyPage: React.FC = () => {
     toggleBadgeModal();
   };
 
-  // e : React.MouseEventHandler<HTMLButtonElement>
   return (
     <>
       <div>

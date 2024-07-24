@@ -25,11 +25,6 @@ const BadgeModal: React.FC = () => {
               <BadgeCard />
               <BadgeCard />
               <BadgeCard />
-              <BadgeCard />
-              <BadgeCard />
-              <BadgeCard />
-              <BadgeCard />
-              <BadgeCard />
             </div>
             <button className="px-4 py-2 bg-gray-500 text-white rounded" onClick={toggleBadgeModal}>
               Close
