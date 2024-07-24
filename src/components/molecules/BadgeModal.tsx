@@ -19,7 +19,7 @@ const BadgeModal: React.FC = () => {
       >
         <div className="bg-white p-4 rounded">
           <div onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-xl font-bold mb-4">모달의 내용물이 들어갑니다.</h2>
+            <h2 className="text-xl font-bold mb-4">내가 획득한 배지들이 쫙 보여요</h2>
 
             <div className="flex flex-col-3 jutify-between">
               <BadgeCard />

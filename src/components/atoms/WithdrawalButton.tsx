@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 
-const WithdrawalButton = () => {
-  return <button>WithdrawalButton</button>;
+const WithdrawalButton = ({ children }: PropsWithChildren) => {
+  return <div>{children}</div>;
 };
 
 export default WithdrawalButton;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { supabase } from '../../supabase/client'; // supabase 클라이언트 임포트
+import { supabase } from '../../supabase/client';
 
 const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> = ({ onClose, onSignupClick }) => {
   const [email, setEmail] = useState('');
@@ -35,6 +35,7 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
       const data = await signIn(email, password);
       console.log('로그인 성공:', data);
       onClose();
+      window.location.reload();
     } catch (error) {
       console.error('로그인 실패:', error);
       setError(error instanceof Error ? error.message : 'An error occurred.');
@@ -45,7 +46,7 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
     <>
       {!showForgotPasswordModal && (
         <div
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[999]"
           onClick={handleBackgroundClick}
         >
           <div className="bg-white p-4 rounded">
@@ -54,14 +55,14 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
             <input
               type="text"
               placeholder="아이디"
-              className="mb-2 p-2 border rounded w-full"
+              className="mb-2 p-2 border rounded w-full text-black"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
             <input
               type="password"
               placeholder="비밀번호"
-              className="mb-4 p-2 border rounded w-full"
+              className="mb-4 p-2 border rounded w-full text-black"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -69,11 +70,11 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
             <h2 className="text-center cursor-pointer text-rose-300" onClick={handleForgotPasswordClick}>
               비밀번호를 잊어버리셨나요?
             </h2>
-            <div className="flex justify-center gap-10 mt-2">
-              <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700" onClick={handleSignIn}>
+            <div className="flex flex-col gap-2 mt-4">
+              <button className="w-full px-4 py-3 bg-gray-500 text-white rounded" onClick={handleSignIn}>
                 로그인
               </button>
-              <button className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700" onClick={onSignupClick}>
+              <button className="w-full px-4 py-3 bg-blue-500 text-white rounded" onClick={onSignupClick}>
                 회원가입
               </button>
             </div>

@@ -1,13 +1,14 @@
 import { SideButtonProps } from '@/types/main';
 import React from 'react';
+import { AiOutlineMenu } from 'react-icons/ai';
 
-const SideButton: React.FC<SideButtonProps> = ({ onClick, children }) => {
+const SideButton: React.FC<SideButtonProps> = ({ onClick }) => {
   return (
     <button
       onClick={onClick}
-      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-300"
+      className="p-2 bg-transparent border-none outline-none hover:bg-gray-700 rounded transition duration-300"
     >
-      {children}
+      <AiOutlineMenu className="text-2xl" />
     </button>
   );
 };
