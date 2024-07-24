@@ -13,11 +13,11 @@ const Todolist: React.FC = () => {
   const [todoInput, setTodoInput] = useState<string>('');
   const [todoList, setTodoList] = useState<Todo[]>([]);
 
-  const handleTodoInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const updateTodoInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTodoInput(e.target.value);
   };
 
-  const addTodoList = () => {
+  const addTodo = () => {
     if (todoInput.trim() === '') return;
 
     const nextTodo: Todo = { id: uuid(), text: todoInput, isDone: false };
@@ -25,18 +25,18 @@ const Todolist: React.FC = () => {
     setTodoInput('');
   };
 
-  const handleChangeIsDone = (id: string) => {
+  const toggleTodoCompletion = (id: string) => {
     setTodoList(todoList.map((todo) => (id === todo.id ? { ...todo, isDone: !todo.isDone } : todo)));
   };
 
-  const handleDeleteTodo = (id: string) => {
+  const removeTodo = (id: string) => {
     setTodoList(todoList.filter((todo) => id !== todo.id));
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const submitOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      addTodoList();
+      addTodo();
       setTodoInput('');
     }
   };
@@ -48,16 +48,16 @@ const Todolist: React.FC = () => {
         {todoList.map((todo) => {
           return (
             <li key={todo.id} className={todo.isDone ? 'line-through' : 'no-underline'}>
-              <input type="checkbox" onChange={() => handleChangeIsDone(todo.id)} />
+              <input type="checkbox" onChange={() => toggleTodoCompletion(todo.id)} />
               {todo.text}
-              <button onClick={() => handleDeleteTodo(todo.id)}>✕</button>
+              <button onClick={() => removeTodo(todo.id)}>✕</button>
             </li>
           );
         })}
       </ul>
       <div>
-        <button onClick={addTodoList}>+</button>
-        <input type="text" value={todoInput} onChange={handleTodoInput} onKeyUp={handleKeyDown} />
+        <button onClick={addTodo}>+</button>
+        <input type="text" value={todoInput} onChange={updateTodoInput} onKeyUp={submitOnEnter} />
       </div>
     </div>
   );
