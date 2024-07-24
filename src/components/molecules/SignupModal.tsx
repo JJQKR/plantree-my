@@ -50,37 +50,37 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
         return { authData, profileData };
       }
     } catch (error) {
-      console.error(error); // 콘솔에 오류 출력
+      console.error(error);
       setError(error instanceof Error ? error.message : 'An error occurred.');
     }
   };
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[999]"
       onClick={handleBackgroundClick}
     >
       <div className="bg-white p-4 rounded w-96">
-        <h2 className="text-xl font-bold mb-4 text-center">회원가입</h2>
+        <h2 className="text-xl font-bold mb-4 text-center text-black">회원가입</h2>
         {error && <p className="text-red-500 text-center">{error}</p>}
         <input
           type="text"
           placeholder="닉네임"
-          className="mb-4 p-2 border rounded w-full"
+          className="mb-4 p-2 border rounded w-full text-black"
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
         />
         <input
           type="email"
           placeholder="이메일"
-          className="mb-4 p-2 border rounded w-full"
+          className="mb-4 p-2 border rounded w-full text-black"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
           type="password"
           placeholder="비밀번호"
-          className="mb-4 p-2 border rounded w-full"
+          className="mb-4 p-2 border rounded w-full text-black"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
