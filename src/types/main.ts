@@ -1,21 +1,18 @@
-// 헤더 컴포넌트에 전달되는 props 타입
 export type MainHeaderProps = {
-  toggleSidebar: () => void;
+  toggleSidebar: () => void; // 사이드바 토글 함수
+  toggleGrid: () => void; // 그리드 뷰 토글 함수
 };
 
-// 사이드바 컴포넌트에 전달되는 props 타입
 export type MainSidebarProps = {
-  onClose: () => void;
+  onClose: () => void; // 사이드바 닫기 함수
 };
 
-// 사이드 버튼 컴포넌트에 전달되는 props 타입
 export type SideButtonProps = {
-  onClick: () => void;
-  children: React.ReactNode;
+  onClick: () => void; // 버튼 클릭 함수
+  children: React.ReactNode; // 버튼 내부의 텍스트 또는 컴포넌트
 };
 
-// DiaryCard 타입 정의
 export type DiaryCard = {
   id: number;
-  content: string;
+  content: string; // 다이어리 카드의 내용
 };
