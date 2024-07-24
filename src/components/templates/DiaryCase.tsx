@@ -12,9 +12,9 @@ import CreateDiaryButton from '../atoms/CreateDiaryButton';
 
 // 다이어리 카드 데이터를 하드코딩한 배열 (테스트를 위한 것)
 const cards: DiaryCard[] = [
-  { id: 1, content: 'Card 1', name: '영수의 책장' },
-  { id: 2, content: 'Card 2', name: '보영의 책장' },
-  { id: 3, content: 'Card 3', name: '재훈의 책장' }
+  { id: 1, content: 'Card 1', name: '영수의 다이어리' },
+  { id: 2, content: 'Card 2', name: '보영의 다이어리' },
+  { id: 3, content: 'Card 3', name: '재훈의 다이어리' }
 ];
 
 const handleCreateDiary = () => {
