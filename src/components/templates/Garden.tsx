@@ -1,6 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+
+import { createClient } from '@supabase/supabase-js';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
@@ -9,12 +11,59 @@ import { EffectCoverflow, Pagination } from 'swiper/modules';
 import Image from 'next/image';
 import { GardenStage } from '@/types/garden';
 
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error('Missing Supabase URL or Key.');
+}
+
+const supabase = createClient(supabaseUrl, supabaseKey);
+
 const Garden = () => {
-  const gardenStages: GardenStage[] = [
+  const [gardenStages, setGardenStages] = useState<GardenStage[]>([
     { id: 1, content: 'Stage1의 url', name: '씨앗' },
     { id: 2, content: 'Stage2의 url', name: '새싹' },
     { id: 3, content: 'Stage3의 url', name: '풀' }
-  ];
+  ]);
+
+  const [levelId, setLevelId] = useState<string | null>(null);
+
+  useEffect(() => {
+    //우선 email 및 yjcoyjco@naver.com로 코딩, 수정필요
+    const fetchLevelId = async (email: string) => {
+      const { data, error } = await supabase.from('users').select('level_id').eq('email', email).single();
+
+      if (error) {
+        console.error('level_id fetching error:', error);
+        return;
+      }
+
+      if (data.level_id === 'dd85615d-7d41-43a4-86e3-33ca7c80248e') {
+        const newStage = { id: 4, content: 'Stage4의 url', name: '묘목' };
+        setGardenStages((prevStages) => [...prevStages, newStage]);
+      }
+
+      setLevelId(data.level_id);
+      console.log(levelId);
+
+      // strict mode로 인한 중복 추가 방지 코드
+      // if (data.level_id === 'dd85615d-7d41-43a4-86e3-33ca7c80248e') {
+      //     const newStage = { id: 4, content: 'Stage4의 url', name: '묘목' };
+      //     setGardenStages((prevStages) => {
+      //       // 중복 추가 방지
+      //       const alreadyAdded = prevStages.some(stage => stage.id === newStage.id);
+      //       if (!alreadyAdded) {
+      //         return [...prevStages, newStage];
+      //       }
+      //       return prevStages;
+      //     });
+      //   }
+      // };
+    };
+
+    fetchLevelId('yjcoyjco@naver.com');
+  }, []);
 
   return (
     <div className="bg-[#1edaaa] w-[700px] h-[400px]">
