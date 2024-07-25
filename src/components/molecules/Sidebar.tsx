@@ -1,6 +1,7 @@
 import { MainSidebarProps } from '@/types/main';
 import React from 'react';
 import { cards } from '../templates/DiaryCase';
+import Link from 'next/link';
 
 const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
   return (
@@ -12,7 +13,9 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
         <nav>
           <ul className="flex flex-col items-center justify-center">
             <li className="w-[240px] h-[300px] bg-black mb-4 ">
-              <p>프로필이 들어갈 박스</p>
+              <Link href="/mypage">
+                <button>마이 페이지</button>
+              </Link>
             </li>
             {cards.map((card) => (
               <li

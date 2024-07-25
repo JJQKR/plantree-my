@@ -8,6 +8,7 @@ import SignupModal from './SignupModal';
 import { supabase } from '../../supabase/client';
 import { MainHeaderProps } from '@/types/main';
 import { useStore } from '@/stores/sidebar.store'; // 상태 가져오기
+import Link from 'next/link';
 
 const Header: React.FC<MainHeaderProps> = ({ toggleSidebar, toggleGrid }) => {
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
@@ -52,7 +53,9 @@ const Header: React.FC<MainHeaderProps> = ({ toggleSidebar, toggleGrid }) => {
     <header className="flex justify-between items-center p-4 bg-gray-800 text-white">
       <SideButton onClick={toggleSidebar}>Menu</SideButton>
       <div className="flex-grow flex justify-center">
-        <h1 className="text-2xl font-bold">Logo</h1>
+        <Link href="/">
+          <h1 className="text-2xl font-bold">Logo</h1>
+        </Link>
       </div>
       <GridToggleButton onClick={toggleGrid} gridView={gridView} />
       <div className="flex gap-4">
