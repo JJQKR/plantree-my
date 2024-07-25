@@ -15,6 +15,7 @@ export type SideButtonProps = {
 export type DiaryCard = {
   id: number;
   content: string; // 다이어리 카드의 내용
+  name: string;
 };
 
 export type CreateDiaryButtonProps = {
@@ -23,4 +24,5 @@ export type CreateDiaryButtonProps = {
 
 export type GridToggleButtonProps = {
   onClick: () => void; // 클릭 이벤트 핸들러
+  gridView: boolean; // 그리드 뷰 상태
 };
