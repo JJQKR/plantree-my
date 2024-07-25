@@ -61,6 +61,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
       onClick={handleBackgroundClick}
     >
       <div className="bg-white p-4 rounded w-96">
+        <h1 className="text-xl font-bold mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
         <h2 className="text-xl font-bold mb-4 text-center text-black">회원가입</h2>
         {error && <p className="text-red-500 text-center">{error}</p>}
         <input
@@ -85,11 +86,11 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
           onChange={(e) => setPassword(e.target.value)}
         />
         <div className="flex flex-col gap-2 mt-4">
-          <button className="w-full px-4 py-3 bg-gray-500 text-white rounded" onClick={onClose}>
-            취소
-          </button>
-          <button className="w-full px-4 py-3 bg-blue-500 text-white rounded" onClick={signUp}>
+          <button className="w-full px-4 py-3 font-bold bg-blue-500 text-black rounded" onClick={signUp}>
             회원가입
+          </button>
+          <button className="w-full px-4 py-3 bg-gray-500 text-black rounded" onClick={onClose}>
+            취소
           </button>
         </div>
       </div>
