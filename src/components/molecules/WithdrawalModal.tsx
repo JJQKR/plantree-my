@@ -36,10 +36,10 @@ const WithdrawalModal: React.FC = () => {
                 <button className="px-4 py-2 bg-red-400 w-full text-white rounded" onSubmit={toggleWithdrawalModal}>
                   탈퇴하기
                 </button>
-                <button className="px-4 py-2 bg-red-400 w-full text-white rounded" onSubmit={toggleWithdrawalModal}>
-                  취소
-                </button>
               </form>
+              <button className="px-4 py-2 bg-red-400 w-full text-white rounded" onClick={toggleWithdrawalModal}>
+                취소
+              </button>
             </div>
           </div>
         </div>
