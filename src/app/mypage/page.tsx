@@ -11,6 +11,7 @@ import WithdrawalButton from '@/components/atoms/WithdrawalButton';
 import NicknameModal from '@/components/molecules/NicknameModal';
 import WithdrawalModal from '@/components/molecules/WithdrawalModal';
 import BadgeCards from '@/components/molecules/BadgeCards';
+import GrowthSummary from '@/components/templates/GrowthSummary';
 
 const MyPage: React.FC = () => {
   const {
@@ -35,12 +36,9 @@ const MyPage: React.FC = () => {
 
   return (
     <>
-      <div>
-        <h2>씨앗 밍밍밍 님의 정원</h2>
-        <p>플랜트리와 함께 100일째,</p>
-        <p>열심히 나무를 키우고 계시네요!</p>
-        <GardenSection />
-      </div>
+      <GrowthSummary />
+      <GardenSection />
+
       <div>
         <BadgeCollection>
           <div>
