@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../../supabase/client';
+import ResetPasswordModal from './ResetPasswordModal';
 
 const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> = ({ onClose, onSignupClick }) => {
   const [email, setEmail] = useState('');
@@ -7,6 +10,16 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
   const [error, setError] = useState<string | null>(null);
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
+  const [resetToken, setResetToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const token = queryParams.get('token');
+    if (token) {
+      setResetToken(token);
+      setShowResetPasswordModal(true);
+    }
+  }, [location]);
 
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -20,10 +33,6 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
 
   const handleForgotPasswordClose = () => {
     setShowForgotPasswordModal(false);
-  };
-
-  const handleResetPasswordClick = () => {
-    setShowResetPasswordModal(true);
   };
 
   const handleResetPasswordClose = () => {
@@ -91,7 +100,7 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
         </div>
       )}
       {showForgotPasswordModal && <ForgotPasswordModal onClose={handleForgotPasswordClose} />}
-      {showResetPasswordModal && <ResetPasswordModal onClose={handleResetPasswordClose} />}
+      {showResetPasswordModal && <ResetPasswordModal token={resetToken} onClose={handleResetPasswordClose} />}
     </>
   );
 };
@@ -109,7 +118,9 @@ const ForgotPasswordModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
 
   const handleResetPassword = async () => {
     try {
-      const { data, error } = await supabase.auth.resetPasswordForEmail(email);
+      const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: 'http://localhost:3000/reset-password?token=YOUR_TOKEN'
+      });
       if (error) throw error;
       setMessage('인증번호가 이메일로 전송되었습니다.');
       setError(null);
@@ -144,74 +155,6 @@ const ForgotPasswordModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
           </button>
           <button className="w-full px-4 py-3 bg-blue-500 text-white rounded" onClick={handleResetPassword}>
             인증번호 받기
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const ResetPasswordModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
-
-  const handleResetPassword = async () => {
-    if (password !== confirmPassword) {
-      setError('비밀번호가 일치하지 않습니다.');
-      return;
-    }
-
-    try {
-      const { data, error } = await supabase.auth.updateUser({ password });
-      if (error) throw error;
-      setMessage('비밀번호가 성공적으로 변경되었습니다.');
-      setError(null);
-      setTimeout(onClose, 2000);
-    } catch (error) {
-      console.error('비밀번호 변경 실패:', error);
-      setMessage(null);
-      setError(error instanceof Error ? error.message : 'An error occurred.');
-    }
-  };
-
-  return (
-    <div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[999]"
-      onClick={handleBackgroundClick}
-    >
-      <div className="bg-white p-4 rounded w-96">
-        <h1 className="text-xl font-bold mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
-        <h2 className="text-xl font-bold mb-4 text-center text-black">비밀번호 재설정</h2>
-        <input
-          type="password"
-          placeholder="새 비밀번호를 입력하세요."
-          className="mb-4 p-2 border rounded w-full text-black"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="비밀번호를 다시 입력하세요."
-          className="mb-4 p-2 border rounded w-full text-black"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
-        {message && <p className="text-green-500">{message}</p>}
-        {error && <p className="text-red-500">{error}</p>}
-        <div className="flex flex-col gap-2 mt-4">
-          <button className="w-full px-4 py-3 bg-gray-500 text-white rounded" onClick={onClose}>
-            취소
-          </button>
-          <button className="w-full px-4 py-3 bg-blue-500 text-white rounded" onClick={handleResetPassword}>
-            비밀번호 변경
           </button>
         </div>
       </div>
