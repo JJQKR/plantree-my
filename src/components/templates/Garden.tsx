@@ -39,6 +39,10 @@ const Garden = () => {
         return;
       }
 
+      //1. 레벨 아이디를 숫자로해서 내가 4면 4까지 다 들고와서 렌더링
+      // or 2. stage라는 새 컬럼을 만들어서 stage 4까지 다 들고옴
+      // 실시간으로 바뀌려면 state로 상태 관리
+
       if (data.level_id === 'dd85615d-7d41-43a4-86e3-33ca7c80248e') {
         const newStage = { id: 4, content: 'Stage4의 url', name: '묘목' };
         setGardenStages((prevStages) => [...prevStages, newStage]);
