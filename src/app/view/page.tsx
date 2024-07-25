@@ -1,7 +1,12 @@
+import IndexBottomSheet from '@/components/templates/IndexBottomSheet';
 import React from 'react';
 
 const ViewPage = () => {
-  return <div>ViewPage</div>;
+  return (
+    <div>
+      <IndexBottomSheet />
+    </div>
+  );
 };
 
 export default ViewPage;

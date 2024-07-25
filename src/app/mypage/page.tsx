@@ -3,7 +3,7 @@
 import React from 'react';
 import useMyModalStore from '@/stores/my.modal.store';
 import BadgeModal from '../../components/molecules/BadgeModal';
-import Garden from '@/components/templates/Garden';
+import GardenSection from '@/components/templates/Garden';
 import BadgeCollection from '@/components/templates/BadgeCollection';
 import NicknameButton from '@/components/atoms/NicknameButton';
 import AccountBar from '@/components/molecules/AccountBar';
@@ -39,7 +39,7 @@ const MyPage: React.FC = () => {
         <h2>씨앗 밍밍밍 님의 정원</h2>
         <p>플랜트리와 함께 100일째,</p>
         <p>열심히 나무를 키우고 계시네요!</p>
-        <Garden />
+        <GardenSection />
       </div>
       <div>
         <BadgeCollection>
@@ -63,9 +63,7 @@ const MyPage: React.FC = () => {
           {isNicknameModalOpen && <NicknameModal />}
         </div>
       </NicknameButton>
-      <AccountBar>
-        <div className="bg-[#eee2f3] w-[300px] h-[100px]">내가 account bar의 자식이다!!!!!!</div>
-      </AccountBar>
+      <AccountBar />
       <WithdrawalButton>
         <div>
           <button onClick={handleToggleWithdrawalModal}>회원 탈퇴 버튼</button>

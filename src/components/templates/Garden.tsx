@@ -20,7 +20,7 @@ if (!supabaseUrl || !supabaseKey) {
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const Garden = () => {
+const GardenSection = () => {
   const [gardenStages, setGardenStages] = useState<GardenStage[]>([
     { id: 1, content: 'Stage1의 url', name: '씨앗' },
     { id: 2, content: 'Stage2의 url', name: '새싹' },
@@ -96,13 +96,8 @@ const Garden = () => {
           </SwiperSlide>
         ))}
       </Swiper>
-
-      <div className="bg-slate-300 w-[700px] h-[200px]">
-        이미지 예시
-        <Image src="/images/garden.png" alt="garden" width={300} height={100} />
-      </div>
     </div>
   );
 };
 
-export default Garden;
+export default GardenSection;
