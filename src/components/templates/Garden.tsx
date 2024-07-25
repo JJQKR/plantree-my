@@ -7,12 +7,13 @@ import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import { EffectCoverflow, Pagination } from 'swiper/modules';
 import Image from 'next/image';
+import { GardenStage } from '@/types/garden';
 
 const Garden = () => {
-  const gardenStages: [] = [
-    { id: 1, content: 'Stage 1', name: '씨앗' },
-    { id: 2, content: 'Stage 2', name: '새싹' },
-    { id: 3, content: 'Stage 3', name: '풀' }
+  const gardenStages: GardenStage[] = [
+    { id: 1, content: 'Stage1의 url', name: '씨앗' },
+    { id: 2, content: 'Stage2의 url', name: '새싹' },
+    { id: 3, content: 'Stage3의 url', name: '풀' }
   ];
 
   return (
@@ -34,13 +35,18 @@ const Garden = () => {
         className="myGarden"
       >
         {gardenStages.map((stage) => (
-          <SwiperSlide></SwiperSlide>
+          <SwiperSlide key={stage.id}>
+            <h3>{stage.name}</h3>
+            <div className="flex items-center justify-center p-4 bg-white rounded shadow-md w-[400px] h-[200px]">
+              <p className="text-center">{stage.content}</p>
+            </div>
+          </SwiperSlide>
         ))}
       </Swiper>
 
       <div className="bg-slate-300 w-[600px] h-[300px]">
         이미지 예시
-        <Image src="/images/garden.png" alt="garden" width={500} height={200} />
+        <Image src="/images/garden.png" alt="garden" width={300} height={100} />
       </div>
     </div>
   );
