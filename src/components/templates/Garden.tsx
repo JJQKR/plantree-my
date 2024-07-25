@@ -93,7 +93,7 @@ const Garden = () => {
         ))}
       </Swiper>
 
-      <div className="bg-slate-300 w-[600px] h-[300px]">
+      <div className="bg-slate-300 w-[700px] h-[200px]">
         이미지 예시
         <Image src="/images/garden.png" alt="garden" width={300} height={100} />
       </div>
