@@ -1,8 +1,8 @@
 import { supabase } from '@/supabase/client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-const fetchNickname = () => {
-  const [nickname, setNickname] = useState<string | null>(null);
+const useNickname = () => {
+  const nicknameRef = useRef<string | null>(null);
 
   useEffect(() => {
     const fetchNickname = async () => {
@@ -14,7 +14,7 @@ const fetchNickname = () => {
         if (error) {
           console.error('닉네임 가져오기 실패:', error);
         } else {
-          setNickname(data.nickname);
+          nicknameRef.current = data.nickname;
         }
       }
     };
@@ -22,7 +22,13 @@ const fetchNickname = () => {
     fetchNickname();
   }, []);
 
-  return <div>{nickname && <p className="text-black text-lg font-bold">{nickname}</p>}</div>;
+  return nicknameRef;
 };
 
-export default fetchNickname;
+const NicknameDisplay = () => {
+  const nicknameRef = useNickname();
+
+  return <div>{nicknameRef.current && <p className="text-black text-lg font-bold">{nicknameRef.current}</p>}</div>;
+};
+
+export default NicknameDisplay;
