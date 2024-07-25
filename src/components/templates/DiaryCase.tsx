@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -10,9 +12,9 @@ import CreateDiaryButton from '../atoms/CreateDiaryButton';
 
 // 다이어리 카드 데이터를 하드코딩한 배열 (테스트를 위한 것)
 const cards: DiaryCard[] = [
-  { id: 1, content: 'Card 1' },
-  { id: 2, content: 'Card 2' },
-  { id: 3, content: 'Card 3' }
+  { id: 1, content: 'Card 1', name: '영수의 다이어리' },
+  { id: 2, content: 'Card 2', name: '보영의 다이어리' },
+  { id: 3, content: 'Card 3', name: '재훈의 다이어리' }
 ];
 
 const handleCreateDiary = () => {
@@ -34,11 +36,11 @@ const DiaryCase: React.FC = () => {
         {gridView ? (
           <div className="grid grid-cols-3 gap-4 max-w-full">
             {limitedCards.map((card) => (
-              <div
-                key={card.id}
-                className="p-4 bg-white flex items-center justify-center rounded shadow-md w-[180px] h-[270px]"
-              >
-                <p className="text-center">{card.content}</p>
+              <div key={card.id} className="flex flex-col items-center">
+                <h2 className="mb-2 text-center text-lg font-bold">{card.name}</h2>
+                <div className="p-4 bg-white flex items-center justify-center rounded shadow-md w-[180px] h-[270px]">
+                  <p className="text-center">{card.content}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -61,7 +63,8 @@ const DiaryCase: React.FC = () => {
           >
             {limitedCards.map((card) => (
               <SwiperSlide key={card.id}>
-                <div className="flex items-center justify-center p-4 bg-white rounded shadow-md w-[380px] h-[570px]">
+                <h2 className="text-xl font-bold mb-2 text-center">{card.name}</h2>
+                <div className="flex items-center justify-center p-4 bg-white rounded shadow-md w-[350px] h-[570px]">
                   <p className="text-center">{card.content}</p>
                 </div>
               </SwiperSlide>
@@ -77,3 +80,4 @@ const DiaryCase: React.FC = () => {
 };
 
 export default DiaryCase;
+export { cards }; // cards를 export하여 Sidebar에서 사용 가능하게 함
