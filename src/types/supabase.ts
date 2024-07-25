@@ -99,18 +99,24 @@ export type Database = {
       contents: {
         Row: {
           content_id: string | null;
+          diary_id: string | null;
           id: string;
           parchment_id: string | null;
+          parchment_index: number | null;
         };
         Insert: {
           content_id?: string | null;
+          diary_id?: string | null;
           id?: string;
           parchment_id?: string | null;
+          parchment_index?: number | null;
         };
         Update: {
           content_id?: string | null;
+          diary_id?: string | null;
           id?: string;
           parchment_id?: string | null;
+          parchment_index?: number | null;
         };
         Relationships: [
           {
@@ -118,6 +124,13 @@ export type Database = {
             columns: ['content_id'];
             isOneToOne: false;
             referencedRelation: '10min_planer_contents';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'contents_diary_id_fkey';
+            columns: ['diary_id'];
+            isOneToOne: false;
+            referencedRelation: 'diaries';
             referencedColumns: ['id'];
           },
           {
@@ -132,21 +145,18 @@ export type Database = {
       diaries: {
         Row: {
           bookshelf_order: number;
-          contents: string[] | null;
           created_at: string;
           id: string;
           user_id: string;
         };
         Insert: {
           bookshelf_order?: number;
-          contents?: string[] | null;
           created_at?: string;
           id?: string;
           user_id: string;
         };
         Update: {
           bookshelf_order?: number;
-          contents?: string[] | null;
           created_at?: string;
           id?: string;
           user_id?: string;
