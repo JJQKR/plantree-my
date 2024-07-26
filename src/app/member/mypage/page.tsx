@@ -2,7 +2,7 @@
 
 import React from 'react';
 import useMyModalStore from '@/stores/my.modal.store';
-import BadgeModal from '../../components/molecules/BadgeModal';
+import BadgeModal from '@/components/molecules/BadgeModal';
 import GardenSection from '@/components/templates/Garden';
 import BadgeCollection from '@/components/templates/BadgeCollection';
 import NicknameButton from '@/components/atoms/NicknameButton';
@@ -12,7 +12,7 @@ import NicknameModal from '@/components/molecules/NicknameModal';
 import WithdrawalModal from '@/components/molecules/WithdrawalModal';
 import BadgeCards from '@/components/molecules/BadgeCards';
 import GrowthSummary from '@/components/templates/GrowthSummary';
-import useUserStore from '@/stores/user.store'; // 유저 상태 관리 스토어 추가
+import useUserStore from '@/stores/user.store';
 
 const MyPage: React.FC = () => {
   const {
