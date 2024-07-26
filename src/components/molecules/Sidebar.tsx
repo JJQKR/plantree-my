@@ -37,7 +37,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
         <nav>
           <ul className="flex flex-col items-center justify-center">
             <li className="w-[240px] h-[300px] bg-black mb-4 flex justify-end items-start relative">
-              <Link href="/mypage">
+              <Link href="/member/mypage">
                 <DiAptana size={30} className="text-white mt-3 mr-3" />
               </Link>
               {nickname && <span className="absolute top-3 left-3 text-white text-lg font-bold">{nickname}</span>}

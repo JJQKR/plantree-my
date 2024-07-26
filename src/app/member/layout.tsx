@@ -7,7 +7,7 @@ interface Props {
 
 const MemberLayout = ({ children }: Props) => {
   return (
-    <div className="flex">
+    <div>
       <ClientLayout>{children}</ClientLayout>
     </div>
   );

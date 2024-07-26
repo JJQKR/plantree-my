@@ -53,7 +53,7 @@ const Header: React.FC<MainHeaderProps> = ({ toggleSidebar, toggleGrid }) => {
     <header className="flex justify-between items-center p-4 bg-gray-800 text-white">
       <SideButton onClick={toggleSidebar}>Menu</SideButton>
       <div className="flex-grow flex justify-center">
-        <Link href="/">
+        <Link href="/member">
           <h1 className="text-2xl font-bold">Logo</h1>
         </Link>
       </div>
