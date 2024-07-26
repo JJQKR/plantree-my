@@ -1,14 +1,15 @@
 'use client';
 
 import { MainSidebarProps } from '@/types/main';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { cards } from '../templates/DiaryCase';
 import Link from 'next/link';
 import { DiAptana } from 'react-icons/di';
 import { supabase } from '../../supabase/client';
+import useUserStore from '@/stores/user.store'; // 유저 상태 관리 스토어 추가
 
 const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
-  const [nickname, setNickname] = useState<string | null>(null);
+  const { nickname, setNickname } = useUserStore((state) => state); // 유저 상태 관리 스토어에서 닉네임 가져오기
 
   useEffect(() => {
     const fetchNickname = async () => {
@@ -20,13 +21,13 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
         if (error) {
           console.error('닉네임 가져오기 실패:', error);
         } else {
-          setNickname(data.nickname);
+          setNickname(data.nickname); // 전역 상태에 닉네임 설정
         }
       }
     };
 
     fetchNickname();
-  }, []);
+  }, [setNickname]);
 
   return (
     <div className="w-[260px] h-[930px] bg-gray-700 text-white flex-shrink-0">

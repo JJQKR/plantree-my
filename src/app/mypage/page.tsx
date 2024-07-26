@@ -12,6 +12,7 @@ import NicknameModal from '@/components/molecules/NicknameModal';
 import WithdrawalModal from '@/components/molecules/WithdrawalModal';
 import BadgeCards from '@/components/molecules/BadgeCards';
 import GrowthSummary from '@/components/templates/GrowthSummary';
+import useUserStore from '@/stores/user.store'; // 유저 상태 관리 스토어 추가
 
 const MyPage: React.FC = () => {
   const {

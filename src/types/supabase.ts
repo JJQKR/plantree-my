@@ -224,7 +224,7 @@ export type Database = {
       level: {
         Row: {
           attendance_goal: number | null;
-          id: string;
+          id: string | null;
           name: string | null;
         };
         Insert: {

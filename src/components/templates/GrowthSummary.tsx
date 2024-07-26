@@ -1,8 +1,9 @@
 import { supabase } from '@/supabase/client';
 import React, { useEffect, useState } from 'react';
+import useUserStore from '@/stores/user.store'; // 유저 상태 관리 스토어 추가
 
 const GrowthSummary = () => {
-  const [nickname, setNickname] = useState<string | null>(null);
+  const { nickname, setNickname } = useUserStore((state) => state); // 유저 상태 관리 스토어에서 닉네임 가져오기
   const [levelName, setLevelName] = useState<string | null>(null);
 
   useEffect(() => {
@@ -17,7 +18,7 @@ const GrowthSummary = () => {
         console.log('Nickname data:', data);
 
         if (data) {
-          setNickname(data.nickname);
+          setNickname(data.nickname); // 전역 상태에 닉네임 설정
         } else {
           console.error('Nickname not found for email:', email);
         }
@@ -87,7 +88,7 @@ const GrowthSummary = () => {
     };
 
     fetchUserData();
-  }, []);
+  }, [setNickname]);
 
   return (
     <div>

@@ -1,11 +1,13 @@
 import useMyModalStore from '@/stores/my.modal.store';
 import React, { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/supabase/client';
+import useUserStore from '@/stores/user.store'; // 유저 상태 관리 스토어 추가
 
 const NicknameModal: React.FC = () => {
   const { isNicknameModalOpen, toggleNicknameModal } = useMyModalStore((state) => state);
+  const { nickname, setNickname } = useUserStore((state) => state); // 유저 상태 관리 스토어에서 닉네임 가져오기
   const nicknameRef = useRef<HTMLInputElement>(null);
-  const [currentNickname, setCurrentNickname] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchNickname = async () => {
@@ -22,7 +24,7 @@ const NicknameModal: React.FC = () => {
             console.error('닉네임 페치 실패:', error);
           } else {
             console.log('닉네임 페치 성공:', data.nickname);
-            setCurrentNickname(data.nickname);
+            setNickname(data.nickname); // 전역 상태에 닉네임 설정
           }
         }
       } catch (error) {
@@ -31,7 +33,7 @@ const NicknameModal: React.FC = () => {
     };
 
     fetchNickname();
-  }, []);
+  }, [setNickname]);
 
   const handleBackGroundClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (e.target === e.currentTarget) {
@@ -42,7 +44,12 @@ const NicknameModal: React.FC = () => {
   const handleNicknameSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (nicknameRef.current) {
-      const newNickname = nicknameRef.current.value;
+      const newNickname = nicknameRef.current.value.trim();
+      if (newNickname.length < 2 || newNickname.length > 8) {
+        setError('닉네임은 최소 2글자, 최대 8글자입니다.');
+        return;
+      }
+
       try {
         const {
           data: { user },
@@ -56,7 +63,7 @@ const NicknameModal: React.FC = () => {
             console.error('닉네임 업데이트 실패:', error);
           } else {
             console.log('닉네임 업데이트 성공:', newNickname);
-            setCurrentNickname(newNickname);
+            setNickname(newNickname); // 전역 상태에 닉네임 업데이트
             toggleNicknameModal();
           }
         }
@@ -82,9 +89,9 @@ const NicknameModal: React.FC = () => {
                   placeholder="새 닉네임 입력"
                   className="mb-4 p-2 border rounded w-full text-black"
                   ref={nicknameRef}
-                  defaultValue={currentNickname}
+                  defaultValue={nickname ?? ''}
                 />
-
+                {error && <p className="text-red-500">{error}</p>}
                 <div className="flex flex-col gap-2">
                   <button type="submit" className="px-4 py-2 bg-red-400 w-full text-white rounded">
                     저장
