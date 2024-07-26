@@ -2,7 +2,7 @@
 
 import React from 'react';
 import useMyModalStore from '@/stores/my.modal.store';
-import BadgeModal from '../../components/molecules/BadgeModal';
+import BadgeModal from '../../../components/molecules/BadgeModal';
 import Garden from '@/components/templates/Garden';
 import BadgeCollection from '@/components/templates/BadgeCollection';
 import NicknameButton from '@/components/atoms/NicknameButton';
