@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 
 type activeCellsObjet = {
-  [key: string]: boolean;
+  [key: string]: { active: boolean; color: string };
 };
 
 const Timetable = () => {
@@ -31,7 +31,7 @@ const Timetable = () => {
   };
   const toggleCellColor = (id: string) => {
     const changeColor = (prev: activeCellsObjet) => {
-      return { ...prev, [id]: !prev[id] };
+      return { ...prev, [id]: { active: !prev[id], color: 'bg-slate-400' } };
     };
     setActiveCells(changeColor);
   };
@@ -61,7 +61,7 @@ const Timetable = () => {
                     key={colIndex}
                     id={id}
                     className={`border border-gray-300 p-1.5 text-center ${
-                      activeCells[id] ? 'bg-slate-500' : 'bg-white'
+                      activeCells[id] ? activeCells[id].color : 'bg-white'
                     }`}
                     onMouseDown={() => handleMouseDown(id)}
                     onMouseOver={() => handleMouseOver(id)}
