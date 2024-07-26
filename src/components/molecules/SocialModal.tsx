@@ -12,12 +12,14 @@ const SocialModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'kakao',
       options: {
+        redirectTo: 'http://localhost:3000/member',
         queryParams: {
           access_type: 'offline',
           prompt: 'consent'
         }
       }
     });
+
     if (error) {
       console.error('Kakao login error:', error.message);
     } else {
@@ -29,6 +31,7 @@ const SocialModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
+        redirectTo: 'http://localhost:3000/member',
         queryParams: {
           access_type: 'offline',
           prompt: 'consent'
