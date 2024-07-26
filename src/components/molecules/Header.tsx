@@ -6,7 +6,7 @@ import SignupModal from './SignupModal';
 import SocialModal from './SocialModal';
 import { supabase } from '../../supabase/client';
 import { MainHeaderProps } from '@/types/main';
-import { useStore } from '@/stores/sidebar.store'; // 상태 가져오기
+import { useStore } from '@/stores/sidebar.store';
 import Link from 'next/link';
 
 const Header: React.FC<MainHeaderProps> = ({ toggleSidebar, toggleGrid }) => {
