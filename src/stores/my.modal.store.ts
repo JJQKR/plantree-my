@@ -6,18 +6,23 @@ interface MyModalStore {
   isBadgeModalOpen: boolean;
   isNicknameModalOpen: boolean;
   isWithdrawalModalOpen: boolean;
+  isTenMinPlanerColorModalOpen: boolean;
   toggleBadgeModal: () => void;
   toggleNicknameModal: () => void;
   toggleWithdrawalModal: () => void;
+  toggleTenMinPlanerColorModal: () => void;
 }
 
 const useMyModalStore = create<MyModalStore>((set) => ({
   isBadgeModalOpen: false,
   isNicknameModalOpen: false,
   isWithdrawalModalOpen: false,
+  isTenMinPlanerColorModalOpen: false,
   toggleBadgeModal: () => set((state) => ({ isBadgeModalOpen: !state.isBadgeModalOpen })),
   toggleNicknameModal: () => set((state) => ({ isNicknameModalOpen: !state.isNicknameModalOpen })),
-  toggleWithdrawalModal: () => set((state) => ({ isWithdrawalModalOpen: !state.isWithdrawalModalOpen }))
+  toggleWithdrawalModal: () => set((state) => ({ isWithdrawalModalOpen: !state.isWithdrawalModalOpen })),
+  toggleTenMinPlanerColorModal: () =>
+    set((state) => ({ isTenMinPlanerColorModalOpen: !state.isTenMinPlanerColorModalOpen }))
 }));
 
 export default useMyModalStore;

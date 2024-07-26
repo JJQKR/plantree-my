@@ -4,8 +4,8 @@ import { MainSidebarProps } from '@/types/main';
 import React, { useState, useEffect } from 'react';
 import { cards } from '../templates/DiaryCase';
 import Link from 'next/link';
-import { DiAptana } from 'react-icons/di';
 import { supabase } from '../../supabase/client';
+import { DiAptana } from 'react-icons/di';
 
 const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
   const [nickname, setNickname] = useState<string | null>(null);
@@ -37,7 +37,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
         <nav>
           <ul className="flex flex-col items-center justify-center">
             <li className="w-[240px] h-[300px] bg-black rounded-[20px] mb-4 flex justify-center items-center relative">
-              <Link href="/mypage">
+              <Link href="/member/mypage">
                 <DiAptana size={30} className="text-white absolute top-3 right-3" />
               </Link>
               <div className="flex flex-col items-center mb-10">
