@@ -45,6 +45,9 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onClose, children }) 
           isOpen ? 'translate-y-0' : 'translate-y-full'
         }`}
       >
+        <button onClick={onClose} className="absolute top-0 right-0 m-4">
+          Close
+        </button>
         {children}
       </div>
     </div>
@@ -60,7 +63,6 @@ const IndexBottomSheet: React.FC = () => {
   return (
     <>
       <div className="IndexBottomSheet">
-        <button onClick={handleOpen}>Open BottomSheet</button>
         <BottomSheet isOpen={isOpen} onClose={handleClose}>
           <div className="flex items-center space-x-4">
             <div className="p-4 bg-pink-400 rounded shadow-md cursor-pointer">하나</div>
@@ -95,6 +97,9 @@ const IndexBottomSheet: React.FC = () => {
             </Swiper>
           </div>
         </BottomSheet>
+        <button onClick={handleOpen} className="fixed bottom-0 left-1/2 transform -translate-x-1/2 mb-4">
+          !!!!!!!INDEX!!!!!!!!
+        </button>
       </div>
     </>
   );
