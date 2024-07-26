@@ -18,7 +18,11 @@ const SocialModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         }
       }
     });
-    if (error) console.log('Kakao login error:', error.message);
+    if (error) {
+      console.error('Kakao login error:', error.message);
+    } else {
+      console.log('Kakao login successful');
+    }
   };
 
   const handleGoogleLogin = async () => {
@@ -31,7 +35,11 @@ const SocialModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         }
       }
     });
-    if (error) console.log('Google login error:', error.message);
+    if (error) {
+      console.error('Google login error:', error.message);
+    } else {
+      console.log('Google login successful');
+    }
   };
 
   return (
