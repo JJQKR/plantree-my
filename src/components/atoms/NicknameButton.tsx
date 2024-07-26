@@ -1,7 +1,7 @@
 import React, { PropsWithChildren } from 'react';
 
-const NicknameButton = ({ children }: PropsWithChildren) => {
-  return <div>{children}</div>;
+const NicknameButton: React.FC = ({ children }: PropsWithChildren) => {
+  return <>{children}</>;
 };
 
 export default NicknameButton;
