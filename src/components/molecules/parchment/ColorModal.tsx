@@ -22,7 +22,7 @@ const ColorModal = () => {
           ✕
         </button>
         <div className="flex flex-row">
-          <FaCircle size={50} color="FFC5C5" />
+          <FaCircle size={50} color="FFC5C5" onClick={() => {}} />
           <FaCircle size={50} color="FDFFAB" />
           <FaCircle size={50} color="D8EFD3" />
         </div>

@@ -24,17 +24,38 @@ const Timetable = () => {
     if (isMouseDown) {
       toggleCellColor(id);
     }
+    delete activeCells.id;
   };
 
   const handleMouseUp = () => {
     setIsMouseDown(false);
   };
+
   const toggleCellColor = (id: string) => {
     const changeColor = (prev: activeCellsObjet) => {
-      return { ...prev, [id]: { active: !prev[id], color: 'bg-slate-400' } };
+      const isActive = prev[id]?.active;
+      if (isActive) {
+        const newCells = { ...prev };
+        delete newCells[id];
+        return newCells;
+      } else {
+        return { ...prev, [id]: { active: !prev[id], color: 'bg-white' } };
+      }
     };
     setActiveCells(changeColor);
   };
+
+  // const removeCellColor = (id: string) => {
+  //   const removeColor = activeCells.filter((cell)=>{
+  //     return cell.id!==id
+  //   })
+
+  //   (prev: activeCellsObjet) => {
+  //     return { ...prev, [id]: { active: !prev[id], color: 'bg-slate-400' } };
+  //   };
+  //   setActiveCells(changeColor);
+  // };
+
   console.log(activeCells);
 
   return (
@@ -61,7 +82,7 @@ const Timetable = () => {
                     key={colIndex}
                     id={id}
                     className={`border border-gray-300 p-1.5 text-center ${
-                      activeCells[id] ? activeCells[id].color : 'bg-white'
+                      activeCells[id]?.active ? activeCells[id].color : ''
                     }`}
                     onMouseDown={() => handleMouseDown(id)}
                     onMouseOver={() => handleMouseOver(id)}
