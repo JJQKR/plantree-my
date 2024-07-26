@@ -17,8 +17,8 @@ export const useDiaryCover = () => {
     x: 150,
     y: 150
   });
-  const [coverTitleFontSize, setCoverTitleFontSize] = useState(24);
-  const [coverTitleWidth, setCoverTitleWidth] = useState(200);
+  const [coverTitleFontSize, setCoverTitleFontSize] = useState(30);
+  const [coverTitleWidth, setCoverTitleWidth] = useState(220);
   const [coverTitleRotation, setCoverTitleRotation] = useState(0);
   const [coverImage, setCoverImage] = useState<HTMLImageElement | null>(null);
   const [coverImagePosition, setCoverImagePosition] = useState<CoverPosition>({

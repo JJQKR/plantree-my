@@ -323,124 +323,126 @@ const DiaryCoverPage: React.FC = () => {
   // };
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen bg-gray-200">
-      <div className="max-w-lg w-full mb-4">
-        <div className="relative w-full pb-[156.25%] overflow-hidden">
-          <Stage
-            className="absolute top-0 left-0 w-full h-full"
-            width={coverStageSize.width}
-            height={coverStageSize.height}
-            ref={stageRef}
-            onClick={handleStageClick}
-          >
-            <Layer>
-              <Rect
-                x={0}
-                y={0}
-                width={coverStageSize.width}
-                height={coverStageSize.height}
-                fill={coverBackgroundColor}
-              />
-              {coverImage && (
-                <KonvaImage
-                  image={coverImage}
-                  x={coverImagePosition.x * coverScale}
-                  y={coverImagePosition.y * coverScale}
-                  width={coverImageSize.width}
-                  height={coverImageSize.height}
+    <div className="flex flex-col h-screen overflow-hidden">
+      <div className="flex-grow flex flex-col justify-center items-center overflow-auto">
+        <div className="max-w-lg w-full mb-4">
+          <div className="relative w-full pb-[156.25%] overflow-hidden">
+            <Stage
+              className="absolute top-0 left-0 w-full h-full"
+              width={coverStageSize.width}
+              height={coverStageSize.height}
+              ref={stageRef}
+              onClick={handleStageClick}
+            >
+              <Layer>
+                <Rect
+                  x={0}
+                  y={0}
+                  width={coverStageSize.width}
+                  height={coverStageSize.height}
+                  fill={coverBackgroundColor}
+                />
+                {coverImage && (
+                  <KonvaImage
+                    image={coverImage}
+                    x={coverImagePosition.x * coverScale}
+                    y={coverImagePosition.y * coverScale}
+                    width={coverImageSize.width}
+                    height={coverImageSize.height}
+                    draggable
+                    ref={imageRef}
+                    onDragEnd={handleImageChange}
+                    onTransformEnd={handleImageTransform}
+                    onClick={handleImageSelect}
+                    onTap={handleImageSelect}
+                    scaleX={coverScale}
+                    scaleY={coverScale}
+                  />
+                )}
+                <Text
+                  text={coverTitle}
+                  fontSize={coverTitleFontSize}
+                  x={coverTitlePosition.x * coverScale}
+                  y={coverTitlePosition.y * coverScale}
+                  width={coverTitleWidth}
+                  fill="black"
                   draggable
-                  ref={imageRef}
-                  onDragEnd={handleImageChange}
-                  onTransformEnd={handleImageTransform}
-                  onClick={handleImageSelect}
-                  onTap={handleImageSelect}
+                  ref={textRef}
+                  onDragEnd={handleTextChange}
+                  onTransformEnd={handleTextTransform}
+                  onClick={handleTextSelect}
+                  onTap={handleTextSelect}
+                  onDblClick={handleTextDblClick}
+                  onDblTap={handleTextDblClick}
+                  wrap="word"
                   scaleX={coverScale}
                   scaleY={coverScale}
                 />
-              )}
-              <Text
-                text={coverTitle}
-                fontSize={coverTitleFontSize}
-                x={coverTitlePosition.x * coverScale}
-                y={coverTitlePosition.y * coverScale}
-                width={coverTitleWidth}
-                fill="black"
-                draggable
-                ref={textRef}
-                onDragEnd={handleTextChange}
-                onTransformEnd={handleTextTransform}
-                onClick={handleTextSelect}
-                onTap={handleTextSelect}
-                onDblClick={handleTextDblClick}
-                onDblTap={handleTextDblClick}
-                wrap="word"
-                scaleX={coverScale}
-                scaleY={coverScale}
-              />
-              {coverSelectedElement && (
-                <Transformer
-                  ref={trRef}
-                  boundBoxFunc={(oldBox, newBox) => ({
-                    ...newBox,
-                    width: Math.max(20, newBox.width),
-                    height: Math.max(20, newBox.height)
-                  })}
-                  resizeEnabled={true}
-                  enabledAnchors={[
-                    'top-left',
-                    'top-right',
-                    'bottom-left',
-                    'bottom-right',
-                    'middle-left',
-                    'middle-right'
-                  ]}
-                />
-              )}
-            </Layer>
-          </Stage>
-        </div>
-      </div>
-
-      <div className="flex flex-col items-center max-w-lg w-full">
-        <div className="flex flex-wrap items-center mb-4 w-full">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="mb-2 border border-gray-300 rounded p-2 w-full md:w-auto mr-2"
-          />
-          <div className="flex items-center mb-2 mr-2">
-            <label htmlFor="colorPicker" className="mr-2 font-semibold">
-              색 선택:
-            </label>
-            <input
-              type="color"
-              id="colorPicker"
-              value={coverBackgroundColor}
-              onChange={handleBackgroundColorChange}
-              className="border border-gray-300 rounded"
-            />
+                {coverSelectedElement && (
+                  <Transformer
+                    ref={trRef}
+                    boundBoxFunc={(oldBox, newBox) => ({
+                      ...newBox,
+                      width: Math.max(20, newBox.width),
+                      height: Math.max(20, newBox.height)
+                    })}
+                    resizeEnabled={true}
+                    enabledAnchors={[
+                      'top-left',
+                      'top-right',
+                      'bottom-left',
+                      'bottom-right',
+                      'middle-left',
+                      'middle-right'
+                    ]}
+                  />
+                )}
+              </Layer>
+            </Stage>
           </div>
-          <button
-            onClick={handleDownload}
-            className="mb-2 px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300 mr-2"
-          >
-            다운로드
-          </button>
-
-          <button
-            onClick={handleSave}
-            className="mb-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300 mr-2"
-          >
-            저장
-          </button>
         </div>
-        {/* <button
+
+        <div className="flex flex-col items-center max-w-lg w-full">
+          <div className="flex flex-wrap items-center mb-4 w-full">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="mb-2 border border-gray-300 rounded p-2 w-full md:w-auto mr-2"
+            />
+            <div className="flex items-center mb-2 mr-2">
+              <label htmlFor="colorPicker" className="mr-2 font-semibold">
+                색 선택:
+              </label>
+              <input
+                type="color"
+                id="colorPicker"
+                value={coverBackgroundColor}
+                onChange={handleBackgroundColorChange}
+                className="border border-gray-300 rounded"
+              />
+            </div>
+            <button
+              onClick={handleDownload}
+              className="mb-2 px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300 mr-2"
+            >
+              다운로드
+            </button>
+
+            <button
+              onClick={handleSave}
+              className="mb-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300 mr-2"
+            >
+              저장
+            </button>
+          </div>
+          {/* <button
           onClick={handleGoToTestPage}
           className=" px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300"
         >
           테스트 페이지로 이동
         </button> */}
+        </div>
       </div>
     </div>
   );
