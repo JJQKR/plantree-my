@@ -10,7 +10,13 @@ const SocialModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   const handleKakaoLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'kakao'
+      provider: 'kakao',
+      options: {
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent'
+        }
+      }
     });
     if (error) console.log('Kakao login error:', error.message);
   };
