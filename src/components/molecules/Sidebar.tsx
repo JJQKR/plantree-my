@@ -69,6 +69,8 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
                 <div className="w-[120px] h-[120px] bg-white rounded-full mb-2"></div> {/* 프로필 이미지 영역 */}
                 <span className="text-white text-lg font-bold">{nickname || 'Guest'}</span>
                 <div className="text-white text-sm">{levelName || 'Level not set'}</div>
+                <div className="text-white text-sm">{attendance}</div>
+                <div className="text-white text-sm">열심히 나무를 키워보세요!</div>
               </div>
             </li>
             {cards.map((card) => (
