@@ -3,11 +3,23 @@ import create from 'zustand';
 interface UserState {
   nickname: string;
   setNickname: (nickname: string) => void;
+  levelName: string | null;
+  setLevelName: (levelName: string | null) => void;
+  membershipDays: number | null;
+  setMembershipDays: (membershipDays: number | null) => void;
+  attendance: number;
+  setAttendance: (attendance: number) => void;
 }
 
 const useUserStore = create<UserState>((set) => ({
   nickname: '',
-  setNickname: (nickname) => set({ nickname })
+  setNickname: (nickname) => set({ nickname }),
+  levelName: null,
+  setLevelName: (LevelName) => set({ levelName }),
+  membershipDays: null,
+  setMembershipDays: (days) => set({ membershipDays }),
+  attendance: 0,
+  setAttendance: (attendance) => set({ attendance })
 }));
 
 export default useUserStore;

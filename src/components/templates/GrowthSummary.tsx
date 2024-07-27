@@ -94,7 +94,7 @@ const GrowthSummary = () => {
     <div>
       <p>{levelName}</p>
       {nickname}님의 정원✨
-      <p>플랜트리와 함께 100일째,</p>
+      <p>플랜트리와 함께 {membershipDays}일째,</p>
       <p>열심히 나무를 키우고 계시네요!</p>
     </div>
   );
