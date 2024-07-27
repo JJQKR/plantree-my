@@ -11,9 +11,7 @@ const Timetable = () => {
   const [activeCells, setActiveCells] = useState<activeCellsObjet>({});
   const [isMouseDown, setIsMouseDown] = useState(false);
 
-  const { color: newColor, saveColor } = useColorStore((state) => state);
-
-  console.log(newColor);
+  const { color: newColor } = useColorStore((state) => state);
 
   const rows = 24;
   const columns = 6;
@@ -29,7 +27,6 @@ const Timetable = () => {
     if (isMouseDown) {
       toggleCellColor(id);
     }
-    delete activeCells.id;
   };
 
   const handleMouseUp = () => {
@@ -44,24 +41,11 @@ const Timetable = () => {
         delete newCells[id];
         return newCells;
       } else {
-        return { ...prev, [id]: { active: !prev[id], color: newColor } };
+        return { ...prev, [id]: { active: !prev[id], color: `bg-${newColor}` } };
       }
     };
     setActiveCells(changeColor);
   };
-
-  // const removeCellColor = (id: string) => {
-  //   const removeColor = activeCells.filter((cell)=>{
-  //     return cell.id!==id
-  //   })
-
-  //   (prev: activeCellsObjet) => {
-  //     return { ...prev, [id]: { active: !prev[id], color: 'bg-slate-400' } };
-  //   };
-  //   setActiveCells(changeColor);
-  // };
-
-  console.log(activeCells);
 
   return (
     <div className="border-2 relative h-full" onMouseUp={handleMouseUp}>

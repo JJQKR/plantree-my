@@ -5,7 +5,7 @@ import { FaCircle } from 'react-icons/fa';
 
 const ColorModal = () => {
   const { toggleTenMinPlanerColorModal } = useMyModalStore((state) => state);
-  const { saveColor, color } = useColorStore((state) => state);
+  const { saveColor, color: newColor } = useColorStore((state) => state);
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -15,10 +15,9 @@ const ColorModal = () => {
 
   const selectColor = (color: string) => {
     saveColor(color);
+    toggleTenMinPlanerColorModal();
   };
-
-  console.log(color);
-
+  console.log(newColor);
   return (
     <div
       onClick={handleOutsideClick}
