@@ -71,7 +71,6 @@ const Timetable = () => {
             <tr key={rowIndex}>
               {Array.from({ length: columns }, (_, colIndex) => {
                 const id = `${rowIndex}${(colIndex + 1) * 10}`;
-                console.log(activeCells[id]?.color);
                 return (
                   <td
                     key={colIndex}

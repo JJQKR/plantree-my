@@ -56,7 +56,7 @@ const TenMinPlaner = () => {
     setGoal(e.target.value);
   };
 
-  const handleMemo = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMemo = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMemo(e.target.value);
   };
 
@@ -103,13 +103,8 @@ const TenMinPlaner = () => {
           </div>
         </div>
         <div>
-          <ParchmentInput
-            identity="tenMinPlanerRegular"
-            label="memo"
-            id="memo"
-            innerClassName="h-20"
-            onChange={handleMemo}
-          />
+          <label htmlFor="memo">memo</label>
+          <textarea id="memo" className="h-20 w-full" onChange={handleMemo} />
         </div>
       </div>
     </div>
