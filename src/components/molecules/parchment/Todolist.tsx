@@ -6,8 +6,14 @@ import { FaPlus } from 'react-icons/fa6';
 import useMyModalStore from '@/stores/my.modal.store';
 import { FaCircle } from 'react-icons/fa';
 import ColorModal from './ColorModal';
-import useColorStore from '@/stores/color.stor';
 import useTodoListStore from '@/stores/todoList.stor';
+
+type Todo = {
+  id: string;
+  text: string;
+  isDone: boolean;
+  color: string;
+};
 
 const Todolist: React.FC = () => {
   const [todoInput, setTodoInput] = useState<string>('');
@@ -16,6 +22,8 @@ const Todolist: React.FC = () => {
     todoList,
     editingId,
     editingText,
+    selectTodo,
+    selectTodoId,
     addTodo,
     toggleTodoCompletion,
     removeTodo,
@@ -24,7 +32,6 @@ const Todolist: React.FC = () => {
     editTodo
   } = useTodoListStore((state) => state);
   const { isTenMinPlanerColorModalOpen, toggleTenMinPlanerColorModal } = useMyModalStore((state) => state);
-  const { color: newColor } = useColorStore((state) => state);
 
   const updateTodoInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTodoInput(e.target.value);
@@ -32,9 +39,11 @@ const Todolist: React.FC = () => {
 
   const handleAddTodo = () => {
     if (todoInput.trim() === '') return;
-    addTodo({ id: uuid(), text: todoInput, isDone: false, color: newColor });
+    addTodo({ id: uuid(), text: todoInput, isDone: false, color: 'transparent' });
     setTodoInput('');
   };
+
+  console.log(todoList);
 
   const submitOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -45,7 +54,7 @@ const Todolist: React.FC = () => {
   };
 
   const handleToggle = (id: string) => {
-    toggleTodoCompletion(id, newColor);
+    toggleTodoCompletion(id);
   };
 
   const handleEditingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,15 +69,29 @@ const Todolist: React.FC = () => {
     }
   };
 
+  const openModal = (id: string) => {
+    toggleTenMinPlanerColorModal();
+    selectTodoId(id);
+  };
+
+  const handleSelectTodo = (todo: Todo) => {
+    if (todo.color === 'transparent') {
+      alert('컬러를 먼저 지정해주세요');
+      return;
+    }
+    selectTodo(todo);
+  };
+
   return (
     <div className="border-2 border-gray-500 h-96">
       <h2>todolist</h2>
       <div className="w-ful">
         <ul className="relative">
           {todoList.map((todo) => {
+            console.log(`bg-${todo.color}`);
             return (
               <li key={todo.id} className={`flex flex-row border ${todo.isDone ? `bg-${todo.color}` : 'no-underline'}`}>
-                <span onClick={() => toggleTenMinPlanerColorModal()} className={`text-${newColor}`}>
+                <span onClick={() => openModal(todo.id)} className={`text-${todo.color}`}>
                   <FaCircle />
                 </span>
                 <input type="checkbox" onClick={() => handleToggle(todo.id)} />
@@ -82,9 +105,10 @@ const Todolist: React.FC = () => {
                 ) : (
                   <span onClick={() => startEditing(todo.id)}>{todo.text}</span>
                 )}
-                <button onClick={() => removeTodo(todo.id)} className="absolute right-1">
-                  ✕
-                </button>
+                <div className="absolute right-1">
+                  <button onClick={() => handleSelectTodo(todo)}>선택</button>
+                  <button onClick={() => removeTodo(todo.id)}>✕</button>
+                </div>
               </li>
             );
           })}

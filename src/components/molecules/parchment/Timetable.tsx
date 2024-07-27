@@ -1,17 +1,17 @@
 'use client';
 
-import useColorStore from '@/stores/color.stor';
+import useTodoListStore from '@/stores/todoList.stor';
 import React, { useState } from 'react';
 
 type activeCellsObjet = {
-  [key: string]: { active: boolean; color: string };
+  [key: string]: { active: boolean; color: string; id: string };
 };
 
 const Timetable = () => {
   const [activeCells, setActiveCells] = useState<activeCellsObjet>({});
   const [isMouseDown, setIsMouseDown] = useState(false);
 
-  const { color: newColor } = useColorStore((state) => state);
+  const { todo } = useTodoListStore((state) => state);
 
   const rows = 24;
   const columns = 6;
@@ -19,9 +19,14 @@ const Timetable = () => {
   const hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
 
   const handleMouseDown = (id: string) => {
+    if (!todo.id) {
+      alert('todolist에서 todo를 선택해주세요');
+      return;
+    }
     setIsMouseDown(true);
     toggleCellColor(id);
   };
+  console.log(activeCells);
 
   const handleMouseOver = (id: string) => {
     if (isMouseDown) {
@@ -41,7 +46,7 @@ const Timetable = () => {
         delete newCells[id];
         return newCells;
       } else {
-        return { ...prev, [id]: { active: !prev[id], color: `bg-${newColor}` } };
+        return { ...prev, [id]: { active: !prev[id], color: todo.color, id: todo.id } };
       }
     };
     setActiveCells(changeColor);
@@ -66,12 +71,13 @@ const Timetable = () => {
             <tr key={rowIndex}>
               {Array.from({ length: columns }, (_, colIndex) => {
                 const id = `${rowIndex}${(colIndex + 1) * 10}`;
+                console.log(activeCells[id]?.color);
                 return (
                   <td
                     key={colIndex}
                     id={id}
                     className={`border border-gray-300 p-1.5 text-center ${
-                      activeCells[id]?.active ? activeCells[id].color : 'transparent'
+                      activeCells[id]?.active ? `bg-${activeCells[id]?.color}` : 'transparent'
                     }`}
                     onMouseDown={() => handleMouseDown(id)}
                     onMouseOver={() => handleMouseOver(id)}

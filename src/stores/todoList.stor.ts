@@ -8,21 +8,38 @@ interface Todo {
 }
 
 interface TodoListStore {
+  todo: Todo;
+  todoId: string;
   todoList: Todo[];
   editingId: string | null;
   editingText: string;
+  selectTodo: (todo: Todo) => void;
+  selectTodoId: (id: string) => void;
   addTodo: (todo: Todo) => void;
   removeTodo: (id: string) => void;
-  toggleTodoCompletion: (id: string, newColor: string) => void;
+  toggleTodoCompletion: (id: string) => void;
+  changeTodoColor: (id: string, newColor: string) => void;
   startEditing: (id: string) => void;
   stopEditing: () => void;
   editTodo: (id: string, text: string) => void;
 }
 
 const useTodoListStore = create<TodoListStore>((set) => ({
+  todo: { id: '', text: '', isDone: false, color: '' },
+  todoId: '',
   todoList: [],
   editingId: null,
   editingText: '',
+  // todo 전달
+  selectTodo: (todo: Todo) =>
+    set(() => ({
+      todo: todo
+    })),
+  // todo Id 전달
+  selectTodoId: (id) =>
+    set(() => ({
+      todoId: id
+    })),
   // todo 추가
   addTodo: (todo) =>
     set((state) => ({
@@ -34,12 +51,16 @@ const useTodoListStore = create<TodoListStore>((set) => ({
       todoList: state.todoList.filter((todo) => todo.id !== id)
     })),
   // todo isDone 요소 변경
-  toggleTodoCompletion: (id, newColor) =>
+  toggleTodoCompletion: (id) =>
     set((state) => ({
-      todoList: state.todoList.map((todo) =>
-        todo.id === id ? { ...todo, isDone: !todo.isDone, color: newColor } : todo
-      )
+      todoList: state.todoList.map((todo) => (todo.id === id ? { ...todo, isDone: !todo.isDone } : todo))
     })),
+  // todo color 요소 변경
+  changeTodoColor: (id, newColor) =>
+    set((state) => ({
+      todoList: state.todoList.map((todo) => (todo.id === id ? { ...todo, color: newColor } : todo))
+    })),
+
   // 특정 todo의 할 일을 편집 상태로 만들기
   startEditing: (id) =>
     set((state) => ({
