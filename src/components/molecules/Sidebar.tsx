@@ -9,25 +9,49 @@ import { supabase } from '../../supabase/client';
 import useUserStore from '@/stores/user.store'; // 유저 상태 관리 스토어 추가
 
 const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
-  const { nickname, setNickname } = useUserStore((state) => state); // 유저 상태 관리 스토어에서 닉네임 가져오기
+  const { nickname, setNickname, levelName, setLevelName } = useUserStore((state) => state); // 유저 상태 관리 스토어에서 닉네임 및 레벨 이름 가져오기
 
   useEffect(() => {
-    const fetchNickname = async () => {
+    const fetchUserData = async () => {
       const {
         data: { user }
       } = await supabase.auth.getUser();
       if (user) {
-        const { data, error } = await supabase.from('users').select('nickname').eq('id', user.id).single();
-        if (error) {
-          console.error('닉네임 가져오기 실패:', error);
+        const { data: nicknameData, error: nicknameError } = await supabase
+          .from('users')
+          .select('nickname')
+          .eq('id', user.id)
+          .single();
+        if (nicknameError) {
+          console.error('닉네임 가져오기 실패:', nicknameError);
         } else {
-          setNickname(data.nickname); // 전역 상태에 닉네임 설정
+          setNickname(nicknameData.nickname); // 전역 상태에 닉네임 설정
+        }
+
+        const { data: levelData, error: levelError } = await supabase
+          .from('users')
+          .select('level_id')
+          .eq('id', user.id)
+          .single();
+        if (levelError) {
+          console.error('레벨 가져오기 실패:', levelError);
+        } else if (levelData.level_id) {
+          const { data: levelNameData, error: levelNameError } = await supabase
+            .from('level')
+            .select('name')
+            .eq('id', levelData.level_id)
+            .single();
+          if (levelNameError) {
+            console.error('레벨 이름 가져오기 실패:', levelNameError);
+          } else {
+            setLevelName(levelNameData.name); // 전역 상태에 레벨 이름 설정
+          }
         }
       }
     };
 
-    fetchNickname();
-  }, [setNickname]);
+    fetchUserData();
+  }, [setNickname, setLevelName]);
 
   return (
     <div className="w-[260px] h-[930px] bg-gray-700 text-white flex-shrink-0">
@@ -44,8 +68,8 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
               <div className="flex flex-col items-center mb-10">
                 <div className="w-[120px] h-[120px] bg-white rounded-full mb-2"></div> {/* 프로필 이미지 영역 */}
                 <span className="text-white text-lg font-bold">{nickname || 'Guest'}</span>
+                <div className="text-white text-sm">{levelName || 'Level not set'}</div>
               </div>
-              {/* {nickname && <span className="absolute top-3 left-3 text-white text-lg font-bold">{nickname}</span>} */}
             </li>
             {cards.map((card) => (
               <li
