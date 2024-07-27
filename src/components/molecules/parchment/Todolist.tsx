@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import uuid from 'react-uuid';
 import { FaPlus } from 'react-icons/fa6';
 import useMyModalStore from '@/stores/my.modal.store';
 import { FaCircle } from 'react-icons/fa';
 import ColorModal from './ColorModal';
+import useColorStore from '@/stores/color.stor';
 
 type Todo = {
   id: string;
@@ -20,6 +21,8 @@ const Todolist: React.FC = () => {
   const [editingText, setEditingText] = useState<string>('');
 
   const { isTenMinPlanerColorModalOpen, toggleTenMinPlanerColorModal } = useMyModalStore((state) => state);
+  const { color } = useColorStore((state) => state);
+  console.log(color);
 
   const updateTodoInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTodoInput(e.target.value);
@@ -80,7 +83,7 @@ const Todolist: React.FC = () => {
           {todoList.map((todo) => {
             return (
               <li key={todo.id} className={`flex flex-row border ${todo.isDone ? 'bg-yellow-400' : 'no-underline'}`}>
-                <span onClick={() => handleColorModal(todo.id)}>
+                <span onClick={() => handleColorModal(todo.id)} className={`text-${color}`}>
                   <FaCircle />
                 </span>
                 <input type="checkbox" onClick={() => toggleTodoCompletion(todo.id)} />

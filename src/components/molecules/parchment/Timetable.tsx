@@ -1,5 +1,6 @@
 'use client';
 
+import useColorStore from '@/stores/color.stor';
 import React, { useState } from 'react';
 
 type activeCellsObjet = {
@@ -9,6 +10,10 @@ type activeCellsObjet = {
 const Timetable = () => {
   const [activeCells, setActiveCells] = useState<activeCellsObjet>({});
   const [isMouseDown, setIsMouseDown] = useState(false);
+
+  const { color: newColor, saveColor } = useColorStore((state) => state);
+
+  console.log(newColor);
 
   const rows = 24;
   const columns = 6;
@@ -39,7 +44,7 @@ const Timetable = () => {
         delete newCells[id];
         return newCells;
       } else {
-        return { ...prev, [id]: { active: !prev[id], color: 'bg-white' } };
+        return { ...prev, [id]: { active: !prev[id], color: newColor } };
       }
     };
     setActiveCells(changeColor);
@@ -82,7 +87,7 @@ const Timetable = () => {
                     key={colIndex}
                     id={id}
                     className={`border border-gray-300 p-1.5 text-center ${
-                      activeCells[id]?.active ? activeCells[id].color : ''
+                      activeCells[id]?.active ? activeCells[id].color : 'transparent'
                     }`}
                     onMouseDown={() => handleMouseDown(id)}
                     onMouseOver={() => handleMouseOver(id)}

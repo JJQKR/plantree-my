@@ -1,15 +1,23 @@
+import useColorStore from '@/stores/color.stor';
 import useMyModalStore from '@/stores/my.modal.store';
-import React from 'react';
+import React, { useState } from 'react';
 import { FaCircle } from 'react-icons/fa';
 
 const ColorModal = () => {
   const { toggleTenMinPlanerColorModal } = useMyModalStore((state) => state);
+  const { saveColor, color } = useColorStore((state) => state);
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       toggleTenMinPlanerColorModal();
     }
   };
+
+  const selectColor = (color: string) => {
+    saveColor(color);
+  };
+
+  console.log(color);
 
   return (
     <div
@@ -22,9 +30,15 @@ const ColorModal = () => {
           ✕
         </button>
         <div className="flex flex-row">
-          <FaCircle size={50} color="FFC5C5" onClick={() => {}} />
-          <FaCircle size={50} color="FDFFAB" />
-          <FaCircle size={50} color="D8EFD3" />
+          <div className="text-red-300">
+            <FaCircle size={50} onClick={() => selectColor('red-300')} />
+          </div>
+          <div className="text-amber-200">
+            <FaCircle size={50} onClick={() => selectColor('amber-200')} />
+          </div>
+          <div className="text-green-300">
+            <FaCircle size={50} onClick={() => selectColor('green-200')} />
+          </div>
         </div>
       </div>
     </div>
