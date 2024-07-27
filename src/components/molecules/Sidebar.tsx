@@ -7,9 +7,10 @@ import Link from 'next/link';
 import { DiAptana } from 'react-icons/di';
 import { supabase } from '../../supabase/client';
 import useUserStore from '@/stores/user.store'; // 유저 상태 관리 스토어 추가
+import AttendanceCheck from './AttendanceCheck';
 
 const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
-  const { nickname, setNickname, levelName, setLevelName } = useUserStore((state) => state); // 유저 상태 관리 스토어에서 닉네임 및 레벨 이름 가져오기
+  const { nickname, setNickname, levelName, setLevelName, attendance } = useUserStore((state) => state); // 유저 상태 관리 스토어에서 닉네임 및 레벨 이름 가져오기
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -56,6 +57,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
   return (
     <div className="w-[260px] h-[930px] bg-gray-700 text-white flex-shrink-0">
       <div className="p-4">
+        <AttendanceCheck />
         <button onClick={onClose} className="mb-4 text-[20px]">
           Close
         </button>
@@ -69,7 +71,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
                 <div className="w-[120px] h-[120px] bg-white rounded-full mb-2"></div> {/* 프로필 이미지 영역 */}
                 <span className="text-white text-lg font-bold">{nickname || 'Guest'}</span>
                 <div className="text-white text-sm">{levelName || 'Level not set'}</div>
-                <div className="text-white text-sm">{attendance}</div>
+                <div className="text-white text-sm">출석 횟수: {attendance}</div>
                 <div className="text-white text-sm">열심히 나무를 키워보세요!</div>
               </div>
             </li>
