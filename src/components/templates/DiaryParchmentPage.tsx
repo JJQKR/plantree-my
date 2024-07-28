@@ -4,15 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
 import { addCover } from '@/services/cover.service';
 
-const dummyData = [
-  'https://via.placeholder.com/384x600?text=Page+1',
-  'https://via.placeholder.com/384x600?text=Page+2',
-  'https://via.placeholder.com/384x600?text=Page+3',
-  'https://via.placeholder.com/384x600?text=Page+4',
-  'https://via.placeholder.com/384x600?text=Page+5',
-  'https://via.placeholder.com/384x600?text=Page+6',
-  'https://via.placeholder.com/384x600?text=Page+7'
-];
+const dummyData = ['https://via.placeholder.com/384x600?text=Page+1'];
 
 const addParchmentPages = [
   'https://via.placeholder.com/384x600?text=New+Page+1',
@@ -48,7 +40,7 @@ const DiaryParchmentPage: React.FC = () => {
   };
 
   const handleNextPage = () => {
-    if (currentPage < pages.length - 2) {
+    if (currentPage < pages.length) {
       setCurrentPage(currentPage + 2);
     }
   };
@@ -96,30 +88,40 @@ const DiaryParchmentPage: React.FC = () => {
     };
   }, [showPageOptions]);
 
+  const renderPage = (pageUrl: string, pageIndex: number) => (
+    <div className="relative w-11/12 h-11/12 bg-white shadow-lg p-2">
+      <img src={pageUrl} className="w-full h-full object-cover" />
+      <div className="absolute top-2 right-2  text-gray-800 text-xs px-2 py-1 rounded">Page {pageIndex + 1}</div>
+    </div>
+  );
+
   return (
     <div className="flex flex-col overflow-hidden">
       <div className="flex flex-grow">
         <div className="w-1/2 border-r border-gray-300 flex items-center justify-center">
-          <div className="w-11/12 h-11/12 bg-white shadow-lg p-2">
-            <img src={pages[currentPage]} className="w-full h-full object-cover" />
-          </div>
+          {pages[currentPage] ? (
+            renderPage(pages[currentPage], currentPage)
+          ) : (
+            <div
+              className="w-96 h-96 flex items-center justify-center border-2 border-dashed border-gray-600 cursor-pointer"
+              onClick={handleAddPageClick}
+            >
+              <span className="text-gray-600 text-4xl">+ 속지 추가</span>
+            </div>
+          )}
         </div>
 
         <div className="w-1/2 flex items-center justify-center">
-          <div className="w-11/12 h-11/12 bg-white shadow-lg p-2">
-            {currentPage + 1 < pages.length ? (
-              <img src={pages[currentPage + 1]} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
+          {pages[currentPage + 1]
+            ? renderPage(pages[currentPage + 1], currentPage + 1)
+            : currentPage < pages.length && (
                 <div
-                  className="w-96 h-24 flex items-center justify-center border-2 border-dashed border-gray-400 cursor-pointer"
+                  className="w-96 h-96 flex items-center justify-center border-2 border-dashed border-gray-600 cursor-pointer"
                   onClick={handleAddPageClick}
                 >
-                  <span className="text-gray-400 text-4xl">+ 속지 추가</span>
+                  <span className="text-gray-600 text-4xl">+ 속지 추가</span>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
         </div>
       </div>
       <div className="flex justify-between m-4">
@@ -132,7 +134,7 @@ const DiaryParchmentPage: React.FC = () => {
         </button>
         <button
           onClick={handleNextPage}
-          disabled={currentPage >= pages.length - 2}
+          disabled={currentPage >= pages.length}
           className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300"
         >
           다음
