@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import useUserStore from '@/stores/user.store';
 
 const AttendanceCheck = () => {
-  const { userId, setAttendance, attendance } = useUserStore((state) => state);
+  const { userId, setAttendance } = useUserStore((state) => state);
 
   useEffect(() => {
     const handleAttendance = async () => {
@@ -12,33 +12,47 @@ const AttendanceCheck = () => {
       try {
         const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD 형식의 오늘 날짜
 
-        // 오늘 날짜의 출석 기록이 있는지 확인
-        const { data: attendanceData, error: attendanceError } = await supabase
-          .from('attendance')
-          .select('*')
-          .eq('user_id', userId)
-          .eq('date', today);
+        // users 테이블에서 attendance와 created_at 가져오기
+        const { data: userData, error: userError } = await supabase
+          .from('users')
+          .select('attendance, created_at')
+          .eq('id', userId)
+          .single();
+        if (userError) throw userError;
 
-        if (attendanceError) throw attendanceError;
+        const createdAtDate = userData.created_at ? new Date(userData.created_at).toISOString().split('T')[0] : null;
 
-        if (attendanceData.length === 0) {
-          // 오늘 날짜의 출석 기록이 없으면 출석 체크
-          const { data, error } = await supabase.from('attendance').insert([{ user_id: userId, date: today }]);
+        // Authentication users 테이블에서 Last Sign In 가져오기
+        const { data: authUserData, error: authUserError } = await supabase.auth.getUser();
+        if (authUserError) throw authUserError;
 
-          if (error) throw error;
+        const lastSignInDate = authUserData?.user?.last_sign_in_at
+          ? new Date(authUserData.user.last_sign_in_at).toISOString().split('T')[0]
+          : null;
+
+        // 출석 체크 조건: last_sign_in_at이 오늘이 아니거나 created_at이 오늘인 경우
+        if (lastSignInDate !== today) {
+          const newAttendanceCount = (userData.attendance || 0) + 1;
+
+          const { error: updateError } = await supabase
+            .from('users')
+            .update({ attendance: newAttendanceCount })
+            .eq('id', userId);
+
+          if (updateError) throw updateError;
 
           // 출석 횟수 업데이트
-          setAttendance(attendance + 1);
+          setAttendance(newAttendanceCount);
+
+          // 출석 체크 성공 알림
+          alert('출석체크 성공!');
+
+          // Authentication users 테이블의 last_sign_in_at 필드를 오늘 날짜로 업데이트
+          const { error: authUpdateError } = await supabase.auth.updateUser({
+            data: { last_sign_in_at: new Date().toISOString() }
+          });
+          if (authUpdateError) throw authUpdateError;
         } else {
-          // 이미 출석 기록이 있으면 현재 출석 횟수를 가져오기
-          const { data: userData, error: userError } = await supabase
-            .from('users')
-            .select('attendance')
-            .eq('id', userId)
-            .single();
-
-          if (userError) throw userError;
-
           setAttendance(userData.attendance);
         }
       } catch (error) {
@@ -47,7 +61,7 @@ const AttendanceCheck = () => {
     };
 
     handleAttendance();
-  }, [userId, attendance, setAttendance]);
+  }, [userId, setAttendance]);
 
   return null;
 };
