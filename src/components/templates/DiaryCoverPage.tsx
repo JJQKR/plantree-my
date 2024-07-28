@@ -3,7 +3,6 @@ import { useEffect, useRef } from 'react';
 import { Stage, Layer, Rect, Text, Transformer, Image as KonvaImage } from 'react-konva';
 import Konva from 'konva';
 import { KonvaEventObject } from 'konva/lib/Node';
-// import { addCover, updateCover, deleteCover } from '@/services/cover.service';
 import { supabase } from '@/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
@@ -198,8 +197,8 @@ const DiaryCoverPage: React.FC = () => {
 
     textarea.value = textNode.text();
     textarea.style.position = 'absolute';
-    textarea.style.top = `${stageBox.top + textPosition.y}px`;
-    textarea.style.left = `${stageBox.left + textPosition.x}px`;
+    textarea.style.top = `${stageBox.top + textPosition.y + window.scrollY}px`;
+    textarea.style.left = `${stageBox.left + textPosition.x + window.scrollX}px`;
     textarea.style.width = `${textNode.width() - textNode.padding() * 2}px`;
     textarea.style.height = `${textNode.height() + textNode.fontSize()}px`;
     textarea.style.fontSize = `${textNode.fontSize()}px`;
@@ -324,10 +323,10 @@ const DiaryCoverPage: React.FC = () => {
   };
 
   const handleResize = () => {
-    const newWidth = window.innerWidth > 512 ? 512 : window.innerWidth;
-    const newHeight = (newWidth / 512) * 800;
+    const newWidth = window.innerWidth > 384 ? 384 : window.innerWidth;
+    const newHeight = (newWidth / 384) * 600;
     setCoverStageSize({ width: newWidth, height: newHeight });
-    setCoverScale(newWidth / 512);
+    setCoverScale(newWidth / 384);
   };
 
   useEffect(() => {
@@ -364,17 +363,16 @@ const DiaryCoverPage: React.FC = () => {
 
   const handleAddText = () => {
     setCoverTitle('더블클릭후 작성');
-    setCoverTitlePosition({ x: 150, y: 150 });
+    setCoverTitlePosition({ x: 80, y: 150 });
     setCoverTitleFontSize(30);
     setCoverTitleWidth(220);
     setCoverTitleRotation(0);
-    setCoverSelectedElement(textRef.current);
   };
 
   return (
-    <div className="flex flex-col  overflow-hidden">
+    <div className="flex flex-col overflow-hidden">
       <div className="flex-grow flex flex-col justify-center items-center overflow-auto">
-        <div className="max-w-lg w-full mb-4">
+        <div className="max-w-sm w-full mb-4">
           <div className="relative w-full pb-[156.25%] overflow-hidden">
             <Stage
               className="absolute top-0 left-0 w-full h-full"
@@ -451,7 +449,7 @@ const DiaryCoverPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-col items-center max-w-lg w-full">
+        <div className="flex flex-col items-center max-w-sm w-full">
           <div className="flex flex-wrap items-center mb-2 w-full">
             <div className="flex items-center mb-2 mr-2">
               <label htmlFor="imgChoice" className="mr-2 font-semibold">
