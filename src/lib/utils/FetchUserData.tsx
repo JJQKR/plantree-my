@@ -1,84 +1,73 @@
+'use client';
+
 import { supabase } from '@/supabase/client';
 import React, { useEffect } from 'react';
 import useUserStore from '@/stores/user.store';
 
 const FetchUserData = () => {
-  const { setUserId, setNickname, setLevelName } = useUserStore((state) => state);
+  const { setUserId, setNickname, setLevelName, setAttendance, setEmail } = useUserStore((state) => state);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      try {
-        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-        if (sessionError) {
-          throw sessionError;
-        }
-
-        const user = sessionData?.session?.user;
-        if (user) {
-          const { email, id } = user;
-          setUserId(id);
-          await fetchNickname(email);
-          await fetchLevelId(email);
-        } else {
-          console.error('User session not found.');
-        }
-      } catch (error) {
-        console.error('데이터 가져오기 실패:', error);
+      const { data: authData, error: authError } = await supabase.auth.getUser();
+      if (authError) {
+        console.error('Authentication user data fetch error:', authError);
+        return;
       }
-    };
 
-    const fetchNickname = async (email: string) => {
-      try {
-        const { data, error } = await supabase.from('users').select('nickname').eq('email', email).maybeSingle();
-        if (error) {
-          throw error;
-        }
-        if (data) {
-          setNickname(data.nickname);
-        } else {
-          console.error('Nickname not found for email:', email);
-        }
-      } catch (error) {
-        console.error('Nickname fetching error:', error);
-      }
-    };
+      const user = authData?.user;
+      if (user) {
+        console.log('Fetched user ID:', user.id); // 디버깅 코드 추가
+        setUserId(user.id);
+        setEmail(user.email);
 
-    const fetchLevelId = async (email: string) => {
-      try {
-        const { data, error } = await supabase.from('users').select('level_id').eq('email', email).maybeSingle();
-        if (error) {
-          throw error;
-        }
-        console.log('Fetched Level ID data:', data); // 데이터 로그 추가
-        if (data && data.level_id) {
-          await fetchLevelName(data.level_id);
+        const { data: nicknameData, error: nicknameError } = await supabase
+          .from('users')
+          .select('nickname')
+          .eq('id', user.id)
+          .single();
+        if (nicknameError) {
+          console.error('닉네임 가져오기 실패:', nicknameError);
         } else {
-          console.error('Level ID not found for email:', email);
+          setNickname(nicknameData.nickname); // 전역 상태에 닉네임 설정
         }
-      } catch (error) {
-        console.error('Level ID fetching error:', error);
-      }
-    };
 
-    const fetchLevelName = async (levelId: string) => {
-      try {
-        const { data, error } = await supabase.from('level').select('name').eq('id', levelId).maybeSingle();
-        if (error) {
-          throw error;
+        const { data: levelData, error: levelError } = await supabase
+          .from('users')
+          .select('level_id')
+          .eq('id', user.id)
+          .single();
+        if (levelError) {
+          console.error('레벨 가져오기 실패:', levelError);
+        } else if (levelData.level_id) {
+          const { data: levelNameData, error: levelNameError } = await supabase
+            .from('level')
+            .select('name')
+            .eq('id', levelData.level_id)
+            .single();
+          if (levelNameError) {
+            console.error('레벨 이름 가져오기 실패:', levelNameError);
+          } else {
+            setLevelName(levelNameData.name); // 전역 상태에 레벨 이름 설정
+          }
         }
-        console.log('Fetched Level Name data:', data); // 데이터 로그 추가
-        if (data) {
-          setLevelName(data.name);
+
+        // users 테이블에서 출석 횟수 가져오기
+        const { data: attendanceData, error: attendanceError } = await supabase
+          .from('users')
+          .select('attendance')
+          .eq('id', user.id)
+          .single();
+        if (attendanceError) {
+          console.error('출석 횟수 가져오기 실패:', attendanceError);
         } else {
-          console.error('Level name not found for level_id:', levelId);
+          setAttendance(attendanceData.attendance);
         }
-      } catch (error) {
-        console.error('Level name fetching error:', error);
       }
     };
 
     fetchUserData();
-  }, [setUserId, setNickname, setLevelName]);
+  }, [setNickname, setLevelName, setUserId, setAttendance, setEmail]);
 
   return null;
 };
