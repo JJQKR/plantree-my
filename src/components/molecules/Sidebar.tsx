@@ -30,7 +30,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
   }, [setNickname]);
 
   return (
-    <div className="w-[260px] h-[930px] bg-gray-700 text-white flex-shrink-0">
+    <div className="w-[320px] h-[930px] bg-gray-700 text-white flex-shrink-0">
       <div className="p-4">
         <button onClick={onClose} className="mb-4 text-[20px]">
           Close
