@@ -48,6 +48,7 @@ const DiaryCoverPage: React.FC = () => {
   const imageRef = useRef<Konva.Image | null>(null);
   const trRef = useRef<Konva.Transformer | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (trRef.current) {
@@ -345,12 +346,15 @@ const DiaryCoverPage: React.FC = () => {
       setCoverImage(null);
       setImageFile(null);
       setCoverSelectedElement(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Delete' && coverSelectedElement) {
+      if ((e.key === 'Delete' || e.key === 'Backspace') && coverSelectedElement) {
         handleDeleteElement();
       }
     };
@@ -461,6 +465,7 @@ const DiaryCoverPage: React.FC = () => {
                 accept="image/*"
                 onChange={handleImageUpload}
                 className="mb-2 border border-gray-300 rounded p-2 w-full md:w-auto mr-2"
+                ref={fileInputRef}
               />
             </div>
             <div className="flex items-center mb-2 mr-2">
