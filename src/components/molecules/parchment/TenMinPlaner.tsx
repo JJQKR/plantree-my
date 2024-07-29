@@ -107,6 +107,41 @@ const TenMinPlaner = () => {
           <textarea id="memo" className="h-20 w-full" onChange={handleMemo} />
         </div>
       </div>
+      <div className="relative w-1/2 custom-height border-2 border-red-400 flex flex-col gap-4 m-auto p-4">
+        <button className="absolute top-0 right-0 bg-red-400" onClick={updatePlaner}>
+          수정
+        </button>
+        <div className="flex gap-2">
+          <div className="w-1/3">
+            <ParchmentInput identity="tenMinPlanerRegular" label="date" id="date" type="date" onChange={handleDate} />
+          </div>
+          <div className="w-1/3 relative">
+            <ParchmentInput
+              identity="tenMinPlanerRegular"
+              label="d-day"
+              id="d-day"
+              type="date"
+              onChange={handleDdayDate}
+            />
+            <span className="absolute right-3 top-0 font-bold">{dday}</span>
+          </div>
+          <div className="w-1/3">
+            <ParchmentInput identity="tenMinPlanerRegular" label="goal" id="goal" onChange={handleGoal} />
+          </div>
+        </div>
+        <div className="flex flex-row gap-4 ">
+          <div className="w-1/2">
+            <Todolist />
+          </div>
+          <div className="w-1/2">
+            <Timetable />
+          </div>
+        </div>
+        <div>
+          <label htmlFor="memo">memo</label>
+          <textarea id="memo" className="h-20 w-full" onChange={handleMemo} />
+        </div>
+      </div>
     </div>
   );
 };
