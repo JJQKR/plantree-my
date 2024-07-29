@@ -39,43 +39,6 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
     setShowResetPasswordModal(false);
   };
 
-  const handleKakaoLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'kakao',
-      options: {
-        redirectTo: 'http://localhost:3000/member',
-        queryParams: {
-          access_type: 'offline',
-          prompt: 'consent'
-        }
-      }
-    });
-
-    if (error) {
-      console.error('Kakao login error:', error.message);
-    } else {
-      console.log('Kakao login successful');
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: 'http://localhost:3000/member',
-        queryParams: {
-          access_type: 'offline',
-          prompt: 'consent'
-        }
-      }
-    });
-    if (error) {
-      console.error('Google login error:', error.message);
-    } else {
-      console.log('Google login successful');
-    }
-  };
-
   const signIn = async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -126,15 +89,6 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
               <h2 className="text-center cursor-pointer text-rose-300" onClick={handleForgotPasswordClick}>
                 비밀번호를 잊어버리셨나요?
               </h2>
-              <button
-                className="w-full px-4 py-3 font-bold bg-yellow-300 text-black rounded"
-                onClick={handleKakaoLogin}
-              >
-                카카오톡 로그인
-              </button>
-              <button className="w-full px-4 py-3 font-bold bg-red-500 text-black rounded" onClick={handleGoogleLogin}>
-                구글 로그인
-              </button>
               <div className="flex flex-col gap-2 mt-4">
                 <button type="submit" className="w-full px-4 py-3 font-bold bg-gray-500 text-black rounded">
                   로그인
@@ -175,7 +129,7 @@ const ForgotPasswordModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
         redirectTo: 'http://localhost:3000/member/reset-password?token=YOUR_TOKEN'
       });
       if (error) throw error;
-      setMessage('인증번호가 이메일로 전송되었습니다.');
+      setMessage('인증 메일이 전송되었습니다.');
       setError(null);
     } catch (error) {
       console.error('비밀번호 재설정 실패:', error);
