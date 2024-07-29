@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import LoginModal from './LoginModal';
 import SignupModal from './SignupModal';
 import SocialModal from './SocialModal';
+import Image from 'next/image';
 
 const LandingHeader = () => {
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
@@ -44,9 +45,16 @@ const LandingHeader = () => {
   };
 
   return (
-    <header className="bg-green-400 text-white p-4">
+    <header className="bg-blue-200 text-white p-4">
       <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-2xl font-bold">My Landing Page</h1>
+        <h1 className="text-2xl font-bold">
+          <Image
+            src="/images/Plantree.png"
+            alt="Logo"
+            width={200} // 원하는 너비
+            height={50} // 원하는 높이
+          />
+        </h1>
         <div className="flex gap-4">
           {isLoggedIn ? (
             <button className="px-4 py-2 bg-red-500 rounded hover:bg-red-700" onClick={handleLogout}>

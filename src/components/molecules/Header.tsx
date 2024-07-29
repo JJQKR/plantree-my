@@ -6,6 +6,7 @@ import GridToggleButton from '../atoms/GridToggleButton';
 import { MainHeaderProps } from '@/types/main';
 import { useStore } from '@/stores/sidebar.store'; // 상태 가져오기
 import Link from 'next/link';
+import Image from 'next/image';
 
 const Header: React.FC<MainHeaderProps> = ({ toggleSidebar, toggleGrid }) => {
   // 상태 가져오기
@@ -16,7 +17,12 @@ const Header: React.FC<MainHeaderProps> = ({ toggleSidebar, toggleGrid }) => {
       <SideButton onClick={toggleSidebar}>Menu</SideButton>
       <div className="flex-grow flex justify-center">
         <Link href="/member">
-          <h1 className="text-2xl font-bold">Logo</h1>
+          <Image
+            src="/images/Plantree.png"
+            alt="Logo"
+            width={200} // 원하는 너비
+            height={50} // 원하는 높이
+          />
         </Link>
       </div>
       <GridToggleButton onClick={toggleGrid} gridView={gridView} />
