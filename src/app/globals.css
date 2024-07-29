@@ -11,12 +11,13 @@ body,
 }
 
 body {
-  width: 1024px;
-  height: 1024px;
+  width: 100%;
+  height: 100%;
   margin: 0 auto; /* 화면 중앙에 배치 */
   background: #eee;
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
   font-size: 14px;
+  /* overflow: hidden; */
   color: #000;
 }
 
