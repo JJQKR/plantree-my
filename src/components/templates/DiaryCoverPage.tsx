@@ -1,15 +1,16 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Stage, Layer, Rect, Text, Transformer, Image as KonvaImage } from 'react-konva';
 import Konva from 'konva';
 import { KonvaEventObject } from 'konva/lib/Node';
-import { useDiaryCover } from '@/lib/hooks/useDiaryCover';
-import { addCover, updateCover, deleteCover } from '@/services/cover.service';
 import { supabase } from '@/supabase/client';
 import { useRouter } from 'next/navigation';
+import { useDiaryCoverStore } from '@/stores/diarycover.store';
 
 const DiaryCoverPage: React.FC = () => {
   const router = useRouter();
+  const DiaryId = '1';
+
   const {
     coverTitle,
     setCoverTitle,
@@ -30,19 +31,23 @@ const DiaryCoverPage: React.FC = () => {
     coverSelectedElement,
     setCoverSelectedElement,
     coverScale,
+    setCoverScale,
     coverStageSize,
+    setCoverStageSize,
     coverTitleRotation,
     setCoverTitleRotation,
     coverImageRotation,
     setCoverImageRotation,
     imageFile,
     setImageFile,
-    stageRef,
-    textRef,
-    imageRef,
-    trRef,
-    textareaRef
-  } = useDiaryCover();
+    setCoverData
+  } = useDiaryCoverStore();
+
+  const stageRef = useRef<Konva.Stage | null>(null);
+  const textRef = useRef<Konva.Text | null>(null);
+  const imageRef = useRef<Konva.Image | null>(null);
+  const trRef = useRef<Konva.Transformer | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
     if (trRef.current) {
@@ -145,7 +150,7 @@ const DiaryCoverPage: React.FC = () => {
         }
       };
       img.onerror = (error) => {
-        console.error('Image load error:', error);
+        console.error('이미지 로드 에러:', error);
       };
     };
     reader.readAsDataURL(file);
@@ -192,8 +197,8 @@ const DiaryCoverPage: React.FC = () => {
 
     textarea.value = textNode.text();
     textarea.style.position = 'absolute';
-    textarea.style.top = `${stageBox.top + textPosition.y}px`;
-    textarea.style.left = `${stageBox.left + textPosition.x}px`;
+    textarea.style.top = `${stageBox.top + textPosition.y + window.scrollY}px`;
+    textarea.style.left = `${stageBox.left + textPosition.x + window.scrollX}px`;
     textarea.style.width = `${textNode.width() - textNode.padding() * 2}px`;
     textarea.style.height = `${textNode.height() + textNode.fontSize()}px`;
     textarea.style.fontSize = `${textNode.fontSize()}px`;
@@ -273,7 +278,9 @@ const DiaryCoverPage: React.FC = () => {
     }
   };
 
-  const handleSave = async () => {
+  const handleSaveAndContinue = async () => {
+    let publicUrl: string | null = null;
+
     if (imageFile) {
       const fileName = `${Date.now()}_${imageFile.name}`;
       const { data: uploadData, error: uploadError } = await supabase.storage
@@ -292,40 +299,80 @@ const DiaryCoverPage: React.FC = () => {
         return;
       }
 
-      const publicUrl = publicUrlData.publicUrl;
+      publicUrl = publicUrlData.publicUrl;
+    }
 
-      const coverData = {
-        cover_title: coverTitle,
-        cover_title_position: coverTitlePosition,
-        cover_title_fontsize: coverTitleFontSize,
-        cover_title_width: coverTitleWidth,
-        cover_title_rotation: coverTitleRotation,
-        cover_image: publicUrl,
-        cover_image_position: coverImagePosition,
-        cover_image_size: coverImageSize,
-        cover_image_rotation: coverImageRotation,
-        cover_bg_color: coverBackgroundColor,
-        cover_scale: coverScale,
-        cover_stage_size: coverStageSize
-      };
+    const coverData = {
+      cover_title: coverTitle || null,
+      cover_title_position: coverTitlePosition,
+      cover_title_fontsize: coverTitleFontSize,
+      cover_title_width: coverTitleWidth,
+      cover_title_rotation: coverTitleRotation,
+      cover_image: publicUrl,
+      cover_image_position: coverImagePosition,
+      cover_image_size: coverImageSize,
+      cover_image_rotation: coverImageRotation,
+      cover_bg_color: coverBackgroundColor,
+      cover_scale: coverScale,
+      cover_stage_size: coverStageSize
+    };
 
-      try {
-        const response = await addCover(coverData);
-        console.log('Cover 저장 성공:', response);
-      } catch (error) {
-        console.error('Error 저장실패:', error);
-      }
+    setCoverData(coverData);
+
+    router.push(`/member/diaryedit/${DiaryId}/diaryparchment`);
+  };
+
+  const handleResize = () => {
+    const newWidth = window.innerWidth > 384 ? 384 : window.innerWidth;
+    const newHeight = (newWidth / 384) * 600;
+    setCoverStageSize({ width: newWidth, height: newHeight });
+    setCoverScale(newWidth / 384);
+  };
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const handleDeleteElement = () => {
+    if (coverSelectedElement === textRef.current) {
+      setCoverTitle(null);
+      setCoverSelectedElement(null);
+    } else if (coverSelectedElement === imageRef.current) {
+      setCoverImage(null);
+      setImageFile(null);
+      setCoverSelectedElement(null);
     }
   };
 
-  // const handleGoToTestPage = () => {
-  //   router.push('/testPage');
-  // };
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Delete' && coverSelectedElement) {
+        handleDeleteElement();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [coverSelectedElement]);
+
+  const handleAddText = () => {
+    setCoverTitle('더블클릭후 작성');
+    setCoverTitlePosition({ x: 80, y: 150 });
+    setCoverTitleFontSize(30);
+    setCoverTitleWidth(220);
+    setCoverTitleRotation(0);
+  };
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    <div className="flex flex-col overflow-hidden">
       <div className="flex-grow flex flex-col justify-center items-center overflow-auto">
-        <div className="max-w-lg w-full mb-4">
+        <div className="max-w-sm w-full mb-4">
           <div className="relative w-full pb-[156.25%] overflow-hidden">
             <Stage
               className="absolute top-0 left-0 w-full h-full"
@@ -360,7 +407,7 @@ const DiaryCoverPage: React.FC = () => {
                   />
                 )}
                 <Text
-                  text={coverTitle}
+                  text={coverTitle ?? ''}
                   fontSize={coverTitleFontSize}
                   x={coverTitlePosition.x * coverScale}
                   y={coverTitlePosition.y * coverScale}
@@ -402,14 +449,20 @@ const DiaryCoverPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-col items-center max-w-lg w-full">
-          <div className="flex flex-wrap items-center mb-4 w-full">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="mb-2 border border-gray-300 rounded p-2 w-full md:w-auto mr-2"
-            />
+        <div className="flex flex-col items-center max-w-sm w-full">
+          <div className="flex flex-wrap items-center mb-2 w-full">
+            <div className="flex items-center mb-2 mr-2">
+              <label htmlFor="imgChoice" className="mr-2 font-semibold">
+                이미지 선택:
+              </label>
+              <input
+                id="imgChoice"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="mb-2 border border-gray-300 rounded p-2 w-full md:w-auto mr-2"
+              />
+            </div>
             <div className="flex items-center mb-2 mr-2">
               <label htmlFor="colorPicker" className="mr-2 font-semibold">
                 색 선택:
@@ -426,22 +479,22 @@ const DiaryCoverPage: React.FC = () => {
               onClick={handleDownload}
               className="mb-2 px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300 mr-2"
             >
-              다운로드
+              커버 다운로드
             </button>
 
             <button
-              onClick={handleSave}
+              onClick={handleSaveAndContinue}
               className="mb-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300 mr-2"
             >
-              저장
+              저장후 속지작성
+            </button>
+            <button
+              onClick={handleAddText}
+              className="mb-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300 mr-2"
+            >
+              제목 작성
             </button>
           </div>
-          {/* <button
-          onClick={handleGoToTestPage}
-          className=" px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300"
-        >
-          테스트 페이지로 이동
-        </button> */}
         </div>
       </div>
     </div>
