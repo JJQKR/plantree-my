@@ -55,6 +55,7 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
       console.log('로그인 성공:', data);
       onClose();
       window.location.reload();
+      window.location.href = 'http://localhost:3000/member';
     } catch (error) {
       console.error('로그인 실패:', error);
       setError(error instanceof Error ? error.message : 'An error occurred.');
