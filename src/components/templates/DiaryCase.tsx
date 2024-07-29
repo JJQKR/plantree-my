@@ -34,11 +34,11 @@ const DiaryCase: React.FC = () => {
         }`}
       >
         {gridView ? (
-          <div className="grid grid-cols-3 gap-4 max-w-full">
+          <div className="grid grid-cols-3 gap-10 max-w-full">
             {limitedCards.map((card) => (
               <div key={card.id} className="flex flex-col items-center">
                 <h2 className="mb-2 text-center text-lg font-bold">{card.name}</h2>
-                <div className="p-4 bg-white flex items-center justify-center rounded shadow-md w-[180px] h-[270px]">
+                <div className="p-4 bg-white flex items-center justify-center rounded shadow-md w-[250px] h-[400px]">
                   <p className="text-center">{card.content}</p>
                 </div>
               </div>
@@ -72,7 +72,7 @@ const DiaryCase: React.FC = () => {
           </Swiper>
         )}
       </div>
-      <div className="absolute bottom-4 right-4 z-50">
+      <div className="absolute bottom-4 right-4">
         <CreateDiaryButton onClick={handleCreateDiary} />
       </div>
     </div>
