@@ -1,5 +1,6 @@
 'use client';
 
+import { getBackgroundColorClass } from '@/lib/utils/tenMinPlanerColor';
 import useTodoListStore from '@/stores/todoList.stor';
 import React, { useState } from 'react';
 
@@ -26,7 +27,7 @@ const Timetable = () => {
     setIsMouseDown(true);
     toggleCellColor(id);
   };
-  console.log(activeCells);
+  // console.log(activeCells);
 
   const handleMouseOver = (id: string) => {
     if (isMouseDown) {
@@ -76,7 +77,7 @@ const Timetable = () => {
                     key={colIndex}
                     id={id}
                     className={`border border-gray-300 p-1.5 text-center ${
-                      activeCells[id]?.active ? `bg-${activeCells[id]?.color}` : 'transparent'
+                      activeCells[id]?.active ? getBackgroundColorClass(activeCells[id]?.color) : 'transparent'
                     }`}
                     onMouseDown={() => handleMouseDown(id)}
                     onMouseOver={() => handleMouseOver(id)}

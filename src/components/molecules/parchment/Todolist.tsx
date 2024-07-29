@@ -7,6 +7,7 @@ import useMyModalStore from '@/stores/my.modal.store';
 import { FaCircle } from 'react-icons/fa';
 import ColorModal from './ColorModal';
 import useTodoListStore from '@/stores/todoList.stor';
+import { getBackgroundColorClass, getColorClass } from '@/lib/utils/tenMinPlanerColor';
 
 type Todo = {
   id: string;
@@ -88,10 +89,13 @@ const Todolist: React.FC = () => {
       <div className="w-ful">
         <ul className="relative">
           {todoList.map((todo) => {
-            console.log(`bg-${todo.color}`);
+            console.log(getColorClass(todo.color));
             return (
-              <li key={todo.id} className={`flex flex-row border ${todo.isDone ? `bg-${todo.color}` : 'no-underline'}`}>
-                <span onClick={() => openModal(todo.id)} className={`text-${todo.color}`}>
+              <li
+                key={todo.id}
+                className={`flex flex-row border ${todo.isDone ? getBackgroundColorClass(todo.color) : 'no-underline'}`}
+              >
+                <span onClick={() => openModal(todo.id)} className={getColorClass(todo.color)}>
                   <FaCircle />
                 </span>
                 <input type="checkbox" onClick={() => handleToggle(todo.id)} />

@@ -30,13 +30,16 @@ const ColorModal = () => {
         </button>
         <div className="flex flex-row">
           <div className="text-red-300 border-2 rounded-full border-gray-300">
-            <FaCircle size={50} onClick={() => selectColor('red-300')} />
+            <FaCircle size={50} onClick={() => selectColor('red')} />
           </div>
-          <div className="text-amber-200 border-2 rounded-full border-gray-300">
-            <FaCircle size={50} onClick={() => selectColor('amber-200')} />
+          <div className="text-yellow-200 border-2 rounded-full border-gray-300">
+            <FaCircle size={50} onClick={() => selectColor('yellow')} />
           </div>
           <div className="text-green-300 border-2 rounded-full border-gray-300">
-            <FaCircle size={50} onClick={() => selectColor('green-300')} />
+            <FaCircle size={50} onClick={() => selectColor('green')} />
+          </div>
+          <div className="text-orange-300 border-2 rounded-full border-gray-300">
+            <FaCircle size={50} onClick={() => selectColor('orange')} />
           </div>
           <div className="text-transparent border-2 rounded-full border-gray-300">
             <FaCircle size={50} onClick={() => selectColor('transparent')} />
