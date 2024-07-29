@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { supabase } from '../../supabase/client'; // supabase 클라이언트 임포트
+import { supabase } from '../../supabase/client';
 
 interface SignupModalProps {
   onClose: () => void;
@@ -37,7 +37,8 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
           .insert({
             id: authData.user.id,
             nickname: nickname,
-            email: email
+            email: email,
+            level_id: 'lv1'
           })
           .select();
         if (profileError) throw profileError;

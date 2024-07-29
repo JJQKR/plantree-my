@@ -4,7 +4,6 @@ import { supabase } from '@/supabase/client';
 import React, { useEffect, useState } from 'react';
 import LoginModal from './LoginModal';
 import SignupModal from './SignupModal';
-import SocialModal from './SocialModal';
 import Image from 'next/image';
 
 const LandingHeader = () => {
@@ -69,12 +68,6 @@ const LandingHeader = () => {
                 로그인
               </button>
               <button
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-                onClick={() => setSocialModalOpen(true)}
-              >
-                소셜 로그인
-              </button>
-              <button
                 className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
                 onClick={() => setSignupModalOpen(true)}
               >
@@ -89,7 +82,6 @@ const LandingHeader = () => {
         {isSignupModalOpen && (
           <SignupModal onClose={() => setSignupModalOpen(false)} onSignupSuccess={handleSignupSuccess} />
         )}
-        {isSocialModalOpen && <SocialModal onClose={() => setSocialModalOpen(false)} />}
       </div>
     </header>
   );
