@@ -89,13 +89,14 @@ const Todolist: React.FC = () => {
       <div className="w-ful">
         <ul className="relative">
           {todoList.map((todo) => {
-            console.log(getColorClass(todo.color));
+            console.log(getBackgroundColorClass(todo.color));
             return (
               <li
                 key={todo.id}
-                className={`flex flex-row border ${todo.isDone ? getBackgroundColorClass(todo.color) : 'no-underline'}`}
+                className={`flex flex-row border`}
+                style={{ backgroundColor: todo.isDone ? getBackgroundColorClass(todo.color) : 'transparent' }}
               >
-                <span onClick={() => openModal(todo.id)} className={getColorClass(todo.color)}>
+                <span onClick={() => openModal(todo.id)} style={{ color: getColorClass(todo.color) }}>
                   <FaCircle />
                 </span>
                 <input type="checkbox" onClick={() => handleToggle(todo.id)} />

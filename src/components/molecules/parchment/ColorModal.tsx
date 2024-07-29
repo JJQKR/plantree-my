@@ -1,3 +1,5 @@
+`use Client`;
+
 import useMyModalStore from '@/stores/my.modal.store';
 import useTodoListStore from '@/stores/todoList.stor';
 import React, { useState } from 'react';
@@ -29,17 +31,17 @@ const ColorModal = () => {
           ✕
         </button>
         <div className="flex flex-row">
-          <div className="text-red-300 border-2 rounded-full border-gray-300">
-            <FaCircle size={50} onClick={() => selectColor('red')} />
+          <div className="text-[#FFCBCB] border-2 rounded-full border-gray-300">
+            <FaCircle size={50} onClick={() => selectColor('pink')} />
           </div>
-          <div className="text-yellow-200 border-2 rounded-full border-gray-300">
-            <FaCircle size={50} onClick={() => selectColor('yellow')} />
+          <div className="text-[#FDFFAB] border-2 rounded-full border-gray-300">
+            <FaCircle size={50} onClick={() => selectColor('lemon')} />
           </div>
-          <div className="text-green-300 border-2 rounded-full border-gray-300">
-            <FaCircle size={50} onClick={() => selectColor('green')} />
+          <div className="text-[#A1EEBD] border-2 rounded-full border-gray-300">
+            <FaCircle size={50} onClick={() => selectColor('greentee')} />
           </div>
-          <div className="text-orange-300 border-2 rounded-full border-gray-300">
-            <FaCircle size={50} onClick={() => selectColor('orange')} />
+          <div className="text-[#7BD3EA] border-2 rounded-full border-gray-300">
+            <FaCircle size={50} onClick={() => selectColor('sky')} />
           </div>
           <div className="text-transparent border-2 rounded-full border-gray-300">
             <FaCircle size={50} onClick={() => selectColor('transparent')} />

@@ -27,7 +27,7 @@ const Timetable = () => {
     setIsMouseDown(true);
     toggleCellColor(id);
   };
-  // console.log(activeCells);
+  console.log(activeCells);
 
   const handleMouseOver = (id: string) => {
     if (isMouseDown) {
@@ -76,9 +76,12 @@ const Timetable = () => {
                   <td
                     key={colIndex}
                     id={id}
-                    className={`border border-gray-300 p-1.5 text-center ${
-                      activeCells[id]?.active ? getBackgroundColorClass(activeCells[id]?.color) : 'transparent'
-                    }`}
+                    className={`border border-gray-300 p-1.5 text-center`}
+                    style={{
+                      background: activeCells[id]?.active
+                        ? getBackgroundColorClass(activeCells[id]?.color)
+                        : 'transparent'
+                    }}
                     onMouseDown={() => handleMouseDown(id)}
                     onMouseOver={() => handleMouseOver(id)}
                   ></td>
