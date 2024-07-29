@@ -323,10 +323,10 @@ const DiaryCoverPage: React.FC = () => {
   };
 
   const handleResize = () => {
-    const newWidth = window.innerWidth > 384 ? 384 : window.innerWidth;
-    const newHeight = (newWidth / 384) * 600;
+    const newWidth = window.innerWidth > 512 ? 512 : window.innerWidth;
+    const newHeight = (newWidth / 512) * 800;
     setCoverStageSize({ width: newWidth, height: newHeight });
-    setCoverScale(newWidth / 384);
+    setCoverScale(newWidth / 512);
   };
 
   useEffect(() => {
@@ -363,7 +363,7 @@ const DiaryCoverPage: React.FC = () => {
 
   const handleAddText = () => {
     setCoverTitle('더블클릭후 작성');
-    setCoverTitlePosition({ x: 80, y: 150 });
+    setCoverTitlePosition({ x: 150, y: 150 });
     setCoverTitleFontSize(30);
     setCoverTitleWidth(220);
     setCoverTitleRotation(0);
@@ -372,7 +372,7 @@ const DiaryCoverPage: React.FC = () => {
   return (
     <div className="flex flex-col overflow-hidden">
       <div className="flex-grow flex flex-col justify-center items-center overflow-auto">
-        <div className="max-w-sm w-full mb-4">
+        <div className="max-w-lg w-full mb-4">
           <div className="relative w-full pb-[156.25%] overflow-hidden">
             <Stage
               className="absolute top-0 left-0 w-full h-full"
@@ -449,7 +449,7 @@ const DiaryCoverPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-col items-center max-w-sm w-full">
+        <div className="flex flex-col items-center max-w-lg w-full">
           <div className="flex flex-wrap items-center mb-2 w-full">
             <div className="flex items-center mb-2 mr-2">
               <label htmlFor="imgChoice" className="mr-2 font-semibold">
@@ -486,13 +486,13 @@ const DiaryCoverPage: React.FC = () => {
               onClick={handleSaveAndContinue}
               className="mb-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300 mr-2"
             >
-              저장후 속지작성
+              속지 작성
             </button>
             <button
               onClick={handleAddText}
               className="mb-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300 mr-2"
             >
-              제목 작성
+              제목 생성
             </button>
           </div>
         </div>
