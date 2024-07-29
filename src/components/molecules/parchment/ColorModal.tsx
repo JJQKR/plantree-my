@@ -1,14 +1,23 @@
+`use Client`;
+
 import useMyModalStore from '@/stores/my.modal.store';
-import React from 'react';
+import useTodoListStore from '@/stores/todoList.stor';
+import React, { useState } from 'react';
 import { FaCircle } from 'react-icons/fa';
 
 const ColorModal = () => {
+  const { todoId, changeTodoColor } = useTodoListStore();
   const { toggleTenMinPlanerColorModal } = useMyModalStore((state) => state);
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       toggleTenMinPlanerColorModal();
     }
+  };
+
+  const selectColor = (newColor: string) => {
+    changeTodoColor(todoId, newColor);
+    toggleTenMinPlanerColorModal();
   };
 
   return (
@@ -22,9 +31,21 @@ const ColorModal = () => {
           ✕
         </button>
         <div className="flex flex-row">
-          <FaCircle size={50} color="FFC5C5" />
-          <FaCircle size={50} color="FDFFAB" />
-          <FaCircle size={50} color="D8EFD3" />
+          <div className="text-[#FFCBCB] border-2 rounded-full border-gray-300">
+            <FaCircle size={50} onClick={() => selectColor('pink')} />
+          </div>
+          <div className="text-[#FDFFAB] border-2 rounded-full border-gray-300">
+            <FaCircle size={50} onClick={() => selectColor('lemon')} />
+          </div>
+          <div className="text-[#A1EEBD] border-2 rounded-full border-gray-300">
+            <FaCircle size={50} onClick={() => selectColor('greentee')} />
+          </div>
+          <div className="text-[#7BD3EA] border-2 rounded-full border-gray-300">
+            <FaCircle size={50} onClick={() => selectColor('sky')} />
+          </div>
+          <div className="text-transparent border-2 rounded-full border-gray-300">
+            <FaCircle size={50} onClick={() => selectColor('transparent')} />
+          </div>
         </div>
       </div>
     </div>
