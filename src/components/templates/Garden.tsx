@@ -84,7 +84,7 @@ const GardenSection = () => {
         {displayStages.map((stage) => (
           <SwiperSlide key={stage.id}>
             <h3>{stage.name}</h3>
-            <div className="flex items-center justify-center p-4 bg-white rounded shadow-md w-[400px] h-[200px]">
+            <div className="flex items-center justify-center p-4 bg-white rounded-[20px] shadow-md w-[650px] h-[370px]">
               <p className="text-center">{stage.content}</p>
             </div>
           </SwiperSlide>
