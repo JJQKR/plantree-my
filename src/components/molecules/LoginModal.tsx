@@ -7,6 +7,8 @@ import ResetPasswordModal from './ResetPasswordModal';
 const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> = ({ onClose, onSignupClick }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const [autoLogin, setAutoLogin] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
@@ -19,7 +21,27 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
       setResetToken(token);
       setShowResetPasswordModal(true);
     }
+
+    //토큰이 존재하면, 리셋 토큰 상태를 설정하고, 리셋 패스워드 모달을 보여줌
+
+    const savedEmail = localStorage.getItem('email');
+    const savedPassword = localStorage.getItem('password');
+    const savedAutoLogin = localStorage.getItem('autoLogin') === 'true';
+
+    if (savedEmail && savedPassword) {
+      setEmail(savedEmail);
+      setPassword(savedPassword);
+      setRememberMe(true);
+    }
+
+    //ID와 비밀번호가 저장되어 있으면, 로컬스토리지에서 불러와서 상태에 저장
+
+    if (savedAutoLogin && savedEmail && savedPassword) {
+      handleSignIn(savedEmail, savedPassword, true);
+    }
   }, [location]);
+
+  //자동 로그인이 설정되어 있고, ID와 비밀번호가 저장되어 있으면, 자동으로 로그인
 
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -48,11 +70,22 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
     return data;
   };
 
-  const handleSignIn = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSignIn = async (email: string, password: string, fromAutoLogin = false) => {
     try {
       const data = await signIn(email, password);
       console.log('로그인 성공:', data);
+      if (rememberMe) {
+        localStorage.setItem('email', email);
+        localStorage.setItem('password', password);
+      } else {
+        localStorage.removeItem('email');
+        localStorage.removeItem('password');
+      }
+      if (autoLogin) {
+        localStorage.setItem('autoLogin', 'true');
+      } else if (!fromAutoLogin) {
+        localStorage.removeItem('autoLogin');
+      }
       onClose();
       window.location.reload();
       window.location.href = 'http://localhost:3000/member';
@@ -60,6 +93,11 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
       console.error('로그인 실패:', error);
       setError(error instanceof Error ? error.message : 'An error occurred.');
     }
+  };
+
+  const handleFormSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    await handleSignIn(email, password);
   };
 
   return (
@@ -72,7 +110,7 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
           <div className="bg-white p-4 rounded">
             <h1 className="text-xl font-bold mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
             <h2 className="text-xl font-bold mb-4 text-center text-black">로그인</h2>
-            <form onSubmit={handleSignIn}>
+            <form onSubmit={handleFormSubmit}>
               <input
                 type="text"
                 placeholder="아이디"
@@ -83,10 +121,36 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
               <input
                 type="password"
                 placeholder="비밀번호"
-                className="mb-4 p-2 border rounded w-full text-black"
+                className="mb-2 p-2 border rounded w-full text-black"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center ml-1">
+                  <input
+                    type="checkbox"
+                    id="rememberMe"
+                    className="mr-2"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                  />
+                  <label htmlFor="rememberMe" className="text-black">
+                    아이디, 패스워드 기억하기
+                  </label>
+                </div>
+                <div className="flex items-center mr-2">
+                  <input
+                    type="checkbox"
+                    id="autoLogin"
+                    className="mr-2"
+                    checked={autoLogin}
+                    onChange={(e) => setAutoLogin(e.target.checked)}
+                  />
+                  <label htmlFor="autoLogin" className="text-black">
+                    자동 로그인
+                  </label>
+                </div>
+              </div>
               <h2 className="text-center cursor-pointer text-rose-300" onClick={handleForgotPasswordClick}>
                 비밀번호를 잊어버리셨나요?
               </h2>
