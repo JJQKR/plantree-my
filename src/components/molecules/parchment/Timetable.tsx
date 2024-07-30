@@ -1,16 +1,13 @@
 'use client';
 
 import { getBackgroundColorClass } from '@/lib/utils/tenMinPlanerColor';
+import useTimetableStore from '@/stores/timetable.store';
 import useTodoListStore from '@/stores/todoList.stor';
 import React, { useState } from 'react';
 
-type activeCellsObjet = {
-  [key: string]: { active: boolean; color: string; id: string };
-};
-
 const Timetable = () => {
-  const [activeCells, setActiveCells] = useState<activeCellsObjet>({});
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const { activeCells, addActiveCell, removeActiveCell } = useTimetableStore((state) => state);
 
   const { todo } = useTodoListStore((state) => state);
 
@@ -27,7 +24,6 @@ const Timetable = () => {
     setIsMouseDown(true);
     toggleCellColor(id);
   };
-  console.log(activeCells);
 
   const handleMouseOver = (id: string) => {
     if (isMouseDown) {
@@ -40,17 +36,13 @@ const Timetable = () => {
   };
 
   const toggleCellColor = (id: string) => {
-    const changeColor = (prev: activeCellsObjet) => {
-      const isActive = prev[id]?.active;
-      if (isActive) {
-        const newCells = { ...prev };
-        delete newCells[id];
-        return newCells;
-      } else {
-        return { ...prev, [id]: { active: !prev[id], color: todo.color, id: todo.id } };
-      }
-    };
-    setActiveCells(changeColor);
+    const newCell = { [id]: { active: true, color: todo.color, todoId: todo.id } };
+    console.log(activeCells[id]);
+    addActiveCell(newCell);
+
+    if (activeCells[id]) {
+      removeActiveCell(id);
+    }
   };
 
   return (

@@ -44,7 +44,7 @@ const Todolist: React.FC = () => {
     setTodoInput('');
   };
 
-  console.log(todoList);
+  // console.log(todoList);
 
   const submitOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
