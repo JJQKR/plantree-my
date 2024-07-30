@@ -5,6 +5,8 @@ import React, { useState } from 'react';
 import Todolist from './Todolist';
 import Timetable from './Timetable';
 import { useCreateTenMinPlaner } from '@/lib/hooks/useTenMinPlaner';
+import useTimetableStore from '@/stores/timetable.store';
+import useUserStore from '@/stores/user.store';
 
 const TenMinPlaner = () => {
   const [date, setDate] = useState('');
@@ -12,6 +14,9 @@ const TenMinPlaner = () => {
   const [dday, setDday] = useState('');
   const [goal, setGoal] = useState('');
   const [memo, setMemo] = useState('');
+
+  const { activeCells } = useTimetableStore((state) => state);
+  const { userId } = useUserStore((state) => state);
 
   const { mutate: createTenMinPlaner } = useCreateTenMinPlaner();
 
@@ -70,10 +75,10 @@ const TenMinPlaner = () => {
       d_day: dday,
       goal: goal,
       memo: memo,
-      user_id: '',
-      Timetable: ''
+      user_id: userId,
+      timetable: activeCells
     };
-    // createTenMinPlaner(newTenMinPlaner);
+    createTenMinPlaner(newTenMinPlaner);
   };
 
   return (

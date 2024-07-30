@@ -5,11 +5,11 @@ const tenMinPlanerApi = new TenMinPlanerAPI();
 
 // tenMinPlaner 여러개 불러오기
 export const useTenMinPlaners = () => {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['tenMinPlaner'],
     queryFn: () => tenMinPlanerApi.selectTenMinPlaners()
   });
-  return { data, isLoading };
+  return { data, isLoading, error };
 };
 
 // tenMinPlaner 같은 diaryId만 불러오기
@@ -57,7 +57,7 @@ export const useDeleteTenMinPlaner = () => {
   });
 };
 
-// Schedule 수정하기
+// tenMinPlaner 수정하기
 export const useUpdateTenMinPlaner = () => {
   const queryClient = useQueryClient();
   return useMutation({

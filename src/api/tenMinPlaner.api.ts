@@ -7,7 +7,7 @@ export type UpdateTenMinPlanerType = {
   d_day: string;
   goal: string;
   memo: string;
-  timetable: { [key: string]: { active: boolean; color: string; id: string } };
+  timetable: { [key: string]: { active: boolean; color: string; todoId: string } };
   user_id: string;
 };
 
@@ -39,7 +39,7 @@ class TenMinPlanerAPI {
       .eq('diaryId', diaryId)
       .returns<Tables<'ten_min_planer'>[]>();
     if (error) {
-      throw new Error();
+      throw new Error(`Fetching diary failed: ${error.message}`);
     }
     return data;
   }
