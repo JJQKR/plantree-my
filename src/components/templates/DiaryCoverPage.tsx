@@ -4,12 +4,12 @@ import { Stage, Layer, Rect, Text, Transformer, Image as KonvaImage } from 'reac
 import Konva from 'konva';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { supabase } from '@/supabase/client';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
 
 const DiaryCoverPage: React.FC = () => {
   const router = useRouter();
-  const DiaryId = '1';
+  const { diaryId } = useParams();
 
   const {
     coverTitle,
@@ -320,7 +320,7 @@ const DiaryCoverPage: React.FC = () => {
 
     setCoverData(coverData);
 
-    router.push(`/member/diaryedit/${DiaryId}/diaryparchment`);
+    router.push(`/member/diaryedit/${diaryId}/diaryparchment`);
   };
 
   const handleResize = () => {
@@ -456,19 +456,6 @@ const DiaryCoverPage: React.FC = () => {
         <div className="flex flex-col items-center max-w-lg w-full">
           <div className="flex flex-wrap items-center mb-2 w-full">
             <div className="flex items-center mb-2 mr-2">
-              <label htmlFor="imgChoice" className="mr-2 font-semibold">
-                이미지 선택:
-              </label>
-              <input
-                id="imgChoice"
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="mb-2 border border-gray-300 rounded p-2 w-full md:w-auto mr-2"
-                ref={fileInputRef}
-              />
-            </div>
-            <div className="flex items-center mb-2 mr-2">
               <label htmlFor="colorPicker" className="mr-2 font-semibold">
                 색 선택:
               </label>
@@ -477,28 +464,41 @@ const DiaryCoverPage: React.FC = () => {
                 id="colorPicker"
                 value={coverBackgroundColor}
                 onChange={handleBackgroundColorChange}
-                className="border border-gray-300 rounded"
+                className="border border-gray-300 rounded w-16"
               />
             </div>
             <button
               onClick={handleDownload}
-              className="mb-2 px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300 mr-2"
+              className="mb-2 px-2 py-1 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300 mr-2"
             >
               커버 다운로드
             </button>
 
             <button
               onClick={handleSaveAndContinue}
-              className="mb-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300 mr-2"
+              className="mb-2 px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300 mr-2"
             >
               속지 작성
             </button>
             <button
               onClick={handleAddText}
-              className="mb-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300 mr-2"
+              className="mb-2 px-2 py-1 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300 mr-2"
             >
               제목 생성
             </button>
+            <div className="flex items-center mb-2 mr-2">
+              <label htmlFor="imgChoice" className="mr-2 font-semibold">
+                이미지 선택:
+              </label>
+              <input
+                id="imgChoice"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="mb-2 border border-gray-300 rounded p-1 w-full md:w-auto mr-2"
+                ref={fileInputRef}
+              />
+            </div>
           </div>
         </div>
       </div>

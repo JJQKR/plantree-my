@@ -47,7 +47,7 @@ type DiaryCoverState = {
 };
 
 export const useDiaryCoverStore = create<DiaryCoverState>((set) => ({
-  coverTitle: '더블클릭후 작성',
+  coverTitle: '표지 제목 작성',
   setCoverTitle: (title) => set({ coverTitle: title }),
   coverTitlePosition: { x: 150, y: 150 },
   setCoverTitlePosition: (position) => set({ coverTitlePosition: position }),

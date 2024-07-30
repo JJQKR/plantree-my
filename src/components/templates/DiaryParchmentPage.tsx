@@ -140,12 +140,14 @@ const DiaryParchmentPage: React.FC = () => {
           다음
         </button>
       </div>
-      <button
-        onClick={handleFinalSave}
-        className="m-4 px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300"
-      >
-        다이어리 저장
-      </button>
+      <div className="flex justify-end">
+        <button
+          onClick={handleFinalSave}
+          className=" px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300"
+        >
+          다이어리 저장
+        </button>
+      </div>
 
       {showPageOptions && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" onClick={closeModal}>
