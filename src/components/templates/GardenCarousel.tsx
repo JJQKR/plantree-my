@@ -8,6 +8,7 @@ import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import { EffectCoverflow, Pagination } from 'swiper/modules';
 import useUserStore from '@/stores/user.store';
+import Image from 'next/image';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
@@ -27,12 +28,12 @@ const levelMap: { [key: string]: number } = {
   lv6: 6
 };
 
-const GardenSection = () => {
+const GardenCarousel = () => {
   const [gardenStages, setGardenStages] = useState([
-    { id: 1, content: 'Stage1의 url', name: '씨앗' },
-    { id: 2, content: 'Stage2의 url', name: '새싹' },
-    { id: 3, content: 'Stage3의 url', name: '풀' },
-    { id: 4, content: 'Stage4의 url', name: '묘목' },
+    { id: 1, content: <Image src="/images/lv1_img.png" alt="badge_example" width="600" height="300" />, name: '씨앗' },
+    { id: 2, content: <Image src="/images/lv2_img.png" alt="badge_example" width="600" height="300" />, name: '새싹' },
+    { id: 3, content: <Image src="/images/lv3_img.png" alt="badge_example" width="600" height="300" />, name: '풀' },
+    { id: 4, content: <Image src="/images/lv4_img.png" alt="badge_example" width="600" height="300" />, name: '묘목' },
     { id: 5, content: 'Stage5의 url', name: '나무' },
     { id: 6, content: 'Stage6의 url', name: '열매나무' }
   ]);
@@ -67,7 +68,7 @@ const GardenSection = () => {
   }, [gardenStages, levelName]);
 
   return (
-    <div className="bg-[#1edaaa] w-[700px] h-[400px]">
+    <div className=" w-[630px] h-[350px]">
       <Swiper
         effect="coverflow"
         grabCursor={true}
@@ -82,12 +83,11 @@ const GardenSection = () => {
         }}
         pagination={{ clickable: true }}
         modules={[EffectCoverflow, Pagination]}
-        className="myGarden"
       >
         {displayStages.map((stage) => (
           <SwiperSlide key={stage.id}>
             <h3>{stage.name}</h3>
-            <div className="flex items-center justify-center p-4 bg-white rounded-[20px] shadow-md w-[650px] h-[370px]">
+            <div className="flex items-center justify-center p-2 rounded-[10px] w-[600px] h-[300px]">
               <p className="text-center">{stage.content}</p>
             </div>
           </SwiperSlide>
@@ -97,4 +97,4 @@ const GardenSection = () => {
   );
 };
 
-export default GardenSection;
+export default GardenCarousel;

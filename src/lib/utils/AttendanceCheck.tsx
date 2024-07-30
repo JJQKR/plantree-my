@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { supabase } from '@/supabase/client';
 import useUserStore from '@/stores/user.store';
-import LevelUpComponent from './LevelUpComponent';
+import LevelUp from './LevelUp';
 
 const AttendanceCheck = () => {
   const { userId, attendance, setAttendance } = useUserStore((state) => state);
@@ -108,7 +108,7 @@ const AttendanceCheck = () => {
 
   return (
     <>
-      <LevelUpComponent /> {/* 레벨업 로직 실행 */}
+      <LevelUp /> {/* 레벨업 로직 실행 */}
     </>
   );
 };

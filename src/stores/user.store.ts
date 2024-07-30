@@ -9,8 +9,8 @@ interface UserState {
   setMembershipDays: (membershipDays: number | null) => void;
   attendance: number;
   setAttendance: (attendance: number) => void;
-  userId: string | null;
-  setUserId: (userId: string | null) => void;
+  userId: string;
+  setUserId: (userId: string) => void;
   email: string | null;
   setEmail: (email: string | null) => void;
 }
@@ -24,7 +24,7 @@ const useUserStore = create<UserState>((set) => ({
   setMembershipDays: (membershipDays) => set({ membershipDays }),
   attendance: 0,
   setAttendance: (attendance) => set({ attendance }),
-  userId: null,
+  userId: '',
   setUserId: (userId) => set({ userId }),
   email: null,
   setEmail: (email) => set({ email })
