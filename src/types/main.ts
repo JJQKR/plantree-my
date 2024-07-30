@@ -13,9 +13,12 @@ export type SideButtonProps = {
 };
 
 export type DiaryCard = {
-  id: number;
+  id: string; // UUID 또는 고유 식별자
   content: string; // 다이어리 카드의 내용
-  name: string;
+  name: string; // 다이어리 카드의 이름
+  created_at: string; // 다이어리 생성 날짜 및 시간 (ISO 8601 형식 문자열)
+  user_id: string; // 다이어리를 생성한 사용자 ID
+  bookshelf_order?: number; // 책장에 있는 순서 (옵션)
 };
 
 export type CreateDiaryButtonProps = {

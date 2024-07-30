@@ -1,30 +1,56 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import { EffectCoverflow, Pagination } from 'swiper/modules';
-import { DiaryCard } from '@/types/main';
-import { useStore } from '@/stores/sidebar.store';
 import CreateDiaryButton from '../atoms/CreateDiaryButton';
-
-// 다이어리 카드 데이터를 하드코딩한 배열 (테스트를 위한 것)
-const cards: DiaryCard[] = [
-  { id: 1, content: 'Card 1', name: '영수의 다이어리' },
-  { id: 2, content: 'Card 2', name: '보영의 다이어리' },
-  { id: 3, content: 'Card 3', name: '재훈의 다이어리' }
-];
-
-const handleCreateDiary = () => {
-  // 여기에 새 다이어리 생성 로직을 추가
-  alert('새 다이어리 생성 버튼 클릭됨');
-};
+import { useRouter } from 'next/navigation';
+import { useStore } from '@/stores/sidebar.store';
+import { supabase } from '@/supabase/client';
 
 const DiaryCase: React.FC = () => {
-  const { gridView } = useStore(); // 상태에서 gridView 값을 가져옴
-  const limitedCards = cards.slice(0, 3); // 카드 데이터를 최대 3개로 제한
+  const [diaries, setDiaries] = useState<any[]>([]);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true); // 로그인 상태
+  const { gridView } = useStore();
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchDiaries = async () => {
+      const {
+        data: { session }
+      } = await supabase.auth.getSession();
+      const user = session?.user;
+      if (!user) {
+        setIsLoggedIn(false); // 로그인하지 않은 상태로 설정
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('diaries')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('bookshelf_order', { ascending: true }); // bookshelf_order 기준 정렬
+
+      if (error) {
+        console.error('다이어리 목록 가져오기 실패:', error);
+      } else {
+        setDiaries(data || []);
+      }
+    };
+
+    fetchDiaries();
+  }, []);
+
+  const handleCreateDiary = () => {
+    if (!isLoggedIn) {
+      alert('로그인 상태가 아닙니다. 로그인 후 다시 시도해 주세요.'); // 로그인 상태가 아닐 때 알림 표시
+      return;
+    }
+    router.push('/member/test'); // 로그인 상태일 때 다이어리 생성 페이지로 이동
+  };
 
   return (
     <div className="relative w-full h-full flex flex-col items-center">
@@ -34,41 +60,55 @@ const DiaryCase: React.FC = () => {
         }`}
       >
         {gridView ? (
-          <div className="grid grid-cols-3 gap-10 max-w-full">
-            {limitedCards.map((card) => (
-              <div key={card.id} className="flex flex-col items-center">
-                <h2 className="mb-2 text-center text-lg font-bold">{card.name}</h2>
-                <div className="p-4 bg-white flex items-center justify-center rounded shadow-md w-[250px] h-[400px]">
-                  <p className="text-center">{card.content}</p>
+          <div className="grid grid-cols-4 gap-10 max-w-full">
+            {diaries.map((diary) => (
+              <div key={diary.id} className="flex flex-col items-center justify-center">
+                <div className="flex items-center justify-center w-[250px] h-[400px] bg-gray-200 rounded shadow-md text-center text-2xl font-bold text-gray-600">
+                  {diary.name}
                 </div>
               </div>
             ))}
+            <div className="flex flex-col items-center justify-center">
+              <button
+                onClick={handleCreateDiary}
+                className="flex items-center justify-center w-[250px] h-[400px] bg-gray-200 rounded shadow-md text-center text-2xl font-bold text-gray-600"
+              >
+                +<br /> 다이어리 생성
+              </button>
+            </div>
           </div>
         ) : (
           <Swiper
-            effect="coverflow" // 커버플로우 효과 적용
-            grabCursor={true} // 마우스 커서가 손 모양으로 변경
-            centeredSlides={true} // 슬라이드가 가운데 정렬
-            slidesPerView="auto" // 화면에 보이는 슬라이드 개수를 자동으로 조정
+            effect="coverflow"
+            grabCursor={true}
+            centeredSlides={true}
+            slidesPerView="auto"
             coverflowEffect={{
-              rotate: 50, // 슬라이드 회전 각도
-              stretch: 0, // 슬라이드 간 거리
-              depth: 100, // 슬라이드 깊이
-              modifier: 1, // 효과 강도
-              slideShadows: true // 슬라이드 그림자 표시
+              rotate: 50,
+              stretch: 0,
+              depth: 100,
+              modifier: 1,
+              slideShadows: true
             }}
-            pagination={{ clickable: true }} // 페이지네이션을 클릭 가능하게 설정
-            modules={[EffectCoverflow, Pagination]} // 사용 모듈 설정
+            pagination={{ clickable: true }}
+            modules={[EffectCoverflow, Pagination]}
             className="mySwiper"
           >
-            {limitedCards.map((card) => (
-              <SwiperSlide key={card.id}>
-                <h2 className="text-xl font-bold mb-2 text-center">{card.name}</h2>
-                <div className="flex items-center justify-center p-4 bg-white rounded shadow-md w-[350px] h-[570px]">
-                  <p className="text-center">{card.content}</p>
+            {diaries.map((diary) => (
+              <SwiperSlide key={diary.id}>
+                <div className="flex items-center justify-center w-[350px] h-[570px] bg-gray-200 rounded shadow-md text-center text-2xl font-bold text-gray-600">
+                  {diary.name}
                 </div>
               </SwiperSlide>
             ))}
+            <SwiperSlide>
+              <button
+                onClick={handleCreateDiary}
+                className="flex items-center justify-center w-[350px] h-[570px] bg-gray-200 rounded shadow-md text-center text-2xl font-bold text-gray-600"
+              >
+                +<br /> 다이어리 생성
+              </button>
+            </SwiperSlide>
           </Swiper>
         )}
       </div>
@@ -80,4 +120,3 @@ const DiaryCase: React.FC = () => {
 };
 
 export default DiaryCase;
-export { cards }; // cards를 export하여 Sidebar에서 사용 가능하게 함
