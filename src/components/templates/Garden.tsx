@@ -7,6 +7,7 @@ import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import { EffectCoverflow, Pagination } from 'swiper/modules';
+import useUserStore from '@/stores/user.store';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
@@ -38,6 +39,8 @@ const GardenSection = () => {
 
   const [displayStages, setDisplayStages] = useState([]);
 
+  const { levelName } = useUserStore((state) => state);
+
   useEffect(() => {
     const fetchUserEmailAndLevel = async () => {
       const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
@@ -61,7 +64,7 @@ const GardenSection = () => {
     };
 
     fetchUserEmailAndLevel();
-  }, [gardenStages]);
+  }, [gardenStages, levelName]);
 
   return (
     <div className="bg-[#1edaaa] w-[700px] h-[400px]">

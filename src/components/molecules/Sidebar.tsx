@@ -1,4 +1,3 @@
-// src>components>molecules>SideBar.tsx
 'use client';
 
 import { MainSidebarProps } from '@/types/main';
@@ -6,18 +5,18 @@ import React from 'react';
 import { cards } from '../templates/DiaryCase';
 import Link from 'next/link';
 import { DiAptana } from 'react-icons/di';
-import useUserStore from '@/stores/user.store'; // 유저 상태 관리 스토어 추가
+import useUserStore from '@/stores/user.store';
 import AttendanceCheck from '@/lib/utils/AttendanceCheck';
-import FetchUserData from '@/lib/utils/FetchUserData'; // FetchUserData 컴포넌트 import
+import FetchUserData from '@/lib/utils/FetchUserData';
 
 const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
-  const { nickname, levelName, attendance } = useUserStore((state) => state); // 유저 상태 관리 스토어에서 닉네임 및 레벨 이름 가져오기
+  const { nickname, levelName, attendance } = useUserStore((state) => state);
 
   return (
     <div className="w-[320px] h-[930px] bg-gray-700 text-white flex-shrink-0">
-      <FetchUserData /> {/* 사용자 데이터 페칭 */}
+      <FetchUserData />
+      <AttendanceCheck />
       <div className="p-4">
-        <AttendanceCheck />
         <button onClick={onClose} className="mb-4 text-[20px]">
           Close
         </button>
