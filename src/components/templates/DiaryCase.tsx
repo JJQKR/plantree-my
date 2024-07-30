@@ -59,7 +59,7 @@ const DiaryCase: React.FC = () => {
   // 다이어리 클릭 핸들러
   const handleDiaryClick = (id: string) => {
     setDiaryId(id); // Zustand store에 클릭한 다이어리 ID 저장
-    router.push(`/member/diary/${id}`); // 다이어리 상세 페이지로 리다이렉트
+    router.push(`/member/diaryedit/${id}/diarycover`); // 다이어리 상세 페이지로 리다이렉트
   };
 
   return (
