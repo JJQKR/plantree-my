@@ -14,21 +14,29 @@ const BadgeModal: React.FC = () => {
   return (
     <>
       <div
-        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
         onClick={handleBackGroundClick}
       >
-        <div className="bg-white p-4 rounded">
+        <div className="bg-white p-4  rounded">
           <div onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-xl font-bold mb-4">내가 획득한 배지들이 쫙 보여요</h2>
-
-            <div className="flex flex-col-3 jutify-between">
+            <h2 className="text-xl font-bold mb-4">도전과제 확인 1/15</h2>
+            <div className="grid grid-cols-3 gap-2 place-content-center h-[500px] overflow-y-auto">
+              <BadgeCard />
+              <BadgeCard />
+              <BadgeCard />
+              <BadgeCard />
+              <BadgeCard />
+              <BadgeCard />
+              <BadgeCard />
+              <BadgeCard />
+              <BadgeCard />
+              <BadgeCard />
+              <BadgeCard />
+              <BadgeCard />
               <BadgeCard />
               <BadgeCard />
               <BadgeCard />
             </div>
-            <button className="px-4 py-2 bg-gray-500 text-white rounded" onClick={toggleBadgeModal}>
-              Close
-            </button>
           </div>
         </div>
       </div>

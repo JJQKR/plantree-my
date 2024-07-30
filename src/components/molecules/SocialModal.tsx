@@ -1,9 +1,47 @@
 import React from 'react';
+import { supabase } from '../../supabase/client';
 
 const SocialModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       onClose();
+    }
+  };
+
+  const handleKakaoLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'kakao',
+      options: {
+        redirectTo: 'http://localhost:3000/member',
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent'
+        }
+      }
+    });
+
+    if (error) {
+      console.error('Kakao login error:', error.message);
+    } else {
+      console.log('Kakao login successful');
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: 'http://localhost:3000/member',
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent'
+        }
+      }
+    });
+    if (error) {
+      console.error('Google login error:', error.message);
+    } else {
+      console.log('Google login successful');
     }
   };
 
@@ -13,12 +51,15 @@ const SocialModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       onClick={handleBackgroundClick}
     >
       <div className="bg-white p-4 rounded w-96">
-        <h1 className="text-xl font-bold mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
+        <h1 className="text-xl font-bold mb-4 text-center text-emerald-400">Welcome to PlanTree!</h1>
         <h2 className="text-xl font-bold mb-4 text-center text-black">소셜 로그인</h2>
         <div className="flex flex-col gap-2 mt-4">
-          <button className="w-full px-4 py-3 font-bold bg-green-500 text-black rounded">네이버 로그인</button>
-          <button className="w-full px-4 py-3 font-bold bg-yellow-300 text-black rounded">카카오톡 로그인</button>
-          <button className="w-full px-4 py-3 font-bold bg-red-500  text-black rounded">구글 로그인</button>
+          <button className="w-full px-4 py-3 font-bold bg-yellow-300 text-black rounded" onClick={handleKakaoLogin}>
+            카카오톡 로그인
+          </button>
+          <button className="w-full px-4 py-3 font-bold bg-red-500 text-black rounded" onClick={handleGoogleLogin}>
+            구글 로그인
+          </button>
           <button className="w-full px-4 py-3 bg-gray-500 text-white rounded" onClick={onClose}>
             취소
           </button>
