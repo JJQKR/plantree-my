@@ -36,8 +36,8 @@ const AttendanceCheck = () => {
           throw authUserError;
         }
 
-        const lastSignInDate = authUserData?.user?.last_sign_in_at
-          ? new Date(authUserData.user.last_sign_in_at).toISOString().split('T')[0]
+        const lastSignInDate = authUserData?.user?.user_metadata?.last_sign_in_at
+          ? new Date(authUserData.user.user_metadata.last_sign_in_at).toISOString().split('T')[0]
           : null;
 
         console.log('Today:', today);
@@ -45,6 +45,7 @@ const AttendanceCheck = () => {
         console.log('Created At Date:', createdAtDate);
         console.log('Current Attendance:', userData.attendance);
 
+        //당일 가입 후 당일 최초 로그인이면 +1
         if (lastSignInDate === today && createdAtDate === today && userData.attendance === 0) {
           const newAttendanceCount = userData.attendance + 1;
 
@@ -63,7 +64,7 @@ const AttendanceCheck = () => {
           alert('출석체크 성공!');
 
           const { error: authUpdateError } = await supabase.auth.updateUser({
-            data: { last_sign_in_at: new Date().toISOString() }
+            data: { user_metadata: { last_sign_in_at: new Date().toISOString() } }
           });
           if (authUpdateError) {
             console.error('Error updating last sign-in date:', authUpdateError);
@@ -87,7 +88,7 @@ const AttendanceCheck = () => {
           alert('출석체크 성공!');
 
           const { error: authUpdateError } = await supabase.auth.updateUser({
-            data: { last_sign_in_at: new Date().toISOString() }
+            data: { user_metadata: { last_sign_in_at: new Date().toISOString() } }
           });
           if (authUpdateError) {
             console.error('Error updating last sign-in date:', authUpdateError);
