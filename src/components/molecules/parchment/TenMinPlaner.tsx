@@ -1,12 +1,14 @@
 'use client';
 
 import ParchmentInput from '@/components/atoms/ParchmentInput';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Todolist from './Todolist';
 import Timetable from './Timetable';
-import { useCreateTenMinPlaner } from '@/lib/hooks/useTenMinPlaner';
+import { useCreateTenMinPlaner, useTenMinPlaner, useUpdateTenMinPlaner } from '@/lib/hooks/useTenMinPlaner';
 import useTimetableStore from '@/stores/timetable.store';
 import useUserStore from '@/stores/user.store';
+import useDiaryStore from '@/stores/diary.store';
+import useTenMinPlanerStore from '@/stores/tenMinPlaner.store';
 
 const TenMinPlaner = () => {
   const [date, setDate] = useState('');
@@ -17,8 +19,12 @@ const TenMinPlaner = () => {
 
   const { activeCells } = useTimetableStore((state) => state);
   const { userId } = useUserStore((state) => state);
+  const { diaryId } = useDiaryStore((state) => state);
+  const { tenMinPlanerId } = useTenMinPlanerStore((state) => state);
 
   const { mutate: createTenMinPlaner } = useCreateTenMinPlaner();
+  const { data: tenMinPlaner } = useTenMinPlaner(tenMinPlanerId);
+  const { mutate: updateTenMinPlaner } = useUpdateTenMinPlaner();
 
   const handleDate = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputData = e.target.value;
@@ -68,7 +74,23 @@ const TenMinPlaner = () => {
     setMemo(e.target.value);
   };
 
+  useEffect(() => {
+    if (tenMinPlaner && tenMinPlanerId) {
+      setDate(tenMinPlaner?.date || '');
+      setDdayDate(tenMinPlaner?.d_day_date || '');
+      setDday(tenMinPlaner?.d_day || '');
+      setGoal(tenMinPlaner?.goal || '');
+      setMemo(tenMinPlaner?.memo || '');
+    }
+  }, [tenMinPlaner, tenMinPlanerId]);
+
+  console.log(tenMinPlanerId);
+
   const updatePlaner = () => {
+    if (!date) {
+      alert('작성 날짜를 입력해 주세요.');
+    }
+
     const newTenMinPlaner = {
       date: date,
       d_day_date: ddayDate,
@@ -76,8 +98,15 @@ const TenMinPlaner = () => {
       goal: goal,
       memo: memo,
       user_id: userId,
+      diary_id: diaryId,
       timetable: activeCells
     };
+
+    if (tenMinPlanerId) {
+      if (confirm('이대로 저장하시겠습니까?')) {
+        updateTenMinPlaner({ id: tenMinPlanerId, updateTenMinPlaner: newTenMinPlaner });
+      }
+    }
     createTenMinPlaner(newTenMinPlaner);
   };
 
@@ -89,7 +118,14 @@ const TenMinPlaner = () => {
         </button>
         <div className="flex gap-2">
           <div className="w-1/3">
-            <ParchmentInput identity="tenMinPlanerRegular" label="date" id="date" type="date" onChange={handleDate} />
+            <ParchmentInput
+              identity="tenMinPlanerRegular"
+              label="date"
+              id="date"
+              type="date"
+              onChange={handleDate}
+              value={date}
+            />
           </div>
           <div className="w-1/3 relative">
             <ParchmentInput
@@ -98,11 +134,12 @@ const TenMinPlaner = () => {
               id="d-day"
               type="date"
               onChange={handleDdayDate}
+              value={ddayDate}
             />
             <span className="absolute right-3 top-0 font-bold">{dday}</span>
           </div>
           <div className="w-1/3">
-            <ParchmentInput identity="tenMinPlanerRegular" label="goal" id="goal" onChange={handleGoal} />
+            <ParchmentInput identity="tenMinPlanerRegular" label="goal" id="goal" onChange={handleGoal} value={goal} />
           </div>
         </div>
         <div className="flex flex-row gap-4 ">
@@ -115,7 +152,7 @@ const TenMinPlaner = () => {
         </div>
         <div>
           <label htmlFor="memo">memo</label>
-          <textarea id="memo" className="h-20 w-full" onChange={handleMemo} />
+          <textarea id="memo" className="h-20 w-full" onChange={handleMemo} value={memo} />
         </div>
       </div>
     </div>

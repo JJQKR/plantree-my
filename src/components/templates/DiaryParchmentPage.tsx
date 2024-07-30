@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
 import { addCover } from '@/services/cover.service';
+import TenMinPlaner from '../molecules/parchment/TenMinPlaner';
 
 const dummyData = [
   'https://via.placeholder.com/384x600?text=Page+1'

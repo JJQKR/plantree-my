@@ -44,8 +44,6 @@ const Todolist: React.FC = () => {
     setTodoInput('');
   };
 
-  // console.log(todoList);
-
   const submitOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       // e.preventDefault();
@@ -89,7 +87,6 @@ const Todolist: React.FC = () => {
       <div className="w-ful">
         <ul className="relative">
           {todoList.map((todo) => {
-            console.log(getBackgroundColorClass(todo.color));
             return (
               <li
                 key={todo.id}
