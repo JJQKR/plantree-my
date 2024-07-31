@@ -8,11 +8,13 @@ import useUserStore from '@/stores/user.store';
 import AttendanceCheck from '@/lib/utils/AttendanceCheck';
 import FetchUserData from '@/lib/utils/FetchUserData';
 import { supabase } from '@/supabase/client';
+import ProfileStages from './ProfileStages';
 
 const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
   const [nickname, setNickname] = useState<string | null>(null);
   const [diaries, setDiaries] = useState<any[]>([]);
-  const { levelName, attendance } = useUserStore((state) => state);
+  const { levelName, attendance, userId } = useUserStore((state) => state);
+  const [levelId, setLevelId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchNicknameAndDiaries = async () => {
@@ -23,7 +25,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
       if (user) {
         const { data: nicknameData, error: nicknameError } = await supabase
           .from('users')
-          .select('nickname')
+          .select('nickname, level_id')
           .eq('id', user.id)
           .single();
 
@@ -31,6 +33,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
           console.error('닉네임 가져오기 실패:', nicknameError);
         } else {
           setNickname(nicknameData.nickname);
+          setLevelId(nicknameData.level_id); // level_id 설정
         }
 
         const { data: diariesData, error: diariesError } = await supabase
@@ -50,7 +53,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
     };
 
     fetchNicknameAndDiaries();
-  }, []);
+  }, [userId]);
 
   return (
     <div className="w-[320px] h-auto bg-gray-700 text-white flex-shrink-0">
@@ -67,7 +70,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
                 <DiAptana size={30} className="text-white absolute top-3 right-3" />
               </Link>
               <div className="flex flex-col items-center mb-10">
-                <div className="w-[120px] h-[120px] bg-white rounded-full mb-2"></div>
+                <ProfileStages levelId={levelId} size={120} /> {/* levelId에 맞는 프로필 이미지 표시 */}
                 <span className="text-white text-lg font-bold">{nickname}</span>
                 <div className="text-white text-sm">{levelName || 'Level not set'}</div>
                 <div className="text-white text-sm">출석 횟수: {attendance}</div>

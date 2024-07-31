@@ -16,7 +16,12 @@ const AttendanceCheck = () => {
       }
 
       try {
-        const today = new Date().toISOString().split('T')[0];
+        const today = new Date().toISOString().split('T')[0]; // 현재 날짜 (YYYY-MM-DD 형식)
+        const lastCheckDate = localStorage.getItem('lastCheckDate');
+
+        if (lastCheckDate === today) {
+          return; // 오늘 이미 출석 체크가 완료된 경우 중복 체크 방지
+        }
 
         const { data: userData, error: userError } = await supabase
           .from('users')
@@ -40,7 +45,8 @@ const AttendanceCheck = () => {
           ? new Date(authUserData.user.last_sign_in_at).toISOString().split('T')[0]
           : null;
 
-        if ((lastSignInDate !== today || createdAtDate === today) && userData.attendance === 0) {
+        // 출석 체크 조건 확인 및 출석 처리
+        if (!lastCheckDate || lastSignInDate !== today) {
           const newAttendanceCount = userData.attendance + 1;
 
           const { error: updateError } = await supabase
@@ -54,6 +60,7 @@ const AttendanceCheck = () => {
           }
 
           setAttendance(newAttendanceCount);
+          localStorage.setItem('lastCheckDate', today); // 출석 체크 완료 날짜 저장
           setHasChecked(true); // 출석 체크 완료 상태 설정
 
           alert('출석체크 성공!');
@@ -67,6 +74,7 @@ const AttendanceCheck = () => {
           }
         } else {
           setAttendance(userData.attendance);
+          setHasChecked(true); // 중복 체크 방지
         }
       } catch (error) {
         console.error('Attendance check error:', error);

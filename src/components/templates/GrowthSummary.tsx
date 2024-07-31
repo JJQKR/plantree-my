@@ -1,17 +1,38 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import FetchUserData from '@/lib/utils/FetchUserData';
 import FetchMembershipDays from '@/lib/utils/FetchMembershipDays';
 import useUserStore from '@/stores/user.store';
+import ProfileStages from '../molecules/ProfileStages';
+import { supabase } from '@/supabase/client';
 import Link from 'next/link';
 
 const GrowthSummary = () => {
-  const { nickname, levelName, membershipDays } = useUserStore((state) => state);
+  const { nickname, levelName, membershipDays, userId } = useUserStore((state) => state);
+  const [levelId, setLevelId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUserLevelId = async () => {
+      const { data: user, error } = await supabase.from('users').select('level_id').eq('id', userId).single();
+
+      if (error) {
+        console.error('사용자 레벨 ID 가져오기 실패:', error);
+      } else {
+        setLevelId(user.level_id);
+      }
+    };
+
+    if (userId) {
+      fetchUserLevelId();
+    }
+  }, [userId]);
 
   return (
     <div className="mt-10 flex flex-col">
       <FetchUserData />
       <FetchMembershipDays />
-      <div className="w-[80px] h-[80px] mt-10 bg-white rounded-full mb-2"></div> {/* 프로필 이미지 영역 */}
+      <ProfileStages levelId={levelId} size={80} /> {/* 레벨에 맞는 프로필 이미지 표시 */}
       <div className="flex items-center">
         <h3 className="font-semibold mt-3 mb-3 text-[14px]">
           {levelName}, {nickname} 님의 정원✨

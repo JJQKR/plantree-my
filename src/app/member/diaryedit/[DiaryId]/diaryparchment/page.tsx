@@ -1,10 +1,11 @@
 'use client';
-import DiaryParchmentPage from '@/components/templates/DiaryParchmentPage';
+import DiaryParchmentPage from '@/components/templates/diarycreate/DiaryParchmentPage';
 import React from 'react';
-import BottomSheet from '@/components/molecules/BottomSheet';
+import BottomSheet from '@/components/molecules/bottomsheet/BottomSheet';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import useBottomSheetStore from '@/stores/bottomsheet.store';
+import ParchmentOptionsModal from '@/components/molecules/bottomsheet/ParchmentOptionsModal';
 
 const DiaryParchment = () => {
   const { bottomSheetList, isSheetOpen, toggleSheet, moveCard } = useBottomSheetStore();
@@ -20,6 +21,7 @@ const DiaryParchment = () => {
           moveCard={moveCard}
         />
       </DndProvider>
+      <ParchmentOptionsModal />
     </div>
   );
 };
