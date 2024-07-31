@@ -10,18 +10,19 @@ import CreateDiaryButton from '../atoms/CreateDiaryButton';
 import { useRouter } from 'next/navigation';
 import { useStore } from '@/stores/sidebar.store';
 import { supabase } from '@/supabase/client';
-import useDiaryStore from '@/stores/diary.store'; // Zustand store import
+import useDiaryStore from '@/stores/diary.store';
 
 const DiaryCase: React.FC = () => {
-  const [diaries, setDiaries] = useState<any[]>([]);
+  const [diaries, setDiaries] = useState<any[]>([]); // 다이어리 목록 상태
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true); // 로그인 상태
-  const { gridView } = useStore();
+  const { gridView } = useStore(); // gridView 상태 가져오기
   const router = useRouter();
-  const setDiaryId = useDiaryStore((state) => state.setDiaryId); // Zustand store의 setDiaryId 함수 가져오기
+  const setDiaryId = useDiaryStore((state) => state.setDiaryId); // Zustand store에서 다이어리 ID 설정 함수 가져오기
 
+  // 컴포넌트가 마운트되었을 때 실행되는 useEffect
   useEffect(() => {
-    // 다이어리 목록을 가져오는 함수
     const fetchDiaries = async () => {
+      // 현재 세션 및 사용자 정보 가져오기
       const {
         data: { session }
       } = await supabase.auth.getSession();
@@ -31,11 +32,12 @@ const DiaryCase: React.FC = () => {
         return;
       }
 
+      // 사용자의 다이어리 목록 가져오기
       const { data, error } = await supabase
         .from('diaries')
         .select('*')
         .eq('user_id', user.id)
-        .order('bookshelf_order', { ascending: true }); // 책장 순서 기준으로 정렬
+        .order('bookshelf_order', { ascending: true });
 
       if (error) {
         console.error('다이어리 목록 가져오기 실패:', error);
@@ -50,10 +52,10 @@ const DiaryCase: React.FC = () => {
   // 다이어리 생성 핸들러
   const handleCreateDiary = () => {
     if (!isLoggedIn) {
-      alert('로그인 상태가 아닙니다. 로그인 후 다시 시도해 주세요.'); // 로그인 상태가 아닐 때 알림 표시
+      alert('로그인 상태가 아닙니다. 로그인 후 다시 시도해 주세요.');
       return;
     }
-    router.push('/member/test'); // 로그인 상태일 때 다이어리 생성 페이지로 리다이렉트
+    router.push('/member/test'); // 다이어리 생성 페이지로 리다이렉트
   };
 
   // 다이어리 클릭 핸들러
@@ -75,7 +77,7 @@ const DiaryCase: React.FC = () => {
               <div
                 key={diary.id}
                 className="flex flex-col items-center justify-center cursor-pointer"
-                onClick={() => handleDiaryClick(diary.id)} // 다이어리 클릭 시 처리
+                onClick={() => handleDiaryClick(diary.id)}
               >
                 <div className="flex items-center justify-center w-[250px] h-[400px] bg-gray-200 rounded shadow-md text-center text-2xl font-bold text-gray-600">
                   {diary.name}
@@ -84,7 +86,7 @@ const DiaryCase: React.FC = () => {
             ))}
             <div className="flex flex-col items-center justify-center">
               <button
-                onClick={handleCreateDiary} // 다이어리 생성 버튼 클릭 시 핸들러 호출
+                onClick={handleCreateDiary}
                 className="flex items-center justify-center w-[250px] h-[400px] bg-gray-200 rounded shadow-md text-center text-2xl font-bold text-gray-600"
               >
                 +<br /> 다이어리 생성
@@ -117,7 +119,7 @@ const DiaryCase: React.FC = () => {
             ))}
             <SwiperSlide>
               <button
-                onClick={handleCreateDiary} // 다이어리 생성 버튼 클릭 시 핸들러 호출
+                onClick={handleCreateDiary}
                 className="flex items-center justify-center w-[350px] h-[570px] bg-gray-200 rounded shadow-md text-center text-2xl font-bold text-gray-600"
               >
                 +<br /> 다이어리 생성
@@ -127,7 +129,7 @@ const DiaryCase: React.FC = () => {
         )}
       </div>
       <div className="absolute bottom-4 right-4">
-        <CreateDiaryButton onClick={handleCreateDiary} /> {/* 다이어리 생성 버튼 */}
+        <CreateDiaryButton onClick={handleCreateDiary} />
       </div>
     </div>
   );

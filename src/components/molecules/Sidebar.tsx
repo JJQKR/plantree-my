@@ -12,21 +12,25 @@ import useDiaryStore from '@/stores/diary.store';
 import { supabase } from '@/supabase/client';
 
 const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
-  const [nickname, setNickname] = useState<string | null>(null);
-  const { levelName, attendance } = useUserStore((state) => state);
+  const [nickname, setNickname] = useState<string | null>(null); // 사용자 닉네임 상태
+  const { levelName, attendance } = useUserStore((state) => state); // 사용자 레벨과 출석 상태 가져오기
   const { diaries, fetchDiaries } = useDiaryStore((state) => ({
     diaries: state.diaries,
     fetchDiaries: state.fetchDiaries
   }));
-  const [levelId, setLevelId] = useState<string | null>(null);
 
+  const [levelId, setLevelId] = useState<string | null>(null); // 사용자 레벨 ID 상태
+
+  // 컴포넌트가 마운트되었을 때 실행되는 useEffect
   useEffect(() => {
     const fetchData = async () => {
+      // 현재 사용자 정보 가져오기
       const {
         data: { user }
       } = await supabase.auth.getUser();
 
       if (user) {
+        // 사용자 닉네임 및 레벨 ID 가져오기
         const { data: nicknameData, error: nicknameError } = await supabase
           .from('users')
           .select('nickname, level_id')
@@ -43,7 +47,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
         // 다이어리 목록 가져오기
         await fetchDiaries();
       } else {
-        setNickname('Guest');
+        setNickname('Guest'); // 로그인하지 않은 경우 기본 닉네임 설정
       }
     };
 
