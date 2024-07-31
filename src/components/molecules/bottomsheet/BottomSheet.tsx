@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, usePathname } from 'next/navigation';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
 import BottomSheetCard from './BottomSheetCard';
+import { supabase } from '@/supabase/client';
 
 type BottomSheetProps = {
   isOpen: boolean;
@@ -13,15 +14,32 @@ type BottomSheetProps = {
 const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheetList, moveCard }) => {
   const router = useRouter();
   const { diaryId } = useParams();
+  const pathname = usePathname();
   const scrollRef = useRef<HTMLDivElement>(null);
   const togglePageOptions = useDiaryCoverStore((state) => state.togglePageOptions);
   const setCurrentPage = useDiaryCoverStore((state) => state.setCurrentPage);
+  const {
+    coverTitle,
+    coverTitlePosition,
+    coverTitleFontSize,
+    coverTitleWidth,
+    coverImagePosition,
+    coverImageSize,
+    coverBackgroundColor,
+    coverScale,
+    coverStageSize,
+    coverTitleRotation,
+    coverImageRotation,
+    imageFile,
+    setCoverData
+  } = useDiaryCoverStore();
 
   const handleCoverPageClick = () => {
     router.push(`/member/diaryedit/${diaryId}/diarycover`);
   };
 
   const handleCardClick = (index: number) => {
+    console.log(`Clicked on page index: ${index}`);
     setCurrentPage(index - (index % 2));
   };
 
@@ -38,7 +56,55 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
   };
 
   const handleAddPageClick = () => {
-    togglePageOptions();
+    if (pathname.includes('diarycover')) {
+      handleSaveAndContinue();
+    } else {
+      togglePageOptions();
+    }
+  };
+
+  const handleSaveAndContinue = async () => {
+    let publicUrl: string | null = null;
+
+    if (imageFile) {
+      const fileName = `${Date.now()}_${imageFile.name}`;
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('cover_img')
+        .upload(fileName, imageFile);
+
+      if (uploadError) {
+        console.error('이미지 업로드 실패:', uploadError);
+        return;
+      }
+
+      const { data: publicUrlData } = supabase.storage.from('cover_img').getPublicUrl(fileName);
+
+      if (!publicUrlData) {
+        console.error('공개 URL 가져오기 실패');
+        return;
+      }
+
+      publicUrl = publicUrlData.publicUrl;
+    }
+
+    const coverDataToSave = {
+      cover_title: coverTitle || null,
+      cover_title_position: coverTitlePosition,
+      cover_title_fontsize: coverTitleFontSize,
+      cover_title_width: coverTitleWidth,
+      cover_title_rotation: coverTitleRotation,
+      cover_image: publicUrl,
+      cover_image_position: coverImagePosition,
+      cover_image_size: coverImageSize,
+      cover_image_rotation: coverImageRotation,
+      cover_bg_color: coverBackgroundColor,
+      cover_scale: coverScale,
+      cover_stage_size: coverStageSize
+    };
+
+    setCoverData(coverDataToSave);
+
+    router.push(`/member/diaryedit/${diaryId}/diaryparchment`);
   };
 
   return (

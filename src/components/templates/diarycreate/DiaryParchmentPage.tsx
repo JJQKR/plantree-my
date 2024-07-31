@@ -39,7 +39,7 @@ const DiaryParchmentPage = () => {
   };
 
   const handleNextPage = () => {
-    if (currentPage < pages.length) {
+    if (currentPage + 1 < pages.length && pages[currentPage] && pages[currentPage + 1]) {
       setCurrentPage(currentPage + 2);
     }
   };
@@ -106,7 +106,7 @@ const DiaryParchmentPage = () => {
         </button>
         <button
           onClick={handleNextPage}
-          disabled={currentPage >= pages.length}
+          disabled={currentPage + 1 >= pages.length || !pages[currentPage] || !pages[currentPage + 1]}
           className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300"
         >
           다음
