@@ -4,13 +4,13 @@ import { supabase } from '@/supabase/client';
 import React, { useEffect, useState } from 'react';
 import LoginModal from './LoginModal';
 import SignupModal from './SignupModal';
-import SocialModal from './SocialModal';
 import Image from 'next/image';
+import PlantreeLoginModal from './PlantreeLoginModal';
 
 const LandingHeader = () => {
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setSignupModalOpen] = useState(false);
-  const [isSocialModalOpen, setSocialModalOpen] = useState(false);
+  const [isPlantreeLoginModalOpen, setPlantreeLoginModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -44,6 +44,11 @@ const LandingHeader = () => {
     }
   };
 
+  const handlePlantreeLoginClick = () => {
+    setPlantreeLoginModalOpen(false);
+    setLoginModalOpen(true);
+  };
+
   return (
     <header className="bg-blue-200 text-white p-4">
       <div className="container mx-auto flex justify-between items-center">
@@ -64,15 +69,9 @@ const LandingHeader = () => {
             <>
               <button
                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-                onClick={() => setLoginModalOpen(true)}
+                onClick={() => setPlantreeLoginModalOpen(true)}
               >
                 로그인
-              </button>
-              <button
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-                onClick={() => setSocialModalOpen(true)}
-              >
-                소셜 로그인
               </button>
               <button
                 className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
@@ -83,13 +82,19 @@ const LandingHeader = () => {
             </>
           )}
         </div>
+        {isPlantreeLoginModalOpen && (
+          <PlantreeLoginModal
+            onClose={() => setPlantreeLoginModalOpen(false)}
+            onSignupClick={handleOpenSignupModal}
+            onPlantreeLoginClick={handlePlantreeLoginClick}
+          />
+        )}
         {isLoginModalOpen && (
           <LoginModal onClose={() => setLoginModalOpen(false)} onSignupClick={handleOpenSignupModal} />
         )}
         {isSignupModalOpen && (
           <SignupModal onClose={() => setSignupModalOpen(false)} onSignupSuccess={handleSignupSuccess} />
         )}
-        {isSocialModalOpen && <SocialModal onClose={() => setSocialModalOpen(false)} />}
       </div>
     </header>
   );
