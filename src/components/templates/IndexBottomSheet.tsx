@@ -7,12 +7,12 @@ import './indexBottomSheet.css';
 
 interface BottomSheetProps {
   isOpen: boolean;
-  onClose: (event: MouseEvent<HTMLDivElement> | KeyboardEvent) => void;
+  onClose: (event: MouseEvent<HTMLElement> | KeyboardEvent) => void;
   children: ReactNode;
 }
 
 const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onClose, children }) => {
-  const handleClose = (e: MouseEvent<HTMLDivElement> | KeyboardEvent) => {
+  const handleClose = (e: MouseEvent<HTMLElement> | KeyboardEvent) => {
     if ('key' in e && e.key === 'Escape') {
       onClose(e);
     } else if ((e.target as HTMLElement).id === 'backdrop') {
@@ -46,7 +46,10 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onClose, children }) 
           isOpen ? 'translate-y-0' : 'translate-y-full'
         }`}
       >
-        <button onClick={onClose} className="absolute top-0 right-0 m-4">
+        <button
+          onClick={onClose as (event: MouseEvent<HTMLButtonElement>) => void}
+          className="absolute top-0 right-0 m-4"
+        >
           Close
         </button>
         {children}

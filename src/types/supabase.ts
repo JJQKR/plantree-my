@@ -223,7 +223,7 @@ export type Database = {
       };
       level: {
         Row: {
-          attendance_goal: number | null;
+          attendance_requirement: number | null;
           id: string | null;
           name: string | null;
         };
@@ -282,7 +282,7 @@ export type Database = {
       };
       users: {
         Row: {
-          attendence: number;
+          attendance: number;
           created_at: string;
           diary_count: number;
           email: string;
@@ -291,7 +291,7 @@ export type Database = {
           nickname: string | null;
         };
         Insert: {
-          attendence?: number;
+          attendance?: number;
           created_at?: string;
           diary_count?: number;
           email: string;
@@ -300,7 +300,7 @@ export type Database = {
           nickname?: string | null;
         };
         Update: {
-          attendence?: number;
+          attendance?: number;
           created_at?: string;
           diary_count?: number;
           email?: string;

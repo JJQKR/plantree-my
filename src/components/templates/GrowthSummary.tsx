@@ -32,7 +32,7 @@ const GrowthSummary = () => {
     <div className="mt-10 flex flex-col">
       <FetchUserData />
       <FetchMembershipDays />
-      <ProfileStages levelId={levelId} size={80} /> {/* 레벨에 맞는 프로필 이미지 표시 */}
+      {levelId && <ProfileStages levelId={levelId} size={80} />} {/* 레벨에 맞는 프로필 이미지 표시 */}
       <div className="flex items-center">
         <h3 className="font-semibold mt-3 mb-3 text-[14px]">
           {levelName}, {nickname} 님의 정원✨
