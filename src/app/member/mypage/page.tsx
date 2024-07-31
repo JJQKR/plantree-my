@@ -44,11 +44,7 @@ const MyPage: React.FC = () => {
 
         <div>
           <div className="flex flex-row justify-between max-w-[600px] mb-1">
-<<<<<<< HEAD
             <h2 className="font-semibold ml-1">도전 과제 1/9</h2>
-=======
-            <h2 className="font-semibold ml-1 ">도전 과제 1/15</h2>
->>>>>>> e3db4cb945dd037315661077924794f53b95a8a8
             <button className="font-semibold bg-white rounded-[5px] mr-1" onClick={handleToggleBadgeModal}>
               전체 보기
             </button>
