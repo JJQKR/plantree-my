@@ -11,7 +11,7 @@ interface DiaryStore {
 }
 
 const useDiaryStore = create<DiaryStore>((set) => ({
-  diaryId: '',
+  diaryId: 'ff4f3ee6-9612-4949-8f3c-14dc134097b1',
   diaries: [],
   setDiaryId: (id: string) => set({ diaryId: id }), // 다이어리 ID 설정
   addDiary: (diary: any) => set((state) => ({ diaries: [...state.diaries, diary] })), // 다이어리 목록에 추가
