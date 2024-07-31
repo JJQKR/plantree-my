@@ -1,6 +1,14 @@
 import { Tables } from '@/types/supabase';
 import { supabase } from '@/supabase/client';
 
+export type TodoType = {
+  id: string;
+  text: string;
+  isDone: boolean;
+  color: string;
+  planer_id: string;
+};
+
 export type UpdateTenMinPlanerType = {
   date: string;
   d_day_date: string;
@@ -10,6 +18,7 @@ export type UpdateTenMinPlanerType = {
   timetable: { [key: string]: { active: boolean; color: string; todoId: string } };
   diary_id: string;
   user_id: string;
+  todo_list: TodoType[];
 };
 
 class TenMinPlanerAPI {
@@ -69,10 +78,10 @@ class TenMinPlanerAPI {
    * @returns ten_min_planer에 추가된 data
    */
   async insertTenMinPlaner(insertData: UpdateTenMinPlanerType) {
-    const { date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id } = insertData;
+    const { date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list } = insertData;
     const { data } = await this.supabase
       .from('ten_min_planer')
-      .insert({ date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id });
+      .insert({ date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list });
 
     return data;
   }
@@ -103,10 +112,10 @@ class TenMinPlanerAPI {
    * @returns
    */
   async updateTenMinPlaner(id: string, updateData: UpdateTenMinPlanerType) {
-    const { date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id } = updateData;
+    const { date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list } = updateData;
     const { data, error } = await this.supabase
       .from('ten_min_planer')
-      .update({ date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id })
+      .update({ date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list })
       .eq('id', id)
       .select('*');
 

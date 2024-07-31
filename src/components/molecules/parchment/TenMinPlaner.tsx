@@ -5,10 +5,12 @@ import React, { useEffect, useState } from 'react';
 import Todolist from './Todolist';
 import Timetable from './Timetable';
 import { useCreateTenMinPlaner, useTenMinPlaner, useUpdateTenMinPlaner } from '@/lib/hooks/useTenMinPlaner';
-import useTimetableStore, { activeCellsObjet } from '@/stores/timetable.store';
+import useTimetableStore, { ActiveCellsObject } from '@/stores/timetable.store';
 import useUserStore from '@/stores/user.store';
 import useTenMinPlanerStore from '@/stores/tenMinPlaner.store';
 import useDiaryStore from '@/stores/diary.store';
+// import { useCreateTenMinTodo, useUpdateTenMinTodo } from '@/lib/hooks/useTenMinTodos';
+import useTodoListStore, { TodoObjectType } from '@/stores/todoList.store';
 
 const TenMinPlaner = () => {
   const [date, setDate] = useState('');
@@ -21,10 +23,13 @@ const TenMinPlaner = () => {
   const { userId } = useUserStore((state) => state);
   const { diaryId } = useDiaryStore((state) => state);
   const { tenMinPlanerId } = useTenMinPlanerStore((state) => state);
+  const { todoList, setTodoList } = useTodoListStore((state) => state);
 
   const { mutate: createTenMinPlaner } = useCreateTenMinPlaner();
   const { data: tenMinPlaner } = useTenMinPlaner(tenMinPlanerId);
   const { mutate: updateTenMinPlaner } = useUpdateTenMinPlaner();
+  // const { mutate: createTenMinTodo } = useCreateTenMinTodo();
+  // const { mutate: updateTenMinTodo } = useUpdateTenMinTodo();
 
   const handleDate = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputData = e.target.value;
@@ -81,9 +86,10 @@ const TenMinPlaner = () => {
       setDday(tenMinPlaner?.d_day || '');
       setGoal(tenMinPlaner?.goal || '');
       setMemo(tenMinPlaner?.memo || '');
-      setActiveCells((tenMinPlaner?.timetable as activeCellsObjet) || {});
+      setActiveCells((tenMinPlaner?.timetable as ActiveCellsObject) || {});
+      setTodoList((tenMinPlaner?.todo_list as unknown as TodoObjectType[]) || []);
     }
-  }, [tenMinPlaner, tenMinPlanerId]);
+  }, [tenMinPlaner, tenMinPlanerId, setActiveCells]);
 
   console.log('supabase', tenMinPlaner);
 
@@ -101,14 +107,16 @@ const TenMinPlaner = () => {
       memo: memo,
       user_id: userId,
       diary_id: diaryId,
-      timetable: activeCells
+      timetable: activeCells,
+      todo_list: todoList
     };
+
+    console.log(todoList);
 
     if (tenMinPlanerId) {
       console.log(tenMinPlanerId);
       if (confirm('이대로 저장하시겠습니까?')) {
         updateTenMinPlaner({ id: tenMinPlanerId, updateTenMinPlaner: newTenMinPlaner });
-        // todolist api
         alert('저장되었습니다.');
         console.log(newTenMinPlaner);
       }

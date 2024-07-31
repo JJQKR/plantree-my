@@ -2,7 +2,7 @@
 
 import { getBackgroundColorClass } from '@/lib/utils/tenMinPlanerColor';
 import useTimetableStore from '@/stores/timetable.store';
-import useTodoListStore from '@/stores/todoList.stor';
+import useTodoListStore from '@/stores/todoList.store';
 import React, { useState } from 'react';
 
 const Timetable = () => {

@@ -1,14 +1,14 @@
 import { create } from 'zustand';
 
-export interface activeCellsObjet {
+export interface ActiveCellsObject {
   [key: string]: { active: boolean; color: string; todoId: string };
 }
 
 interface TimeTableStore {
-  activeCells: activeCellsObjet;
-  addActiveCell: (cell: activeCellsObjet) => void;
+  activeCells: ActiveCellsObject;
+  addActiveCell: (cell: ActiveCellsObject) => void;
   removeActiveCell: (id: string) => void;
-  setActiveCells: (cells: activeCellsObjet) => void;
+  setActiveCells: (cells: ActiveCellsObject) => void;
   // updateCell: (id: string, color: string, todoId: string) => void;
 }
 
@@ -20,7 +20,7 @@ const useTimetableStore = create<TimeTableStore>((set) => ({
       const { [id]: _, ...newActiveCells } = state.activeCells;
       return { activeCells: newActiveCells };
     }),
-  setActiveCells: (cells: activeCellsObjet) => set(() => ({ activeCells: cells }))
+  setActiveCells: (cells: ActiveCellsObject) => set(() => ({ activeCells: cells }))
 
   // updateCell: (id, color, todoId) =>
   //   set((state) => ({

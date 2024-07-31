@@ -22,11 +22,10 @@
 // };
 
 // // tenMinTodos 생성하기
-// export const useCreateTenMinPlaner = () => {
+// export const useCreateTenMinTodo = () => {
 //   const queryClient = useQueryClient();
 //   return useMutation({
-//     mutationFn: async (newTodo: UpdateTodoType) =>
-//       await tenMinTodosApi.insertTenMinTodo(newTodo),
+//     mutationFn: async (newTodo: UpdateTodoType) => await tenMinTodosApi.insertTenMinTodo(newTodo),
 //     onSuccess: () => {
 //       queryClient.invalidateQueries({
 //         queryKey: ['tenMinTodos']
@@ -52,15 +51,15 @@
 // export const useUpdateTenMinTodo = () => {
 //   const queryClient = useQueryClient();
 //   return useMutation({
-//     mutationFn: ({ id, updateTenMinPlaner }: { id: string; updateTenMinPlaner: UpdateTenMinPlanerType }) =>
-//       tenMinTodosApi.updateTenMinPlaner(id, updateTenMinPlaner),
+//     mutationFn: ({ id, updateTenMinTodo }: { id: string; updateTenMinTodo: UpdateTodoType }) =>
+//       tenMinTodosApi.updateTenMinTodo(id, updateTenMinTodo),
 //     onSuccess: (data, variables) => {
 //       // 'variables'를 통해 mutationFn에 전달된 'id'에 접근
 //       queryClient.invalidateQueries({
-//         queryKey: ['tenMinPlaner']
+//         queryKey: ['tenMinTodos']
 //       });
 //       queryClient.invalidateQueries({
-//         queryKey: ['tenMinPlaner', variables.id]
+//         queryKey: ['tenMinTodos', variables.id]
 //       });
 //     }
 //   });

@@ -34,6 +34,13 @@ export type Database = {
             referencedColumns: ['id'];
           },
           {
+            foreignKeyName: 'contents_content_id_fkey1';
+            columns: ['content_id'];
+            isOneToOne: false;
+            referencedRelation: 'line_note';
+            referencedColumns: ['id'];
+          },
+          {
             foreignKeyName: 'contents_diary_id_fkey';
             columns: ['diary_id'];
             isOneToOne: false;
@@ -161,6 +168,47 @@ export type Database = {
         };
         Relationships: [];
       };
+      line_note: {
+        Row: {
+          bg_color: string | null;
+          created_at: string;
+          global_text_color: string | null;
+          id: string;
+          line_color: string | null;
+          line_thickness: number | null;
+          lines: Json | null;
+          user_id: string | null;
+        };
+        Insert: {
+          bg_color?: string | null;
+          created_at?: string;
+          global_text_color?: string | null;
+          id?: string;
+          line_color?: string | null;
+          line_thickness?: number | null;
+          lines?: Json | null;
+          user_id?: string | null;
+        };
+        Update: {
+          bg_color?: string | null;
+          created_at?: string;
+          global_text_color?: string | null;
+          id?: string;
+          line_color?: string | null;
+          line_thickness?: number | null;
+          lines?: Json | null;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'line_note_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          }
+        ];
+      };
       parchment: {
         Row: {
           id: string;
@@ -186,6 +234,7 @@ export type Database = {
           id: string;
           memo: string | null;
           timetable: Json | null;
+          todo_list: Json | null;
           user_id: string | null;
         };
         Insert: {
@@ -197,6 +246,7 @@ export type Database = {
           id?: string;
           memo?: string | null;
           timetable?: Json | null;
+          todo_list?: Json | null;
           user_id?: string | null;
         };
         Update: {
@@ -208,6 +258,7 @@ export type Database = {
           id?: string;
           memo?: string | null;
           timetable?: Json | null;
+          todo_list?: Json | null;
           user_id?: string | null;
         };
         Relationships: [
@@ -229,24 +280,30 @@ export type Database = {
       };
       ten_min_todos: {
         Row: {
-          '10min_planer_id': string | null;
+          color: string | null;
           id: string;
-          todo: string | null;
+          isDone: boolean | null;
+          planer_id: string | null;
+          text: string | null;
         };
         Insert: {
-          '10min_planer_id'?: string | null;
+          color?: string | null;
           id?: string;
-          todo?: string | null;
+          isDone?: boolean | null;
+          planer_id?: string | null;
+          text?: string | null;
         };
         Update: {
-          '10min_planer_id'?: string | null;
+          color?: string | null;
           id?: string;
-          todo?: string | null;
+          isDone?: boolean | null;
+          planer_id?: string | null;
+          text?: string | null;
         };
         Relationships: [
           {
-            foreignKeyName: '10min_todos_10min_planer_id_fkey';
-            columns: ['10min_planer_id'];
+            foreignKeyName: 'ten_min_todos_planer_id_fkey';
+            columns: ['planer_id'];
             isOneToOne: false;
             referencedRelation: 'ten_min_planer';
             referencedColumns: ['id'];
