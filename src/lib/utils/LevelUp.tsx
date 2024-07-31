@@ -8,7 +8,7 @@ const LevelUp = () => {
   const { userId, attendance, setLevelName } = useUserStore((state) => state);
 
   useEffect(() => {
-    const updateUserLevel = async (userId, attendance) => {
+    const updateUserLevel = async (userId: string, attendance: number) => {
       const { data: levels, error: levelsError } = await supabase
         .from('level')
         .select('*')
@@ -19,8 +19,8 @@ const LevelUp = () => {
         return;
       }
 
-      let newLevelId = null;
-      let newLevelName = null;
+      let newLevelId: string | null = null;
+      let newLevelName: string | null = null;
       for (const level of levels) {
         if (attendance >= level.attendance_requirement) {
           newLevelId = level.id;
