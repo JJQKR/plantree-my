@@ -90,35 +90,34 @@ const Todolist: React.FC = () => {
       <h2>todolist</h2>
       <div className="w-ful">
         <ul className="relative">
-          {todoList &&
-            todoList.map((todo) => {
-              return (
-                <li
-                  key={todo.id}
-                  className={`flex flex-row border`}
-                  style={{ backgroundColor: todo.isDone ? getBackgroundColorClass(todo.color) : 'transparent' }}
-                >
-                  <span onClick={() => openModal(todo.id)} style={{ color: getColorClass(todo.color) }}>
-                    <FaCircle />
-                  </span>
-                  <input type="checkbox" checked={todo.isDone} onClick={() => handleToggle(todo.id)} />
-                  {editingId === todo.id ? (
-                    <input
-                      type="text"
-                      value={editingText}
-                      onChange={handleEditingChange}
-                      onKeyUp={(e) => submitEdit(todo.id, e)}
-                    />
-                  ) : (
-                    <span onClick={() => startEditing(todo.id)}>{todo.text}</span>
-                  )}
-                  <div className="absolute right-1">
-                    <button onClick={() => handleSelectTodo(todo)}>선택</button>
-                    <button onClick={() => removeTodo(todo.id)}>✕</button>
-                  </div>
-                </li>
-              );
-            })}
+          {todoList.map((todo) => {
+            return (
+              <li
+                key={todo.id}
+                className={`flex flex-row border`}
+                style={{ backgroundColor: todo.isDone ? getBackgroundColorClass(todo.color) : 'transparent' }}
+              >
+                <span onClick={() => openModal(todo.id)} style={{ color: getColorClass(todo.color) }}>
+                  <FaCircle />
+                </span>
+                <input type="checkbox" checked={todo.isDone} onClick={() => handleToggle(todo.id)} />
+                {editingId === todo.id ? (
+                  <input
+                    type="text"
+                    value={editingText}
+                    onChange={handleEditingChange}
+                    onKeyUp={(e) => submitEdit(todo.id, e)}
+                  />
+                ) : (
+                  <span onClick={() => startEditing(todo.id)}>{todo.text}</span>
+                )}
+                <div className="absolute right-1">
+                  <button onClick={() => handleSelectTodo(todo)}>선택</button>
+                  <button onClick={() => removeTodo(todo.id)}>✕</button>
+                </div>
+              </li>
+            );
+          })}
         </ul>
         <div className="w-full">
           <input type="text" value={todoInput} onChange={updateTodoInput} onKeyUp={submitOnEnter} className="w-11/12" />
