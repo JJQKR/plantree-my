@@ -4,15 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
 import { addCover } from '@/services/cover.service';
 
-const dummyData = [
-  'https://via.placeholder.com/384x600?text=Page+1'
-  // 'https://via.placeholder.com/384x600?text=Page+2',
-  // 'https://via.placeholder.com/384x600?text=Page+3',
-  // 'https://via.placeholder.com/384x600?text=Page+4',
-  // 'https://via.placeholder.com/384x600?text=Page+5',
-  // 'https://via.placeholder.com/384x600?text=Page+6',
-  // 'https://via.placeholder.com/384x600?text=Page+7'
-];
+const dummyData = ['https://via.placeholder.com/384x600?text=Page+1'];
 
 const addParchmentPages = [
   'https://via.placeholder.com/384x600?text=New+Page+1',
@@ -97,7 +89,7 @@ const DiaryParchmentPage: React.FC = () => {
   }, [showPageOptions]);
 
   const renderPage = (pageUrl: string, pageIndex: number) => (
-    <div className="relative w-96 h-152 bg-white shadow-lg p-2">
+    <div className="relative w-[512px] h-[800px] bg-white shadow-lg p-2">
       <img src={pageUrl} className="w-full h-full object-cover" />
       <div className="absolute top-2 right-2 text-gray-800 text-xs px-2 py-1 rounded">Page {pageIndex + 1}</div>
     </div>
@@ -111,7 +103,7 @@ const DiaryParchmentPage: React.FC = () => {
             renderPage(pages[currentPage], currentPage)
           ) : (
             <div
-              className="w-96 h-152 flex items-center justify-center border-2 border-dashed border-gray-600 cursor-pointer"
+              className="w-[512px] h-[800px] flex items-center justify-center border-2 border-dashed border-gray-600 cursor-pointer"
               onClick={handleAddPageClick}
             >
               <span className="text-gray-600 text-4xl">+ 속지 추가</span>
@@ -124,7 +116,7 @@ const DiaryParchmentPage: React.FC = () => {
             ? renderPage(pages[currentPage + 1], currentPage + 1)
             : currentPage < pages.length && (
                 <div
-                  className="w-96 h-152 flex items-center justify-center border-2 border-dashed border-gray-600 cursor-pointer"
+                  className="w-[512px] h-[800px] flex items-center justify-center border-2 border-dashed border-gray-600 cursor-pointer"
                   onClick={handleAddPageClick}
                 >
                   <span className="text-gray-600 text-4xl">+ 속지 추가</span>
@@ -148,12 +140,14 @@ const DiaryParchmentPage: React.FC = () => {
           다음
         </button>
       </div>
-      <button
-        onClick={handleFinalSave}
-        className="m-4 px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300"
-      >
-        저장
-      </button>
+      <div className="flex justify-end">
+        <button
+          onClick={handleFinalSave}
+          className=" px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300"
+        >
+          다이어리 저장
+        </button>
+      </div>
 
       {showPageOptions && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" onClick={closeModal}>
