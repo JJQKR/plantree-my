@@ -8,12 +8,11 @@ const DiaryParchmentPage = () => {
   const router = useRouter();
   const { coverData, pages, setPages } = useDiaryCoverStore();
   const [currentPage, setCurrentPage] = useState(0);
-  const bottomSheetList = useBottomSheetStore((state) => state.bottomSheetList);
   const setBottomSheetList = useBottomSheetStore((state) => state.setBottomSheetList);
 
   const handleDeletePage = (pageIndex: number) => {
     const newPages = [...pages];
-    const [deletedPage] = newPages.splice(pageIndex, 1);
+    newPages.splice(pageIndex, 1);
     setPages(newPages);
 
     const reorderedBottomSheetList = newPages.map((page, index) => ({
