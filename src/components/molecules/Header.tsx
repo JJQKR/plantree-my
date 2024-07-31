@@ -16,7 +16,7 @@ const Header: React.FC<MainHeaderProps> = ({ toggleSidebar, toggleGrid }) => {
     <header className="flex justify-between items-center p-4 bg-gray-800 text-white">
       <SideButton onClick={toggleSidebar}>Menu</SideButton>
       <div className="flex-grow flex justify-center">
-        <Link href="/member">
+        <Link href="/">
           <Image
             src="/images/Plantree.png"
             alt="Logo"

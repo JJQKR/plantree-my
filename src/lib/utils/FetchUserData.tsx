@@ -19,7 +19,7 @@ const FetchUserData = () => {
       if (user) {
         console.log('Fetched user ID:', user.id); // 디버깅 코드 추가
         setUserId(user.id);
-        setEmail(user.email);
+        setEmail(user.email ?? null);
 
         const { data: nicknameData, error: nicknameError } = await supabase
           .from('users')
@@ -29,7 +29,7 @@ const FetchUserData = () => {
         if (nicknameError) {
           console.error('닉네임 가져오기 실패:', nicknameError);
         } else {
-          setNickname(nicknameData.nickname); // 전역 상태에 닉네임 설정
+          setNickname(nicknameData.nickname ?? ''); // 전역 상태에 닉네임 설정
         }
 
         const { data: levelData, error: levelError } = await supabase
