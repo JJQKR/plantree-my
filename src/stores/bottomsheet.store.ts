@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { useDiaryCoverStore } from '@/stores/diarycover.store';
 
 type BottomSheetState = {
   bottomSheetList: { id: string; title: string; content: string }[];
@@ -8,7 +7,6 @@ type BottomSheetState = {
   setBottomSheetList: (newList: { id: string; title: string; content: string }[]) => void;
   moveCard: (dragIndex: number, hoverIndex: number) => void;
   addPageToBottomSheet: (id: string, title: string, content: string) => void;
-  deletePageFromBottomSheet: (id: string) => void;
 };
 
 const useBottomSheetStore = create<BottomSheetState>((set) => ({
@@ -27,14 +25,7 @@ const useBottomSheetStore = create<BottomSheetState>((set) => ({
   addPageToBottomSheet: (id, title, content) =>
     set((state) => ({
       bottomSheetList: [...state.bottomSheetList, { id, title, content }]
-    })),
-  deletePageFromBottomSheet: (id) => {
-    const deletePage = useDiaryCoverStore.getState().deletePage;
-    deletePage(id); // delete page from the cover store as well
-    set((state) => ({
-      bottomSheetList: state.bottomSheetList.filter((page) => page.id !== id)
-    }));
-  }
+    }))
 }));
 
 export default useBottomSheetStore;
