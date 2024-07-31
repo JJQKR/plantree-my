@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { supabase } from '../../supabase/client'; // supabase 클라이언트 임포트
+import { supabase } from '../../supabase/client';
 
 interface SignupModalProps {
   onClose: () => void;
@@ -20,7 +20,6 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
 
   const signUp = async () => {
     try {
-      // 1. 사용자 인증 정보로 회원가입
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
@@ -32,19 +31,18 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
       });
       if (authError) throw authError;
 
-      // 2. 회원가입 성공 시, 사용자 프로필 정보 추가
       if (authData.user) {
         const { data: profileData, error: profileError } = await supabase
           .from('users')
           .insert({
             id: authData.user.id,
             nickname: nickname,
-            email: email
+            email: email,
+            level_id: 'lv1'
           })
           .select();
         if (profileError) throw profileError;
 
-        // 회원가입과 프로필 정보 추가가 모두 성공하면 모달 닫기 및 성공 콜백 호출
         onClose();
         onSignupSuccess();
         return { authData, profileData };
