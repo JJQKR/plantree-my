@@ -1,28 +1,36 @@
 'use client';
 
 import { MainSidebarProps } from '@/types/main';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { DiAptana } from 'react-icons/di';
 import useUserStore from '@/stores/user.store';
 import AttendanceCheck from '@/lib/utils/AttendanceCheck';
 import FetchUserData from '@/lib/utils/FetchUserData';
-import { supabase } from '@/supabase/client';
 import ProfileStages from './ProfileStages';
+import useDiaryStore from '@/stores/diary.store';
+import { supabase } from '@/supabase/client';
 
 const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
-  const [nickname, setNickname] = useState<string | null>(null);
-  const [diaries, setDiaries] = useState<any[]>([]);
-  const { levelName, attendance, userId } = useUserStore((state) => state);
-  const [levelId, setLevelId] = useState<string | null>(null);
+  const [nickname, setNickname] = useState<string | null>(null); // 사용자 닉네임 상태
+  const { levelName, attendance } = useUserStore((state) => state); // 사용자 레벨과 출석 상태 가져오기
+  const { diaries, fetchDiaries } = useDiaryStore((state) => ({
+    diaries: state.diaries,
+    fetchDiaries: state.fetchDiaries
+  }));
 
+  const [levelId, setLevelId] = useState<string | null>(null); // 사용자 레벨 ID 상태
+
+  // 컴포넌트가 마운트되었을 때 실행되는 useEffect
   useEffect(() => {
-    const fetchNicknameAndDiaries = async () => {
+    const fetchData = async () => {
+      // 현재 사용자 정보 가져오기
       const {
         data: { user }
       } = await supabase.auth.getUser();
 
       if (user) {
+        // 사용자 닉네임 및 레벨 ID 가져오기
         const { data: nicknameData, error: nicknameError } = await supabase
           .from('users')
           .select('nickname, level_id')
@@ -33,27 +41,18 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
           console.error('닉네임 가져오기 실패:', nicknameError);
         } else {
           setNickname(nicknameData.nickname);
-          setLevelId(nicknameData.level_id); // level_id 설정
+          setLevelId(nicknameData.level_id);
         }
 
-        const { data: diariesData, error: diariesError } = await supabase
-          .from('diaries')
-          .select('id, name')
-          .eq('user_id', user.id)
-          .order('bookshelf_order', { ascending: true });
-
-        if (diariesError) {
-          console.error('다이어리 목록 가져오기 실패:', diariesError);
-        } else {
-          setDiaries(diariesData || []);
-        }
+        // 다이어리 목록 가져오기
+        await fetchDiaries();
       } else {
-        setNickname('Guest'); // 로그인 안하면 게스트로 나오게
+        setNickname('Guest'); // 로그인하지 않은 경우 기본 닉네임 설정
       }
     };
 
-    fetchNicknameAndDiaries();
-  }, [userId]);
+    fetchData();
+  }, [fetchDiaries]);
 
   return (
     <div className="w-[320px] h-auto bg-gray-700 text-white flex-shrink-0">

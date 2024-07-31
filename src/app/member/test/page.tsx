@@ -3,64 +3,77 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/supabase/client';
-import useDiaryStore from '@/stores/diary.store'; // Zustand store import
+import useDiaryStore from '@/stores/diary.store';
 
 const CreateDiaryPage: React.FC = () => {
-  const [diaryName, setDiaryName] = useState<string>('');
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  // 상태 정의
+  const [diaryName, setDiaryName] = useState<string>(''); // 다이어리 이름 상태
+  const [error, setError] = useState<string | null>(null); // 에러 메시지 상태
+  const [success, setSuccess] = useState<string | null>(null); // 성공 메시지 상태
   const router = useRouter();
-  const setDiaryId = useDiaryStore((state) => state.setDiaryId); // Zustand store의 setDiaryId 함수 가져오기
 
+  // Zustand store에서 필요한 상태와 함수 가져오기
+  const { setDiaryId, addDiary, fetchDiaries } = useDiaryStore((state) => ({
+    setDiaryId: state.setDiaryId,
+    addDiary: state.addDiary,
+    fetchDiaries: state.fetchDiaries
+  }));
+
+  // 컴포넌트가 마운트되었을 때 실행되는 useEffect
   useEffect(() => {
-    // 사용자 로그인 세션을 확인하는 함수
     const checkSession = async () => {
+      // 현재 세션 가져오기
       const {
         data: { session }
       } = await supabase.auth.getSession();
       if (!session) {
-        // 로그인되어 있지 않으면 에러 메시지 설정
         setError('로그인되어 있지 않습니다.');
       }
     };
-
     checkSession();
   }, []);
 
   // 다이어리 생성 핸들러
   const handleCreateDiary = async () => {
+    // 다이어리 이름이 비어있는 경우
     if (!diaryName.trim()) {
-      setError('다이어리 이름을 입력해 주세요.'); // 다이어리 이름이 비어있는 경우 에러 메시지 설정
+      setError('다이어리 이름을 입력해 주세요.');
       return;
     }
 
+    // 현재 세션 및 사용자 정보 가져오기
     const {
       data: { session }
     } = await supabase.auth.getSession();
     const user = session?.user;
     if (!user) {
-      setError('사용자가 로그인되어 있지 않습니다.'); // 로그인되지 않은 경우 에러 메시지 설정
+      setError('사용자가 로그인되어 있지 않습니다.');
       return;
     }
 
     try {
+      // 사용자의 다이어리 개수 가져오기
       const { count } = await supabase.from('diaries').select('*', { count: 'exact' }).eq('user_id', user.id);
 
+      // 새로운 다이어리 삽입
       const { data: newDiary, error: insertError } = await supabase
         .from('diaries')
         .insert({
-          created_at: new Date().toISOString(), // 현재 시간으로 다이어리 생성일 설정
+          created_at: new Date().toISOString(),
           user_id: user.id,
-          bookshelf_order: count || 0, // 현재 사용자의 다이어리 수를 기반으로 순서 설정
+          bookshelf_order: count || 0,
           name: diaryName
         })
         .select()
-        .single(); // 새로운 다이어리 데이터 가져오기
+        .single();
 
       if (insertError) throw insertError;
 
       if (newDiary) {
-        setDiaryId(newDiary.id); // Zustand store에 다이어리 ID 저장
+        // Zustand store에 새 다이어리 추가 및 목록 새로고침
+        setDiaryId(newDiary.id);
+        addDiary(newDiary);
+        await fetchDiaries();
       }
 
       setSuccess('다이어리가 성공적으로 생성되었습니다!');
@@ -80,18 +93,15 @@ const CreateDiaryPage: React.FC = () => {
       <input
         type="text"
         value={diaryName}
-        onChange={(e) => setDiaryName(e.target.value)} // 입력 필드 값 변경 시 상태 업데이트
+        onChange={(e) => setDiaryName(e.target.value)}
         placeholder="다이어리 이름"
         className="mb-2 p-2 border rounded w-full text-black"
       />
-      <button
-        onClick={handleCreateDiary} // 버튼 클릭 시 다이어리 생성 핸들러 호출
-        className="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 transition duration-300"
-      >
-        새 다이어리 생성
+      <button onClick={handleCreateDiary} className="p-2 bg-blue-500 text-white rounded">
+        생성하기
       </button>
-      {error && <p className="text-red-500 mt-2">{error}</p>} {/* 에러 메시지 표시 */}
-      {success && <p className="text-green-500 mt-2">{success}</p>} {/* 성공 메시지 표시 */}
+      {error && <div className="mt-2 text-red-500">{error}</div>}
+      {success && <div className="mt-2 text-green-500">{success}</div>}
     </div>
   );
 };
