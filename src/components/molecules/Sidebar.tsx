@@ -7,18 +7,21 @@ import { DiAptana } from 'react-icons/di';
 import useUserStore from '@/stores/user.store';
 import AttendanceCheck from '@/lib/utils/AttendanceCheck';
 import FetchUserData from '@/lib/utils/FetchUserData';
-import { supabase } from '@/supabase/client';
 import ProfileStages from './ProfileStages';
 import useDiaryStore from '@/stores/diary.store';
+import { supabase } from '@/supabase/client';
 
 const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
   const [nickname, setNickname] = useState<string | null>(null);
-  const { levelName, attendance, userId } = useUserStore((state) => state);
-  const { diaries } = useDiaryStore((state) => ({ diaries: state.diaries }));
+  const { levelName, attendance } = useUserStore((state) => state);
+  const { diaries, fetchDiaries } = useDiaryStore((state) => ({
+    diaries: state.diaries,
+    fetchDiaries: state.fetchDiaries
+  }));
   const [levelId, setLevelId] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchNicknameAndDiaries = async () => {
+    const fetchData = async () => {
       const {
         data: { user }
       } = await supabase.auth.getUser();
@@ -37,14 +40,15 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
           setLevelId(nicknameData.level_id);
         }
 
-        // 다이어리 목록을 상태에서 가져오므로 삭제함
+        // 다이어리 목록 가져오기
+        await fetchDiaries();
       } else {
         setNickname('Guest');
       }
     };
 
-    fetchNicknameAndDiaries();
-  }, [userId]);
+    fetchData();
+  }, [fetchDiaries]);
 
   return (
     <div className="w-[320px] h-auto bg-gray-700 text-white flex-shrink-0">

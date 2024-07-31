@@ -10,10 +10,10 @@ const CreateDiaryPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const router = useRouter();
-  const { setDiaryId, addDiary, setDiaries } = useDiaryStore((state) => ({
+  const { setDiaryId, addDiary, fetchDiaries } = useDiaryStore((state) => ({
     setDiaryId: state.setDiaryId,
     addDiary: state.addDiary,
-    setDiaries: state.setDiaries
+    fetchDiaries: state.fetchDiaries
   }));
 
   useEffect(() => {
@@ -62,13 +62,7 @@ const CreateDiaryPage: React.FC = () => {
       if (newDiary) {
         setDiaryId(newDiary.id);
         addDiary(newDiary); // 새로 생성한 다이어리 추가
-        // 새로 생성한 다이어리 목록 업데이트
-        const { data: updatedDiaries } = await supabase
-          .from('diaries')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('bookshelf_order', { ascending: true });
-        setDiaries(updatedDiaries || []);
+        await fetchDiaries(); // 다이어리 목록 새로고침
       }
 
       setSuccess('다이어리가 성공적으로 생성되었습니다!');
@@ -92,14 +86,11 @@ const CreateDiaryPage: React.FC = () => {
         placeholder="다이어리 이름"
         className="mb-2 p-2 border rounded w-full text-black"
       />
-      <button
-        onClick={handleCreateDiary}
-        className="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 transition duration-300"
-      >
-        새 다이어리 생성
+      <button onClick={handleCreateDiary} className="p-2 bg-blue-500 text-white rounded">
+        생성하기
       </button>
-      {error && <p className="text-red-500 mt-2">{error}</p>}
-      {success && <p className="text-green-500 mt-2">{success}</p>}
+      {error && <div className="mt-2 text-red-500">{error}</div>}
+      {success && <div className="mt-2 text-green-500">{success}</div>}
     </div>
   );
 };
