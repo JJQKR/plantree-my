@@ -24,7 +24,9 @@ const NicknameModal: React.FC = () => {
             console.error('닉네임 페치 실패:', error);
           } else {
             console.log('닉네임 페치 성공:', data.nickname);
-            setNickname(data.nickname); // 전역 상태에 닉네임 설정
+            if (data.nickname !== null) {
+              setNickname(data.nickname); // 전역 상태에 닉네임 설정
+            }
           }
         }
       } catch (error) {
@@ -42,7 +44,7 @@ const NicknameModal: React.FC = () => {
   };
 
   const handleNicknameSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    // e.preventDefault();
     if (nicknameRef.current) {
       const newNickname = nicknameRef.current.value.trim();
       if (newNickname.length < 2 || newNickname.length > 8) {

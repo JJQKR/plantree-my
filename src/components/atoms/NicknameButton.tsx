@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 
-const NicknameButton: React.FC = ({ children }: PropsWithChildren) => {
+const NicknameButton: React.FC<PropsWithChildren<{}>> = ({ children }) => {
   return <>{children}</>;
 };
 
