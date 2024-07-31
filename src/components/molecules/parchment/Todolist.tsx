@@ -6,14 +6,16 @@ import { FaPlus } from 'react-icons/fa6';
 import useMyModalStore from '@/stores/my.modal.store';
 import { FaCircle } from 'react-icons/fa';
 import ColorModal from './ColorModal';
-import useTodoListStore from '@/stores/todoList.stor';
+import useTodoListStore from '@/stores/todoList.store';
 import { getBackgroundColorClass, getColorClass } from '@/lib/utils/tenMinPlanerColor';
+import useTenMinPlanerStore from '@/stores/tenMinPlaner.store';
 
 type Todo = {
   id: string;
   text: string;
   isDone: boolean;
   color: string;
+  planer_id: string;
 };
 
 const Todolist: React.FC = () => {
@@ -32,7 +34,9 @@ const Todolist: React.FC = () => {
     stopEditing,
     editTodo
   } = useTodoListStore((state) => state);
+  const { tenMinPlanerId } = useTenMinPlanerStore();
   const { isTenMinPlanerColorModalOpen, toggleTenMinPlanerColorModal } = useMyModalStore((state) => state);
+  // const { mutate: createTenMinTodo } = useCreateTenMinTodo();
 
   const updateTodoInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTodoInput(e.target.value);
@@ -40,11 +44,9 @@ const Todolist: React.FC = () => {
 
   const handleAddTodo = () => {
     if (todoInput.trim() === '') return;
-    addTodo({ id: uuid(), text: todoInput, isDone: false, color: 'transparent' });
+    addTodo({ id: uuid(), text: todoInput, isDone: false, color: 'transparent', planer_id: tenMinPlanerId });
     setTodoInput('');
   };
-
-  console.log(todoList);
 
   const submitOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -88,35 +90,35 @@ const Todolist: React.FC = () => {
       <h2>todolist</h2>
       <div className="w-ful">
         <ul className="relative">
-          {todoList.map((todo) => {
-            console.log(getBackgroundColorClass(todo.color));
-            return (
-              <li
-                key={todo.id}
-                className={`flex flex-row border`}
-                style={{ backgroundColor: todo.isDone ? getBackgroundColorClass(todo.color) : 'transparent' }}
-              >
-                <span onClick={() => openModal(todo.id)} style={{ color: getColorClass(todo.color) }}>
-                  <FaCircle />
-                </span>
-                <input type="checkbox" onClick={() => handleToggle(todo.id)} />
-                {editingId === todo.id ? (
-                  <input
-                    type="text"
-                    value={editingText}
-                    onChange={handleEditingChange}
-                    onKeyUp={(e) => submitEdit(todo.id, e)}
-                  />
-                ) : (
-                  <span onClick={() => startEditing(todo.id)}>{todo.text}</span>
-                )}
-                <div className="absolute right-1">
-                  <button onClick={() => handleSelectTodo(todo)}>선택</button>
-                  <button onClick={() => removeTodo(todo.id)}>✕</button>
-                </div>
-              </li>
-            );
-          })}
+          {todoList &&
+            todoList.map((todo) => {
+              return (
+                <li
+                  key={todo.id}
+                  className={`flex flex-row border`}
+                  style={{ backgroundColor: todo.isDone ? getBackgroundColorClass(todo.color) : 'transparent' }}
+                >
+                  <span onClick={() => openModal(todo.id)} style={{ color: getColorClass(todo.color) }}>
+                    <FaCircle />
+                  </span>
+                  <input type="checkbox" checked={todo.isDone} onClick={() => handleToggle(todo.id)} />
+                  {editingId === todo.id ? (
+                    <input
+                      type="text"
+                      value={editingText}
+                      onChange={handleEditingChange}
+                      onKeyUp={(e) => submitEdit(todo.id, e)}
+                    />
+                  ) : (
+                    <span onClick={() => startEditing(todo.id)}>{todo.text}</span>
+                  )}
+                  <div className="absolute right-1">
+                    <button onClick={() => handleSelectTodo(todo)}>선택</button>
+                    <button onClick={() => removeTodo(todo.id)}>✕</button>
+                  </div>
+                </li>
+              );
+            })}
         </ul>
         <div className="w-full">
           <input type="text" value={todoInput} onChange={updateTodoInput} onKeyUp={submitOnEnter} className="w-11/12" />

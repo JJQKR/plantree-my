@@ -3,99 +3,6 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
-      '10min_planer_contents': {
-        Row: {
-          current_date: string;
-          d_day: string | null;
-          d_day_date: string | null;
-          goal: string | null;
-          id: string;
-          memo: string | null;
-          user_id: string | null;
-        };
-        Insert: {
-          current_date: string;
-          d_day?: string | null;
-          d_day_date?: string | null;
-          goal?: string | null;
-          id?: string;
-          memo?: string | null;
-          user_id?: string | null;
-        };
-        Update: {
-          current_date?: string;
-          d_day?: string | null;
-          d_day_date?: string | null;
-          goal?: string | null;
-          id?: string;
-          memo?: string | null;
-          user_id?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: '10min_planer_contents_user_id_fkey';
-            columns: ['user_id'];
-            isOneToOne: false;
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-      '10min_timetable': {
-        Row: {
-          end_time: string | null;
-          id: string;
-          start_time: string | null;
-          todo_id: string | null;
-        };
-        Insert: {
-          end_time?: string | null;
-          id?: string;
-          start_time?: string | null;
-          todo_id?: string | null;
-        };
-        Update: {
-          end_time?: string | null;
-          id?: string;
-          start_time?: string | null;
-          todo_id?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: '10min_timetable_todo_id_fkey';
-            columns: ['todo_id'];
-            isOneToOne: false;
-            referencedRelation: '10min_todos';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-      '10min_todos': {
-        Row: {
-          '10min_planer_id': string | null;
-          id: string;
-          todo: string | null;
-        };
-        Insert: {
-          '10min_planer_id'?: string | null;
-          id?: string;
-          todo?: string | null;
-        };
-        Update: {
-          '10min_planer_id'?: string | null;
-          id?: string;
-          todo?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: '10min_todos_10min_planer_id_fkey';
-            columns: ['10min_planer_id'];
-            isOneToOne: false;
-            referencedRelation: '10min_planer_contents';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
       contents: {
         Row: {
           content_id: string | null;
@@ -123,7 +30,14 @@ export type Database = {
             foreignKeyName: 'contents_content_id_fkey';
             columns: ['content_id'];
             isOneToOne: false;
-            referencedRelation: '10min_planer_contents';
+            referencedRelation: 'ten_min_planer';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'contents_content_id_fkey1';
+            columns: ['content_id'];
+            isOneToOne: false;
+            referencedRelation: 'line_note';
             referencedColumns: ['id'];
           },
           {
@@ -145,21 +59,27 @@ export type Database = {
       diaries: {
         Row: {
           bookshelf_order: number;
+          content: string | null;
           created_at: string;
           id: string;
-          user_id: string;
+          name: string | null;
+          user_id: string | null;
         };
         Insert: {
           bookshelf_order?: number;
+          content?: string | null;
           created_at?: string;
           id?: string;
-          user_id: string;
+          name?: string | null;
+          user_id?: string | null;
         };
         Update: {
           bookshelf_order?: number;
+          content?: string | null;
           created_at?: string;
           id?: string;
-          user_id?: string;
+          name?: string | null;
+          user_id?: string | null;
         };
         Relationships: [
           {
@@ -173,43 +93,52 @@ export type Database = {
       };
       diary_covers: {
         Row: {
-          cover_color: string | null;
-          cover_font: string | null;
+          cover_bg_color: string | null;
           cover_image: string | null;
+          cover_image_position: Json | null;
+          cover_image_rotation: number | null;
+          cover_image_size: Json | null;
+          cover_scale: number | null;
+          cover_stage_size: Json | null;
+          cover_title: string | null;
+          cover_title_fontsize: number | null;
+          cover_title_position: Json | null;
+          cover_title_rotation: number | null;
+          cover_title_width: number | null;
           diary_id: string | null;
-          diary_title: string | null;
-          diary_title_color: string | null;
-          diary_title_position: string | null;
-          diary_title_size: string | null;
           id: string;
-          image_position: string | null;
-          image_size: string | null;
         };
         Insert: {
-          cover_color?: string | null;
-          cover_font?: string | null;
+          cover_bg_color?: string | null;
           cover_image?: string | null;
+          cover_image_position?: Json | null;
+          cover_image_rotation?: number | null;
+          cover_image_size?: Json | null;
+          cover_scale?: number | null;
+          cover_stage_size?: Json | null;
+          cover_title?: string | null;
+          cover_title_fontsize?: number | null;
+          cover_title_position?: Json | null;
+          cover_title_rotation?: number | null;
+          cover_title_width?: number | null;
           diary_id?: string | null;
-          diary_title?: string | null;
-          diary_title_color?: string | null;
-          diary_title_position?: string | null;
-          diary_title_size?: string | null;
           id?: string;
-          image_position?: string | null;
-          image_size?: string | null;
         };
         Update: {
-          cover_color?: string | null;
-          cover_font?: string | null;
+          cover_bg_color?: string | null;
           cover_image?: string | null;
+          cover_image_position?: Json | null;
+          cover_image_rotation?: number | null;
+          cover_image_size?: Json | null;
+          cover_scale?: number | null;
+          cover_stage_size?: Json | null;
+          cover_title?: string | null;
+          cover_title_fontsize?: number | null;
+          cover_title_position?: Json | null;
+          cover_title_rotation?: number | null;
+          cover_title_width?: number | null;
           diary_id?: string | null;
-          diary_title?: string | null;
-          diary_title_color?: string | null;
-          diary_title_position?: string | null;
-          diary_title_size?: string | null;
           id?: string;
-          image_position?: string | null;
-          image_size?: string | null;
         };
         Relationships: [
           {
@@ -223,21 +152,62 @@ export type Database = {
       };
       level: {
         Row: {
-          attendance_goal: number | null;
-          id: string | null;
+          attendance_requirement: number | null;
+          id: string;
           name: string | null;
         };
         Insert: {
-          attendance_count?: number | null;
+          attendance_requirement?: number | null;
           id?: string;
           name?: string | null;
         };
         Update: {
-          attendance_count?: number | null;
+          attendance_requirement?: number | null;
           id?: string;
           name?: string | null;
         };
         Relationships: [];
+      };
+      line_note: {
+        Row: {
+          bg_color: string | null;
+          created_at: string;
+          global_text_color: string | null;
+          id: string;
+          line_color: string | null;
+          line_thickness: number | null;
+          lines: Json | null;
+          user_id: string | null;
+        };
+        Insert: {
+          bg_color?: string | null;
+          created_at?: string;
+          global_text_color?: string | null;
+          id?: string;
+          line_color?: string | null;
+          line_thickness?: number | null;
+          lines?: Json | null;
+          user_id?: string | null;
+        };
+        Update: {
+          bg_color?: string | null;
+          created_at?: string;
+          global_text_color?: string | null;
+          id?: string;
+          line_color?: string | null;
+          line_thickness?: number | null;
+          lines?: Json | null;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'line_note_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          }
+        ];
       };
       parchment: {
         Row: {
@@ -253,6 +223,92 @@ export type Database = {
           name?: string | null;
         };
         Relationships: [];
+      };
+      ten_min_planer: {
+        Row: {
+          d_day: string | null;
+          d_day_date: string | null;
+          date: string;
+          diary_id: string | null;
+          goal: string | null;
+          id: string;
+          memo: string | null;
+          timetable: Json | null;
+          todo_list: Json | null;
+          user_id: string | null;
+        };
+        Insert: {
+          d_day?: string | null;
+          d_day_date?: string | null;
+          date: string;
+          diary_id?: string | null;
+          goal?: string | null;
+          id?: string;
+          memo?: string | null;
+          timetable?: Json | null;
+          todo_list?: Json | null;
+          user_id?: string | null;
+        };
+        Update: {
+          d_day?: string | null;
+          d_day_date?: string | null;
+          date?: string;
+          diary_id?: string | null;
+          goal?: string | null;
+          id?: string;
+          memo?: string | null;
+          timetable?: Json | null;
+          todo_list?: Json | null;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: '10min_planer_contents_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'ten_min_planer_diary_id_fkey';
+            columns: ['diary_id'];
+            isOneToOne: false;
+            referencedRelation: 'diaries';
+            referencedColumns: ['id'];
+          }
+        ];
+      };
+      ten_min_todos: {
+        Row: {
+          color: string | null;
+          id: string;
+          isDone: boolean | null;
+          planer_id: string | null;
+          text: string | null;
+        };
+        Insert: {
+          color?: string | null;
+          id?: string;
+          isDone?: boolean | null;
+          planer_id?: string | null;
+          text?: string | null;
+        };
+        Update: {
+          color?: string | null;
+          id?: string;
+          isDone?: boolean | null;
+          planer_id?: string | null;
+          text?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'ten_min_todos_planer_id_fkey';
+            columns: ['planer_id'];
+            isOneToOne: false;
+            referencedRelation: 'ten_min_planer';
+            referencedColumns: ['id'];
+          }
+        ];
       };
       user_badge: {
         Row: {
@@ -282,7 +338,7 @@ export type Database = {
       };
       users: {
         Row: {
-          attendence: number;
+          attendance: number;
           created_at: string;
           diary_count: number;
           email: string;
@@ -291,7 +347,7 @@ export type Database = {
           nickname: string | null;
         };
         Insert: {
-          attendence?: number;
+          attendance?: number;
           created_at?: string;
           diary_count?: number;
           email: string;
@@ -300,7 +356,7 @@ export type Database = {
           nickname?: string | null;
         };
         Update: {
-          attendence?: number;
+          attendance?: number;
           created_at?: string;
           diary_count?: number;
           email?: string;
@@ -330,7 +386,10 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      delete_user_account: {
+        Args: Record<PropertyKey, never>;
+        Returns: undefined;
+      };
     };
     Enums: {
       [_ in never]: never;

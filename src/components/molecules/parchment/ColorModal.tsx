@@ -1,8 +1,6 @@
-`use Client`;
-
 import useMyModalStore from '@/stores/my.modal.store';
-import useTodoListStore from '@/stores/todoList.stor';
-import React, { useState } from 'react';
+import useTodoListStore from '@/stores/todoList.store';
+import React from 'react';
 import { FaCircle } from 'react-icons/fa';
 
 const ColorModal = () => {

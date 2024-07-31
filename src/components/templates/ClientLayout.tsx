@@ -20,7 +20,7 @@ const ClientLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         <main
           className={`bg-gray-400 ${
             sidebarOpen ? 'w-[1920px]' : 'w-full'
-          } h-[930px] flex items-center justify-center transition-all duration-300`}
+          } h-auto flex items-center justify-center transition-all duration-300`}
         >
           {children}
         </main>
