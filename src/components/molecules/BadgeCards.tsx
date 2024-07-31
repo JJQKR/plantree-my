@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import BadgeCard from '../atoms/BadgeCard';
+import Image from 'next/image';
 
 const BadgeCards: React.FC = () => {
-  const [hasBadge, setHasBadge] = useState(true);
   return (
-    <div className="bg-yellow-100 w-[700px] h-[150px]">
-      <div>{hasBadge ? <BadgeCard /> : <div>획득한 배지가 없습니다</div>}</div>
+    <div className="flex flex-row">
+      <div className="m-3 bg-red-300 w-[90px] h-[170px]">
+        <Image src="/images/leaf.png" alt="badge_example" width="600" height="300" />
+      </div>
+      <div className="m-3 bg-red-300 w-[90px] h-[170px]">
+        <Image src="/images/leaf.png" alt="badge_example" width="600" height="300" />
+      </div>
     </div>
   );
 };

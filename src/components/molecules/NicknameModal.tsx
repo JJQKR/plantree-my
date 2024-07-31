@@ -80,7 +80,7 @@ const NicknameModal: React.FC = () => {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
           onClick={handleBackGroundClick}
         >
-          <div className="bg-white p-4 rounded">
+          <div className="bg-white p-4 rounded-[10px]">
             <div onClick={(e) => e.stopPropagation()}>
               <h1 className="text-xl font-bold mb-4 text-left text-emerald-400">닉네임 변경하기</h1>
               <form className="flex flex-col gap-2" onSubmit={handleNicknameSubmit}>

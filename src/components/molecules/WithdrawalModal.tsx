@@ -54,7 +54,7 @@ const WithdrawalModal: React.FC = () => {
         className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
         onClick={handleBackGroundClick}
       >
-        <div className="bg-white p-4 rounded">
+        <div className="bg-white p-4 rounded-[10px]">
           <div onClick={(e) => e.stopPropagation()}>
             <div className="text-xl font-bold mb-4">
               <p>정말 탈퇴하시겠어요?</p>
