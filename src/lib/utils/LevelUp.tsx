@@ -4,6 +4,12 @@ import { useEffect } from 'react';
 import { supabase } from '@/supabase/client';
 import useUserStore from '@/stores/user.store';
 
+interface Level {
+  id: string;
+  name: string;
+  attendance_requirement: number | null;
+}
+
 const LevelUp = () => {
   const { userId, attendance, setLevelName } = useUserStore((state) => state);
 
@@ -21,8 +27,9 @@ const LevelUp = () => {
 
       let newLevelId: string | null = null;
       let newLevelName: string | null = null;
-      for (const level of levels) {
-        if (attendance >= level.attendance_requirement) {
+
+      for (const level of levels as Level[]) {
+        if (level.attendance_requirement !== null && attendance >= level.attendance_requirement) {
           newLevelId = level.id;
           newLevelName = level.name;
         } else {
