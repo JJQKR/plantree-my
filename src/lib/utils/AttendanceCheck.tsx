@@ -6,7 +6,7 @@ import useUserStore from '@/stores/user.store';
 import LevelUp from './LevelUp';
 
 const AttendanceCheck = () => {
-  const { userId, attendance, setAttendance } = useUserStore((state) => state);
+  const { userId, attendance, setAttendance, createdAt, setCreatedAt } = useUserStore((state) => state);
   const [hasChecked, setHasChecked] = useState(false); // 출석 체크 여부 상태 추가
 
   useEffect(() => {
@@ -25,13 +25,16 @@ const AttendanceCheck = () => {
 
         const { data: userData, error: userError } = await supabase
           .from('users')
-          .select('attendance, created_at')
+          .select('attendance, created_at') // created_at 필드를 명시적으로 선택
           .eq('id', userId)
           .single();
         if (userError) {
           console.error('Error fetching user data:', userError);
           throw userError;
         }
+
+        // created_at 값을 상태에 저장
+        setCreatedAt(userData.created_at);
 
         const createdAtDate = userData.created_at ? new Date(userData.created_at).toISOString().split('T')[0] : null;
 
@@ -82,7 +85,7 @@ const AttendanceCheck = () => {
     };
 
     handleAttendance();
-  }, [userId, setAttendance, hasChecked]);
+  }, [userId, setAttendance, setCreatedAt, hasChecked]);
 
   return (
     <>
