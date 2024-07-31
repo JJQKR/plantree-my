@@ -19,12 +19,13 @@ const CreateDiaryPage: React.FC = () => {
         data: { session }
       } = await supabase.auth.getSession();
       if (!session) {
-        router.push('/login'); // 로그인되어 있지 않으면 로그인 페이지로 리다이렉트
+        // 로그인되어 있지 않으면 에러 메시지 설정
+        setError('로그인되어 있지 않습니다.');
       }
     };
 
     checkSession();
-  }, [router]);
+  }, []);
 
   // 다이어리 생성 핸들러
   const handleCreateDiary = async () => {

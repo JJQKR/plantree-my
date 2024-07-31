@@ -48,7 +48,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
           setDiaries(diariesData || []);
         }
       } else {
-        setNickname('Guest');
+        setNickname('Guest'); // 로그인 안하면 게스트로 나오게
       }
     };
 
@@ -56,7 +56,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
   }, [userId]);
 
   return (
-    <div className="w-[320px] h-[930px] bg-gray-700 text-white flex-shrink-0">
+    <div className="w-[320px] h-auto bg-gray-700 text-white flex-shrink-0">
       <FetchUserData />
       <AttendanceCheck />
       <div className="p-4">
@@ -79,7 +79,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
             </li>
             <div className="w-full bg-gray-800 p-4 rounded-lg">
               <p className="text-lg font-bold mb-2 text-center">리스트</p>
-              <ul className="list-none space-y-2">
+              <ul className="list-none space-y-2 text-center">
                 {diaries.length > 0 ? (
                   diaries.map((diary) => (
                     <li key={diary.id} className="bg-gray-600 p-2 rounded-lg shadow-md">
