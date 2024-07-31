@@ -70,7 +70,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
                 <DiAptana size={30} className="text-white absolute top-3 right-3" />
               </Link>
               <div className="flex flex-col items-center mb-10">
-                <ProfileStages levelId={levelId} /> {/* levelId에 맞는 프로필 이미지 표시 */}
+                <ProfileStages levelId={levelId} size={120} /> {/* levelId에 맞는 프로필 이미지 표시 */}
                 <span className="text-white text-lg font-bold">{nickname}</span>
                 <div className="text-white text-sm">{levelName || 'Level not set'}</div>
                 <div className="text-white text-sm">출석 횟수: {attendance}</div>
