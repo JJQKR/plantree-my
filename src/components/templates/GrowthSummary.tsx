@@ -6,6 +6,7 @@ import FetchMembershipDays from '@/lib/utils/FetchMembershipDays';
 import useUserStore from '@/stores/user.store';
 import ProfileStages from '../molecules/ProfileStages';
 import { supabase } from '@/supabase/client';
+import Link from 'next/link';
 
 const GrowthSummary = () => {
   const { nickname, levelName, membershipDays, userId } = useUserStore((state) => state);
@@ -32,9 +33,14 @@ const GrowthSummary = () => {
       <FetchUserData />
       <FetchMembershipDays />
       <ProfileStages levelId={levelId} size={80} /> {/* 레벨에 맞는 프로필 이미지 표시 */}
-      <h3 className="font-semibold mt-3 mb-3 text-[14px]">
-        {levelName}, {nickname} 님의 정원✨
-      </h3>
+      <div className="flex items-center">
+        <h3 className="font-semibold mt-3 mb-3 text-[14px]">
+          {levelName}, {nickname} 님의 정원✨
+        </h3>
+        <Link href="/member">
+          <p className="ml-2 text-blue-500">허브로 이동</p>
+        </Link>
+      </div>
       <div className="mb-4">
         <p>플랜트리와 함께 {membershipDays}일째,</p>
         <p>열심히 나무를 키우고 계시네요!</p>
