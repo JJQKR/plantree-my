@@ -1,7 +1,5 @@
 import React from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import useBottomSheetStore from '@/stores/bottomsheet.store';
-import { useDiaryCoverStore } from '@/stores/diarycover.store';
 
 const ItemType = {
   CARD: 'card'
@@ -49,12 +47,6 @@ const BottomSheetCard: React.FC<BottomSheetCardProps> = ({ id, title, content, i
 
   drag(drop(ref));
 
-  const deletePageFromBottomSheet = useBottomSheetStore((state) => state.deletePageFromBottomSheet);
-
-  const handleDelete = () => {
-    deletePageFromBottomSheet(id);
-  };
-
   return (
     <div
       ref={ref}
@@ -62,12 +54,6 @@ const BottomSheetCard: React.FC<BottomSheetCardProps> = ({ id, title, content, i
         isDragging ? 'opacity-50' : ''
       }`}
     >
-      <button
-        onClick={handleDelete}
-        className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
-      >
-        &times;
-      </button>
       <h2 className="text-xl font-bold" onClick={onClick}>
         {title}
       </h2>

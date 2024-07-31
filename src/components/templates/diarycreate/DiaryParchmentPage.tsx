@@ -8,7 +8,6 @@ const DiaryParchmentPage = () => {
   const router = useRouter();
   const { coverData, pages, setPages } = useDiaryCoverStore();
   const [currentPage, setCurrentPage] = useState(0);
-  const deletePageFromBottomSheet = useBottomSheetStore((state) => state.deletePageFromBottomSheet);
   const bottomSheetList = useBottomSheetStore((state) => state.bottomSheetList);
   const setBottomSheetList = useBottomSheetStore((state) => state.setBottomSheetList);
 
@@ -16,11 +15,6 @@ const DiaryParchmentPage = () => {
     const newPages = [...pages];
     const [deletedPage] = newPages.splice(pageIndex, 1);
     setPages(newPages);
-
-    const bottomSheetItem = bottomSheetList.find((item) => item.id === deletedPage.id);
-    if (bottomSheetItem) {
-      deletePageFromBottomSheet(bottomSheetItem.id);
-    }
 
     const reorderedBottomSheetList = newPages.map((page, index) => ({
       id: page.id,
