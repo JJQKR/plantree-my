@@ -3,7 +3,7 @@
 import React from 'react';
 import useMyModalStore from '@/stores/my.modal.store';
 import BadgeModal from '@/components/molecules/BadgeModal';
-import GardenSection from '@/components/templates/Garden';
+
 import BadgeCollection from '@/components/templates/BadgeCollection';
 import NicknameButton from '@/components/atoms/NicknameButton';
 import AccountBar from '@/components/molecules/AccountBar';
@@ -13,6 +13,7 @@ import WithdrawalModal from '@/components/molecules/WithdrawalModal';
 import BadgeCards from '@/components/molecules/BadgeCards';
 import GrowthSummary from '@/components/templates/GrowthSummary';
 import useUserStore from '@/stores/user.store';
+import GardenCarousel from '@/components/templates/GardenCarousel';
 
 const MyPage: React.FC = () => {
   const {
@@ -37,39 +38,39 @@ const MyPage: React.FC = () => {
 
   return (
     <>
-      <GrowthSummary />
-      <GardenSection />
-
       <div>
-        <BadgeCollection>
-          <div>
-            <div className="flex justify-around">
-              <h2>획득한 배지</h2>
-              <button className="bg-purple-400" onClick={handleToggleBadgeModal}>
-                배지 전체 보기
-              </button>
-              {isBadgeModalOpen && <BadgeModal />}
-            </div>
-            <BadgeCards />
-          </div>
-        </BadgeCollection>
-      </div>
-      <NicknameButton>
-        <div>
-          <button onClick={handleToggleNicknameModal} className="bg-[#b6dff3] w-[300px] h-[100px]">
-            닉네임 수정 버튼
-          </button>
+        <GrowthSummary />
+        <GardenCarousel />
 
-          {isNicknameModalOpen && <NicknameModal />}
-        </div>
-      </NicknameButton>
-      <AccountBar />
-      <WithdrawalButton>
         <div>
-          <button onClick={handleToggleWithdrawalModal}>회원 탈퇴 버튼</button>
-          {isWithdrawalModalOpen && <WithdrawalModal />}
+          <div className="flex flex-row justify-between max-w-[600px] mb-1">
+            <h2 className="font-semibold ml-1 ">도전 과제 1/15</h2>
+            <button className="font-semibold bg-white rounded-[5px] mr-1" onClick={handleToggleBadgeModal}>
+              전체 보기
+            </button>
+            {isBadgeModalOpen && <BadgeModal />}
+          </div>
         </div>
-      </WithdrawalButton>
+        <BadgeCollection>
+          <BadgeCards />
+        </BadgeCollection>
+
+        <NicknameButton>
+          <div className="flex items-center justify-start mt-3 pl-3 p-2 bg-white rounded-[10px] shadow-md w-[600px] h-[50px]">
+            <button onClick={handleToggleNicknameModal}>닉네임 변경</button>
+
+            {isNicknameModalOpen && <NicknameModal />}
+          </div>
+        </NicknameButton>
+        <AccountBar />
+        <WithdrawalButton>
+          {' '}
+          <div className="flex items-center justify-start mt-3 pl-3 p-2 bg-white rounded-[10px] shadow-md w-[600px] h-[50px]">
+            <button onClick={handleToggleWithdrawalModal}>회원 탈퇴</button>
+            {isWithdrawalModalOpen && <WithdrawalModal />}
+          </div>
+        </WithdrawalButton>
+      </div>
     </>
   );
 };
