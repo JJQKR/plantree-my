@@ -34,7 +34,12 @@ const profileStages = [
   }
 ];
 
-const ProfileStages = ({ levelId, size = 120 }) => {
+interface ProfileStagesProps {
+  levelId: string;
+  size?: number;
+}
+
+const ProfileStages: React.FC<ProfileStagesProps> = ({ levelId, size = 120 }) => {
   const profileStage = profileStages.find((stage) => stage.id === levelId);
   return profileStage ? (
     <Image src={profileStage.src} alt="badge_example" width={size} height={size} className="rounded-full mb-2" />
