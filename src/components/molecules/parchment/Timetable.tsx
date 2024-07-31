@@ -34,10 +34,12 @@ const Timetable = () => {
   const handleMouseUp = () => {
     setIsMouseDown(false);
   };
+  console.log('activeCells', activeCells);
 
   const toggleCellColor = (id: string) => {
     const newCell = { [id]: { active: true, color: todo.color, todoId: todo.id } };
     console.log(activeCells[id]);
+    // null[420] => error
     addActiveCell(newCell);
 
     if (activeCells[id]) {
@@ -70,9 +72,10 @@ const Timetable = () => {
                     id={id}
                     className={`border border-gray-300 p-1.5 text-center`}
                     style={{
-                      background: activeCells[id]?.active
-                        ? getBackgroundColorClass(activeCells[id]?.color)
-                        : 'transparent'
+                      background:
+                        activeCells && activeCells[id]?.active
+                          ? getBackgroundColorClass(activeCells[id]?.color)
+                          : 'transparent'
                     }}
                     onMouseDown={() => handleMouseDown(id)}
                     onMouseOver={() => handleMouseOver(id)}

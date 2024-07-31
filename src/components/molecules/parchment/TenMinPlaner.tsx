@@ -5,10 +5,10 @@ import React, { useEffect, useState } from 'react';
 import Todolist from './Todolist';
 import Timetable from './Timetable';
 import { useCreateTenMinPlaner, useTenMinPlaner, useUpdateTenMinPlaner } from '@/lib/hooks/useTenMinPlaner';
-import useTimetableStore from '@/stores/timetable.store';
+import useTimetableStore, { activeCellsObjet } from '@/stores/timetable.store';
 import useUserStore from '@/stores/user.store';
-import useDiaryStore from '@/stores/diary.store';
 import useTenMinPlanerStore from '@/stores/tenMinPlaner.store';
+import useDiaryStore from '@/stores/diary.store';
 
 const TenMinPlaner = () => {
   const [date, setDate] = useState('');
@@ -17,7 +17,7 @@ const TenMinPlaner = () => {
   const [goal, setGoal] = useState('');
   const [memo, setMemo] = useState('');
 
-  const { activeCells } = useTimetableStore((state) => state);
+  const { activeCells, setActiveCells } = useTimetableStore((state) => state);
   const { userId } = useUserStore((state) => state);
   const { diaryId } = useDiaryStore((state) => state);
   const { tenMinPlanerId } = useTenMinPlanerStore((state) => state);
@@ -81,14 +81,16 @@ const TenMinPlaner = () => {
       setDday(tenMinPlaner?.d_day || '');
       setGoal(tenMinPlaner?.goal || '');
       setMemo(tenMinPlaner?.memo || '');
+      setActiveCells((tenMinPlaner?.timetable as activeCellsObjet) || {});
     }
   }, [tenMinPlaner, tenMinPlanerId]);
 
-  console.log(tenMinPlanerId);
+  console.log('supabase', tenMinPlaner);
 
   const updatePlaner = () => {
     if (!date) {
       alert('작성 날짜를 입력해 주세요.');
+      return;
     }
 
     const newTenMinPlaner = {
@@ -103,18 +105,23 @@ const TenMinPlaner = () => {
     };
 
     if (tenMinPlanerId) {
+      console.log(tenMinPlanerId);
       if (confirm('이대로 저장하시겠습니까?')) {
         updateTenMinPlaner({ id: tenMinPlanerId, updateTenMinPlaner: newTenMinPlaner });
+        // todolist api
+        alert('저장되었습니다.');
+        console.log(newTenMinPlaner);
       }
+    } else {
+      createTenMinPlaner(newTenMinPlaner);
     }
-    createTenMinPlaner(newTenMinPlaner);
   };
 
   return (
     <div className="flex flex-row p-4 w-[1024px]">
       <div className="relative w-1/2 custom-height border-2 border-red-400 flex flex-col gap-4 m-auto p-4">
         <button className="absolute top-0 right-0 bg-red-400" onClick={updatePlaner}>
-          수정
+          저장하기
         </button>
         <div className="flex gap-2">
           <div className="w-1/3">

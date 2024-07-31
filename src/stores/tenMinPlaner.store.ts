@@ -6,7 +6,7 @@ interface TenMinPlanerStore {
 }
 
 const useTenMinPlanerStore = create<TenMinPlanerStore>((set) => ({
-  tenMinPlanerId: '6a17e2da-0d05-47bb-ad3d-2155da7e43b7',
+  tenMinPlanerId: '4557f456-6cb5-4de4-af4d-34135d6a0f6f',
   setTenMinPlanerId: (id) => set(() => ({ tenMinPlanerId: id }))
 }));
 

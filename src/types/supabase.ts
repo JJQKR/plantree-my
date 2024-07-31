@@ -52,21 +52,27 @@ export type Database = {
       diaries: {
         Row: {
           bookshelf_order: number;
+          content: string | null;
           created_at: string;
           id: string;
-          user_id: string;
+          name: string | null;
+          user_id: string | null;
         };
         Insert: {
           bookshelf_order?: number;
+          content?: string | null;
           created_at?: string;
           id?: string;
-          user_id: string;
+          name?: string | null;
+          user_id?: string | null;
         };
         Update: {
           bookshelf_order?: number;
+          content?: string | null;
           created_at?: string;
           id?: string;
-          user_id?: string;
+          name?: string | null;
+          user_id?: string | null;
         };
         Relationships: [
           {

@@ -37,7 +37,7 @@ class TenMinPlanerAPI {
     const { data, error } = await this.supabase
       .from('ten_min_planer')
       .select()
-      .eq('diaryId', diaryId)
+      .eq('diary_id', diaryId)
       .returns<Tables<'ten_min_planer'>[]>();
     if (error) {
       throw new Error(`Fetching diary failed: ${error.message}`);
