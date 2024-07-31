@@ -7,16 +7,20 @@ import LevelUp from './LevelUp';
 
 const AttendanceCheck = () => {
   const { userId, attendance, setAttendance } = useUserStore((state) => state);
-  const [hasChecked, setHasChecked] = useState(false); // 출석 체크 여부 상태 추가
 
   useEffect(() => {
     const handleAttendance = async () => {
-      if (!userId || hasChecked) {
+      if (!userId) {
         return;
       }
 
       try {
         const today = new Date().toISOString().split('T')[0];
+        const lastCheckDate = localStorage.getItem('lastCheckDate');
+
+        if (lastCheckDate === today) {
+          return; // 오늘 이미 출석 체크가 완료된 경우 중복 체크 방지
+        }
 
         const { data: userData, error: userError } = await supabase
           .from('users')
@@ -54,7 +58,7 @@ const AttendanceCheck = () => {
           }
 
           setAttendance(newAttendanceCount);
-          setHasChecked(true); // 출석 체크 완료 상태 설정
+          localStorage.setItem('lastCheckDate', today); // 출석 체크 완료 날짜 저장
 
           alert('출석체크 성공!');
 
@@ -74,7 +78,7 @@ const AttendanceCheck = () => {
     };
 
     handleAttendance();
-  }, [userId, setAttendance, hasChecked]);
+  }, [userId, setAttendance]);
 
   return (
     <>
