@@ -1,7 +1,7 @@
 'use client';
 
 import { MainSidebarProps } from '@/types/main';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { DiAptana } from 'react-icons/di';
 import useUserStore from '@/stores/user.store';
@@ -9,11 +9,12 @@ import AttendanceCheck from '@/lib/utils/AttendanceCheck';
 import FetchUserData from '@/lib/utils/FetchUserData';
 import { supabase } from '@/supabase/client';
 import ProfileStages from './ProfileStages';
+import useDiaryStore from '@/stores/diary.store';
 
 const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
   const [nickname, setNickname] = useState<string | null>(null);
-  const [diaries, setDiaries] = useState<any[]>([]);
   const { levelName, attendance, userId } = useUserStore((state) => state);
+  const { diaries } = useDiaryStore((state) => ({ diaries: state.diaries }));
   const [levelId, setLevelId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -33,22 +34,12 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
           console.error('닉네임 가져오기 실패:', nicknameError);
         } else {
           setNickname(nicknameData.nickname);
-          setLevelId(nicknameData.level_id); // level_id 설정
+          setLevelId(nicknameData.level_id);
         }
 
-        const { data: diariesData, error: diariesError } = await supabase
-          .from('diaries')
-          .select('id, name')
-          .eq('user_id', user.id)
-          .order('bookshelf_order', { ascending: true });
-
-        if (diariesError) {
-          console.error('다이어리 목록 가져오기 실패:', diariesError);
-        } else {
-          setDiaries(diariesData || []);
-        }
+        // 다이어리 목록을 상태에서 가져오므로 삭제함
       } else {
-        setNickname('Guest'); // 로그인 안하면 게스트로 나오게
+        setNickname('Guest');
       }
     };
 
@@ -70,7 +61,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
                 <DiAptana size={30} className="text-white absolute top-3 right-3" />
               </Link>
               <div className="flex flex-col items-center mb-10">
-                <ProfileStages levelId={levelId} size={120} /> {/* levelId에 맞는 프로필 이미지 표시 */}
+                <ProfileStages levelId={levelId} size={120} />
                 <span className="text-white text-lg font-bold">{nickname}</span>
                 <div className="text-white text-sm">{levelName || 'Level not set'}</div>
                 <div className="text-white text-sm">출석 횟수: {attendance}</div>
