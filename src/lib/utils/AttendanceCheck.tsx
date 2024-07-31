@@ -1,17 +1,17 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '@/supabase/client';
 import useUserStore from '@/stores/user.store';
 import LevelUp from './LevelUp';
 
 const AttendanceCheck = () => {
   const { userId, attendance, setAttendance } = useUserStore((state) => state);
+  const [hasChecked, setHasChecked] = useState(false); // 출석 체크 여부 상태 추가
 
   useEffect(() => {
     const handleAttendance = async () => {
-      if (!userId) {
-        console.log('User ID is not set.');
+      if (!userId || hasChecked) {
         return;
       }
 
@@ -36,17 +36,11 @@ const AttendanceCheck = () => {
           throw authUserError;
         }
 
-        const lastSignInDate = authUserData?.user?.user_metadata?.last_sign_in_at
-          ? new Date(authUserData.user.user_metadata.last_sign_in_at).toISOString().split('T')[0]
+        const lastSignInDate = authUserData?.user?.last_sign_in_at
+          ? new Date(authUserData.user.last_sign_in_at).toISOString().split('T')[0]
           : null;
 
-        console.log('Today:', today);
-        console.log('Last Sign In Date:', lastSignInDate);
-        console.log('Created At Date:', createdAtDate);
-        console.log('Current Attendance:', userData.attendance);
-
-        //당일 가입 후 당일 최초 로그인이면 +1
-        if (lastSignInDate === today && createdAtDate === today && userData.attendance === 0) {
+        if ((lastSignInDate !== today || createdAtDate === today) && userData.attendance === 0) {
           const newAttendanceCount = userData.attendance + 1;
 
           const { error: updateError } = await supabase
@@ -60,35 +54,12 @@ const AttendanceCheck = () => {
           }
 
           setAttendance(newAttendanceCount);
+          setHasChecked(true); // 출석 체크 완료 상태 설정
 
           alert('출석체크 성공!');
 
           const { error: authUpdateError } = await supabase.auth.updateUser({
-            data: { user_metadata: { last_sign_in_at: new Date().toISOString() } }
-          });
-          if (authUpdateError) {
-            console.error('Error updating last sign-in date:', authUpdateError);
-            throw authUpdateError;
-          }
-        } else if (lastSignInDate !== today) {
-          const newAttendanceCount = userData.attendance + 1;
-
-          const { error: updateError } = await supabase
-            .from('users')
-            .update({ attendance: newAttendanceCount })
-            .eq('id', userId);
-
-          if (updateError) {
-            console.error('Error updating attendance:', updateError);
-            throw updateError;
-          }
-
-          setAttendance(newAttendanceCount);
-
-          alert('출석체크 성공!');
-
-          const { error: authUpdateError } = await supabase.auth.updateUser({
-            data: { user_metadata: { last_sign_in_at: new Date().toISOString() } }
+            data: { last_sign_in_at: new Date().toISOString() }
           });
           if (authUpdateError) {
             console.error('Error updating last sign-in date:', authUpdateError);
@@ -102,10 +73,8 @@ const AttendanceCheck = () => {
       }
     };
 
-    if (userId) {
-      handleAttendance();
-    }
-  }, [userId, setAttendance]);
+    handleAttendance();
+  }, [userId, setAttendance, hasChecked]);
 
   return (
     <>

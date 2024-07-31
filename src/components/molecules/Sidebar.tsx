@@ -11,7 +11,7 @@ import { supabase } from '@/supabase/client';
 
 const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
   const [nickname, setNickname] = useState<string | null>(null);
-  const [diaries, setDiaries] = useState<any[]>([]); // 다이어리 목록 상태 추가
+  const [diaries, setDiaries] = useState<any[]>([]);
   const { levelName, attendance } = useUserStore((state) => state);
 
   useEffect(() => {
@@ -21,7 +21,6 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
       } = await supabase.auth.getUser();
 
       if (user) {
-        // 사용자 닉네임 가져오기
         const { data: nicknameData, error: nicknameError } = await supabase
           .from('users')
           .select('nickname')
@@ -34,10 +33,9 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
           setNickname(nicknameData.nickname);
         }
 
-        // 다이어리 목록 가져오기
         const { data: diariesData, error: diariesError } = await supabase
           .from('diaries')
-          .select('id, name') // id와 name만 선택하여 가져옵니다
+          .select('id, name')
           .eq('user_id', user.id)
           .order('bookshelf_order', { ascending: true });
 
@@ -69,7 +67,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
                 <DiAptana size={30} className="text-white absolute top-3 right-3" />
               </Link>
               <div className="flex flex-col items-center mb-10">
-                <div className="w-[120px] h-[120px] bg-white rounded-full mb-2"></div> {/* 프로필 이미지 영역 */}
+                <div className="w-[120px] h-[120px] bg-white rounded-full mb-2"></div>
                 <span className="text-white text-lg font-bold">{nickname}</span>
                 <div className="text-white text-sm">{levelName || 'Level not set'}</div>
                 <div className="text-white text-sm">출석 횟수: {attendance}</div>
