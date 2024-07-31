@@ -53,10 +53,11 @@ const BottomSheetCard: React.FC<BottomSheetCardProps> = ({ id, title, content, i
       className={`relative bg-gray-100 rounded-lg shadow-md p-4 w-32 h-40 flex-none cursor-pointer ${
         isDragging ? 'opacity-50' : ''
       }`}
+      onClick={() => {
+        onClick();
+      }}
     >
-      <h2 className="text-xl font-bold" onClick={onClick}>
-        {title}
-      </h2>
+      <h2 className="text-xl font-bold">{title}</h2>
       <p>{content}</p>
     </div>
   );

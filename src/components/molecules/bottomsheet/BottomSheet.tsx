@@ -22,7 +22,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
   };
 
   const handleCardClick = (index: number) => {
-    setCurrentPage(index);
+    setCurrentPage(index - (index % 2));
   };
 
   const scrollLeft = () => {
@@ -84,7 +84,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
             onClick={handleAddPageClick}
             className="bg-gray-100 rounded-lg shadow-md p-4 w-32 h-40 flex-none cursor-pointer"
           >
-            <h2 className="text-xl font-bold">+ 페이지 추가</h2>
+            <h2 className="text-xl font-bold">+ 속지 추가</h2>
           </div>
         </div>
         <button
