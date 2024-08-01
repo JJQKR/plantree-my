@@ -7,15 +7,15 @@ import useMyModalStore from '@/stores/my.modal.store';
 import { FaCircle } from 'react-icons/fa';
 import ColorModal from './ColorModal';
 import useTodoListStore from '@/stores/todoList.store';
-import { getBackgroundColorClass, getColorClass } from '@/lib/utils/tenMinPlanerColor';
-import useTenMinPlanerStore from '@/stores/tenMinPlaner.store';
+import { getBackgroundColorClass, getColorClass } from '@/lib/utils/tenMinPlannerColor';
+import useTenMinplannerStore from '@/stores/tenMinPlanner.store';
 
 type Todo = {
   id: string;
   text: string;
   isDone: boolean;
   color: string;
-  planer_id: string;
+  planner_id: string;
 };
 
 const Todolist: React.FC = () => {
@@ -34,8 +34,8 @@ const Todolist: React.FC = () => {
     stopEditing,
     editTodo
   } = useTodoListStore((state) => state);
-  const { tenMinPlanerId } = useTenMinPlanerStore();
-  const { isTenMinPlanerColorModalOpen, toggleTenMinPlanerColorModal } = useMyModalStore((state) => state);
+  const { tenMinplannerId } = useTenMinplannerStore();
+  const { isTenMinplannerColorModalOpen, toggleTenMinplannerColorModal } = useMyModalStore((state) => state);
   // const { mutate: createTenMinTodo } = useCreateTenMinTodo();
 
   const updateTodoInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +44,7 @@ const Todolist: React.FC = () => {
 
   const handleAddTodo = () => {
     if (todoInput.trim() === '') return;
-    addTodo({ id: uuid(), text: todoInput, isDone: false, color: 'transparent', planer_id: tenMinPlanerId });
+    addTodo({ id: uuid(), text: todoInput, isDone: false, color: 'transparent', planner_id: tenMinplannerId });
     setTodoInput('');
   };
 
@@ -73,7 +73,7 @@ const Todolist: React.FC = () => {
   };
 
   const openModal = (id: string) => {
-    toggleTenMinPlanerColorModal();
+    toggleTenMinplannerColorModal();
     selectTodoId(id);
   };
 
@@ -126,7 +126,7 @@ const Todolist: React.FC = () => {
           </button>
         </div>
       </div>
-      {isTenMinPlanerColorModalOpen && <ColorModal />}
+      {isTenMinplannerColorModalOpen && <ColorModal />}
     </div>
   );
 };

@@ -6,10 +6,10 @@ export type TodoType = {
   text: string;
   isDone: boolean;
   color: string;
-  planer_id: string;
+  planner_id: string;
 };
 
-export type UpdateTenMinPlanerType = {
+export type UpdateTenMinplannerType = {
   date: string;
   d_day_date: string;
   d_day: string;
@@ -21,7 +21,7 @@ export type UpdateTenMinPlanerType = {
   todo_list: TodoType[];
 };
 
-class TenMinPlanerAPI {
+class TenMinplannerAPI {
   private supabase;
 
   constructor() {
@@ -30,24 +30,24 @@ class TenMinPlanerAPI {
 
   /**
    *
-   * @returns ten_min_planer 테이블 데이터 전부
+   * @returns ten_min_planner 테이블 데이터 전부
    */
-  async selectTenMinPlaners() {
-    const { data } = await this.supabase.from('ten_min_planer').select().returns<Tables<'ten_min_planer'>[]>();
+  async selectTenMinplanners() {
+    const { data } = await this.supabase.from('ten_min_planner').select().returns<Tables<'ten_min_planner'>[]>();
     return data;
   }
 
   /**
    *
    * @param id {string}  diary 데이터 id
-   * @returns ten_min_planer 테이블 데이터 중 같은 다이어리 데이터 전부
+   * @returns ten_min_planner 테이블 데이터 중 같은 다이어리 데이터 전부
    */
-  async selectTenMinPlanersOfDiaryId(diaryId: string) {
+  async selectTenMinplannersOfDiaryId(diaryId: string) {
     const { data, error } = await this.supabase
-      .from('ten_min_planer')
+      .from('ten_min_planner')
       .select()
       .eq('diary_id', diaryId)
-      .returns<Tables<'ten_min_planer'>[]>();
+      .returns<Tables<'ten_min_planner'>[]>();
     if (error) {
       throw new Error(`Fetching diary failed: ${error.message}`);
     }
@@ -56,11 +56,11 @@ class TenMinPlanerAPI {
 
   /**
    *
-   *  @param id {string}  ten_min_planer 데이터 id
-   * @returns ten_min_planer 테이블 데이터 중 1개
+   *  @param id {string}  ten_min_planner 데이터 id
+   * @returns ten_min_planner 테이블 데이터 중 1개
    */
-  async selectTenMinPlanerOfPlanerId(id: string) {
-    const { data } = await this.supabase.from('ten_min_planer').select('*').eq('id', id).single();
+  async selectTenMinplannerOfplannerId(id: string) {
+    const { data } = await this.supabase.from('ten_min_planner').select('*').eq('id', id).single();
     return data;
   }
 
@@ -75,12 +75,12 @@ class TenMinPlanerAPI {
    * timetable: { [key: string]: { active: boolean; color: string; id: string } },
    * user_id:string
    * };
-   * @returns ten_min_planer에 추가된 data
+   * @returns ten_min_planner에 추가된 data
    */
-  async insertTenMinPlaner(insertData: UpdateTenMinPlanerType) {
+  async insertTenMinplanner(insertData: UpdateTenMinplannerType) {
     const { date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list } = insertData;
     const { data } = await this.supabase
-      .from('ten_min_planer')
+      .from('ten_min_planner')
       .insert({ date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list });
 
     return data;
@@ -91,8 +91,8 @@ class TenMinPlanerAPI {
    * @param id {string} 스케쥴 게시물 아이디
    * @returns 삭제된 data
    */
-  async deleteTenMinPlaner(id: string) {
-    const { data } = await this.supabase.from('ten_min_planer').delete().eq('id', id).select();
+  async deleteTenMinplanner(id: string) {
+    const { data } = await this.supabase.from('ten_min_planner').delete().eq('id', id).select();
     return data;
   }
 
@@ -111,10 +111,10 @@ class TenMinPlanerAPI {
   };
    * @returns
    */
-  async updateTenMinPlaner(id: string, updateData: UpdateTenMinPlanerType) {
+  async updateTenMinplanner(id: string, updateData: UpdateTenMinplannerType) {
     const { date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list } = updateData;
     const { data, error } = await this.supabase
-      .from('ten_min_planer')
+      .from('ten_min_planner')
       .update({ date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list })
       .eq('id', id)
       .select('*');
@@ -123,4 +123,4 @@ class TenMinPlanerAPI {
   }
 }
 
-export default TenMinPlanerAPI;
+export default TenMinplannerAPI;

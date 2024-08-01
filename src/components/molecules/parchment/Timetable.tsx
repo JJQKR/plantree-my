@@ -1,6 +1,6 @@
 'use client';
 
-import { getBackgroundColorClass } from '@/lib/utils/tenMinPlanerColor';
+import { getBackgroundColorClass } from '@/lib/utils/tenMinPlannerColor';
 import useTimetableStore from '@/stores/timetable.store';
 import useTodoListStore from '@/stores/todoList.store';
 import React, { useState } from 'react';

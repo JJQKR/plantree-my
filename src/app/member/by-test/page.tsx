@@ -1,10 +1,10 @@
-import TenMinPlaner from '@/components/molecules/parchment/TenMinPlaner';
+import TenMinplanner from '@/components/molecules/parchment/TenMinPlanner';
 import React from 'react';
 
 const page = () => {
   return (
     <div>
-      <TenMinPlaner />
+      <TenMinplanner />
     </div>
   );
 };
