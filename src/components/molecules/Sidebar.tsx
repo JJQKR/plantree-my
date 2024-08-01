@@ -1,29 +1,39 @@
 'use client';
 
 import { MainSidebarProps } from '@/types/main';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { DiAptana } from 'react-icons/di';
 import useUserStore from '@/stores/user.store';
 import AttendanceCheck from '@/lib/utils/AttendanceCheck';
 import FetchUserData from '@/lib/utils/FetchUserData';
+import ProfileStages from './ProfileStages';
+import useDiaryStore from '@/stores/diary.store';
 import { supabase } from '@/supabase/client';
 
 const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
-  const [nickname, setNickname] = useState<string | null>(null);
-  const [diaries, setDiaries] = useState<any[]>([]);
-  const { levelName, attendance } = useUserStore((state) => state);
+  const [nickname, setNickname] = useState<string | null>(null); // 사용자 닉네임 상태
+  const { levelName, attendance } = useUserStore((state) => state); // 사용자 레벨과 출석 상태 가져오기
+  const { diaries, fetchDiaries } = useDiaryStore((state) => ({
+    diaries: state.diaries,
+    fetchDiaries: state.fetchDiaries
+  }));
 
+  const [levelId, setLevelId] = useState<string | null>(null); // 사용자 레벨 ID 상태
+
+  // 컴포넌트가 마운트되었을 때 실행되는 useEffect
   useEffect(() => {
-    const fetchNicknameAndDiaries = async () => {
+    const fetchData = async () => {
+      // 현재 사용자 정보 가져오기
       const {
         data: { user }
       } = await supabase.auth.getUser();
 
       if (user) {
+        // 사용자 닉네임 및 레벨 ID 가져오기
         const { data: nicknameData, error: nicknameError } = await supabase
           .from('users')
-          .select('nickname')
+          .select('nickname, level_id')
           .eq('id', user.id)
           .single();
 
@@ -31,29 +41,21 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
           console.error('닉네임 가져오기 실패:', nicknameError);
         } else {
           setNickname(nicknameData.nickname);
+          setLevelId(nicknameData.level_id);
         }
 
-        const { data: diariesData, error: diariesError } = await supabase
-          .from('diaries')
-          .select('id, name')
-          .eq('user_id', user.id)
-          .order('bookshelf_order', { ascending: true });
-
-        if (diariesError) {
-          console.error('다이어리 목록 가져오기 실패:', diariesError);
-        } else {
-          setDiaries(diariesData || []);
-        }
+        // 다이어리 목록 가져오기
+        await fetchDiaries();
       } else {
-        setNickname('Guest');
+        setNickname('Guest'); // 로그인하지 않은 경우 기본 닉네임 설정
       }
     };
 
-    fetchNicknameAndDiaries();
-  }, []);
+    fetchData();
+  }, [fetchDiaries]);
 
   return (
-    <div className="w-[320px] h-[930px] bg-gray-700 text-white flex-shrink-0">
+    <div className="w-[320px] h-auto bg-gray-700 text-white flex-shrink-0">
       <FetchUserData />
       <AttendanceCheck />
       <div className="p-4">
@@ -67,7 +69,11 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
                 <DiAptana size={30} className="text-white absolute top-3 right-3" />
               </Link>
               <div className="flex flex-col items-center mb-10">
-                <div className="w-[120px] h-[120px] bg-white rounded-full mb-2"></div>
+                {levelId ? (
+                  <ProfileStages levelId={levelId} size={120} /> // levelId가 존재할 때만 렌더링
+                ) : (
+                  <div style={{ width: 120, height: 120 }} className="bg-white rounded-full mb-2"></div>
+                )}
                 <span className="text-white text-lg font-bold">{nickname}</span>
                 <div className="text-white text-sm">{levelName || 'Level not set'}</div>
                 <div className="text-white text-sm">출석 횟수: {attendance}</div>
@@ -76,7 +82,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
             </li>
             <div className="w-full bg-gray-800 p-4 rounded-lg">
               <p className="text-lg font-bold mb-2 text-center">리스트</p>
-              <ul className="list-none space-y-2">
+              <ul className="list-none space-y-2 text-center">
                 {diaries.length > 0 ? (
                   diaries.map((diary) => (
                     <li key={diary.id} className="bg-gray-600 p-2 rounded-lg shadow-md">

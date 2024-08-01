@@ -192,7 +192,7 @@ const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
   }, [userId, loadData]);
 
   return (
-    <div className="p-4">
+    <div className={`${className}`}>
       <div className="flex justify-between mb-4 bg-white">
         <div>
           <label className="block m-2">
@@ -239,7 +239,7 @@ const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
         </div>
       </div>
       <div
-        className="border p-4 w-[500px]"
+        className="border p-4 w-[495px]"
         style={{
           backgroundColor: bgColor,
           minHeight: '480px',

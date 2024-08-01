@@ -1,45 +1,43 @@
 import { create } from 'zustand';
 
-interface Todo {
+export interface TodoObjectType {
   id: string;
   text: string;
   isDone: boolean;
   color: string;
+  planner_id: string;
 }
 
-interface TodoListStore {
-  todo: Todo;
+interface TodoListStoreType {
+  todo: TodoObjectType;
   todoId: string;
-  todoList: Todo[];
+  todoList: TodoObjectType[];
   editingId: string | null;
   editingText: string;
-  selectTodo: (todo: Todo) => void;
-  selectTodoId: (id: string) => void;
-  addTodo: (todo: Todo) => void;
+  selectTodo: (todo: TodoObjectType) => void;
+  addTodo: (todo: TodoObjectType) => void;
   removeTodo: (id: string) => void;
+  setTodoList: (todoLis: TodoObjectType[]) => void;
+  editTodo: (id: string, text: string) => void;
+  selectTodoId: (id: string) => void;
   toggleTodoCompletion: (id: string) => void;
   changeTodoColor: (id: string, newColor: string) => void;
   startEditing: (id: string) => void;
   stopEditing: () => void;
-  editTodo: (id: string, text: string) => void;
 }
 
-const useTodoListStore = create<TodoListStore>((set) => ({
-  todo: { id: '', text: '', isDone: false, color: '' },
+const useTodoListStore = create<TodoListStoreType>((set) => ({
+  todo: { id: '', text: '', isDone: false, color: '', planner_id: '' },
   todoId: '',
   todoList: [],
   editingId: null,
   editingText: '',
   // todo 전달
-  selectTodo: (todo: Todo) =>
+  selectTodo: (todo: TodoObjectType) =>
     set(() => ({
       todo: todo
     })),
-  // todo Id 전달
-  selectTodoId: (id) =>
-    set(() => ({
-      todoId: id
-    })),
+
   // todo 추가
   addTodo: (todo) =>
     set((state) => ({
@@ -49,6 +47,22 @@ const useTodoListStore = create<TodoListStore>((set) => ({
   removeTodo: (id) =>
     set((state) => ({
       todoList: state.todoList.filter((todo) => todo.id !== id)
+    })),
+  // 완전 새로운 todolist 넣기
+  setTodoList: (newTodoList: TodoObjectType[]) =>
+    set(() => ({
+      todoList: newTodoList
+    })),
+  // 편집 todo 업데이트
+  editTodo: (id, text) =>
+    set((state) => ({
+      todoList: state.todoList.map((todo) => (todo.id === id ? { ...todo, text: text } : todo)),
+      editingText: text
+    })),
+  // todo Id 전달
+  selectTodoId: (id) =>
+    set(() => ({
+      todoId: id
     })),
   // todo isDone 요소 변경
   toggleTodoCompletion: (id) =>
@@ -72,12 +86,6 @@ const useTodoListStore = create<TodoListStore>((set) => ({
     set({
       editingId: null,
       editingText: ''
-    }),
-  // 편집 todo 업데이트
-  editTodo: (id, text) =>
-    set((state) => ({
-      todoList: state.todoList.map((todo) => (todo.id === id ? { ...todo, text: text } : todo)),
-      editingText: text
-    }))
+    })
 }));
 export default useTodoListStore;

@@ -28,8 +28,14 @@ const levelMap: { [key: string]: number } = {
   lv6: 6
 };
 
-const GardenCarousel = () => {
-  const [gardenStages, setGardenStages] = useState([
+interface GardenStage {
+  id: number;
+  content: React.ReactNode;
+  name: string;
+}
+
+const GardenCarousel: React.FC = () => {
+  const [gardenStages, setGardenStages] = useState<GardenStage[]>([
     { id: 1, content: <Image src="/images/lv1_img.png" alt="badge_example" width="600" height="300" />, name: '씨앗' },
     { id: 2, content: <Image src="/images/lv2_img.png" alt="badge_example" width="600" height="300" />, name: '새싹' },
     { id: 3, content: <Image src="/images/lv3_img.png" alt="badge_example" width="600" height="300" />, name: '풀' },
@@ -38,7 +44,7 @@ const GardenCarousel = () => {
     { id: 6, content: 'Stage6의 url', name: '열매나무' }
   ]);
 
-  const [displayStages, setDisplayStages] = useState([]);
+  const [displayStages, setDisplayStages] = useState<GardenStage[]>([]);
 
   const { levelName } = useUserStore((state) => state);
 

@@ -30,7 +30,14 @@ export type Database = {
             foreignKeyName: 'contents_content_id_fkey';
             columns: ['content_id'];
             isOneToOne: false;
-            referencedRelation: 'ten_min_planer';
+            referencedRelation: 'ten_min_planner';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'contents_content_id_fkey1';
+            columns: ['content_id'];
+            isOneToOne: false;
+            referencedRelation: 'line_note';
             referencedColumns: ['id'];
           },
           {
@@ -217,7 +224,7 @@ export type Database = {
         };
         Relationships: [];
       };
-      ten_min_planer: {
+      ten_min_planner: {
         Row: {
           d_day: string | null;
           d_day_date: string | null;
@@ -227,6 +234,7 @@ export type Database = {
           id: string;
           memo: string | null;
           timetable: Json | null;
+          todo_list: Json | null;
           user_id: string | null;
         };
         Insert: {
@@ -238,6 +246,7 @@ export type Database = {
           id?: string;
           memo?: string | null;
           timetable?: Json | null;
+          todo_list?: Json | null;
           user_id?: string | null;
         };
         Update: {
@@ -249,18 +258,19 @@ export type Database = {
           id?: string;
           memo?: string | null;
           timetable?: Json | null;
+          todo_list?: Json | null;
           user_id?: string | null;
         };
         Relationships: [
           {
-            foreignKeyName: '10min_planer_contents_user_id_fkey';
+            foreignKeyName: '10min_planner_contents_user_id_fkey';
             columns: ['user_id'];
             isOneToOne: false;
             referencedRelation: 'users';
             referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'ten_min_planer_diary_id_fkey';
+            foreignKeyName: 'ten_min_planner_diary_id_fkey';
             columns: ['diary_id'];
             isOneToOne: false;
             referencedRelation: 'diaries';
@@ -270,26 +280,32 @@ export type Database = {
       };
       ten_min_todos: {
         Row: {
+          color: string | null;
           id: string;
-          planer_id: string | null;
-          todo: string | null;
+          isDone: boolean | null;
+          planner_id: string | null;
+          text: string | null;
         };
         Insert: {
+          color?: string | null;
           id?: string;
-          planer_id?: string | null;
-          todo?: string | null;
+          isDone?: boolean | null;
+          planner_id?: string | null;
+          text?: string | null;
         };
         Update: {
+          color?: string | null;
           id?: string;
-          planer_id?: string | null;
-          todo?: string | null;
+          isDone?: boolean | null;
+          planner_id?: string | null;
+          text?: string | null;
         };
         Relationships: [
           {
-            foreignKeyName: 'ten_min_todos_planer_id_fkey';
-            columns: ['planer_id'];
+            foreignKeyName: 'ten_min_todos_planner_id_fkey';
+            columns: ['planner_id'];
             isOneToOne: false;
-            referencedRelation: 'ten_min_planer';
+            referencedRelation: 'ten_min_planner';
             referencedColumns: ['id'];
           }
         ];

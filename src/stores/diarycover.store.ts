@@ -11,6 +11,11 @@ type CoverSize = {
   height: number;
 };
 
+type Page = {
+  id: string;
+  url: string;
+};
+
 type DiaryCoverState = {
   coverTitle: string | null;
   setCoverTitle: (text: string | null) => void;
@@ -42,11 +47,19 @@ type DiaryCoverState = {
   setTempImageUrl: (url: string | null) => void;
   imageFile: File | null;
   setImageFile: (file: File | null) => void;
-  coverData: any;
-  setCoverData: (data: any) => void;
+  coverData: object | null;
+  setCoverData: (data: object | null) => void;
+  pages: Page[];
+  currentPage: number;
+  setCurrentPage: (pageIndex: number) => void;
+  showPageOptions: boolean;
+  togglePageOptions: () => void;
+  addPage: (newPageUrl: string) => number;
+  deletePage: (pageId: string) => void;
+  setPages: (newPages: Page[]) => void;
 };
 
-export const useDiaryCoverStore = create<DiaryCoverState>((set) => ({
+export const useDiaryCoverStore = create<DiaryCoverState>((set, get) => ({
   coverTitle: '표지 제목 작성',
   setCoverTitle: (title) => set({ coverTitle: title }),
   coverTitlePosition: { x: 150, y: 150 },
@@ -78,5 +91,23 @@ export const useDiaryCoverStore = create<DiaryCoverState>((set) => ({
   imageFile: null,
   setImageFile: (file) => set({ imageFile: file }),
   coverData: null,
-  setCoverData: (data) => set({ coverData: data })
+  setCoverData: (data) => set({ coverData: data }),
+  pages: [],
+  currentPage: 0,
+  setCurrentPage: (pageIndex: number) => set({ currentPage: pageIndex }),
+  showPageOptions: false,
+  togglePageOptions: () => set((state) => ({ showPageOptions: !state.showPageOptions })),
+  addPage: (newPageUrl: string) => {
+    const newPage: Page = { id: String(Date.now() + Math.random()), url: newPageUrl };
+    set((state) => ({
+      pages: [...state.pages, newPage]
+    }));
+    return get().pages.length - 1;
+  },
+  deletePage: (pageId: string) => {
+    set((state) => ({
+      pages: state.pages.filter((page) => page.id !== pageId)
+    }));
+  },
+  setPages: (newPages: Page[]) => set({ pages: newPages })
 }));

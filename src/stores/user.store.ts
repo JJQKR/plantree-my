@@ -13,6 +13,8 @@ interface UserState {
   setUserId: (userId: string) => void;
   email: string | null;
   setEmail: (email: string | null) => void;
+  createdAt: string; // created_at 필드 nullable이 아님
+  setCreatedAt: (createdAt: string) => void; // created_at 설정 함수
 }
 
 const useUserStore = create<UserState>((set) => ({
@@ -27,7 +29,9 @@ const useUserStore = create<UserState>((set) => ({
   userId: '',
   setUserId: (userId) => set({ userId }),
   email: null,
-  setEmail: (email) => set({ email })
+  setEmail: (email) => set({ email }),
+  createdAt: new Date().toISOString(), // 초기값 설정
+  setCreatedAt: (createdAt) => set({ createdAt }) // 설정 함수 정의
 }));
 
 export default useUserStore;
