@@ -97,6 +97,10 @@ const GardenCarousel: React.FC = () => {
             <SwiperSlide key={stage.id}>
               <div className="w-[600px] h-[300px] relative">
                 <div className="absolute inset-0 flex items-center justify-center">{stage.content}</div>
+                <h3 className="absolute top-0 w-full text-center text-white bg-slate-900 bg-opacity-40 py-1">
+                  {' '}
+                  현재 stage id / totalStages
+                </h3>
                 <h3 className="absolute bottom-0 w-full text-center text-white bg-slate-900 bg-opacity-40 py-1">
                   {stage.name}
                 </h3>
