@@ -1,14 +1,22 @@
 'use client';
 
 import { useState, useRef, useCallback, useEffect } from 'react';
+import { supabase } from '@/supabase/client';
+import { Json } from '@/types/supabase';
+import { isNoteLineArray } from '@/stores/noteline.store';
 
-interface NoteLine {
+export interface NoteLine {
   text: string;
   fontSize: number;
   textColor: string;
 }
 
-const Notebook: React.FC = () => {
+interface LineNoteProps {
+  userId: string;
+  className?: string;
+}
+
+const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
   const [lines, setLines] = useState<NoteLine[]>(
     Array.from({ length: 15 }, () => ({ text: '', fontSize: 16, textColor: '#000000' }))
   );
@@ -51,19 +59,13 @@ const Notebook: React.FC = () => {
             inputRefs.current[nextLineIndex]!.setSelectionRange(0, 0);
             inputRefs.current[nextLineIndex]!.focus();
           }
-        } else {
-          newLines.push({ text: overflowChar, fontSize: 16, textColor: globalTextColor });
         }
       }
 
       if (newText.length === 0 && index > 0) {
         const prevLineIndex = index - 1;
         newLines[prevLineIndex].text += newLines[index].text;
-        if (index >= 15) {
-          newLines.splice(index, 1);
-        } else {
-          newLines[index].text = '';
-        }
+        newLines[index].text = '';
         if (inputRefs.current[prevLineIndex]) {
           inputRefs.current[prevLineIndex]!.focus();
           inputRefs.current[prevLineIndex]!.setSelectionRange(
@@ -75,7 +77,7 @@ const Notebook: React.FC = () => {
 
       setLines(newLines);
     },
-    [lines, measureTextWidth, globalTextColor]
+    [lines, measureTextWidth]
   );
 
   useEffect(() => {
@@ -90,8 +92,108 @@ const Notebook: React.FC = () => {
     });
   }, [lines, measureTextWidth, handleTextChange]);
 
+  const saveData = useCallback(async () => {
+    if (!userId) {
+      console.error('userId is undefined');
+      return;
+    }
+
+    console.log('Saving data with user_id:', userId);
+    const { data, error } = await supabase.from('line_note').insert([
+      {
+        user_id: userId,
+        line_color: lineColor,
+        line_thickness: lineThickness,
+        bg_color: bgColor,
+        global_text_color: globalTextColor,
+        lines: lines as unknown as Json
+      }
+    ]);
+
+    if (error) {
+      console.error('Error saving data:', error);
+    } else {
+      console.log('Data saved:', data);
+    }
+  }, [userId, lineColor, lineThickness, bgColor, globalTextColor, lines]);
+
+  const updateData = useCallback(async () => {
+    if (!userId) {
+      console.error('userId is undefined');
+      return;
+    }
+
+    console.log('Updating data with user_id:', userId);
+    const { data, error } = await supabase
+      .from('line_note')
+      .update({
+        line_color: lineColor,
+        line_thickness: lineThickness,
+        bg_color: bgColor,
+        global_text_color: globalTextColor,
+        lines: lines as unknown as Json
+      })
+      .eq('user_id', userId);
+
+    if (error) {
+      console.error('Error updating data:', error);
+    } else {
+      console.log('Data updated:', data);
+    }
+  }, [userId, lineColor, lineThickness, bgColor, globalTextColor, lines]);
+
+  const deleteData = useCallback(async () => {
+    if (!userId) {
+      console.error('userId is undefined');
+      return;
+    }
+
+    console.log('Deleting data with user_id:', userId);
+    const { data, error } = await supabase.from('line_note').delete().eq('user_id', userId);
+
+    if (error) {
+      console.error('Error deleting data:', error);
+    } else {
+      console.log('Data deleted:', data);
+      setLines(Array.from({ length: 15 }, () => ({ text: '', fontSize: 16, textColor: '#000000' })));
+      setLineColor('#000000');
+      setLineThickness(1);
+      setBgColor('#ffffff');
+      setGlobalTextColor('#000000');
+    }
+  }, [userId]);
+
+  const loadData = useCallback(async () => {
+    if (!userId) {
+      console.error('userId is undefined');
+      return;
+    }
+
+    const { data, error } = await supabase.from('line_note').select('*').eq('user_id', userId).maybeSingle();
+
+    if (error) {
+      console.error('Error loading data:', error);
+    } else if (data) {
+      setLineColor(data?.line_color || '#000000');
+      setLineThickness(data?.line_thickness || 1);
+      setBgColor(data?.bg_color || '#ffffff');
+      setGlobalTextColor(data?.global_text_color || '#000000');
+      if (isNoteLineArray(data?.lines)) {
+        setLines(data?.lines);
+      } else {
+        console.error('Invalid data format for lines');
+      }
+    } else {
+      console.log('No data found for this user.');
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    loadData();
+  }, [userId, loadData]);
+
   return (
-    <div className="p-4">
+    <div>
       <div className="flex justify-between mb-4 bg-white">
         <div>
           <label className="block m-2">
@@ -138,7 +240,7 @@ const Notebook: React.FC = () => {
         </div>
       </div>
       <div
-        className="border p-4 w-[500px]"
+        className="border p-4 w-[495px]"
         style={{
           backgroundColor: bgColor,
           minHeight: '480px',
@@ -146,7 +248,7 @@ const Notebook: React.FC = () => {
           borderRadius: '8px'
         }}
       >
-        <div className="relative w-full overflow-hidden" style={{ height: `${lines.length * 30}px` }}>
+        <div className="relative w-full overflow-hidden" style={{ height: '450px' }}>
           {lines.map((line, index) => (
             <div
               key={index}
@@ -170,8 +272,19 @@ const Notebook: React.FC = () => {
           ))}
         </div>
       </div>
+      <div className="flex justify-between mt-4">
+        <button onClick={saveData} className="p-2 bg-blue-500 text-white rounded">
+          저장
+        </button>
+        <button onClick={updateData} className="p-2 bg-green-500 text-white rounded">
+          수정하기
+        </button>
+        <button onClick={deleteData} className="p-2 bg-red-500 text-white rounded">
+          삭제하기
+        </button>
+      </div>
     </div>
   );
 };
 
-export default Notebook;
+export default LineNote;

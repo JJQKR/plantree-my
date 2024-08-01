@@ -1,8 +1,10 @@
+// LoginModal.js
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../supabase/client';
 import ResetPasswordModal from './ResetPasswordModal';
+import useUserStore from '@/stores/user.store';
 
 const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> = ({ onClose, onSignupClick }) => {
   const [email, setEmail] = useState('');
@@ -14,6 +16,8 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
   const [resetToken, setResetToken] = useState<string | null>(null);
 
+  const setUserId = useUserStore((state) => state.setUserId);
+
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const token = queryParams.get('token');
@@ -21,8 +25,6 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
       setResetToken(token);
       setShowResetPasswordModal(true);
     }
-
-    //토큰이 존재하면, 리셋 토큰 상태를 설정하고, 리셋 패스워드 모달을 보여줌
 
     const savedEmail = localStorage.getItem('email');
     const savedPassword = localStorage.getItem('password');
@@ -34,14 +36,10 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
       setRememberMe(true);
     }
 
-    //ID와 비밀번호가 저장되어 있으면, 로컬스토리지에서 불러와서 상태에 저장
-
     if (savedAutoLogin && savedEmail && savedPassword) {
       handleSignIn(savedEmail, savedPassword, true);
     }
   }, [location]);
-
-  //자동 로그인이 설정되어 있고, ID와 비밀번호가 저장되어 있으면, 자동으로 로그인
 
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -72,8 +70,9 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
 
   const handleSignIn = async (email: string, password: string, fromAutoLogin = false) => {
     try {
-      const data = await signIn(email, password);
-      console.log('로그인 성공:', data);
+      const { user } = await signIn(email, password);
+      setUserId(user.id);
+      console.log('로그인 성공:', user);
       if (rememberMe) {
         localStorage.setItem('email', email);
         localStorage.setItem('password', password);
