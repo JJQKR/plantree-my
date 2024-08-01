@@ -48,6 +48,7 @@ const GardenCarousel: React.FC = () => {
   ]);
 
   const [displayStages, setDisplayStages] = useState<GardenStage[]>([]);
+  const [totalStages, setTotalStages] = useState<number>(1);
 
   const { levelName } = useUserStore((state) => state);
 
@@ -70,6 +71,7 @@ const GardenCarousel: React.FC = () => {
 
       const levelId = data?.level_id;
       const maxLevel = levelId ? levelMap[levelId] : 1;
+      setTotalStages(maxLevel);
       setDisplayStages(gardenStages.slice(0, maxLevel));
     };
 
@@ -93,13 +95,12 @@ const GardenCarousel: React.FC = () => {
           }}
           modules={[EffectCoverflow]}
         >
-          {displayStages.map((stage) => (
+          {displayStages.map((stage, index) => (
             <SwiperSlide key={stage.id}>
               <div className="w-[600px] h-[300px] relative">
                 <div className="absolute inset-0 flex items-center justify-center">{stage.content}</div>
                 <h3 className="absolute top-0 w-full text-center text-white bg-slate-900 bg-opacity-40 py-1">
-                  {' '}
-                  현재 stage id / totalStages
+                  {`${index + 1} / ${totalStages}`}
                 </h3>
                 <h3 className="absolute bottom-0 w-full text-center text-white bg-slate-900 bg-opacity-40 py-1">
                   {stage.name}
