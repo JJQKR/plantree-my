@@ -91,14 +91,14 @@ const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
     });
   }, [lines, measureTextWidth, handleTextChange]);
 
-  const saveData = async () => {
+  const saveData = useCallback(async () => {
     if (!userId) {
       console.error('userId is undefined');
       return;
     }
 
     console.log('Saving data with user_id:', userId);
-    const { data, error } = await supabase.from('line_note').upsert([
+    const { data, error } = await supabase.from('line_note').insert([
       {
         user_id: userId,
         line_color: lineColor,
@@ -114,9 +114,55 @@ const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
     } else {
       console.log('Data saved:', data);
     }
-  };
+  }, [userId, lineColor, lineThickness, bgColor, globalTextColor, lines]);
 
-  const loadData = async () => {
+  const updateData = useCallback(async () => {
+    if (!userId) {
+      console.error('userId is undefined');
+      return;
+    }
+
+    console.log('Updating data with user_id:', userId);
+    const { data, error } = await supabase
+      .from('line_note')
+      .update({
+        line_color: lineColor,
+        line_thickness: lineThickness,
+        bg_color: bgColor,
+        global_text_color: globalTextColor,
+        lines: lines as unknown as Json
+      })
+      .eq('user_id', userId);
+
+    if (error) {
+      console.error('Error updating data:', error);
+    } else {
+      console.log('Data updated:', data);
+    }
+  }, [userId, lineColor, lineThickness, bgColor, globalTextColor, lines]);
+
+  const deleteData = useCallback(async () => {
+    if (!userId) {
+      console.error('userId is undefined');
+      return;
+    }
+
+    console.log('Deleting data with user_id:', userId);
+    const { data, error } = await supabase.from('line_note').delete().eq('user_id', userId);
+
+    if (error) {
+      console.error('Error deleting data:', error);
+    } else {
+      console.log('Data deleted:', data);
+      setLines(Array.from({ length: 15 }, () => ({ text: '', fontSize: 16, textColor: '#000000' })));
+      setLineColor('#000000');
+      setLineThickness(1);
+      setBgColor('#ffffff');
+      setGlobalTextColor('#000000');
+    }
+  }, [userId]);
+
+  const loadData = useCallback(async () => {
     if (!userId) {
       console.error('userId is undefined');
       return;
@@ -139,11 +185,11 @@ const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
     } else {
       console.log('No data found for this user.');
     }
-  };
+  }, [userId]);
 
   useEffect(() => {
     loadData();
-  }, [userId]);
+  }, [userId, loadData]);
 
   return (
     <div className="p-4">
@@ -225,9 +271,17 @@ const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
           ))}
         </div>
       </div>
-      <button onClick={saveData} className="mt-4 p-2 bg-blue-500 text-white rounded">
-        저장
-      </button>
+      <div className="flex justify-between mt-4">
+        <button onClick={saveData} className="p-2 bg-blue-500 text-white rounded">
+          저장
+        </button>
+        <button onClick={updateData} className="p-2 bg-green-500 text-white rounded">
+          수정하기
+        </button>
+        <button onClick={deleteData} className="p-2 bg-red-500 text-white rounded">
+          삭제하기
+        </button>
+      </div>
     </div>
   );
 };
