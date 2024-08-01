@@ -58,7 +58,6 @@ const BottomSheetCard: React.FC<BottomSheetCardProps> = ({ id, title, content, i
       }}
     >
       <h2 className="text-xl font-bold">{title}</h2>
-      <p>{content}</p>
     </div>
   );
 };

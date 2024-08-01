@@ -67,10 +67,12 @@ const DiaryParchmentPage = () => {
       <div className="absolute top-2 left-2 text-gray-800 text-3xl px-2 py-1 rounded">Page {pageIndex + 1}</div>
 
       {/* 조건에 따라 컴포넌트 렌더링 */}
-      {pageUrl === 'https://via.placeholder.com/384x600?text=New+Page+1' ? (
+      {pageUrl ===
+      'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA3MDlfNjkg%2FMDAxNjg4OTE0NTM5NDIy.BqIsAefGkbiPvhFb1AOv_2jHyDJBKHFoKK4b0EBOCQEg.WcVvf2YLvLnup2mXQSXuapJMZrWvXmo0hY15gB0SHJ4g.JPEG.simone18%2FIMG_3596.JPG&type=a340' ? (
         <TenMinplanner className="w-full h-full max-w-screen-md max-h-screen overflow-auto mt-1" />
-      ) : pageUrl === 'https://via.placeholder.com/384x600?text=New+Page+2' ? (
-        <LineNote className="w-full h-full max-w-screen-md max-h-screen overflow-auto mt-20" />
+      ) : pageUrl ===
+        'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzA0MDNfMTYg%2FMDAxNDkxMTQ3OTg5MTE0.LgXNxgiumuZL55kTdDozdNvqDeTJCN7Blm2b8ANfrNQg.Q81ksE4O3Q-DxFw8K_MtLZ_mRosfRL0m-UCLE8Axglsg.JPEG.ut_era%2F%25BC%25F6%25C7%25D0%25B3%25EB%25C6%25AE_6mm_png.png&type=a340' ? (
+        <LineNote className="w-full max-w-screen-md max-h-screen overflow-auto mt-20" />
       ) : (
         <img src={pageUrl} className="w-full h-full object-cover" />
       )}
