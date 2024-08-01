@@ -30,7 +30,7 @@ export type Database = {
             foreignKeyName: 'contents_content_id_fkey';
             columns: ['content_id'];
             isOneToOne: false;
-            referencedRelation: 'ten_min_planer';
+            referencedRelation: 'ten_min_planner';
             referencedColumns: ['id'];
           },
           {
@@ -224,7 +224,7 @@ export type Database = {
         };
         Relationships: [];
       };
-      ten_min_planer: {
+      ten_min_planner: {
         Row: {
           d_day: string | null;
           d_day_date: string | null;
@@ -263,14 +263,14 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: '10min_planer_contents_user_id_fkey';
+            foreignKeyName: '10min_planner_contents_user_id_fkey';
             columns: ['user_id'];
             isOneToOne: false;
             referencedRelation: 'users';
             referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'ten_min_planer_diary_id_fkey';
+            foreignKeyName: 'ten_min_planner_diary_id_fkey';
             columns: ['diary_id'];
             isOneToOne: false;
             referencedRelation: 'diaries';
@@ -283,29 +283,29 @@ export type Database = {
           color: string | null;
           id: string;
           isDone: boolean | null;
-          planer_id: string | null;
+          planner_id: string | null;
           text: string | null;
         };
         Insert: {
           color?: string | null;
           id?: string;
           isDone?: boolean | null;
-          planer_id?: string | null;
+          planner_id?: string | null;
           text?: string | null;
         };
         Update: {
           color?: string | null;
           id?: string;
           isDone?: boolean | null;
-          planer_id?: string | null;
+          planner_id?: string | null;
           text?: string | null;
         };
         Relationships: [
           {
-            foreignKeyName: 'ten_min_todos_planer_id_fkey';
-            columns: ['planer_id'];
+            foreignKeyName: 'ten_min_todos_planner_id_fkey';
+            columns: ['planner_id'];
             isOneToOne: false;
-            referencedRelation: 'ten_min_planer';
+            referencedRelation: 'ten_min_planner';
             referencedColumns: ['id'];
           }
         ];

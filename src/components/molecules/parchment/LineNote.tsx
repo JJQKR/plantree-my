@@ -8,7 +8,11 @@ interface NoteLine {
   textColor: string;
 }
 
-const Notebook: React.FC = () => {
+interface LineNoteProps {
+  className?: string;
+}
+
+const Notebook: React.FC<LineNoteProps> = ({ className }) => {
   const [lines, setLines] = useState<NoteLine[]>(
     Array.from({ length: 15 }, () => ({ text: '', fontSize: 16, textColor: '#000000' }))
   );
@@ -91,7 +95,7 @@ const Notebook: React.FC = () => {
   }, [lines, measureTextWidth, handleTextChange]);
 
   return (
-    <div className="p-4">
+    <div className={`${className}`}>
       <div className="flex justify-between mb-4 bg-white">
         <div>
           <label className="block m-2">
@@ -138,7 +142,7 @@ const Notebook: React.FC = () => {
         </div>
       </div>
       <div
-        className="border p-4 w-[500px]"
+        className="border p-4 w-[495px]"
         style={{
           backgroundColor: bgColor,
           minHeight: '480px',

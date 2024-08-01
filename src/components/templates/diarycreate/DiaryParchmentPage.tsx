@@ -1,26 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
-import { addCover } from '@/services/cover.service';
+import { addCover } from '@/services/diarycover.service';
 import useBottomSheetStore from '@/stores/bottomsheet.store';
+import TenMinplanner from '@/components/molecules/parchment/TenMinPlanner';
+import LineNote from '@/components/molecules/parchment/LineNote';
 
 const DiaryParchmentPage = () => {
   const router = useRouter();
-  const { coverData, pages, setPages } = useDiaryCoverStore();
-  const [currentPage, setCurrentPage] = useState(0);
-  const deletePageFromBottomSheet = useBottomSheetStore((state) => state.deletePageFromBottomSheet);
-  const bottomSheetList = useBottomSheetStore((state) => state.bottomSheetList);
+  const { coverData, pages, setPages, currentPage, setCurrentPage } = useDiaryCoverStore();
   const setBottomSheetList = useBottomSheetStore((state) => state.setBottomSheetList);
 
   const handleDeletePage = (pageIndex: number) => {
     const newPages = [...pages];
-    const [deletedPage] = newPages.splice(pageIndex, 1);
+    newPages.splice(pageIndex, 1);
     setPages(newPages);
-
-    const bottomSheetItem = bottomSheetList.find((item) => item.id === deletedPage.id);
-    if (bottomSheetItem) {
-      deletePageFromBottomSheet(bottomSheetItem.id);
-    }
 
     const reorderedBottomSheetList = newPages.map((page, index) => ({
       id: page.id,
@@ -47,7 +41,7 @@ const DiaryParchmentPage = () => {
   };
 
   const handleNextPage = () => {
-    if (currentPage < pages.length && pages[currentPage + 1]) {
+    if (currentPage + 1 < pages.length && pages[currentPage] && pages[currentPage + 1]) {
       setCurrentPage(currentPage + 2);
     }
   };
@@ -63,15 +57,23 @@ const DiaryParchmentPage = () => {
   };
 
   const renderPage = (pageUrl: string | undefined, pageIndex: number) => (
-    <div className="relative w-[512px] h-[800px] bg-white shadow-lg p-2">
+    <div key={pageIndex} className="relative w-[512px] h-[800px] bg-white shadow-lg p-2">
       <button
         onClick={() => handleDeletePage(pageIndex)}
         className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
       >
         &times;
       </button>
-      <img src={pageUrl} className="w-full h-full object-cover" />
       <div className="absolute top-2 left-2 text-gray-800 text-3xl px-2 py-1 rounded">Page {pageIndex + 1}</div>
+
+      {/* 조건에 따라 컴포넌트 렌더링 */}
+      {pageUrl === 'https://via.placeholder.com/384x600?text=New+Page+1' ? (
+        <TenMinplanner className="w-full h-full max-w-screen-md max-h-screen overflow-auto mt-1" />
+      ) : pageUrl === 'https://via.placeholder.com/384x600?text=New+Page+2' ? (
+        <LineNote className="w-full h-full max-w-screen-md max-h-screen overflow-auto mt-20" />
+      ) : (
+        <img src={pageUrl} className="w-full h-full object-cover" />
+      )}
     </div>
   );
 
@@ -92,16 +94,16 @@ const DiaryParchmentPage = () => {
         </div>
 
         <div className="flex items-center justify-center">
-          {pages[currentPage + 1]
-            ? renderPage(pages[currentPage + 1].url, currentPage + 1)
-            : currentPage < pages.length && (
-                <div
-                  className="w-[512px] h-[800px] flex items-center justify-center border-2 border-dashed border-gray-600 cursor-pointer"
-                  onClick={handleAddPageClick}
-                >
-                  <span className="text-gray-600 text-4xl">+ 속지 추가</span>
-                </div>
-              )}
+          {pages[currentPage + 1] ? (
+            renderPage(pages[currentPage + 1].url, currentPage + 1)
+          ) : pages[currentPage] ? (
+            <div
+              className="w-[512px] h-[800px] flex items-center justify-center border-2 border-dashed border-gray-600 cursor-pointer"
+              onClick={handleAddPageClick}
+            >
+              <span className="text-gray-600 text-4xl">+ 속지 추가</span>
+            </div>
+          ) : null}
         </div>
       </div>
       <div className="flex justify-between my-4">
@@ -114,7 +116,7 @@ const DiaryParchmentPage = () => {
         </button>
         <button
           onClick={handleNextPage}
-          disabled={currentPage >= pages.length || !pages[currentPage + 1]}
+          disabled={currentPage + 1 >= pages.length || !pages[currentPage] || !pages[currentPage + 1]}
           className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300"
         >
           다음
@@ -123,7 +125,7 @@ const DiaryParchmentPage = () => {
       <div className="flex justify-end">
         <button
           onClick={handleFinalSave}
-          className=" px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300"
+          className="px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300"
         >
           다이어리 저장
         </button>
