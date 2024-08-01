@@ -77,32 +77,34 @@ const GardenCarousel: React.FC = () => {
   }, [gardenStages, levelName]);
 
   return (
-    <div className="w-[630px] h-[350px]">
-      <Swiper
-        effect="coverflow"
-        grabCursor={true}
-        centeredSlides={true}
-        slidesPerView="auto"
-        coverflowEffect={{
-          rotate: 50,
-          stretch: 0,
-          depth: 0,
-          modifier: 1,
-          slideShadows: true
-        }}
-        modules={[EffectCoverflow]}
-      >
-        {displayStages.map((stage) => (
-          <SwiperSlide key={stage.id}>
-            <div className="relative w-[600px] h-[300px]">
-              <div className="absolute inset-0 flex items-center justify-center">{stage.content}</div>
-              <div className="absolute bottom-0 w-full text-center text-white bg-black bg-opacity-50 py-2">
-                <h3>{stage.name}</h3>
+    <div className="flex">
+      <div className="w-[600px] h-[300px]">
+        <Swiper
+          effect="coverflow"
+          grabCursor={true}
+          centeredSlides={true}
+          slidesPerView="auto"
+          coverflowEffect={{
+            rotate: 50,
+            stretch: 0,
+            depth: 0,
+            modifier: 1,
+            slideShadows: true
+          }}
+          modules={[EffectCoverflow]}
+        >
+          {displayStages.map((stage) => (
+            <SwiperSlide key={stage.id}>
+              <div className="w-[600px] h-[300px] relative">
+                <div className="absolute inset-0 flex items-center justify-center">{stage.content}</div>
+                <h3 className="absolute bottom-0 w-full text-center text-white bg-slate-900 bg-opacity-40 py-1">
+                  {stage.name}
+                </h3>
               </div>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
     </div>
   );
 };

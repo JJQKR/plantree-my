@@ -43,9 +43,9 @@ const MyPage: React.FC = () => {
         <GardenCarousel />
 
         <div>
-          <div className="flex flex-row justify-between max-w-[600px] mb-1">
-            <h2 className="font-semibold ml-1">도전 과제 1/9</h2>
-            <button className="font-semibold bg-white rounded-[5px] mr-1" onClick={handleToggleBadgeModal}>
+          <div className="flex flex-row justify-between max-w-[600px] mt-4 mb-1">
+            <h2 className="font-semibold ml-1">도전과제 1/9</h2>
+            <button className="font-semibold rounded-[5px] mr-1" onClick={handleToggleBadgeModal}>
               전체 보기
             </button>
             {isBadgeModalOpen && <BadgeModal />}
