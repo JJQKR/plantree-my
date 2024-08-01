@@ -13,6 +13,7 @@ export interface NoteLine {
 
 interface LineNoteProps {
   userId: string;
+  className?: string;
 }
 
 const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
