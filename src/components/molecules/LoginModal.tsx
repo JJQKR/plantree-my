@@ -22,8 +22,6 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
       setShowResetPasswordModal(true);
     }
 
-    //토큰이 존재하면, 리셋 토큰 상태를 설정하고, 리셋 패스워드 모달을 보여줌
-
     const savedEmail = localStorage.getItem('email');
     const savedPassword = localStorage.getItem('password');
     const savedAutoLogin = localStorage.getItem('autoLogin') === 'true';
