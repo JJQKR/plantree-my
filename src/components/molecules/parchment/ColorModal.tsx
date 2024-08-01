@@ -5,17 +5,17 @@ import { FaCircle } from 'react-icons/fa';
 
 const ColorModal = () => {
   const { todoId, changeTodoColor } = useTodoListStore();
-  const { toggleTenMinPlanerColorModal } = useMyModalStore((state) => state);
+  const { toggleTenMinplannerColorModal } = useMyModalStore((state) => state);
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
-      toggleTenMinPlanerColorModal();
+      toggleTenMinplannerColorModal();
     }
   };
 
   const selectColor = (newColor: string) => {
     changeTodoColor(todoId, newColor);
-    toggleTenMinPlanerColorModal();
+    toggleTenMinplannerColorModal();
   };
 
   return (
@@ -25,7 +25,7 @@ const ColorModal = () => {
     >
       <div className="relative bg-white rounded-[2.5rem] w-96 h-96 ">
         ColorModal
-        <button onClick={toggleTenMinPlanerColorModal} className="absolute top-3 right-4 text-gray-500 p-1 text-2xl">
+        <button onClick={toggleTenMinplannerColorModal} className="absolute top-3 right-4 text-gray-500 p-1 text-2xl">
           ✕
         </button>
         <div className="flex flex-row">
