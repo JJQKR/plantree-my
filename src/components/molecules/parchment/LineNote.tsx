@@ -192,7 +192,7 @@ const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
   }, [userId, loadData]);
 
   return (
-    <div className={`${className}`}>
+    <div>
       <div className="flex justify-between mb-4 bg-white">
         <div>
           <label className="block m-2">
