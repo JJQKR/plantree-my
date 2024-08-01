@@ -41,8 +41,9 @@ interface ProfileStagesProps {
 
 const ProfileStages: React.FC<ProfileStagesProps> = ({ levelId, size = 120 }) => {
   const profileStage = profileStages.find((stage) => stage.id === levelId);
+
   return profileStage ? (
-    <Image src={profileStage.src} alt="badge_example" width={size} height={size} className="rounded-full mb-2" />
+    <Image src={profileStage.src} alt="profile" width={size} height={size} className="rounded-full mb-2" />
   ) : (
     <div style={{ width: size, height: size }} className="bg-white rounded-full mb-2"></div>
   );
