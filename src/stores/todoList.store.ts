@@ -5,7 +5,7 @@ export interface TodoObjectType {
   text: string;
   isDone: boolean;
   color: string;
-  planer_id: string;
+  planner_id: string;
 }
 
 interface TodoListStoreType {
@@ -27,7 +27,7 @@ interface TodoListStoreType {
 }
 
 const useTodoListStore = create<TodoListStoreType>((set) => ({
-  todo: { id: '', text: '', isDone: false, color: '', planer_id: '' },
+  todo: { id: '', text: '', isDone: false, color: '', planner_id: '' },
   todoId: '',
   todoList: [],
   editingId: null,

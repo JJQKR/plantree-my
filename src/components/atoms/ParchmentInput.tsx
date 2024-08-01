@@ -10,8 +10,8 @@ type InputProps = {
 } & ComponentProps<'input'>; // HTML input 요소의 모든 속성을 포함
 
 // 컴포넌트에 사용될 스타일을 변수로 정의
-const tenMinPlanerRegularStyle = '';
-const tenMinPlanerTodoStyle = '';
+const tenMinplannerRegularStyle = '';
+const tenMinplannerTodoStyle = '';
 const blankPaperStyle = '';
 
 // ParchmentInput 함수형 컴포넌트를 정의합니다. 이 컴포넌트는 입력 필드를 생성합니다.
@@ -20,10 +20,10 @@ function ParchmentInput({ label, required, id, identity, warnning, innerClassNam
   const inputId = id || inputUid; // // 제공된 id 또는 생성된 고유 id를 사용
 
   let inputStyle = ''; // 입력 필드에 적용할 스타일을 초기화
-  if (identity === 'tenMinPlanerRegular') {
-    inputStyle = tenMinPlanerRegularStyle;
-  } else if (identity === 'tenMinPlanerTodo') {
-    inputStyle = tenMinPlanerTodoStyle;
+  if (identity === 'tenMinplannerRegular') {
+    inputStyle = tenMinplannerRegularStyle;
+  } else if (identity === 'tenMinplannerTodo') {
+    inputStyle = tenMinplannerTodoStyle;
   }
 
   return (
