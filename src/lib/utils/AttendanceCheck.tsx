@@ -18,10 +18,10 @@ const AttendanceCheck = () => {
         const today = now.toISOString().split('T')[0]; // 현재 날짜 (YYYY-MM-DD 형식)
 
         // 로컬 스토리지에서 마지막 출석 체크 날짜 가져오기
-        const lastCheckDate = localStorage.getItem('lastCheckDate');
+        const lastCheckDate = localStorage.getItem(`lastCheckDate_${userId}`);
 
         // 로컬 스토리지에서 출석 횟수 가져오기
-        const localAttendance = JSON.parse(localStorage.getItem('attendance') || '0');
+        const localAttendance = JSON.parse(localStorage.getItem(`attendance_${userId}`) || '0');
 
         // 이미 오늘 출석 체크가 완료된 경우 중복 체크 방지
         if (lastCheckDate === today) {
@@ -69,8 +69,8 @@ const AttendanceCheck = () => {
           }
 
           setAttendance(newAttendanceCount);
-          localStorage.setItem('lastCheckDate', today); // 로컬 스토리지에 출석 체크 완료 날짜 저장
-          localStorage.setItem('attendance', JSON.stringify(newAttendanceCount)); // 로컬 스토리지에 출석 횟수 저장
+          localStorage.setItem(`lastCheckDate_${userId}`, today); // 로컬 스토리지에 출석 체크 완료 날짜 저장
+          localStorage.setItem(`attendance_${userId}`, JSON.stringify(newAttendanceCount)); // 로컬 스토리지에 출석 횟수 저장
 
           alert('출석체크 성공!');
 
@@ -97,6 +97,14 @@ const AttendanceCheck = () => {
 
     return () => clearInterval(interval); // 컴포넌트 언마운트 시 인터벌 클리어
   }, [userId, setAttendance]);
+
+  useEffect(() => {
+    // userId가 변경될 때 로컬 스토리지 초기화
+    if (userId) {
+      localStorage.removeItem('lastCheckDate');
+      localStorage.removeItem('attendance');
+    }
+  }, [userId]);
 
   return (
     <>
