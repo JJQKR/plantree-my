@@ -55,7 +55,7 @@ const DiaryCase: React.FC = () => {
       alert('로그인 상태가 아닙니다. 로그인 후 다시 시도해 주세요.');
       return;
     }
-    router.push('/member/test'); // 다이어리 생성 페이지로 리다이렉트
+    router.push('/member/diarycreate/cover'); // 다이어리 생성 페이지로 리다이렉트
   };
 
   // 다이어리 클릭 핸들러

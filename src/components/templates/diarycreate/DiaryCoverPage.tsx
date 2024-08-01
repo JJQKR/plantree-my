@@ -320,7 +320,11 @@ const DiaryCoverPage: React.FC = () => {
 
     setCoverData(coverData);
 
-    router.push(`/member/diaryedit/${diaryId}/diaryparchment`);
+    if (diaryId) {
+      router.push(`/member/diaryedit/${diaryId}/diaryparchment`);
+    } else {
+      router.push(`/member/diarycreate/diaryparchment`);
+    }
   };
 
   const handleResize = () => {

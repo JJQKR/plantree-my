@@ -12,7 +12,7 @@ type InputProps = {
 // 컴포넌트에 사용될 스타일을 변수로 정의
 const tenMinplannerRegularStyle = '';
 const tenMinplannerTodoStyle = '';
-const blankPaperStyle = '';
+const blankNoteStyle = 'border w-[8rem] text-[0.8rem]';
 
 // ParchmentInput 함수형 컴포넌트를 정의합니다. 이 컴포넌트는 입력 필드를 생성합니다.
 function ParchmentInput({ label, required, id, identity, warnning, innerClassName, ...props }: InputProps) {
@@ -24,19 +24,20 @@ function ParchmentInput({ label, required, id, identity, warnning, innerClassNam
     inputStyle = tenMinplannerRegularStyle;
   } else if (identity === 'tenMinplannerTodo') {
     inputStyle = tenMinplannerTodoStyle;
+  } else if (identity === 'blank') {
+    inputStyle = blankNoteStyle;
   }
-
   return (
     <div className="flex flex-col gap-y-2 [&+&]:mt-8 w-full">
       {/* 라벨이 있는 경우 : 라벨 요소 렌더링 */}
       {label && (
-        <label htmlFor={inputId} className={`text-sm font-semibold text-gray-500 ${label && 'h-4'}`}>
+        <label htmlFor={inputId} className={`text-[0.7rem] font-semibold text-gray-500 ${label && 'h-4'}`}>
           {label}
         </label>
       )}
 
       {/* 기본 : 입력 필드 렌더링(기존 설정 스타일+추가 스타일)*/}
-      <input id={inputId} {...props} className={inputStyle + innerClassName} />
+      <input id={inputId} {...props} className={`${inputStyle} ${innerClassName}`} />
 
       {/* 경고 메시지가 필요한 경우 : 경고 메시지를 렌더링합니다. 필수 요소일 경우 경고 메시지 옆에 별표(*)를 추가합니다. */}
       {warnning && required && (
