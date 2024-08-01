@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
-import { addCover } from '@/services/cover.service';
+import { addCover } from '@/services/diarycover.service';
 import useBottomSheetStore from '@/stores/bottomsheet.store';
 
 const DiaryParchmentPage = () => {
