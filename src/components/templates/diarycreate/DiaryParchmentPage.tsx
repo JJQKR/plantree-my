@@ -1,8 +1,10 @@
+// DiaryParchmentPage.tsx
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
 import { addCover } from '@/services/diarycover.service';
 import useBottomSheetStore from '@/stores/bottomsheet.store';
+import TenMinplanner from '@/components/molecules/parchment/TenMinPlanner';
 
 const DiaryParchmentPage = () => {
   const router = useRouter();
@@ -62,7 +64,12 @@ const DiaryParchmentPage = () => {
       >
         &times;
       </button>
-      <img src={pageUrl} className="w-full h-full object-cover" />
+      {/* 조건에 따라 TenMinplanner 컴포넌트 렌더링 */}
+      {pageUrl === 'https://via.placeholder.com/384x600?text=New+Page+1' ? (
+        <TenMinplanner className="w-full h-auto max-w-screen-md max-h-screen overflow-auto mt-10" />
+      ) : (
+        <img src={pageUrl} className="w-full h-full object-cover" />
+      )}
       <div className="absolute top-2 left-2 text-gray-800 text-3xl px-2 py-1 rounded">Page {pageIndex + 1}</div>
     </div>
   );

@@ -11,7 +11,11 @@ import useTenMinplannerStore from '@/stores/tenMinPlanner.store';
 import useDiaryStore from '@/stores/diary.store';
 import useTodoListStore, { TodoObjectType } from '@/stores/todoList.store';
 
-const TenMinplanner = () => {
+interface TenMinplannerProps {
+  className?: string;
+}
+
+const TenMinplanner: React.FC<TenMinplannerProps> = ({ className }) => {
   const [date, setDate] = useState('');
   const [ddayDate, setDdayDate] = useState('');
   const [dday, setDday] = useState('');
@@ -123,8 +127,8 @@ const TenMinplanner = () => {
   };
 
   return (
-    <div className="flex flex-row p-4 w-[1024px]">
-      <div className="relative w-1/2 custom-height border-2 border-red-400 flex flex-col gap-4 m-auto p-4">
+    <div className={`flex flex-row p-4 max-w-full max-h-full overflow-auto ${className}`}>
+      <div className="relative w-full max-w-[900px] max-h-[800px] border-2 border-red-400 flex flex-col gap-4 p-4 m-auto">
         <button className="absolute top-0 right-0 bg-red-400" onClick={updateplanner}>
           저장하기
         </button>
