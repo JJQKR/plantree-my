@@ -1,40 +1,33 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { supabase } from '@/supabase/client';
 import useUserStore from '@/stores/user.store';
 import LevelUp from './LevelUp';
 
 const AttendanceCheck = () => {
-  const { userId, attendance, setAttendance, createdAt, setCreatedAt } = useUserStore((state) => state);
-  const [hasChecked, setHasChecked] = useState(false); // 출석 체크 여부 상태 추가
+  const { userId, attendance, setAttendance } = useUserStore((state) => state);
 
   useEffect(() => {
     const handleAttendance = async () => {
-      if (!userId || hasChecked) {
+      if (!userId) {
         return;
       }
 
       try {
-        const today = new Date().toISOString().split('T')[0]; // 현재 날짜 (YYYY-MM-DD 형식)
-        const lastCheckDate = localStorage.getItem('lastCheckDate');
-
-        if (lastCheckDate === today) {
-          return; // 오늘 이미 출석 체크가 완료된 경우 중복 체크 방지
-        }
+        // 한국 시간으로 오늘 날짜 계산
+        const now = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
+        const today = now.toISOString().split('T')[0]; // 현재 날짜 (YYYY-MM-DD 형식)
 
         const { data: userData, error: userError } = await supabase
           .from('users')
-          .select('attendance, created_at') // created_at 필드를 명시적으로 선택
+          .select('attendance, created_at')
           .eq('id', userId)
           .single();
         if (userError) {
           console.error('Error fetching user data:', userError);
           throw userError;
         }
-
-        // created_at 값을 상태에 저장
-        setCreatedAt(userData.created_at);
 
         const createdAtDate = userData.created_at ? new Date(userData.created_at).toISOString().split('T')[0] : null;
 
@@ -49,7 +42,7 @@ const AttendanceCheck = () => {
           : null;
 
         // 출석 체크 조건 확인 및 출석 처리
-        if (!lastCheckDate || lastSignInDate !== today) {
+        if (lastSignInDate !== today) {
           const newAttendanceCount = userData.attendance + 1;
 
           const { error: updateError } = await supabase
@@ -63,13 +56,12 @@ const AttendanceCheck = () => {
           }
 
           setAttendance(newAttendanceCount);
-          localStorage.setItem('lastCheckDate', today); // 출석 체크 완료 날짜 저장
-          setHasChecked(true); // 출석 체크 완료 상태 설정
 
           alert('출석체크 성공!');
 
+          // Authentication users 테이블의 last_sign_in_at 필드를 오늘 날짜로 업데이트
           const { error: authUpdateError } = await supabase.auth.updateUser({
-            data: { last_sign_in_at: new Date().toISOString() }
+            data: { last_sign_in_at: now.toISOString() }
           });
           if (authUpdateError) {
             console.error('Error updating last sign-in date:', authUpdateError);
@@ -77,7 +69,6 @@ const AttendanceCheck = () => {
           }
         } else {
           setAttendance(userData.attendance);
-          setHasChecked(true); // 중복 체크 방지
         }
       } catch (error) {
         console.error('Attendance check error:', error);
@@ -85,7 +76,7 @@ const AttendanceCheck = () => {
     };
 
     handleAttendance();
-  }, [userId, setAttendance, setCreatedAt, hasChecked]);
+  }, [userId, setAttendance]);
 
   return (
     <>

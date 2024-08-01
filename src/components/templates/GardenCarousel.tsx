@@ -5,8 +5,7 @@ import { createClient } from '@supabase/supabase-js';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
-import 'swiper/css/pagination';
-import { EffectCoverflow, Pagination } from 'swiper/modules';
+import { EffectCoverflow } from 'swiper/modules';
 import useUserStore from '@/stores/user.store';
 import Image from 'next/image';
 
@@ -36,12 +35,16 @@ interface GardenStage {
 
 const GardenCarousel: React.FC = () => {
   const [gardenStages, setGardenStages] = useState<GardenStage[]>([
-    { id: 1, content: <Image src="/images/lv1_img.png" alt="badge_example" width="600" height="300" />, name: '씨앗' },
-    { id: 2, content: <Image src="/images/lv2_img.png" alt="badge_example" width="600" height="300" />, name: '새싹' },
-    { id: 3, content: <Image src="/images/lv3_img.png" alt="badge_example" width="600" height="300" />, name: '풀' },
-    { id: 4, content: <Image src="/images/lv4_img.png" alt="badge_example" width="600" height="300" />, name: '묘목' },
-    { id: 5, content: 'Stage5의 url', name: '나무' },
-    { id: 6, content: 'Stage6의 url', name: '열매나무' }
+    { id: 1, content: <Image src="/images/garden1.png" alt="badge_example" width="600" height="300" />, name: '씨앗' },
+    { id: 2, content: <Image src="/images/garden2.png" alt="badge_example" width="600" height="300" />, name: '새싹' },
+    { id: 3, content: <Image src="/images/garden3.jpg" alt="badge_example" width="600" height="300" />, name: '풀' },
+    { id: 4, content: <Image src="/images/garden4.png" alt="badge_example" width="600" height="300" />, name: '묘목' },
+    { id: 5, content: <Image src="/images/garden5.jpg" alt="badge_example" width="600" height="300" />, name: '나무' },
+    {
+      id: 6,
+      content: <Image src="/images/garden6.png" alt="badge_example" width="600" height="300" />,
+      name: '열매나무'
+    }
   ]);
 
   const [displayStages, setDisplayStages] = useState<GardenStage[]>([]);
@@ -74,7 +77,7 @@ const GardenCarousel: React.FC = () => {
   }, [gardenStages, levelName]);
 
   return (
-    <div className=" w-[630px] h-[350px]">
+    <div className="w-[630px] h-[350px]">
       <Swiper
         effect="coverflow"
         grabCursor={true}
@@ -83,18 +86,19 @@ const GardenCarousel: React.FC = () => {
         coverflowEffect={{
           rotate: 50,
           stretch: 0,
-          depth: 100,
+          depth: 0,
           modifier: 1,
           slideShadows: true
         }}
-        pagination={{ clickable: true }}
-        modules={[EffectCoverflow, Pagination]}
+        modules={[EffectCoverflow]}
       >
         {displayStages.map((stage) => (
           <SwiperSlide key={stage.id}>
-            <h3>{stage.name}</h3>
-            <div className="flex items-center justify-center p-2 rounded-[10px] w-[600px] h-[300px]">
-              <p className="text-center">{stage.content}</p>
+            <div className="relative w-[600px] h-[300px]">
+              <div className="absolute inset-0 flex items-center justify-center">{stage.content}</div>
+              <div className="absolute bottom-0 w-full text-center text-white bg-black bg-opacity-50 py-2">
+                <h3>{stage.name}</h3>
+              </div>
             </div>
           </SwiperSlide>
         ))}
