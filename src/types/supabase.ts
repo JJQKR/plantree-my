@@ -3,59 +3,6 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
-      contents: {
-        Row: {
-          content_id: string | null;
-          diary_id: string | null;
-          id: string;
-          parchment_id: string | null;
-          parchment_index: number | null;
-        };
-        Insert: {
-          content_id?: string | null;
-          diary_id?: string | null;
-          id?: string;
-          parchment_id?: string | null;
-          parchment_index?: number | null;
-        };
-        Update: {
-          content_id?: string | null;
-          diary_id?: string | null;
-          id?: string;
-          parchment_id?: string | null;
-          parchment_index?: number | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'contents_content_id_fkey';
-            columns: ['content_id'];
-            isOneToOne: false;
-            referencedRelation: 'ten_min_planner';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'contents_content_id_fkey1';
-            columns: ['content_id'];
-            isOneToOne: false;
-            referencedRelation: 'line_note';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'contents_diary_id_fkey';
-            columns: ['diary_id'];
-            isOneToOne: false;
-            referencedRelation: 'diaries';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'contents_parchment_id_fkey';
-            columns: ['parchment_id'];
-            isOneToOne: false;
-            referencedRelation: 'parchment';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
       diaries: {
         Row: {
           bookshelf_order: number;
@@ -209,6 +156,27 @@ export type Database = {
           }
         ];
       };
+      pages: {
+        Row: {
+          content_id: string | null;
+          diary_id: string | null;
+          id: string;
+          page_index: number | null;
+        };
+        Insert: {
+          content_id?: string | null;
+          diary_id?: string | null;
+          id?: string;
+          page_index?: number | null;
+        };
+        Update: {
+          content_id?: string | null;
+          diary_id?: string | null;
+          id?: string;
+          page_index?: number | null;
+        };
+        Relationships: [];
+      };
       parchment: {
         Row: {
           id: string;
@@ -263,49 +231,10 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: '10min_planner_contents_user_id_fkey';
+            foreignKeyName: '10min_planer_contents_user_id_fkey';
             columns: ['user_id'];
             isOneToOne: false;
             referencedRelation: 'users';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'ten_min_planner_diary_id_fkey';
-            columns: ['diary_id'];
-            isOneToOne: false;
-            referencedRelation: 'diaries';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-      ten_min_todos: {
-        Row: {
-          color: string | null;
-          id: string;
-          isDone: boolean | null;
-          planner_id: string | null;
-          text: string | null;
-        };
-        Insert: {
-          color?: string | null;
-          id?: string;
-          isDone?: boolean | null;
-          planner_id?: string | null;
-          text?: string | null;
-        };
-        Update: {
-          color?: string | null;
-          id?: string;
-          isDone?: boolean | null;
-          planner_id?: string | null;
-          text?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'ten_min_todos_planner_id_fkey';
-            columns: ['planner_id'];
-            isOneToOne: false;
-            referencedRelation: 'ten_min_planner';
             referencedColumns: ['id'];
           }
         ];
