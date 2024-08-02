@@ -4,18 +4,15 @@ import ParchmentInput from '@/components/atoms/ParchmentInput';
 import React, { useEffect, useState } from 'react';
 import Todolist from './Todolist';
 import Timetable from './Timetable';
-import { useCreateTenMinplanner, useTenMinplanner, useUpdateTenMinplanner } from '@/lib/hooks/useTenMinPlanner';
+import { useCreateTenMinPlanner, useTenMinPlanner, useUpdateTenMinPlanner } from '@/lib/hooks/useTenMinPlanner';
 import useTimetableStore, { ActiveCellsObject } from '@/stores/timetable.store';
 import useUserStore from '@/stores/user.store';
-import useTenMinplannerStore from '@/stores/tenMinPlanner.store';
+import useTenMinPlannerStore from '@/stores/tenMinPlanner.store';
 import useDiaryStore from '@/stores/diary.store';
 import useTodoListStore, { TodoObjectType } from '@/stores/todoList.store';
+import uuid from 'react-uuid';
 
-interface TenMinplannerProps {
-  className?: string;
-}
-
-const TenMinplanner: React.FC<TenMinplannerProps> = ({ className }) => {
+const TenMinPlanner = () => {
   const [date, setDate] = useState('');
   const [ddayDate, setDdayDate] = useState('');
   const [dday, setDday] = useState('');
@@ -25,12 +22,12 @@ const TenMinplanner: React.FC<TenMinplannerProps> = ({ className }) => {
   const { activeCells, setActiveCells } = useTimetableStore((state) => state);
   const { userId } = useUserStore((state) => state);
   const { diaryId } = useDiaryStore((state) => state);
-  const { tenMinplannerId } = useTenMinplannerStore((state) => state);
+  const { tenMinPlannerId, setTenMinPlannerId } = useTenMinPlannerStore((state) => state);
   const { todoList, setTodoList } = useTodoListStore((state) => state);
 
-  const { mutate: createTenMinplanner } = useCreateTenMinplanner();
-  const { data: tenMinplanner } = useTenMinplanner(tenMinplannerId);
-  const { mutate: updateTenMinplanner } = useUpdateTenMinplanner();
+  const { mutate: createTenMinPlanner } = useCreateTenMinPlanner();
+  const { data: tenMinPlanner } = useTenMinPlanner(tenMinPlannerId);
+  const { mutate: updateTenMinPlanner } = useUpdateTenMinPlanner();
 
   const handleDate = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputData = e.target.value;
@@ -81,26 +78,27 @@ const TenMinplanner: React.FC<TenMinplannerProps> = ({ className }) => {
   };
 
   useEffect(() => {
-    if (tenMinplanner && tenMinplannerId) {
-      setDate(tenMinplanner?.date || '');
-      setDdayDate(tenMinplanner?.d_day_date || '');
-      setDday(tenMinplanner?.d_day || '');
-      setGoal(tenMinplanner?.goal || '');
-      setMemo(tenMinplanner?.memo || '');
-      setActiveCells((tenMinplanner?.timetable as ActiveCellsObject) || {});
-      setTodoList((tenMinplanner?.todo_list as unknown as TodoObjectType[]) || []);
+    if (tenMinPlanner && tenMinPlannerId) {
+      setDate(tenMinPlanner?.date || '');
+      setDdayDate(tenMinPlanner?.d_day_date || '');
+      setDday(tenMinPlanner?.d_day || '');
+      setGoal(tenMinPlanner?.goal || '');
+      setMemo(tenMinPlanner?.memo || '');
+      setActiveCells((tenMinPlanner?.timetable as ActiveCellsObject) || {});
+      setTodoList((tenMinPlanner?.todo_list as unknown as TodoObjectType[]) || []);
     }
-  }, [tenMinplanner, tenMinplannerId, setActiveCells]);
+  }, [tenMinPlanner, tenMinPlannerId, setActiveCells]);
 
-  console.log('supabase', tenMinplanner);
+  console.log('supabase', tenMinPlanner);
 
-  const updateplanner = () => {
+  const updatePlanner = () => {
     if (!date) {
       alert('작성 날짜를 입력해 주세요.');
       return;
     }
 
-    const newTenMinplanner = {
+    const newTenMinPlanner = {
+      id: uuid(),
       date: date,
       d_day_date: ddayDate,
       d_day: dday,
@@ -112,30 +110,31 @@ const TenMinplanner: React.FC<TenMinplannerProps> = ({ className }) => {
       todo_list: todoList
     };
 
-    console.log(todoList);
+    console.log(newTenMinPlanner);
 
-    if (tenMinplannerId) {
-      console.log(tenMinplannerId);
+    if (tenMinPlannerId) {
+      console.log(tenMinPlannerId);
       if (confirm('이대로 저장하시겠습니까?')) {
-        updateTenMinplanner({ id: tenMinplannerId, updateTenMinplanner: newTenMinplanner });
+        updateTenMinPlanner({ id: tenMinPlannerId, updateTenMinPlanner: newTenMinPlanner });
         alert('저장되었습니다.');
-        console.log(newTenMinplanner);
+        console.log(newTenMinPlanner);
       }
     } else {
-      createTenMinplanner(newTenMinplanner);
+      setTenMinPlannerId(uuid());
+      createTenMinPlanner(newTenMinPlanner);
     }
   };
 
   return (
-    <div className={`flex flex-row p-4 max-w-full max-h-full overflow-auto ${className}`}>
-      <div className="relative w-full max-w-[900px] max-h-[800px] border-2 border-red-400 flex flex-col gap-4 p-4 m-auto">
-        <button className="absolute top-0 right-0 bg-red-400" onClick={updateplanner}>
+    <div className="w-full h-full max-w-screen-md max-h-screen overflow-auto mt-1">
+      <div className="relative custom-height border-2 border-red-400 flex flex-col gap-4 m-auto p-4">
+        <button className="absolute top-0 right-0 bg-red-400" onClick={updatePlanner}>
           저장하기
         </button>
         <div className="flex gap-2">
           <div className="w-1/3">
             <ParchmentInput
-              identity="tenMinplannerRegular"
+              identity="tenMinPlannerRegular"
               label="date"
               id="date"
               type="date"
@@ -145,7 +144,7 @@ const TenMinplanner: React.FC<TenMinplannerProps> = ({ className }) => {
           </div>
           <div className="w-1/3 relative">
             <ParchmentInput
-              identity="tenMinplannerRegular"
+              identity="tenMinPlannerRegular"
               label="d-day"
               id="d-day"
               type="date"
@@ -155,7 +154,7 @@ const TenMinplanner: React.FC<TenMinplannerProps> = ({ className }) => {
             <span className="absolute right-3 top-0 font-bold">{dday}</span>
           </div>
           <div className="w-1/3">
-            <ParchmentInput identity="tenMinplannerRegular" label="goal" id="goal" onChange={handleGoal} value={goal} />
+            <ParchmentInput identity="tenMinPlannerRegular" label="goal" id="goal" onChange={handleGoal} value={goal} />
           </div>
         </div>
         <div className="flex flex-row gap-4 ">
@@ -175,4 +174,4 @@ const TenMinplanner: React.FC<TenMinplannerProps> = ({ className }) => {
   );
 };
 
-export default TenMinplanner;
+export default TenMinPlanner;
