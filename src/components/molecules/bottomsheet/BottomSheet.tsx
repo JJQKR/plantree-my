@@ -40,7 +40,6 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
   };
 
   const handleCardClick = (index: number) => {
-    console.log(`Clicked on page index: ${index}`);
     setCurrentPage(index - (index % 2));
   };
 
