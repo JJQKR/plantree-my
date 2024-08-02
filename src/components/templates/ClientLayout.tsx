@@ -18,7 +18,7 @@ const ClientLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       <div className="flex flex-grow">
         {sidebarOpen && <Sidebar onClose={toggleSidebar} />}
         <main
-          className={`bg-gray-400 ${
+          className={`${
             sidebarOpen ? 'w-[1920px]' : 'w-full'
           } h-auto flex items-center justify-center transition-all duration-300`}
         >
