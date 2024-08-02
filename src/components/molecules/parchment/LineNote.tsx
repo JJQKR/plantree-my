@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { supabase } from '@/supabase/client';
 import { Json } from '@/types/supabase';
 import { isNoteLineArray } from '@/stores/noteline.store';
+import Swal from 'sweetalert2';
 
 export interface NoteLine {
   text: string;
@@ -113,9 +114,21 @@ const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
 
     if (error) {
       console.error('Error saving data:', error);
+      Swal.fire({
+        title: '저장 실패.',
+        text: '속지를 저장하지 못했어요. 다시 시도해주세요!',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
     } else {
       console.log('Data saved:', data);
       setDataExists(true);
+      Swal.fire({
+        title: '저장 성공!',
+        text: '속지를 성공적으로 저장했어요!',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
     }
   }, [userId, lineColor, lineThickness, bgColor, globalTextColor, lines]);
 
@@ -139,8 +152,20 @@ const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
 
     if (error) {
       console.error('Error updating data:', error);
+      Swal.fire({
+        title: '수정 실패!',
+        text: '속지 수정에 실패했어요. 다시 시도해주세요!',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
     } else {
       console.log('Data updated:', data);
+      Swal.fire({
+        title: '수정 성공!',
+        text: '속지를 성공적으로 수정했어요!',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
     }
   }, [userId, lineColor, lineThickness, bgColor, globalTextColor, lines]);
 
@@ -150,20 +175,43 @@ const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
       return;
     }
 
-    console.log('Deleting data with user_id:', userId);
-    const { data, error } = await supabase.from('line_note').delete().eq('user_id', userId);
+    Swal.fire({
+      title: '정말 삭제하시겠어요?',
+      text: '삭제된 속지는 되돌릴 수 없습니다!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'OK',
+      cancelButtonText: 'NO'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        console.log('Deleting data with user_id:', userId);
+        const { data, error } = await supabase.from('line_note').delete().eq('user_id', userId);
 
-    if (error) {
-      console.error('Error deleting data:', error);
-    } else {
-      console.log('Data deleted:', data);
-      setLines(Array.from({ length: 15 }, () => ({ text: '', fontSize: 16, textColor: '#000000' })));
-      setLineColor('#000000');
-      setLineThickness(1);
-      setBgColor('#ffffff');
-      setGlobalTextColor('#000000');
-      setDataExists(false);
-    }
+        if (error) {
+          console.error('Error deleting data:', error);
+          Swal.fire({
+            title: '삭제 실패!',
+            text: '속지 삭제에 실패했어요! 다시 시도해주세요!',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        } else {
+          console.log('Data deleted:', data);
+          setLines(Array.from({ length: 15 }, () => ({ text: '', fontSize: 16, textColor: '#000000' })));
+          setLineColor('#000000');
+          setLineThickness(1);
+          setBgColor('#ffffff');
+          setGlobalTextColor('#000000');
+          setDataExists(false);
+          Swal.fire({
+            title: '삭제 성공!',
+            text: '속지를 성공적으로 삭제했어요!',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          });
+        }
+      }
+    });
   }, [userId]);
 
   const loadData = useCallback(async () => {
@@ -176,6 +224,12 @@ const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
 
     if (error) {
       console.error('Error loading data:', error);
+      Swal.fire({
+        title: '이런!',
+        text: '데이터를 읽어오지 못했어요. 다시 시도해주세요!',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
     } else if (data) {
       setLineColor(data?.line_color || '#000000');
       setLineThickness(data?.line_thickness || 1);
@@ -186,6 +240,12 @@ const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
         setDataExists(true);
       } else {
         console.error('Invalid data format for lines');
+        Swal.fire({
+          title: '이런!',
+          text: '유저 정보를 가져올 수 없어요.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
       }
     } else {
       console.log('No data found for this user.');
