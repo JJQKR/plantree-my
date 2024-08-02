@@ -34,7 +34,7 @@ const Todolist: React.FC = () => {
     stopEditing,
     editTodo
   } = useTodoListStore((state) => state);
-  const { tenMinplannerId } = useTenMinplannerStore();
+  const { tenMinPlannerId } = useTenMinplannerStore();
   const { isTenMinplannerColorModalOpen, toggleTenMinplannerColorModal } = useMyModalStore((state) => state);
   // const { mutate: createTenMinTodo } = useCreateTenMinTodo();
 
@@ -44,7 +44,7 @@ const Todolist: React.FC = () => {
 
   const handleAddTodo = () => {
     if (todoInput.trim() === '') return;
-    addTodo({ id: uuid(), text: todoInput, isDone: false, color: 'transparent', planner_id: tenMinplannerId });
+    addTodo({ id: uuid(), text: todoInput, isDone: false, color: 'transparent', planner_id: tenMinPlannerId });
     setTodoInput('');
   };
 
