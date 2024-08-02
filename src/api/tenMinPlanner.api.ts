@@ -9,7 +9,8 @@ export type TodoType = {
   planner_id: string;
 };
 
-export type UpdateTenMinplannerType = {
+export type UpdateTenMinPlannerType = {
+  id: string;
   date: string;
   d_day_date: string;
   d_day: string;
@@ -21,7 +22,7 @@ export type UpdateTenMinplannerType = {
   todo_list: TodoType[];
 };
 
-class TenMinplannerAPI {
+class TenMinPlannerAPI {
   private supabase;
 
   constructor() {
@@ -32,7 +33,7 @@ class TenMinplannerAPI {
    *
    * @returns ten_min_planner 테이블 데이터 전부
    */
-  async selectTenMinplanners() {
+  async selectTenMinPlanners() {
     const { data } = await this.supabase.from('ten_min_planner').select().returns<Tables<'ten_min_planner'>[]>();
     return data;
   }
@@ -42,7 +43,7 @@ class TenMinplannerAPI {
    * @param id {string}  diary 데이터 id
    * @returns ten_min_planner 테이블 데이터 중 같은 다이어리 데이터 전부
    */
-  async selectTenMinplannersOfDiaryId(diaryId: string) {
+  async selectTenMinPlannersOfDiaryId(diaryId: string) {
     const { data, error } = await this.supabase
       .from('ten_min_planner')
       .select()
@@ -59,7 +60,7 @@ class TenMinplannerAPI {
    *  @param id {string}  ten_min_planner 데이터 id
    * @returns ten_min_planner 테이블 데이터 중 1개
    */
-  async selectTenMinplannerOfplannerId(id: string) {
+  async selectTenMinPlannerOfPlannerId(id: string) {
     const { data } = await this.supabase.from('ten_min_planner').select('*').eq('id', id).single();
     return data;
   }
@@ -77,11 +78,11 @@ class TenMinplannerAPI {
    * };
    * @returns ten_min_planner에 추가된 data
    */
-  async insertTenMinplanner(insertData: UpdateTenMinplannerType) {
-    const { date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list } = insertData;
+  async insertTenMinPlanner(insertData: UpdateTenMinPlannerType) {
+    const { id, date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list } = insertData;
     const { data } = await this.supabase
       .from('ten_min_planner')
-      .insert({ date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list });
+      .insert({ id, date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list });
 
     return data;
   }
@@ -91,7 +92,7 @@ class TenMinplannerAPI {
    * @param id {string} 스케쥴 게시물 아이디
    * @returns 삭제된 data
    */
-  async deleteTenMinplanner(id: string) {
+  async deleteTenMinPlanner(id: string) {
     const { data } = await this.supabase.from('ten_min_planner').delete().eq('id', id).select();
     return data;
   }
@@ -111,7 +112,7 @@ class TenMinplannerAPI {
   };
    * @returns
    */
-  async updateTenMinplanner(id: string, updateData: UpdateTenMinplannerType) {
+  async updateTenMinPlanner(id: string, updateData: UpdateTenMinPlannerType) {
     const { date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list } = updateData;
     const { data, error } = await this.supabase
       .from('ten_min_planner')
@@ -123,4 +124,4 @@ class TenMinplannerAPI {
   }
 }
 
-export default TenMinplannerAPI;
+export default TenMinPlannerAPI;
