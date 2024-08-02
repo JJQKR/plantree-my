@@ -14,26 +14,23 @@ import useDiaryStore from '@/stores/diary.store';
 import uuid from 'react-uuid';
 
 const DiaryCase: React.FC = () => {
-  const [diaries, setDiaries] = useState<any[]>([]); // 다이어리 목록 상태
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true); // 로그인 상태
-  const { gridView } = useStore(); // gridView 상태 가져오기
+  const [diaries, setDiaries] = useState<any[]>([]);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
+  const { gridView } = useStore();
   const router = useRouter();
-  const setDiaryId = useDiaryStore((state) => state.setDiaryId); // Zustand store에서 다이어리 ID 설정 함수 가져오기
+  const setDiaryId = useDiaryStore((state) => state.setDiaryId);
 
-  // 컴포넌트가 마운트되었을 때 실행되는 useEffect
   useEffect(() => {
     const fetchDiaries = async () => {
-      // 현재 세션 및 사용자 정보 가져오기
       const {
         data: { session }
       } = await supabase.auth.getSession();
       const user = session?.user;
       if (!user) {
-        setIsLoggedIn(false); // 로그인하지 않은 경우 로그인 상태 false로 설정
+        setIsLoggedIn(false);
         return;
       }
 
-      // 사용자의 다이어리 목록 가져오기
       const { data, error } = await supabase
         .from('diaries')
         .select('*')
@@ -43,14 +40,13 @@ const DiaryCase: React.FC = () => {
       if (error) {
         console.error('다이어리 목록 가져오기 실패:', error);
       } else {
-        setDiaries(data || []); // 다이어리 목록 상태 업데이트
+        setDiaries(data || []);
       }
     };
 
     fetchDiaries();
   }, []);
 
-  // 다이어리 생성 핸들러
   const handleCreateDiary = () => {
     if (!isLoggedIn) {
       alert('로그인 상태가 아닙니다. 로그인 후 다시 시도해 주세요.');
@@ -61,14 +57,13 @@ const DiaryCase: React.FC = () => {
     router.push(`/member/diary/${diaryId}/cover`); // 다이어리 생성 페이지로 리다이렉트
   };
 
-  // 다이어리 클릭 핸들러
   const handleDiaryClick = (id: string) => {
     setDiaryId(id); // Zustand store에 클릭한 다이어리 ID 저장
     router.push(`/member/diary/${id}/cover`); // 다이어리 상세 페이지로 리다이렉트
   };
 
   return (
-    <div className="relative w-full h-full flex flex-col items-center">
+    <div>
       <div
         className={`flex-grow flex items-center justify-center transition-all duration-300 ${
           gridView ? 'justify-start mt-8' : 'justify-center'
@@ -82,15 +77,15 @@ const DiaryCase: React.FC = () => {
                 className="flex flex-col items-center justify-center cursor-pointer"
                 onClick={() => handleDiaryClick(diary.id)}
               >
-                <div className="flex items-center justify-center w-[250px] h-[400px] bg-gray-200 rounded shadow-md text-center text-2xl font-bold text-gray-600">
+                <div className="flex items-center justify-center w-[250px] h-[400px] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
                   {diary.name}
                 </div>
               </div>
             ))}
             <div className="flex flex-col items-center justify-center">
               <button
-                onClick={() => handleCreateDiary()}
-                className="flex items-center justify-center w-[250px] h-[400px] bg-gray-200 rounded shadow-md text-center text-2xl font-bold text-gray-600"
+                onClick={handleCreateDiary}
+                className="flex items-center justify-center w-[250px] h-[400px] bg-red-300 rounded shadow-md text-2xl font-bold text-black"
               >
                 +<br /> 다이어리 생성
               </button>
@@ -114,24 +109,23 @@ const DiaryCase: React.FC = () => {
             className="mySwiper"
           >
             {diaries.map((diary) => (
-              <SwiperSlide key={diary.id} onClick={() => handleDiaryClick(diary.id)} className="cursor-pointer">
-                <div className="flex items-center justify-center w-[350px] h-[570px] bg-gray-200 rounded shadow-md text-center text-2xl font-bold text-gray-600">
-                  {diary.name}
-                </div>
+              <SwiperSlide
+                key={diary.id}
+                onClick={() => handleDiaryClick(diary.id)}
+                className="cursor-pointer flex items-center justify-center w-[350px] h-[570px] bg-red-300 rounded shadow-md text-2xl font-bold text-black"
+              >
+                <div className="flex items-center justify-center w-full h-full">{diary.name}</div>
               </SwiperSlide>
             ))}
-            <SwiperSlide>
-              <button
-                onClick={handleCreateDiary}
-                className="flex items-center justify-center w-[350px] h-[570px] bg-gray-200 rounded shadow-md text-center text-2xl font-bold text-gray-600"
-              >
+            <SwiperSlide className="flex items-center justify-center w-[350px] h-[570px] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
+              <button onClick={handleCreateDiary} className="flex items-center justify-center w-full h-full">
                 +<br /> 다이어리 생성
               </button>
             </SwiperSlide>
           </Swiper>
         )}
       </div>
-      <div className="absolute bottom-4 right-4">
+      <div className="absolute bottom-[20px] right-4">
         <CreateDiaryButton onClick={handleCreateDiary} />
       </div>
     </div>

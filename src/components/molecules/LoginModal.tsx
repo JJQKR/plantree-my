@@ -1,10 +1,10 @@
-// LoginModal.js
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../supabase/client';
 import ResetPasswordModal from './ResetPasswordModal';
 import useUserStore from '@/stores/user.store';
+import Swal from 'sweetalert2';
 
 const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> = ({ onClose, onSignupClick }) => {
   const [email, setEmail] = useState('');
@@ -71,6 +71,15 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
   const handleSignIn = async (email: string, password: string, fromAutoLogin = false) => {
     try {
       const { user } = await signIn(email, password);
+      if (!user) {
+        Swal.fire({
+          title: '로그인 실패.',
+          text: '등록되지 않은 사용자입니다!',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+        return;
+      }
       setUserId(user.id);
       console.log('로그인 성공:', user);
       if (rememberMe) {
@@ -85,12 +94,25 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
       } else if (!fromAutoLogin) {
         localStorage.removeItem('autoLogin');
       }
-      onClose();
-      window.location.reload();
-      window.location.href = 'http://localhost:3000/member';
+      Swal.fire({
+        title: '로그인 성공!',
+        text: 'PlanTree 에 오신 것을 환영합니다!',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        onClose();
+        window.location.reload();
+        window.location.href = 'http://localhost:3000/member';
+      });
     } catch (error) {
       console.error('로그인 실패:', error);
       setError(error instanceof Error ? error.message : 'An error occurred.');
+      Swal.fire({
+        title: '로그인 실패!',
+        text: '다시 시도해주세요!',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
     }
   };
 
@@ -195,10 +217,24 @@ const ForgotPasswordModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
       if (error) throw error;
       setMessage('인증 메일이 전송되었습니다.');
       setError(null);
+      Swal.fire({
+        title: '인증 메일 전송 성공!',
+        text: '인증 메일이 전송되었습니다. 이메일을 확인해주세요.',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        window.location.reload();
+      });
     } catch (error) {
       console.error('비밀번호 재설정 실패:', error);
       setMessage(null);
       setError(error instanceof Error ? error.message : 'An error occurred.');
+      Swal.fire({
+        title: '인증 메일 전송 실패!',
+        text: '인증 메일 전송에 실패했습니다. 다시 시도해주세요.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
     }
   };
 
@@ -218,15 +254,14 @@ const ForgotPasswordModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          {message && <p className="text-green-500">{message}</p>}
           {error && <p className="text-red-500">{error}</p>}
-          <h1 className="text-center text-xs">인증번호를 메일로 전송해드립니다.</h1>
+          <h1 className="text-center text-xs text-black">인증 메일을 메일로 전송해드립니다.</h1>
           <div className="flex flex-col gap-2 mt-4">
             <button type="button" className="w-full px-4 py-3 bg-gray-500 text-white rounded" onClick={onClose}>
               취소
             </button>
             <button type="submit" className="w-full px-4 py-3 bg-blue-500 text-white rounded">
-              인증번호 받기
+              인증메일 받기
             </button>
           </div>
         </form>

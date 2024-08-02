@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { supabase } from '../../supabase/client';
+import Swal from 'sweetalert2';
 
 interface SignupModalProps {
   onClose: () => void;
@@ -43,8 +44,16 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
           .select();
         if (profileError) throw profileError;
 
-        onClose();
-        onSignupSuccess();
+        Swal.fire({
+          title: '회원가입 성공!',
+          text: 'PlanTree에 오신 것을 환영합니다!',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          onClose();
+          onSignupSuccess();
+        });
+
         return { authData, profileData };
       }
     } catch (error) {
