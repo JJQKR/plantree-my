@@ -13,14 +13,14 @@ const Header: React.FC<MainHeaderProps> = ({ toggleSidebar, toggleGrid }) => {
   const { gridView } = useStore();
 
   return (
-    <header className="flex justify-between items-center p-4 bg-white">
+    <header className="flex justify-between items-center h-[80px] p-4 bg-white">
       <SideButton onClick={toggleSidebar}>Menu</SideButton>
       <div className="flex-grow flex justify-center">
         <Link href="/">
           <Image
             src="/images/Plantree.png"
             alt="Logo"
-            width={200} // 원하는 너비
+            width={250} // 원하는 너비
             height={50} // 원하는 높이
           />
         </Link>
