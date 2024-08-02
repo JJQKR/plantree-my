@@ -29,7 +29,7 @@ const PlantreeLoginModal: React.FC<{
     if (error) {
       console.error('Kakao login error:', error.message);
     } else {
-      console.log('Kakao login successful');
+      localStorage.setItem('loginSuccess', 'true');
     }
   };
 
@@ -47,7 +47,7 @@ const PlantreeLoginModal: React.FC<{
     if (error) {
       console.error('Google login error:', error.message);
     } else {
-      console.log('Google login successful');
+      localStorage.setItem('loginSuccess', 'true');
     }
   };
 
