@@ -60,7 +60,7 @@ const DiaryCase: React.FC = () => {
   };
 
   return (
-    <div className="relative w-full h-full flex flex-col items-center">
+    <div>
       <div
         className={`flex-grow flex items-center justify-center transition-all duration-300 ${
           gridView ? 'justify-start mt-8' : 'justify-center'
@@ -122,7 +122,7 @@ const DiaryCase: React.FC = () => {
           </Swiper>
         )}
       </div>
-      <div className="absolute bottom-[100px] right-2">
+      <div className="absolute bottom-[20px] right-4">
         <CreateDiaryButton onClick={handleCreateDiary} />
       </div>
     </div>
