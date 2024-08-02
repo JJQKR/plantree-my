@@ -74,7 +74,7 @@ const DiaryCase: React.FC = () => {
                 className="flex flex-col items-center justify-center cursor-pointer"
                 onClick={() => handleDiaryClick(diary.id)}
               >
-                <div className="flex items-center justify-center w-[250px] h-[400px] bg-red-300 rounded shadow-md text-2xl font-bold text-gray-600">
+                <div className="flex items-center justify-center w-[250px] h-[400px] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
                   {diary.name}
                 </div>
               </div>
@@ -82,7 +82,7 @@ const DiaryCase: React.FC = () => {
             <div className="flex flex-col items-center justify-center">
               <button
                 onClick={handleCreateDiary}
-                className="flex items-center justify-center w-[250px] h-[400px] bg-red-300 rounded shadow-md text-2xl font-bold text-gray-600"
+                className="flex items-center justify-center w-[250px] h-[400px] bg-red-300 rounded shadow-md text-2xl font-bold text-black"
               >
                 +<br /> 다이어리 생성
               </button>
@@ -109,12 +109,12 @@ const DiaryCase: React.FC = () => {
               <SwiperSlide
                 key={diary.id}
                 onClick={() => handleDiaryClick(diary.id)}
-                className="cursor-pointer flex items-center justify-center w-[350px] h-[570px] bg-red-300 rounded shadow-md text-2xl font-bold text-gray-600"
+                className="cursor-pointer flex items-center justify-center w-[350px] h-[570px] bg-red-300 rounded shadow-md text-2xl font-bold text-black"
               >
                 <div className="flex items-center justify-center w-full h-full">{diary.name}</div>
               </SwiperSlide>
             ))}
-            <SwiperSlide className="flex items-center justify-center w-[350px] h-[570px] bg-red-300 rounded shadow-md text-2xl font-bold text-gray-600">
+            <SwiperSlide className="flex items-center justify-center w-[350px] h-[570px] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
               <button onClick={handleCreateDiary} className="flex items-center justify-center w-full h-full">
                 +<br /> 다이어리 생성
               </button>

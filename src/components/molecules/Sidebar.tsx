@@ -88,7 +88,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
           <ul className="list-none space-y-2 text-center">
             {diaries.length > 0 ? (
               diaries.map((diary) => (
-                <li key={diary.id} className="bg-gray-600 h-[50px] p-3 rounded-lg shadow-md">
+                <li key={diary.id} className="bg-red-300 h-[50px] p-3 rounded-lg shadow-md text-black">
                   {diary.name}
                 </li>
               ))
