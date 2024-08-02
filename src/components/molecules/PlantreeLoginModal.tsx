@@ -57,7 +57,7 @@ const PlantreeLoginModal: React.FC<{
       onClick={handleBackgroundClick}
     >
       <div className="bg-white p-4 rounded">
-        <h1 className="text-xl font-bold mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
+        <h1 className="text-xl font-bold mb-4 text-center text-emerald-400">Welcome to PlanTree!! </h1>
         <form>
           <div className="flex flex-col gap-2 mt-4">
             <button
