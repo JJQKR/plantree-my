@@ -1,92 +1,80 @@
 'use client';
 
-import React, { useCallback, useRef, useState } from 'react';
-
-type Blank = {
-  text: string;
-  fontSize: number;
-  textColor: string;
-};
+import React, { useRef, useState, useEffect } from 'react';
+import { supabase } from '@/supabase/client';
 
 const BlankNote = () => {
-  const [lines, setLines] = useState<Blank[]>(
-    Array.from({ length: 15 }, () => ({ text: '', fontSize: 16, textColor: '#000000' }))
-  );
   const [bgColor, setBgColor] = useState('#ffffff');
   const [globalTextColor, setGlobalTextColor] = useState('#000000');
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const [content, setContent] = useState('');
+  const [date, setDate] = useState('');
+  const [title, setTitle] = useState('');
+  const [currentHeight, setCurrentHeight] = useState(0);
+  const editableDivRef = useRef<HTMLDivElement>(null);
+  const maxHeight = 400;
 
-  const measureTextWidth = useCallback((text: string, fontSize: number) => {
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    if (context) {
-      context.font = `${fontSize}px sans-serif`;
-      return context.measureText(text).width;
+  const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
+    const target = e.currentTarget as HTMLDivElement;
+    const newHeight = target.scrollHeight;
+    setCurrentHeight(newHeight);
+
+    if (newHeight > maxHeight) {
+      alert('마지막 줄 입니다.');
+
+      target.innerText = content;
+      setCurrentHeight(editableDivRef.current?.scrollHeight || 0);
+    } else {
+      setContent(target.innerText);
     }
-    return 0;
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (currentHeight >= maxHeight && e.key !== 'Backspace' && e.key !== 'Delete') {
+      e.preventDefault();
+    }
+  };
+
+  useEffect(() => {
+    if (editableDivRef.current && editableDivRef.current.innerText !== content) {
+      editableDivRef.current.innerText = content;
+    }
+  }, [content]);
+
+  useEffect(() => {
+    if (editableDivRef.current) {
+      setCurrentHeight(editableDivRef.current.scrollHeight);
+    }
   }, []);
 
-  const handleTextChange = useCallback(
-    (index: number, newText: string) => {
-      if (!inputRefs.current[index]) return;
-
-      const inputWidth = inputRefs.current[index]!.offsetWidth;
-      let textWidth = measureTextWidth(newText, lines[index].fontSize);
-
-      const newLines = [...lines];
-      newLines[index].text = newText;
-
-      while (textWidth > inputWidth) {
-        const overflowChar = newText.slice(-1);
-        newText = newText.slice(0, -1);
-        newLines[index].text = newText;
-        textWidth = measureTextWidth(newText, lines[index].fontSize);
-
-        const nextLineIndex = index + 1;
-        if (nextLineIndex < newLines.length) {
-          newLines[nextLineIndex].text = overflowChar + newLines[nextLineIndex].text;
-          if (inputRefs.current[nextLineIndex]) {
-            inputRefs.current[nextLineIndex]!.setSelectionRange(0, 0);
-            inputRefs.current[nextLineIndex]!.focus();
-          }
-        } else {
-          newLines.push({ text: overflowChar, fontSize: 16, textColor: globalTextColor });
-        }
-      }
-
-      if (newText.length === 0 && index > 0) {
-        const prevLineIndex = index - 1;
-        newLines[prevLineIndex].text += newLines[index].text;
-        if (index >= 15) {
-          newLines.splice(index, 1);
-        } else {
-          newLines[index].text = '';
-        }
-        if (inputRefs.current[prevLineIndex]) {
-          inputRefs.current[prevLineIndex]!.focus();
-          inputRefs.current[prevLineIndex]!.setSelectionRange(
-            newLines[prevLineIndex].text.length,
-            newLines[prevLineIndex].text.length
-          );
-        }
-      }
-
-      setLines(newLines);
-    },
-    [lines, measureTextWidth, globalTextColor]
-  );
+  const handleSave = () => {
+    alert(
+      `저장됨!\n날짜: ${date}\n제목: ${title}\n내용: ${content}\n배경 색상: ${bgColor}\n텍스트 색상: ${globalTextColor}`
+    );
+  };
 
   return (
-    <div className="bg-white w-[512px] h-[800px] p-[2rem]" style={{ backgroundColor: bgColor }}>
+    <div className="bg-white w-[512px] h-[600px] p-[2rem]" style={{ backgroundColor: bgColor }}>
       <div>
         <label htmlFor="date">날짜 : </label>
-        <input id="date" type="date" className="border w-[7rem] text-[0.7rem]" />
+        <input
+          id="date"
+          type="date"
+          className="border w-[7rem] text-[0.7rem]"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
       </div>
-      <div className="flex flex-row w-full">
+      <div className="flex flex-row w-full mb-2">
         <label htmlFor="title" className="w-[3rem]">
           제목:
         </label>
-        <input id="title" type="text" className="border w-full text-[0.7rem]" />
+        <input
+          id="title"
+          type="text"
+          className="border w-full text-[0.7rem]"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
       </div>
       <div>
         <label className="block m-2">
@@ -108,25 +96,25 @@ const BlankNote = () => {
           />
         </label>
       </div>
-      <div className=" border w-full overflow-hidden" style={{ height: `${lines.length * 30}px` }}>
-        {lines.map((line, index) => (
-          <div key={index} className="h-[30px]">
-            <input
-              type="text"
-              value={line.text}
-              onChange={(e) => handleTextChange(index, e.target.value)}
-              className="w-full outline-none bg-transparent"
-              style={{
-                fontSize: `${line.fontSize}px`,
-                color: globalTextColor
-              }}
-              ref={(el) => {
-                inputRefs.current[index] = el;
-              }}
-            />
-          </div>
-        ))}
-      </div>
+      <div
+        ref={editableDivRef}
+        contentEditable
+        className="border w-full overflow-hidden mb-2"
+        style={{
+          height: `${maxHeight}px`,
+          color: globalTextColor,
+          fontSize: '16px',
+          backgroundColor: bgColor,
+          overflowY: 'hidden',
+          wordBreak: 'break-all',
+          whiteSpace: 'pre-wrap'
+        }}
+        onInput={handleInput}
+        onKeyDown={handleKeyDown}
+      ></div>
+      <button onClick={handleSave} className="p-2 bg-blue-500 text-white rounded">
+        저장
+      </button>
     </div>
   );
 };
