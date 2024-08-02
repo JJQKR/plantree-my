@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import Konva from 'konva';
+import uuid from 'react-uuid';
 
 type CoverPosition = {
   x: number;
@@ -98,7 +99,7 @@ export const useDiaryCoverStore = create<DiaryCoverState>((set, get) => ({
   showPageOptions: false,
   togglePageOptions: () => set((state) => ({ showPageOptions: !state.showPageOptions })),
   addPage: (newPageUrl: string) => {
-    const newPage: Page = { id: String(Date.now() + Math.random()), url: newPageUrl };
+    const newPage: Page = { id: uuid(), url: newPageUrl };
     set((state) => ({
       pages: [...state.pages, newPage]
     }));

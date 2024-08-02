@@ -8,7 +8,7 @@ import useBottomSheetStore from '@/stores/bottomsheet.store';
 import TenMinplanner from '@/components/molecules/parchment/TenMinPlanner';
 import LineNote from '@/components/molecules/parchment/LineNote';
 import useUserStore from '@/stores/user.store';
-import { addParchment, deleteParchment, updateParchment } from '@/services/diaryparchment.service';
+// import { addParchment, deleteParchment, updateParchment } from '@/services/diaryparchment.service';
 import { supabase } from '@/supabase/client';
 
 const DiaryParchmentPage = () => {
@@ -141,7 +141,7 @@ const DiaryParchmentPage = () => {
 
       {pageUrl ===
       'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA3MDlfNjkg%2FMDAxNjg4OTE0NTM5NDIy.BqIsAefGkbiPvhFb1AOv_2jHyDJBKHFoKK4b0EBOCQEg.WcVvf2YLvLnup2mXQSXuapJMZrWvXmo0hY15gB0SHJ4g.JPEG.simone18%2FIMG_3596.JPG&type=a340' ? (
-        <TenMinplanner className="w-full h-full max-w-screen-md max-h-screen overflow-auto mt-1" />
+        <TenMinplanner />
       ) : pageUrl ===
         'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzA0MDNfMTYg%2FMDAxNDkxMTQ3OTg5MTE0.LgXNxgiumuZL55kTdDozdNvqDeTJCN7Blm2b8ANfrNQg.Q81ksE4O3Q-DxFw8K_MtLZ_mRosfRL0m-UCLE8Axglsg.JPEG.ut_era%2F%25BC%25F6%25C7%25D0%25B3%25EB%25C6%25AE_6mm_png.png&type=a340' ? (
         <LineNote userId={userId} className="w-full max-w-screen-md max-h-screen overflow-auto mt-20" />
