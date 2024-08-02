@@ -15,6 +15,8 @@ interface UserState {
   setEmail: (email: string | null) => void;
   createdAt: string; // created_at 필드 nullable이 아님
   setCreatedAt: (createdAt: string) => void; // created_at 설정 함수
+  diaryCounts: number; // nullable not allowed
+  setDiaryCounts: (diaryCounts: number) => void;
 }
 
 const useUserStore = create<UserState>((set) => ({
@@ -31,7 +33,9 @@ const useUserStore = create<UserState>((set) => ({
   email: null,
   setEmail: (email) => set({ email }),
   createdAt: new Date().toISOString(), // 초기값 설정
-  setCreatedAt: (createdAt) => set({ createdAt }) // 설정 함수 정의
+  setCreatedAt: (createdAt) => set({ createdAt }), // 설정 함수 정의
+  diaryCounts: 0,
+  setDiaryCounts: (diaryCounts) => set({ diaryCounts })
 }));
 
 export default useUserStore;
