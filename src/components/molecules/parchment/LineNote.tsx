@@ -24,6 +24,7 @@ const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
   const [lineThickness, setLineThickness] = useState(1);
   const [bgColor, setBgColor] = useState('#ffffff');
   const [globalTextColor, setGlobalTextColor] = useState('#000000');
+  const [dataExists, setDataExists] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const measureTextWidth = useCallback((text: string, fontSize: number) => {
@@ -114,6 +115,7 @@ const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
       console.error('Error saving data:', error);
     } else {
       console.log('Data saved:', data);
+      setDataExists(true);
     }
   }, [userId, lineColor, lineThickness, bgColor, globalTextColor, lines]);
 
@@ -160,6 +162,7 @@ const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
       setLineThickness(1);
       setBgColor('#ffffff');
       setGlobalTextColor('#000000');
+      setDataExists(false);
     }
   }, [userId]);
 
@@ -180,11 +183,13 @@ const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
       setGlobalTextColor(data?.global_text_color || '#000000');
       if (isNoteLineArray(data?.lines)) {
         setLines(data?.lines);
+        setDataExists(true);
       } else {
         console.error('Invalid data format for lines');
       }
     } else {
       console.log('No data found for this user.');
+      setDataExists(false);
     }
   }, [userId]);
 
@@ -273,12 +278,15 @@ const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
         </div>
       </div>
       <div className="flex justify-between mt-4">
-        <button onClick={saveData} className="p-2 bg-blue-500 text-white rounded">
-          저장
-        </button>
-        <button onClick={updateData} className="p-2 bg-green-500 text-white rounded">
-          수정하기
-        </button>
+        {!dataExists ? (
+          <button onClick={saveData} className="p-2 bg-blue-500 text-white rounded">
+            저장
+          </button>
+        ) : (
+          <button onClick={updateData} className="p-2 bg-green-500 text-white rounded">
+            수정하기
+          </button>
+        )}
         <button onClick={deleteData} className="p-2 bg-red-500 text-white rounded">
           삭제하기
         </button>
