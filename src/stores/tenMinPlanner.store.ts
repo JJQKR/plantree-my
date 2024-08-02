@@ -1,13 +1,13 @@
 import { create } from 'zustand';
 
-interface TenMinplannerStore {
-  tenMinplannerId: string;
-  setTenMinplannerId: (id: string) => void;
+interface TenMinPlannerStore {
+  tenMinPlannerId: string;
+  setTenMinPlannerId: (id: string) => void;
 }
 
-const useTenMinplannerStore = create<TenMinplannerStore>((set) => ({
-  tenMinplannerId: '4557f456-6cb5-4de4-af4d-34135d6a0f6f',
-  setTenMinplannerId: (id) => set(() => ({ tenMinplannerId: id }))
+const useTenMinPlannerStore = create<TenMinPlannerStore>((set) => ({
+  tenMinPlannerId: '',
+  setTenMinPlannerId: (id) => set(() => ({ tenMinPlannerId: id }))
 }));
 
-export default useTenMinplannerStore;
+export default useTenMinPlannerStore;

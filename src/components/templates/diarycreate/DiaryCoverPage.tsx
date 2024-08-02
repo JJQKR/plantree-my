@@ -4,12 +4,13 @@ import { Stage, Layer, Rect, Text, Transformer, Image as KonvaImage } from 'reac
 import Konva from 'konva';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { supabase } from '@/supabase/client';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
+import useDiaryStore from '@/stores/diary.store';
 
 const DiaryCoverPage: React.FC = () => {
   const router = useRouter();
-  const { diaryId } = useParams();
+  const { diaryId } = useDiaryStore((state) => state);
 
   const {
     coverTitle,
@@ -319,12 +320,8 @@ const DiaryCoverPage: React.FC = () => {
     };
 
     setCoverData(coverData);
-
-    if (diaryId) {
-      router.push(`/member/diaryedit/${diaryId}/diaryparchment`);
-    } else {
-      router.push(`/member/diarycreate/diaryparchment`);
-    }
+    console.log(diaryId);
+    router.push(`/member/diary/${diaryId}/parchment`);
   };
 
   const handleResize = () => {

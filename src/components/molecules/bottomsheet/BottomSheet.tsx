@@ -3,6 +3,7 @@ import { useParams, useRouter, usePathname } from 'next/navigation';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
 import BottomSheetCard from './BottomSheetCard';
 import { supabase } from '@/supabase/client';
+import useDiaryStore from '@/stores/diary.store';
 
 type BottomSheetProps = {
   isOpen: boolean;
@@ -13,11 +14,11 @@ type BottomSheetProps = {
 
 const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheetList, moveCard }) => {
   const router = useRouter();
-  const { diaryId } = useParams();
+  const { diaryId } = useDiaryStore((state) => state);
   const pathname = usePathname();
   const scrollRef = useRef<HTMLDivElement>(null);
   const togglePageOptions = useDiaryCoverStore((state) => state.togglePageOptions);
-  const setCurrentPage = useDiaryCoverStore((state) => state.setCurrentPage);
+  const { setCurrentPage, currentPage } = useDiaryCoverStore((state) => state);
   const {
     coverTitle,
     coverTitlePosition,
@@ -35,13 +36,15 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
   } = useDiaryCoverStore();
 
   const handleCoverPageClick = () => {
-    router.push(`/member/diaryedit/${diaryId}/diarycover`);
+    router.push(`/member/diary/${diaryId}/cover`);
   };
 
   const handleCardClick = (index: number) => {
     console.log(`Clicked on page index: ${index}`);
     setCurrentPage(index - (index % 2));
   };
+
+  console.log(bottomSheetList);
 
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -104,7 +107,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
 
     setCoverData(coverDataToSave);
 
-    router.push(`/member/diaryedit/${diaryId}/diaryparchment`);
+    router.push(`/member/diary/${diaryId}/parchment`);
   };
 
   return (

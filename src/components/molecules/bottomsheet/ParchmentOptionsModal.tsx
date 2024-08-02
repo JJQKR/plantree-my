@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
 import useBottomSheetStore from '@/stores/bottomsheet.store';
+import uuid from 'react-uuid';
 
 const addParchmentPages = [
   'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA3MDlfNjkg%2FMDAxNjg4OTE0NTM5NDIy.BqIsAefGkbiPvhFb1AOv_2jHyDJBKHFoKK4b0EBOCQEg.WcVvf2YLvLnup2mXQSXuapJMZrWvXmo0hY15gB0SHJ4g.JPEG.simone18%2FIMG_3596.JPG&type=a340',
@@ -13,12 +14,13 @@ const addParchmentPages = [
 ];
 
 const ParchmentOptionsModal: React.FC = () => {
-  const { showPageOptions, togglePageOptions, addPage } = useDiaryCoverStore();
+  const { showPageOptions, togglePageOptions, addPage, pages } = useDiaryCoverStore();
   const addPageToBottomSheet = useBottomSheetStore((state) => state.addPageToBottomSheet);
   const [currentOptionPage, setCurrentOptionPage] = useState(0);
 
   const handleAddPage = (newPageUrl: string) => {
-    const id = String(Date.now() + Math.random());
+    // const id = String(Date.now() + Math.random());
+    const id = uuid();
     const pageIndex = addPage(newPageUrl);
     const title = `Page ${pageIndex + 1}`;
     const content = newPageUrl;
