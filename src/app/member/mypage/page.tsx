@@ -3,7 +3,6 @@
 import React from 'react';
 import useMyModalStore from '@/stores/my.modal.store';
 import BadgeModal from '@/components/molecules/BadgeModal';
-
 import BadgeCollection from '@/components/templates/BadgeCollection';
 import NicknameButton from '@/components/atoms/NicknameButton';
 import AccountBar from '@/components/molecules/AccountBar';
@@ -12,7 +11,6 @@ import NicknameModal from '@/components/molecules/NicknameModal';
 import WithdrawalModal from '@/components/molecules/WithdrawalModal';
 import BadgeCards from '@/components/molecules/BadgeCards';
 import GrowthSummary from '@/components/templates/GrowthSummary';
-import useUserStore from '@/stores/user.store';
 import GardenCarousel from '@/components/templates/GardenCarousel';
 
 const MyPage: React.FC = () => {
@@ -51,9 +49,7 @@ const MyPage: React.FC = () => {
             {isBadgeModalOpen && <BadgeModal />}
           </div>
         </div>
-        <BadgeCollection>
-          <BadgeCards />
-        </BadgeCollection>
+        <BadgeCollection />
 
         <NicknameButton>
           <div className="flex items-center justify-start mt-3 pl-3 p-2 bg-white rounded-[10px] shadow-md w-[600px] h-[50px]">
