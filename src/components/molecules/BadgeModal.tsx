@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { totalBadges } from '../atoms/TotalBadges';
 import useMyModalStore from '@/stores/my.modal.store';
+import BadgeCards from './BadgeCards';
+//배지 카드 다 그려주기
+//user - diary_count 값 >= badges - 문구점사장님 - requsiite 값 이면 true, 아니면 false
+//membershipDays 값 >= badges - 안녕하세요 - requisite 값 이면 true, 아니면 false
+//membershipDays 값 >= badges - 안녕하세요 - requisite 값 이면 true, 아니면 false
 
 const BadgeModal: React.FC = () => {
   const { isBadgeModalOpen, toggleBadgeModal } = useMyModalStore((state) => state);
