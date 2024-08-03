@@ -4,19 +4,26 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
 import { addCover, deleteCover, updateCover } from '@/services/diarycover.service';
-import useBottomSheetStore from '@/stores/bottomsheet.store';
-import TenMinplanner from '@/components/molecules/parchment/TenMinPlanner';
+// import useBottomSheetStore from '@/stores/bottomsheet.store';
 import LineNote from '@/components/molecules/parchment/LineNote';
 import useUserStore from '@/stores/user.store';
 // import { addParchment, deleteParchment, updateParchment } from '@/services/diaryparchment.service';
 import { supabase } from '@/supabase/client';
+import usePageStore from '@/stores/pages.store';
+import TenMinPlanner from '@/components/molecules/parchment/TenMinPlanner';
+import { useDeletePage, usePage } from '@/lib/hooks/usePages';
+import { UpdatePageType } from '@/api/pages.api';
+// import BlankNote from '@/components/molecules/parchment/BlankNote';
 
 const DiaryParchmentPage = () => {
   const router = useRouter();
-  const { pages, setPages, currentPage, setCurrentPage } = useDiaryCoverStore();
-  const setBottomSheetList = useBottomSheetStore((state) => state.setBottomSheetList);
+  const { currentPage, setCurrentPage } = useDiaryCoverStore();
+  // const setBottomSheetList = useBottomSheetStore((state) => state.setBottomSheetList);
+  const { pages, removePage } = usePageStore((state) => state);
   const userId = useUserStore((state) => state.userId);
   const { diaryId } = useParams();
+  const { mutate: deletePage } = useDeletePage();
+  // const { data: Page } = usePage();
 
   const diaryIdString = Array.isArray(diaryId) ? diaryId[0] : diaryId;
 
@@ -30,20 +37,27 @@ const DiaryParchmentPage = () => {
     return <div>로그인 해주세요.</div>;
   }
 
-  const handleDeletePage = (pageIndex: number) => {
+  const handleDeletePage = (page: UpdatePageType) => {
     const confirmDelete = confirm('이 페이지를 삭제하시겠습니까?');
     if (!confirmDelete) return;
 
-    const newPages = [...pages];
-    newPages.splice(pageIndex, 1);
-    setPages(newPages);
+    // const newPages = [...pages];
+    // newPages.splice(pageIndex, 1);
+    // setPages(newPages);
 
-    const reorderedBottomSheetList = newPages.map((page, index) => ({
-      id: page.id,
-      title: `Page ${index + 1}`,
-      content: page.url
-    }));
-    setBottomSheetList(reorderedBottomSheetList);
+    // const newPages = pages.map((page) => ({
+    //   id: page.id,
+    //   content_id: page.content_id,
+    //   parchment_style: page.parchment_style,
+    //   index: page.index,
+    //   diary_id: page.diary_id
+    //   // id: page.id,
+    //   // title: `Page ${index + 1}`,
+    //   // content: page.url
+    // }));
+    removePage(page.id);
+    deletePage(page.id);
+    console.log(page.id);
   };
 
   const handleFinalSave = async () => {
@@ -129,24 +143,21 @@ const DiaryParchmentPage = () => {
     }
   };
 
-  const renderPage = (pageUrl: string | undefined, pageIndex: number) => (
-    <div key={pageIndex} className="relative w-[512px] h-[800px] bg-white shadow-lg p-2">
+  const renderPage = (page: UpdatePageType) => (
+    <div key={page.index} className="relative w-[512px] h-[800px] bg-white shadow-lg p-2">
       <button
-        onClick={() => handleDeletePage(pageIndex)}
+        onClick={() => handleDeletePage(page)}
         className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
       >
         &times;
       </button>
-      <div className="absolute top-2 left-2 text-gray-800 text-3xl px-2 py-1 rounded">Page {pageIndex + 1}</div>
-
-      {pageUrl ===
-      'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA3MDlfNjkg%2FMDAxNjg4OTE0NTM5NDIy.BqIsAefGkbiPvhFb1AOv_2jHyDJBKHFoKK4b0EBOCQEg.WcVvf2YLvLnup2mXQSXuapJMZrWvXmo0hY15gB0SHJ4g.JPEG.simone18%2FIMG_3596.JPG&type=a340' ? (
-        <TenMinplanner />
-      ) : pageUrl ===
-        'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzA0MDNfMTYg%2FMDAxNDkxMTQ3OTg5MTE0.LgXNxgiumuZL55kTdDozdNvqDeTJCN7Blm2b8ANfrNQg.Q81ksE4O3Q-DxFw8K_MtLZ_mRosfRL0m-UCLE8Axglsg.JPEG.ut_era%2F%25BC%25F6%25C7%25D0%25B3%25EB%25C6%25AE_6mm_png.png&type=a340' ? (
+      <div className="absolute top-2 left-2 text-gray-800 text-3xl px-2 py-1 rounded">Page {page.index}</div>
+      {page.parchment_style === 'tenMinPlanner' ? (
+        <TenMinPlanner />
+      ) : page.parchment_style === 'lineNote' ? (
         <LineNote userId={userId} className="w-full max-w-screen-md max-h-screen overflow-auto mt-20" />
       ) : (
-        <img src={pageUrl} className="w-full h-full object-cover" />
+        <img className="w-full h-full object-cover" />
       )}
     </div>
   );
@@ -195,7 +206,7 @@ const DiaryParchmentPage = () => {
       <div className="grid grid-cols-2 gap-4">
         <div className="border-r border-gray-300 flex items-center justify-center">
           {pages[currentPage] ? (
-            renderPage(pages[currentPage].url, currentPage)
+            renderPage(pages[currentPage])
           ) : (
             <div
               className="w-[512px] h-[800px] flex items-center justify-center border-2 border-dashed border-gray-600 cursor-pointer"
@@ -208,7 +219,7 @@ const DiaryParchmentPage = () => {
 
         <div className="flex items-center justify-center">
           {pages[currentPage + 1] ? (
-            renderPage(pages[currentPage + 1].url, currentPage + 1)
+            renderPage(pages[currentPage + 1])
           ) : pages[currentPage] ? (
             <div
               className="w-[512px] h-[800px] flex items-center justify-center border-2 border-dashed border-gray-600 cursor-pointer"

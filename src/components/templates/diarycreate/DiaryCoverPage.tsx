@@ -13,8 +13,7 @@ import { useParams } from 'next/navigation';
 const DiaryCoverPage: React.FC = () => {
   const router = useRouter();
   // const { diaryId } = useDiaryStore((state) => state);
-  const { DiaryId: diaryId } = useParams();
-  console.log({ diaryId });
+  const { diaryId } = useParams();
   const diaryIdString = Array.isArray(diaryId) ? diaryId[0] : diaryId;
 
   const {

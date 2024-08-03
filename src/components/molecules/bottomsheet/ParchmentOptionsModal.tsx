@@ -3,34 +3,50 @@ import React, { useState } from 'react';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
 import useBottomSheetStore from '@/stores/bottomsheet.store';
 import uuid from 'react-uuid';
+import { useCreatePage } from '@/lib/hooks/usePages';
+import { useParams } from 'next/navigation';
+import usePageStore from '@/stores/pages.store';
 
-const addParchmentPages = [
-  'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA3MDlfNjkg%2FMDAxNjg4OTE0NTM5NDIy.BqIsAefGkbiPvhFb1AOv_2jHyDJBKHFoKK4b0EBOCQEg.WcVvf2YLvLnup2mXQSXuapJMZrWvXmo0hY15gB0SHJ4g.JPEG.simone18%2FIMG_3596.JPG&type=a340',
-  'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzA0MDNfMTYg%2FMDAxNDkxMTQ3OTg5MTE0.LgXNxgiumuZL55kTdDozdNvqDeTJCN7Blm2b8ANfrNQg.Q81ksE4O3Q-DxFw8K_MtLZ_mRosfRL0m-UCLE8Axglsg.JPEG.ut_era%2F%25BC%25F6%25C7%25D0%25B3%25EB%25C6%25AE_6mm_png.png&type=a340',
-  'https://via.placeholder.com/384x600?text=New+Page+3',
-  'https://via.placeholder.com/384x600?text=New+Page+4',
-  'https://via.placeholder.com/384x600?text=New+Page+5',
-  'https://via.placeholder.com/384x600?text=New+Page+6'
+type ParchmentType = {
+  id: number;
+  parchmentStyle: string;
+  url: string;
+};
+
+type ParamTypes = {
+  [key: string]: string;
+  diaryId: string;
+};
+
+const parchments = [
+  { id: 1, parchmentStyle: 'tenMinPlanner', url: '/images/tenMinPlanner.png' },
+  { id: 2, parchmentStyle: 'lineNote', url: '/images/lineNote.png' },
+  { id: 3, parchmentStyle: 'BlankNote', url: 'https://via.placeholder.com/384x600?text=New+Page+3' }
 ];
 
 const ParchmentOptionsModal: React.FC = () => {
-  const { showPageOptions, togglePageOptions, addPage, pages } = useDiaryCoverStore();
-  const addPageToBottomSheet = useBottomSheetStore((state) => state.addPageToBottomSheet);
+  const { showPageOptions, togglePageOptions } = useDiaryCoverStore();
+  const { addPage, pages } = usePageStore((state) => state);
   const [currentOptionPage, setCurrentOptionPage] = useState(0);
+  const { mutate: createPage } = useCreatePage();
+  const { diaryId } = useParams<ParamTypes>();
 
-  const handleAddPage = (newPageUrl: string) => {
-    // const id = String(Date.now() + Math.random());
-    const id = uuid();
-    const pageIndex = addPage(newPageUrl);
-    const title = `Page ${pageIndex + 1}`;
-    const content = newPageUrl;
+  const handleAddPage = (parchment: ParchmentType) => {
+    const newPage = {
+      id: uuid(),
+      content_id: uuid(),
+      parchment_style: parchment.parchmentStyle,
+      index: pages.length + 1,
+      diary_id: diaryId
+    };
 
-    addPageToBottomSheet(id, title, content);
+    addPage(newPage);
     togglePageOptions();
+    createPage(newPage);
   };
 
   const handleNextOptionPage = () => {
-    if (currentOptionPage < addParchmentPages.length - 4) {
+    if (currentOptionPage < parchments.length - 4) {
       setCurrentOptionPage(currentOptionPage + 4);
     }
   };
@@ -48,9 +64,9 @@ const ParchmentOptionsModal: React.FC = () => {
       <div className="bg-white p-4 rounded shadow-lg w-[85%] max-w-4xl" onClick={(e) => e.stopPropagation()}>
         <h2 className="mb-4 text-lg font-semibold">속지 선택</h2>
         <div className="grid grid-cols-4 gap-4">
-          {addParchmentPages.slice(currentOptionPage, currentOptionPage + 4).map((url, index) => (
-            <div key={index} className="border p-2 cursor-pointer" onClick={() => handleAddPage(url)}>
-              <img src={url} alt={`Page ${index}`} />
+          {parchments.slice(currentOptionPage, currentOptionPage + 4).map((parchment) => (
+            <div key={parchment.id} className="border p-2 cursor-pointer" onClick={() => handleAddPage(parchment)}>
+              <img src={parchment.url} alt={`Page ${parchment.id}`} />
             </div>
           ))}
         </div>
@@ -64,7 +80,7 @@ const ParchmentOptionsModal: React.FC = () => {
           </button>
           <button
             onClick={handleNextOptionPage}
-            disabled={currentOptionPage >= addParchmentPages.length - 4}
+            disabled={currentOptionPage >= parchments.length - 2}
             className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300"
           >
             다음

@@ -130,7 +130,17 @@ class TenMinPlannerAPI {
     console.log({ date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list });
     const { data, error } = await this.supabase
       .from('ten_min_planner')
-      .update({ date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list })
+      .update({
+        date,
+        d_day_date: d_day_date ? d_day_date : null,
+        d_day,
+        goal,
+        memo,
+        timetable,
+        diary_id,
+        user_id,
+        todo_list
+      })
       .eq('id', id);
     // .select('*');
     console.log({ data, error });

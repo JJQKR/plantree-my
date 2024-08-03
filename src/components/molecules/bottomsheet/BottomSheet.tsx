@@ -4,17 +4,18 @@ import { useDiaryCoverStore } from '@/stores/diarycover.store';
 import BottomSheetCard from './BottomSheetCard';
 import { supabase } from '@/supabase/client';
 import useDiaryStore from '@/stores/diary.store';
+import { UpdatePageType } from '@/api/pages.api';
 
 type BottomSheetProps = {
   isOpen: boolean;
   onToggle: () => void;
-  bottomSheetList: { id: string; title: string; content: string }[];
+  bottomSheetList: UpdatePageType[];
   moveCard: (dragIndex: number, hoverIndex: number) => void;
 };
 
 const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheetList, moveCard }) => {
   const router = useRouter();
-  const { diaryId } = useDiaryStore((state) => state);
+  // const { diaryId } = useDiaryStore((state) => state);
   const pathname = usePathname();
   const scrollRef = useRef<HTMLDivElement>(null);
   const togglePageOptions = useDiaryCoverStore((state) => state.togglePageOptions);
@@ -34,13 +35,14 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
     imageFile,
     setCoverData
   } = useDiaryCoverStore();
+  const { diaryId } = useParams();
 
   const handleCoverPageClick = () => {
     router.push(`/member/diary/${diaryId}/cover`);
   };
 
-  const handleCardClick = (index: number) => {
-    setCurrentPage(index - (index % 2));
+  const handleCardClick = (pageIndex: number) => {
+    setCurrentPage(pageIndex - (pageIndex % 2));
   };
 
   console.log(bottomSheetList);
@@ -137,15 +139,12 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
           >
             <h2 className="text-xl font-bold">커버 페이지</h2>
           </div>
-          {bottomSheetList.map((item, index) => (
+          {bottomSheetList.map((page) => (
             <BottomSheetCard
-              key={item.id}
-              id={item.id}
-              title={`Page ${index + 1}`}
-              content={item.content}
-              index={index}
+              page={page}
+              key={page.index}
               moveCard={moveCard}
-              onClick={() => handleCardClick(index)}
+              onClick={() => handleCardClick(page.index)}
             />
           ))}
           <div
