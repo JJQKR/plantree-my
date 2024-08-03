@@ -61,8 +61,11 @@ class TenMinPlannerAPI {
    * @returns ten_min_planner 테이블 데이터 중 1개
    */
   async selectTenMinPlannerOfPlannerId(id: string) {
-    const { data } = await this.supabase.from('ten_min_planner').select('*').eq('id', id).single();
-    return data;
+    if (id) {
+      const { data } = await this.supabase.from('ten_min_planner').select('*').eq('id', id).maybeSingle();
+      return data;
+    }
+    return null;
   }
 
   /**
@@ -80,9 +83,18 @@ class TenMinPlannerAPI {
    */
   async insertTenMinPlanner(insertData: UpdateTenMinPlannerType) {
     const { id, date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list } = insertData;
-    const { data } = await this.supabase
-      .from('ten_min_planner')
-      .insert({ id, date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list });
+    const { data } = await this.supabase.from('ten_min_planner').insert({
+      id,
+      date,
+      d_day_date: d_day_date ? d_day_date : null,
+      d_day,
+      goal,
+      memo,
+      timetable,
+      diary_id,
+      user_id,
+      todo_list
+    });
 
     return data;
   }
@@ -114,11 +126,14 @@ class TenMinPlannerAPI {
    */
   async updateTenMinPlanner(id: string, updateData: UpdateTenMinPlannerType) {
     const { date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list } = updateData;
+    console.log({ id });
+    console.log({ date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list });
     const { data, error } = await this.supabase
       .from('ten_min_planner')
       .update({ date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list })
-      .eq('id', id)
-      .select('*');
+      .eq('id', id);
+    // .select('*');
+    console.log({ data, error });
 
     return data;
   }
