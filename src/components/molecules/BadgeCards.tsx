@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { totalBadges } from '../atoms/TotalBadges';
 import useUserStore from '@/stores/user.store';
-import FetchDiaryCount from '@/lib/utils/FetchDiaryCount';
-import FetchMembershipDays from '@/lib/utils/FetchMembershipDays';
 
 const BadgeCards: React.FC = () => {
   const { diaryCount, membershipDays } = useUserStore((state) => state);
@@ -54,8 +52,6 @@ const BadgeCards: React.FC = () => {
           />
         </div>
       ))}
-      <FetchDiaryCount />
-      <FetchMembershipDays />
     </div>
   );
 };

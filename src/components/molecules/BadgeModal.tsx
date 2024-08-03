@@ -1,18 +1,11 @@
-import React, { useState } from 'react';
-import Image from 'next/image';
-import { totalBadges } from '../atoms/TotalBadges';
+import React from 'react';
 import useMyModalStore from '@/stores/my.modal.store';
 import BadgeCards from './BadgeCards';
-//배지 카드 다 그려주기
-//user - diary_count 값 >= badges - 문구점사장님 - requsiite 값 이면 true, 아니면 false
-//membershipDays 값 >= badges - 안녕하세요 - requisite 값 이면 true, 아니면 false
-//membershipDays 값 >= badges - 안녕하세요 - requisite 값 이면 true, 아니면 false
+import FetchDiaryCount from '@/lib/utils/FetchDiaryCount';
+import FetchMembershipDays from '@/lib/utils/FetchMembershipDays';
 
 const BadgeModal: React.FC = () => {
   const { isBadgeModalOpen, toggleBadgeModal } = useMyModalStore((state) => state);
-
-  // 각 그룹의 배지 상태를 관리하기 위한 useState
-  const [badgesState, setBadgesState] = useState(totalBadges.map((group) => group[0]));
 
   const handleBackGroundClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (e.target === e.currentTarget) {
@@ -20,12 +13,7 @@ const BadgeModal: React.FC = () => {
     }
   };
 
-  // 특정 그룹의 배지 상태를 토글하는 함수
-  const toggleBadgeObtained = (groupIndex: number) => {
-    setBadgesState((prevBadges) =>
-      prevBadges.map((badge, index) => (index === groupIndex ? { ...badge, isObtained: !badge.isObtained } : badge))
-    );
-  };
+  if (!isBadgeModalOpen) return null;
 
   return (
     <>
@@ -36,22 +24,12 @@ const BadgeModal: React.FC = () => {
         <div className="bg-white p-4 rounded-[10px] w-[500px] h-[500px]">
           <div onClick={(e) => e.stopPropagation()} className="h-full overflow-y-auto">
             <h2 className="text-xl font-bold mb-4">도전과제 확인 1/9</h2>
-            <div className="grid grid-cols-3 gap-2">
-              {badgesState.map((badge, index) => (
-                <div key={index} onClick={() => toggleBadgeObtained(index)}>
-                  <Image
-                    className="m-5"
-                    src={badge.isObtained ? badge.content : badge.content.replace('true', 'false')}
-                    alt={badge.isObtained ? 'Obtained Badge' : 'Unobtained Badge'}
-                    width={100}
-                    height={150}
-                  />
-                </div>
-              ))}
-            </div>
+            <BadgeCards />
           </div>
         </div>
       </div>
+      <FetchDiaryCount />
+      <FetchMembershipDays />
     </>
   );
 };
