@@ -14,6 +14,13 @@ export type UpdateDiaryType = {
   name: string | null;
 };
 
+export type Diary = {
+  id: string;
+  user_id: string;
+  bookshelf_order: number;
+  name: string | null;
+};
+
 class DiariesAPI {
   private supabase;
 
