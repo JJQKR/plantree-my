@@ -7,7 +7,7 @@ const diariesApi = new DiariesAPI();
 export const useDiariesToUserId = (userId: string) => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['diaries', userId],
-    queryFn: () => diariesApi.selectPagesOfDiaryId(userId)
+    queryFn: () => diariesApi.selectPagesOfUserId(userId)
   });
   return { data, isLoading, error };
 };
