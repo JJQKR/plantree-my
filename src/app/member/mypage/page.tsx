@@ -63,7 +63,7 @@ const MyPage: React.FC = () => {
         <AccountBar />
         <WithdrawalButton>
           {' '}
-          <div className="flex items-center justify-start mt-3 pl-3 p-2 bg-white rounded-[10px] shadow-md w-[600px] h-[50px]">
+          <div className="flex items-center justify-start my-3 pl-3 p-2 bg-white rounded-[10px] shadow-md w-[600px] h-[50px]">
             <button onClick={handleToggleWithdrawalModal}>회원 탈퇴</button>
             {isWithdrawalModalOpen && <WithdrawalModal />}
           </div>

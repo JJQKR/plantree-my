@@ -3,6 +3,8 @@ import useMyModalStore from '@/stores/my.modal.store';
 import BadgeCards from './BadgeCards';
 import FetchDiaryCount from '@/lib/utils/FetchDiaryCount';
 import FetchMembershipDays from '@/lib/utils/FetchMembershipDays';
+import ObtainedBadgesCount from '../atoms/ObtainedBadges';
+import { totalBadges } from '../atoms/TotalBadges';
 
 const BadgeModal: React.FC = () => {
   const { isBadgeModalOpen, toggleBadgeModal } = useMyModalStore((state) => state);
@@ -23,7 +25,9 @@ const BadgeModal: React.FC = () => {
       >
         <div className="bg-white p-4 rounded-[10px] w-[500px] h-[500px]">
           <div onClick={(e) => e.stopPropagation()} className="h-full overflow-y-auto">
-            <h2 className="text-xl font-bold mb-4">도전과제 확인 1/9</h2>
+            <h2 className="text-xl font-bold mb-4">
+              도전과제 확인 <ObtainedBadgesCount /> / {totalBadges.length}
+            </h2>
             <BadgeCards />
           </div>
         </div>
