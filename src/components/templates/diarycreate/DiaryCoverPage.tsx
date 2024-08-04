@@ -19,6 +19,7 @@ const DiaryCoverPage: React.FC = () => {
   const router = useRouter();
   // const { diaryId } = useDiaryStore((state) => state);
   const { diaryId } = useParams<ParamTypes>();
+  console.log(diaryId);
   // const diaryIdString = Array.isArray(diaryId) ? diaryId[0] : diaryId;
 
   const {
@@ -93,17 +94,17 @@ const DiaryCoverPage: React.FC = () => {
           setCoverScale(parsedData.cover_scale);
           setCoverStageSize(parsedData.cover_stage_size);
 
-          if (parsedData.cover_image) {
-            const img = new window.Image();
-            img.src = parsedData.cover_image;
-            img.onload = () => {
-              setLoadedImage(img);
-              setCoverImage(parsedData.cover_image);
-              setCoverImagePosition(parsedData.cover_image_position);
-              setCoverImageSize(parsedData.cover_image_size);
-              setCoverImageRotation(parsedData.cover_image_rotation);
-            };
-          }
+          // if (parsedData.cover_image) {
+          //   const img = new window.Image();
+          //   img.src = parsedData.cover_image;
+          //   img.onload = () => {
+          //     setLoadedImage(img);
+          //     setCoverImage(parsedData.cover_image);
+          //     setCoverImagePosition(parsedData.cover_image_position);
+          //     setCoverImageSize(parsedData.cover_image_size);
+          //     setCoverImageRotation(parsedData.cover_image_rotation);
+          //   };
+          // }
         } else {
           setCoverTitle('표지 제목 작성');
           setCoverTitlePosition({ x: 150, y: 150 });
@@ -114,17 +115,17 @@ const DiaryCoverPage: React.FC = () => {
           setCoverScale(1);
           setCoverStageSize({ width: 512, height: 800 });
 
-          if (!parsedData.cover_image) {
-            const img = new window.Image();
-            img.src = parsedData.cover_image;
-            img.onload = () => {
-              setLoadedImage(null);
-              setCoverImage(null);
-              setCoverImagePosition({ x: 50, y: 50 });
-              setCoverImageSize({ width: 0, height: 0 });
-              setCoverImageRotation(0);
-            };
-          }
+          // if (!parsedData.cover_image) {
+          //   const img = new window.Image();
+          //   img.src = parsedData.cover_image;
+          //   img.onload = () => {
+          //     setLoadedImage(null);
+          //     setCoverImage(null);
+          //     setCoverImagePosition({ x: 50, y: 50 });
+          //     setCoverImageSize({ width: 0, height: 0 });
+          //     setCoverImageRotation(0);
+          //   };
+          // }
 
           setIsEditMode(false);
         }

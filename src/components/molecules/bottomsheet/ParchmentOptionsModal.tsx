@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
 import useBottomSheetStore from '@/stores/bottomsheet.store';
 import uuid from 'react-uuid';
-import { useCreatePage } from '@/lib/hooks/usePages';
+import { useCreatePage, usePageToDiaryId, usePages } from '@/lib/hooks/usePages';
 import { useParams } from 'next/navigation';
 import usePageStore from '@/stores/pages.store';
 
@@ -25,11 +25,12 @@ const parchments = [
 ];
 
 const ParchmentOptionsModal: React.FC = () => {
+  const { diaryId } = useParams<ParamTypes>();
   const { showPageOptions, togglePageOptions } = useDiaryCoverStore();
   const { addPage, temporaryPages } = usePageStore((state) => state);
   const [currentOptionPage, setCurrentOptionPage] = useState(0);
   const { mutate: createPage } = useCreatePage();
-  const { diaryId } = useParams<ParamTypes>();
+  const { data: pages } = usePageToDiaryId(diaryId);
 
   const handleAddPage = (parchment: ParchmentType) => {
     const newPage = {
@@ -40,9 +41,10 @@ const ParchmentOptionsModal: React.FC = () => {
       diary_id: diaryId
     };
 
-    addPage(newPage);
+    // addPage(newPage);
     togglePageOptions();
     createPage(newPage);
+    console.log(pages);
   };
 
   const handleNextOptionPage = () => {
