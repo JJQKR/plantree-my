@@ -3,8 +3,7 @@ import { supabase } from '@/supabase/client';
 
 export async function GET(request: NextRequest, { params }: { params: { diaryId: string } }) {
   const { diaryId } = params;
-
-  const { data, error } = await supabase.from('diary_covers').select('*').eq('id', diaryId).single();
+  const { data, error } = await supabase.from('diary_covers').select('*').eq('id', diaryId).maybeSingle();
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
