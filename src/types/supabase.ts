@@ -346,6 +346,44 @@ export type Database = {
           }
         ];
       };
+      blank_note: {
+        Row: {
+          id: string;
+          user_id: string;
+          date: string;
+          title: string;
+          content: string;
+          bgColor: string;
+          globalTextColor: string;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string;
+          date?: string;
+          title?: string;
+          content?: string;
+          bgColor?: string;
+          globalTextColor?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          date?: string;
+          title?: string;
+          content?: string;
+          bgColor?: string;
+          globalTextColor?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'blank_note_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          }
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
