@@ -12,6 +12,7 @@ import { useStore } from '@/stores/sidebar.store';
 import { supabase } from '@/supabase/client';
 import useDiaryStore from '@/stores/diary.store';
 import uuid from 'react-uuid';
+import Swal from 'sweetalert2'; // sweetalert2 가져오기
 
 const DiaryCase: React.FC = () => {
   const [diaries, setDiaries] = useState<any[]>([]);
@@ -49,7 +50,13 @@ const DiaryCase: React.FC = () => {
 
   const handleCreateDiary = () => {
     if (!isLoggedIn) {
-      alert('로그인 상태가 아닙니다. 로그인 후 다시 시도해 주세요.');
+      Swal.fire({
+        icon: 'error',
+        title: '로그인 필요',
+        text: '로그인 상태가 아닙니다. 로그인 후 다시 시도해 주세요.'
+      }).then(() => {
+        router.push('/'); // 로그인 페이지로 리다이렉트
+      });
       return;
     }
     const diaryId = uuid();
