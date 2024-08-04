@@ -3,7 +3,7 @@ import { supabase } from '@/supabase/client';
 
 export async function GET(request: NextRequest, { params }: { params: { diaryId: string } }) {
   const { diaryId } = params;
-  const { data, error } = await supabase.from('diary_covers').select('*').eq('id', diaryId).maybeSingle();
+  const { data, error } = await supabase.from('diary_covers').select('*').eq('diary_id', diaryId).maybeSingle();
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -16,7 +16,7 @@ export async function PUT(request: NextRequest, { params }: { params: { diaryId:
   const { diaryId } = params;
   const coverData = await request.json();
 
-  const { data, error } = await supabase.from('diary_covers').update(coverData).eq('id', diaryId).single();
+  const { data, error } = await supabase.from('diary_covers').update(coverData).eq('diary_id', diaryId).single();
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

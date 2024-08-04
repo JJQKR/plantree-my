@@ -79,7 +79,7 @@ export const useDiaryCoverStore = create<DiaryCoverState>((set, get) => ({
   setCoverImageSize: (size) => set({ coverImageSize: size }),
   coverImageRotation: 0,
   setCoverImageRotation: (rotation) => set({ coverImageRotation: rotation }),
-  coverBackgroundColor: '#eeeeee',
+  coverBackgroundColor: '#ffffff',
   setCoverBackgroundColor: (color) => set({ coverBackgroundColor: color }),
   coverSelectedElement: null,
   setCoverSelectedElement: (element) => set({ coverSelectedElement: element }),
