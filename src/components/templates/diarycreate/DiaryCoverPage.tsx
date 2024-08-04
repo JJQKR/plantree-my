@@ -9,6 +9,7 @@ import { useDiaryCoverStore } from '@/stores/diarycover.store';
 import { getCover, updateCover, deleteCover } from '@/services/diarycover.service';
 import useDiaryStore from '@/stores/diary.store';
 import { useParams } from 'next/navigation';
+import { useDiary } from '@/lib/hooks/useDiaries';
 
 type ParamTypes = {
   [key: string]: string;
@@ -17,10 +18,8 @@ type ParamTypes = {
 
 const DiaryCoverPage: React.FC = () => {
   const router = useRouter();
-  // const { diaryId } = useDiaryStore((state) => state);
+
   const { diaryId } = useParams<ParamTypes>();
-  console.log(diaryId);
-  // const diaryIdString = Array.isArray(diaryId) ? diaryId[0] : diaryId;
 
   const {
     coverTitle,
@@ -68,22 +67,22 @@ const DiaryCoverPage: React.FC = () => {
     const fetchDiaryCover = async () => {
       try {
         const data = await getCover(diaryId);
-        const parsedData = {
-          cover_title: data.cover_title,
-          cover_title_position: JSON.parse(data.cover_title_position),
-          cover_title_fontsize: data.cover_title_fontsize,
-          cover_title_width: data.cover_title_width,
-          cover_title_rotation: data.cover_title_rotation,
-          cover_image: data.cover_image,
-          cover_image_position: JSON.parse(data.cover_image_position),
-          cover_image_size: JSON.parse(data.cover_image_size),
-          cover_image_rotation: data.cover_image_rotation,
-          cover_bg_color: data.cover_bg_color,
-          cover_scale: data.cover_scale,
-          cover_stage_size: JSON.parse(data.cover_stage_size)
-        };
-        console.log(data);
         if (data) {
+          const parsedData = {
+            cover_title: data.cover_title,
+            cover_title_position: JSON.parse(data.cover_title_position),
+            cover_title_fontsize: data.cover_title_fontsize,
+            cover_title_width: data.cover_title_width,
+            cover_title_rotation: data.cover_title_rotation,
+            cover_image: data.cover_image,
+            cover_image_position: JSON.parse(data.cover_image_position),
+            cover_image_size: JSON.parse(data.cover_image_size),
+            cover_image_rotation: data.cover_image_rotation,
+            cover_bg_color: data.cover_bg_color,
+            cover_scale: data.cover_scale,
+            cover_stage_size: JSON.parse(data.cover_stage_size)
+          };
+
           setIsEditMode(true);
           setCoverTitle(parsedData.cover_title);
           setCoverTitlePosition(parsedData.cover_title_position);

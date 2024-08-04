@@ -3,13 +3,13 @@ import { supabase } from '@/supabase/client';
 
 export type AddDiaryType = {
   id: string;
-  user_id: string;
+  user_id: string | null;
   bookshelf_order: number;
   name: string | null;
 };
 
 export type UpdateDiaryType = {
-  user_id: string;
+  user_id: string | null;
   bookshelf_order: number;
   name: string | null;
 };
