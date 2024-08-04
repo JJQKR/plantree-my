@@ -13,7 +13,7 @@ import usePageStore from '@/stores/pages.store';
 import TenMinPlanner from '@/components/molecules/parchment/TenMinPlanner';
 import { useDeletePage, usePageToDiaryId, useUpdatePage } from '@/lib/hooks/usePages';
 import { AddPageType } from '@/api/pages.api';
-import { useCreateDiary, useDiariesToUserId, useDiary } from '@/lib/hooks/useDiaries';
+import { useCreateDiary, useDiariesToUserId, useDiary, useUpdateDiary } from '@/lib/hooks/useDiaries';
 // import BlankNote from '@/components/molecules/parchment/BlankNote';
 
 type ParamTypes = {
@@ -32,11 +32,12 @@ const DiaryParchmentPage = () => {
   const { mutate: updatePage } = useUpdatePage();
   const { data: pages, isLoading, error } = usePageToDiaryId(diaryId);
   const { mutate: createDiary } = useCreateDiary();
+  const { mutate: updateDiary } = useUpdateDiary();
   const { data: diaries } = useDiariesToUserId(userId);
 
   // const { data: Page } = usePage();
 
-  const diaryIdString = Array.isArray(diaryId) ? diaryId[0] : diaryId;
+  // const diaryIdString = Array.isArray(diaryId) ? diaryId[0] : diaryId;
 
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
@@ -112,9 +113,9 @@ const DiaryParchmentPage = () => {
 
     try {
       if (isEditMode) {
-        await updateCover(diaryIdString, coverData);
+        await updateCover(diaryId, coverData);
         // await updateParchment(diaryIdString, parchmentData);
-        alert('Diary 업데이트 성공!');
+        alert('diary 업데이트 성공!');
       } else {
         const maxOrder = diaries?.reduce((max, diary) => Math.max(max, diary.bookshelf_order), 0) || 0;
         const newOrder = maxOrder + 1;
@@ -127,12 +128,13 @@ const DiaryParchmentPage = () => {
         };
         await addCover(coverData);
         await createDiary(newDiary);
+        await updateDiary({ id: diaryId, updateDiary: newDiary });
         // await addParchment(parchmentData);
-        alert('Diary 저장 성공!');
+        alert('diary 저장 성공!');
       }
       router.push('/member');
     } catch (error) {
-      console.error('Diary 저장 실패:', error);
+      console.error('diary 저장 실패:', error);
       alert('diary 저장 실패');
     }
   };
@@ -170,7 +172,7 @@ const DiaryParchmentPage = () => {
       //   return;
       // }
 
-      const coverResult = await deleteCover(diaryIdString);
+      const coverResult = await deleteCover(diaryId);
       if (coverResult.error) {
         console.error('Cover 삭제 실패:', coverResult.error);
         alert('Cover 삭제 실패');
