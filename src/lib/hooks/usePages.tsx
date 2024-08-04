@@ -1,4 +1,4 @@
-import PagesAPI, { UpdatePageType } from '@/api/pages.api';
+import PagesAPI, { AddPageType, UpdatePageType } from '@/api/pages.api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const pagesApi = new PagesAPI();
@@ -34,7 +34,7 @@ export const usePage = (id: string) => {
 export const useCreatePage = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (newPage: UpdatePageType) => await pagesApi.insertPage(newPage),
+    mutationFn: async (newPage: AddPageType) => await pagesApi.insertPage(newPage),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['pages']

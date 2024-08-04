@@ -11,18 +11,29 @@ import useUserStore from '@/stores/user.store';
 import { supabase } from '@/supabase/client';
 import usePageStore from '@/stores/pages.store';
 import TenMinPlanner from '@/components/molecules/parchment/TenMinPlanner';
-import { useDeletePage, usePage } from '@/lib/hooks/usePages';
-import { UpdatePageType } from '@/api/pages.api';
+import { useDeletePage, usePageToDiaryId, useUpdatePage } from '@/lib/hooks/usePages';
+import { AddPageType } from '@/api/pages.api';
+import { useCreateDiary, useDiariesToUserId, useDiary } from '@/lib/hooks/useDiaries';
 // import BlankNote from '@/components/molecules/parchment/BlankNote';
+
+type ParamTypes = {
+  [key: string]: string;
+  diaryId: string;
+};
 
 const DiaryParchmentPage = () => {
   const router = useRouter();
-  const { currentPage, setCurrentPage } = useDiaryCoverStore();
+  const { currentPage, setCurrentPage, coverTitle } = useDiaryCoverStore();
   // const setBottomSheetList = useBottomSheetStore((state) => state.setBottomSheetList);
-  const { pages, removePage } = usePageStore((state) => state);
+  // const { pages, removePage } = usePageStore((state) => state);
   const userId = useUserStore((state) => state.userId);
-  const { diaryId } = useParams();
+  const { diaryId } = useParams<ParamTypes>();
   const { mutate: deletePage } = useDeletePage();
+  const { mutate: updatePage } = useUpdatePage();
+  const { data: pages, isLoading, error } = usePageToDiaryId(diaryId);
+  const { mutate: createDiary } = useCreateDiary();
+  const { data: diaries } = useDiariesToUserId(userId);
+
   // const { data: Page } = usePage();
 
   const diaryIdString = Array.isArray(diaryId) ? diaryId[0] : diaryId;
@@ -37,7 +48,7 @@ const DiaryParchmentPage = () => {
     return <div>로그인 해주세요.</div>;
   }
 
-  const handleDeletePage = (page: UpdatePageType) => {
+  const handleDeletePage = async (deletedPage: AddPageType) => {
     const confirmDelete = confirm('이 페이지를 삭제하시겠습니까?');
     if (!confirmDelete) return;
 
@@ -55,9 +66,40 @@ const DiaryParchmentPage = () => {
     //   // title: `Page ${index + 1}`,
     //   // content: page.url
     // }));
-    removePage(page.id);
-    deletePage(page.id);
-    console.log(page.id);
+    // removePage(page.id);
+
+    // deletePage(deletedPage.id);
+    // pages?.map((page) => {
+    //   updatePage({
+    //     id: page.id,
+    //     updatePage: {
+    //       content_id: page.content_id,
+    //       parchment_style: page.parchment_style,
+    //       diary_id: page.diary_id,
+    //       index: page.index > deletedPage.index ? page.index - 1 : page.index
+    //     }
+    //   });
+    // });
+    // updatePage({ id: page.id, updatePage: newPageIndex });
+    try {
+      await deletePage(deletedPage.id);
+      const updatePromises = pages
+        ?.filter((page) => page.index > deletedPage.index)
+        .map(async (page) => {
+          return updatePage({
+            id: page.id,
+            updatePage: {
+              ...page,
+              index: page.index - 1
+            }
+          });
+        });
+      if (updatePromises && updatePromises.length > 0) {
+        await Promise.all(updatePromises);
+      }
+    } catch (error) {
+      console.error('Error during update:', error);
+    }
   };
 
   const handleFinalSave = async () => {
@@ -74,7 +116,17 @@ const DiaryParchmentPage = () => {
         // await updateParchment(diaryIdString, parchmentData);
         alert('Diary 업데이트 성공!');
       } else {
+        const maxOrder = diaries?.reduce((max, diary) => Math.max(max, diary.bookshelf_order), 0) || 0;
+        const newOrder = maxOrder + 1;
+
+        const newDiary = {
+          id: diaryId,
+          user_id: userId,
+          bookshelf_order: newOrder,
+          name: coverTitle
+        };
         await addCover(coverData);
+        await createDiary(newDiary);
         // await addParchment(parchmentData);
         alert('Diary 저장 성공!');
       }
@@ -85,15 +137,14 @@ const DiaryParchmentPage = () => {
     }
   };
 
-  const handleNextPage = () => {
-    if (currentPage + 1 < pages.length && pages[currentPage] && pages[currentPage + 1]) {
-      setCurrentPage(currentPage + 2);
-    }
-  };
-
   const handlePrevPage = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 2);
+    // if (currentPage > 0) {
+    //   setCurrentPage(currentPage - 2);
+    // }
+    // temporaryPages.map((page)=>page.index)
+    const prevPageIndex = currentPage - 2;
+    if (prevPageIndex >= 0) {
+      setCurrentPage(prevPageIndex);
     }
   };
 
@@ -143,8 +194,8 @@ const DiaryParchmentPage = () => {
     }
   };
 
-  const renderPage = (page: UpdatePageType) => (
-    <div key={page.index} className="relative w-[512px] h-[800px] bg-white shadow-lg p-2">
+  const renderPage = (page: AddPageType) => (
+    <div key={page.id} className="relative w-[512px] h-[800px] bg-white shadow-lg p-2">
       <button
         onClick={() => handleDeletePage(page)}
         className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
@@ -169,6 +220,31 @@ const DiaryParchmentPage = () => {
     }
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading pages. Please try again later.</div>;
+  }
+
+  if (!pages) {
+    return <div>No pages available.</div>;
+  }
+
+  if (!userId) {
+    return <div>Please log in.</div>;
+  }
+
+  const handleNextPage = () => {
+    // if (currentPage + 1 < pages.length && pages[currentPage] && pages[currentPage + 1]) {
+    //   setCurrentPage(currentPage + 2);
+    // }
+    const nextPageIndex = currentPage + 2;
+    if (nextPageIndex < pages.length) {
+      setCurrentPage(nextPageIndex);
+    }
+  };
   return (
     <div className="flex flex-col overflow-hidden px-4">
       <div className="flex justify-between mt-2">
@@ -181,7 +257,8 @@ const DiaryParchmentPage = () => {
         </button>
         <button
           onClick={handleNextPage}
-          disabled={currentPage + 1 >= pages.length || !pages[currentPage] || !pages[currentPage + 1]}
+          // disabled={currentPage + 1 >= pages.length || !pages[currentPage] || !pages[currentPage + 1]}
+          disabled={currentPage >= pages.length - 1}
           className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300"
         >
           다음

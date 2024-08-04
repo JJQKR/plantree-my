@@ -26,7 +26,7 @@ const parchments = [
 
 const ParchmentOptionsModal: React.FC = () => {
   const { showPageOptions, togglePageOptions } = useDiaryCoverStore();
-  const { addPage, pages } = usePageStore((state) => state);
+  const { addPage, temporaryPages } = usePageStore((state) => state);
   const [currentOptionPage, setCurrentOptionPage] = useState(0);
   const { mutate: createPage } = useCreatePage();
   const { diaryId } = useParams<ParamTypes>();
@@ -36,7 +36,7 @@ const ParchmentOptionsModal: React.FC = () => {
       id: uuid(),
       content_id: uuid(),
       parchment_style: parchment.parchmentStyle,
-      index: pages.length + 1,
+      index: temporaryPages.length + 1,
       diary_id: diaryId
     };
 

@@ -1,12 +1,19 @@
 import { Tables } from '@/types/supabase';
 import { supabase } from '@/supabase/client';
 
-export type UpdatePageType = {
+export type AddPageType = {
   id: string;
   content_id: string;
   parchment_style: string;
   index: number;
-  diary_id: string;
+  diary_id: string | null;
+};
+
+export type UpdatePageType = {
+  content_id: string;
+  parchment_style: string;
+  index: number;
+  diary_id: string | null;
 };
 
 class PagesAPI {
@@ -57,12 +64,12 @@ class PagesAPI {
    * @param insertData  {
    * content_id: string;
    * parchment_style: string;
-   * page_index: number;
+   * index: number;
    * diary_id: string;
    * };
    * @returns pages에 추가된 data
    */
-  async insertPage(insertData: UpdatePageType) {
+  async insertPage(insertData: AddPageType) {
     const { id, content_id, parchment_style, index, diary_id } = insertData;
     const { data } = await this.supabase.from('pages').insert({
       id,
@@ -77,7 +84,7 @@ class PagesAPI {
 
   /**
    *
-   * @param id {string} 스케쥴 게시물 아이디
+   * @param id {string} page 아이디
    * @returns 삭제된 data
    */
   async deletePage(id: string) {
@@ -87,11 +94,11 @@ class PagesAPI {
 
   /**
    *
-   * @param id  {string} 스케쥴 게시물 아이디
+   * @param id  {string} page 아이디
    * @param updateData {
    * content_id: string;
    * parchment_style: string;
-   * page_index: number;
+   * index: number;
    * diary_id: string;
    * };
   };
