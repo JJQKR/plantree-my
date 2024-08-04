@@ -94,8 +94,6 @@ const TenMinPlanner = () => {
     }
   }, [tenMinPlanner, tenMinPlannerId, setActiveCells]);
 
-  console.log('supabase', tenMinPlanner);
-
   const updatePlanner = () => {
     if (!date) {
       alert('작성 날짜를 입력해 주세요.');

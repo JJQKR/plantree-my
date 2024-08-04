@@ -34,7 +34,6 @@ const Timetable = () => {
   const handleMouseUp = () => {
     setIsMouseDown(false);
   };
-  console.log('activeCells', activeCells);
 
   const toggleCellColor = (id: string) => {
     const newCell = { [id]: { active: true, color: todo.color, todoId: todo.id } };
