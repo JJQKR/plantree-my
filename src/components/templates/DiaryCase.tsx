@@ -98,12 +98,6 @@ const DiaryCase: React.FC = () => {
               ))
             ) : (
               // 다이어리가 없는 경우의 표시입니다.
-              <div className="flex items-center justify-center w-[250px] h-[400px] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
-                다이어리가 없습니다
-              </div>
-            )}
-            {isLoggedIn && (
-              // 로그인된 경우 다이어리 생성 버튼을 표시합니다.
               <div className="flex flex-col items-center justify-center">
                 <button
                   onClick={handleCreateDiary}
@@ -145,13 +139,6 @@ const DiaryCase: React.FC = () => {
               ))
             ) : (
               // 다이어리가 없는 경우와 로그인된 경우 다이어리 생성 버튼을 표시합니다.
-              <SwiperSlide className="flex items-center justify-center w-[350px] h-[570px] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
-                <button onClick={handleCreateDiary} className="flex items-center justify-center w-full h-full">
-                  +<br /> 다이어리 생성
-                </button>
-              </SwiperSlide>
-            )}
-            {isLoggedIn && (
               <SwiperSlide className="flex items-center justify-center w-[350px] h-[570px] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
                 <button onClick={handleCreateDiary} className="flex items-center justify-center w-full h-full">
                   +<br /> 다이어리 생성
