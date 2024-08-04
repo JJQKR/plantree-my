@@ -1,92 +1,232 @@
 'use client';
 
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { supabase } from '@/supabase/client';
 
-type Blank = {
-  text: string;
-  fontSize: number;
-  textColor: string;
-};
-
-const BlankNote = () => {
-  const [lines, setLines] = useState<Blank[]>(
-    Array.from({ length: 15 }, () => ({ text: '', fontSize: 16, textColor: '#000000' }))
-  );
+const BlankNote: React.FC<{ blankId: string }> = ({ blankId }) => {
   const [bgColor, setBgColor] = useState('#ffffff');
   const [globalTextColor, setGlobalTextColor] = useState('#000000');
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const [content, setContent] = useState('');
+  const [date, setDate] = useState('');
+  const [title, setTitle] = useState('');
+  const [currentHeight, setCurrentHeight] = useState(0);
+  const [isEditMode, setIsEditMode] = useState(!blankId);
+  const [originalContent, setOriginalContent] = useState({
+    bgColor: '#ffffff',
+    globalTextColor: '#000000',
+    content: '',
+    date: '',
+    title: ''
+  });
 
-  const measureTextWidth = useCallback((text: string, fontSize: number) => {
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    if (context) {
-      context.font = `${fontSize}px sans-serif`;
-      return context.measureText(text).width;
+  const editableDivRef = useRef<HTMLDivElement>(null);
+  const maxHeight = 400;
+
+  useEffect(() => {
+    if (blankId) {
+      fetchDiaryData();
     }
-    return 0;
+  }, [blankId]);
+
+  useEffect(() => {
+    if (editableDivRef.current && editableDivRef.current.innerText !== content) {
+      editableDivRef.current.innerText = content;
+    }
+  }, [content]);
+
+  useEffect(() => {
+    if (editableDivRef.current) {
+      setCurrentHeight(editableDivRef.current.scrollHeight);
+    }
   }, []);
 
-  const handleTextChange = useCallback(
-    (index: number, newText: string) => {
-      if (!inputRefs.current[index]) return;
+  const fetchDiaryData = async () => {
+    const { data, error } = await supabase.from('blank_note').select('*').eq('id', blankId).single();
 
-      const inputWidth = inputRefs.current[index]!.offsetWidth;
-      let textWidth = measureTextWidth(newText, lines[index].fontSize);
+    if (error) {
+      console.error('데이터 불러오기 오류:', error);
+      return;
+    }
 
-      const newLines = [...lines];
-      newLines[index].text = newText;
+    if (data) {
+      setBgColor(data.bgColor);
+      setGlobalTextColor(data.globalTextColor);
+      setContent(data.content);
+      setDate(data.date);
+      setTitle(data.title);
+      setOriginalContent({
+        bgColor: data.bgColor,
+        globalTextColor: data.globalTextColor,
+        content: data.content,
+        date: data.date,
+        title: data.title
+      });
+    }
+  };
 
-      while (textWidth > inputWidth) {
-        const overflowChar = newText.slice(-1);
-        newText = newText.slice(0, -1);
-        newLines[index].text = newText;
-        textWidth = measureTextWidth(newText, lines[index].fontSize);
+  const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
+    const target = e.currentTarget as HTMLDivElement;
+    const newHeight = target.scrollHeight;
+    setCurrentHeight(newHeight);
 
-        const nextLineIndex = index + 1;
-        if (nextLineIndex < newLines.length) {
-          newLines[nextLineIndex].text = overflowChar + newLines[nextLineIndex].text;
-          if (inputRefs.current[nextLineIndex]) {
-            inputRefs.current[nextLineIndex]!.setSelectionRange(0, 0);
-            inputRefs.current[nextLineIndex]!.focus();
+    if (newHeight > maxHeight) {
+      alert('마지막 줄 입니다.');
+      target.innerText = content;
+      setCurrentHeight(editableDivRef.current?.scrollHeight || 0);
+    } else {
+      setContent(target.innerText);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (currentHeight >= maxHeight && e.key !== 'Backspace' && e.key !== 'Delete') {
+      e.preventDefault();
+    }
+  };
+
+  const handleSaveOrUpdate = async () => {
+    const { data: session, error: sessionError } = await supabase.auth.getSession();
+
+    if (!date) {
+      alert('날짜를 입력해주세요.');
+      return;
+    }
+    if (!title) {
+      alert('제목을 입력해주세요.');
+      return;
+    }
+    if (!content) {
+      alert('내용을 입력해주세요.');
+      return;
+    }
+    if (sessionError || !session?.session) {
+      alert('로그인 후 저장할 수 있습니다.');
+      return;
+    }
+
+    const user = session.session.user;
+
+    if (blankId) {
+      if (confirm('수정 하시겠습니까?')) {
+        // 업데이트
+        const { error } = await supabase
+          .from('blank_note')
+          .update({
+            date: date,
+            title: title,
+            content: content,
+            bgColor: bgColor,
+            globalTextColor: globalTextColor
+          })
+          .eq('id', blankId)
+          .eq('user_id', user.id);
+
+        if (error) {
+          alert('수정 중 오류가 발생했습니다: ' + error.message);
+        } else {
+          alert('수정되었습니다!');
+          setOriginalContent({
+            bgColor: bgColor,
+            globalTextColor: globalTextColor,
+            content: content,
+            date: date,
+            title: title
+          });
+          setIsEditMode(false);
+        }
+      }
+    } else {
+      if (confirm('저장 하시겠습니까?')) {
+        // 저장
+        const { error } = await supabase.from('blank_note').insert([
+          {
+            user_id: user.id,
+            date: date,
+            title: title,
+            content: content,
+            bgColor: bgColor,
+            globalTextColor: globalTextColor
           }
+        ]);
+
+        if (error) {
+          alert('저장 중 오류가 발생했습니다: ' + error.message);
         } else {
-          newLines.push({ text: overflowChar, fontSize: 16, textColor: globalTextColor });
+          alert('저장되었습니다!');
+          setIsEditMode(false);
         }
       }
+    }
+  };
 
-      if (newText.length === 0 && index > 0) {
-        const prevLineIndex = index - 1;
-        newLines[prevLineIndex].text += newLines[index].text;
-        if (index >= 15) {
-          newLines.splice(index, 1);
-        } else {
-          newLines[index].text = '';
-        }
-        if (inputRefs.current[prevLineIndex]) {
-          inputRefs.current[prevLineIndex]!.focus();
-          inputRefs.current[prevLineIndex]!.setSelectionRange(
-            newLines[prevLineIndex].text.length,
-            newLines[prevLineIndex].text.length
-          );
-        }
+  const handleDelete = async () => {
+    const { data: session, error: sessionError } = await supabase.auth.getSession();
+
+    if (sessionError || !session?.session) {
+      alert('로그인 후 삭제할 수 있습니다.');
+      return;
+    }
+
+    const user = session.session.user;
+
+    if (confirm('내용을 삭제 하시겠습니까?')) {
+      const { error } = await supabase.from('blank_note').delete().eq('id', blankId).eq('user_id', user.id);
+
+      if (error) {
+        alert('삭제 중 오류가 발생했습니다: ' + error.message);
+      } else {
+        alert('삭제되었습니다!');
+        // 상태값 초기화
       }
+    }
+  };
 
-      setLines(newLines);
-    },
-    [lines, measureTextWidth, globalTextColor]
-  );
+  const handleEditModeToggle = () => {
+    if (isEditMode) {
+      // 취소 시 원래 내용 복원
+      setBgColor(originalContent.bgColor);
+      setGlobalTextColor(originalContent.globalTextColor);
+      setContent(originalContent.content);
+      setDate(originalContent.date);
+      setTitle(originalContent.title);
+    } else {
+      // 편집 모드 클릭시 현재 내용 저장
+      setOriginalContent({
+        bgColor: bgColor,
+        globalTextColor: globalTextColor,
+        content: content,
+        date: date,
+        title: title
+      });
+    }
+    setIsEditMode(!isEditMode);
+  };
 
   return (
-    <div className="bg-white w-[512px] h-[800px] p-[2rem]" style={{ backgroundColor: bgColor }}>
+    <div className="bg-white w-[512px] h-[600px] p-[2rem]" style={{ backgroundColor: bgColor }}>
       <div>
         <label htmlFor="date">날짜 : </label>
-        <input id="date" type="date" className="border w-[7rem] text-[0.7rem]" />
+        <input
+          id="date"
+          type="date"
+          className="border w-[7rem] text-[0.7rem]"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          disabled={!!blankId && !isEditMode}
+        />
       </div>
-      <div className="flex flex-row w-full">
+      <div className="flex flex-row w-full mb=2">
         <label htmlFor="title" className="w-[3rem]">
           제목:
         </label>
-        <input id="title" type="text" className="border w-full text-[0.7rem]" />
+        <input
+          id="title"
+          type="text"
+          className="border w-full text-[0.7rem]"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          disabled={!!blankId && !isEditMode}
+        />
       </div>
       <div>
         <label className="block m-2">
@@ -96,6 +236,7 @@ const BlankNote = () => {
             value={bgColor}
             onChange={(e) => setBgColor(e.target.value)}
             className="ml-2 p-1 border"
+            disabled={!!blankId && !isEditMode}
           />
         </label>
         <label className="block m-2">
@@ -105,28 +246,49 @@ const BlankNote = () => {
             value={globalTextColor}
             onChange={(e) => setGlobalTextColor(e.target.value)}
             className="ml-2 p-1 border"
+            disabled={!!blankId && !isEditMode}
           />
         </label>
       </div>
-      <div className=" border w-full overflow-hidden" style={{ height: `${lines.length * 30}px` }}>
-        {lines.map((line, index) => (
-          <div key={index} className="h-[30px]">
-            <input
-              type="text"
-              value={line.text}
-              onChange={(e) => handleTextChange(index, e.target.value)}
-              className="w-full outline-none bg-transparent"
-              style={{
-                fontSize: `${line.fontSize}px`,
-                color: globalTextColor
-              }}
-              ref={(el) => {
-                inputRefs.current[index] = el;
-              }}
-            />
-          </div>
-        ))}
-      </div>
+      <div
+        ref={editableDivRef}
+        contentEditable={isEditMode || !blankId}
+        className="border w-full overflow-hidden mb-2"
+        style={{
+          height: `${maxHeight}px`,
+          color: globalTextColor,
+          fontSize: '16px',
+          backgroundColor: bgColor,
+          overflowY: 'hidden',
+          wordBreak: 'break-all',
+          whiteSpace: 'pre-wrap'
+        }}
+        onInput={handleInput}
+        onKeyDown={handleKeyDown}
+      ></div>
+      {blankId ? (
+        isEditMode ? (
+          <>
+            <button onClick={handleSaveOrUpdate} className="p-2 bg-blue-500 text-white rounded mr-2">
+              수정
+            </button>
+            <button onClick={handleDelete} className="p-2 bg-red-500 text-white rounded mr-2">
+              삭제
+            </button>
+            <button onClick={handleEditModeToggle} className="p-2 bg-gray-500 text-white rounded">
+              편집 취소
+            </button>
+          </>
+        ) : (
+          <button onClick={handleEditModeToggle} className="p-2 bg-green-500 text-white rounded">
+            편집 모드
+          </button>
+        )
+      ) : (
+        <button onClick={handleSaveOrUpdate} className="p-2 bg-blue-500 text-white rounded mr-2">
+          저장
+        </button>
+      )}
     </div>
   );
 };

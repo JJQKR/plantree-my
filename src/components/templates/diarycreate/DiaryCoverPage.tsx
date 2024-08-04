@@ -8,10 +8,12 @@ import { useRouter } from 'next/navigation';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
 import { getCover, updateCover, deleteCover } from '@/services/diarycover.service';
 import useDiaryStore from '@/stores/diary.store';
+import { useParams } from 'next/navigation';
 
 const DiaryCoverPage: React.FC = () => {
   const router = useRouter();
-  const { diaryId } = useDiaryStore((state) => state);
+  // const { diaryId } = useDiaryStore((state) => state);
+  const { diaryId } = useParams();
   const diaryIdString = Array.isArray(diaryId) ? diaryId[0] : diaryId;
 
   const {
@@ -469,6 +471,16 @@ const DiaryCoverPage: React.FC = () => {
     if (!confirm('다이어리를 삭제하시겠습니까?')) {
       return;
     }
+    /**
+     * 1. 현재 diary_covers의 cover_image(url)을 가져온다.
+     *   const { data, error } supabase.from("diary_covers").select("cover_image").eq("id", id)
+     *   // data: { cover_image: ~~~~~~/cover_img/172199~~~~.jpg }
+     *
+     * 2. 이미지 이름을 잘라온다
+     *   // split 해서 뒤에 이미지 이름(172199~~~~.jpg)을 가져온다
+     *
+     * 3. 삭제한ㄷ
+     */
     let coverImage: string | null | undefined;
     try {
       const coverImageUrl = coverImage;

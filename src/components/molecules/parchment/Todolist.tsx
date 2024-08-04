@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import uuid from 'react-uuid';
 import { FaPlus } from 'react-icons/fa6';
 import useMyModalStore from '@/stores/my.modal.store';
@@ -100,7 +100,7 @@ const Todolist: React.FC = () => {
                 <span onClick={() => openModal(todo.id)} style={{ color: getColorClass(todo.color) }}>
                   <FaCircle />
                 </span>
-                <input type="checkbox" checked={todo.isDone} onClick={() => handleToggle(todo.id)} />
+                <input type="checkbox" checked={todo.isDone} onChange={() => handleToggle(todo.id)} />
                 {editingId === todo.id ? (
                   <input
                     type="text"

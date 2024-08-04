@@ -1,19 +1,20 @@
+import { UpdatePageType } from '@/api/pages.api';
 import { create } from 'zustand';
 
 type BottomSheetState = {
-  bottomSheetList: { id: string; title: string; content: string }[];
+  bottomSheetList: UpdatePageType[];
   isSheetOpen: boolean;
   toggleSheet: () => void;
-  setBottomSheetList: (newList: { id: string; title: string; content: string }[]) => void;
+  // setBottomSheetList: (newList: UpdatePageType[]) => void;
   moveCard: (dragIndex: number, hoverIndex: number) => void;
-  addPageToBottomSheet: (id: string, title: string, content: string) => void;
+  addPageToBottomSheet: (newPage: UpdatePageType) => void;
 };
 
 const useBottomSheetStore = create<BottomSheetState>((set) => ({
   bottomSheetList: [],
   isSheetOpen: false,
   toggleSheet: () => set((state) => ({ isSheetOpen: !state.isSheetOpen })),
-  setBottomSheetList: (newList) => set({ bottomSheetList: newList }),
+  // setBottomSheetList: (newList) => set({ bottomSheetList: newList }),
   moveCard: (dragIndex, hoverIndex) =>
     set((state) => {
       const newItems = [...state.bottomSheetList];
@@ -22,9 +23,9 @@ const useBottomSheetStore = create<BottomSheetState>((set) => ({
       newItems.splice(hoverIndex, 0, draggedItem);
       return { bottomSheetList: newItems };
     }),
-  addPageToBottomSheet: (id, title, content) =>
+  addPageToBottomSheet: (newPage) =>
     set((state) => ({
-      bottomSheetList: [...state.bottomSheetList, { id, title, content }]
+      bottomSheetList: [...state.bottomSheetList, newPage]
     }))
 }));
 
