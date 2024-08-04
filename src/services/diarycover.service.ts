@@ -11,20 +11,23 @@ export const addCover = async (coverData: any) => {
   return data;
 };
 
-export const getCover = async (diaryID: string) => {
-  const response = await fetch(`http://localhost:3000/apis/diarycover/${diaryID}`, {
+export const getCover = async (diaryId: string) => {
+  const response = await fetch(`http://localhost:3000/apis/diarycover/${diaryId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
     },
     cache: 'no-store'
   });
+
   const data = await response.json();
+  console.log(data);
+
   return data;
 };
 
-export const deleteCover = async (diaryID: string) => {
-  const response = await fetch(`http://localhost:3000/apis/diarycover/${diaryID}`, {
+export const deleteCover = async (diaryId: string) => {
+  const response = await fetch(`http://localhost:3000/apis/diarycover/${diaryId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json'
@@ -35,8 +38,8 @@ export const deleteCover = async (diaryID: string) => {
   return data;
 };
 
-export const updateCover = async (diaryID: string, coverData: any) => {
-  const response = await fetch(`http://localhost:3000/apis/diarycover/${diaryID}`, {
+export const updateCover = async (diaryId: string, coverData: any) => {
+  const response = await fetch(`http://localhost:3000/apis/diarycover/${diaryId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'

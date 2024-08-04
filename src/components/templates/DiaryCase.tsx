@@ -14,10 +14,12 @@ import useDiaryStore from '@/stores/diary.store';
 import uuid from 'react-uuid';
 import Swal from 'sweetalert2';
 import { useDiariesToUserId } from '@/lib/hooks/useDiaries';
-import { Diary } from '@/api/diaries.api';
+import { UpdateDiaryType } from '@/api/diaries.api';
+import useUserStore from '@/stores/user.store';
 
 const DiaryCase: React.FC = () => {
-  const [userId, setUserId] = useState<string | null>(null);
+  // const [userId, setUserId] = useState<string | null>(null);
+  const { userId, setUserId } = useUserStore((state) => state);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
   const { gridView } = useStore();
   const router = useRouter();
@@ -45,7 +47,7 @@ const DiaryCase: React.FC = () => {
   }, []);
 
   // userId에 따라 다이어리를 가져오는 커스텀 훅입니다.
-  const { data: diaries } = useDiariesToUserId(userId || '');
+  const { data: diaries } = useDiariesToUserId(userId);
 
   // 다이어리 생성 버튼 클릭 시 호출되는 함수입니다.
   const handleCreateDiary = () => {
@@ -85,7 +87,7 @@ const DiaryCase: React.FC = () => {
           <div className="grid grid-cols-4 gap-10 max-w-full">
             {diaries && diaries.length > 0 ? (
               // 다이어리 목록을 그리드로 표시합니다.
-              diaries.map((diary: Diary) => (
+              diaries.map((diary) => (
                 <div
                   key={diary.id}
                   className="flex flex-col items-center justify-center cursor-pointer"
@@ -128,7 +130,7 @@ const DiaryCase: React.FC = () => {
           >
             {diaries && diaries.length > 0 ? (
               // 다이어리 목록을 SwiperSlide로 표시합니다.
-              diaries.map((diary: Diary) => (
+              diaries.map((diary) => (
                 <SwiperSlide
                   key={diary.id}
                   onClick={() => handleDiaryClick(diary.id)}

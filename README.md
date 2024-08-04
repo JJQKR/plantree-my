@@ -13,6 +13,6 @@
 | 💄 style    | css                            |
 | 🙈 gitfix   | gitignore 수정                 |
 | 🔨script    | package.json 변경(npm 설치 등) |
-| 🧤chore     | 기타 잡무                      |
+| 🧤 chore    | 기타 잡무                      |
 
 [🎉 add] SideBar.tsx 파일 생성

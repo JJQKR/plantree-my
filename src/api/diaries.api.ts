@@ -14,13 +14,6 @@ export type UpdateDiaryType = {
   name: string | null;
 };
 
-export type Diary = {
-  id: string;
-  user_id: string;
-  bookshelf_order: number;
-  name: string | null;
-};
-
 class DiariesAPI {
   private supabase;
 
@@ -33,7 +26,7 @@ class DiariesAPI {
    * @param id {string}  user 데이터 id
    * @returns diaries 테이블 데이터 중 같은 user 데이터 전부
    */
-  async selectPagesOfDiaryId(userId: string) {
+  async selectPagesOfUserId(userId: string) {
     const { data, error } = await this.supabase
       .from('diaries')
       .select()
