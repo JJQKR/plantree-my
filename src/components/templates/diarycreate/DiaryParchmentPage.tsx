@@ -14,7 +14,7 @@ import TenMinPlanner from '@/components/molecules/parchment/TenMinPlanner';
 import { useDeletePage, usePageToDiaryId, useUpdatePage } from '@/lib/hooks/usePages';
 import { AddPageType } from '@/api/pages.api';
 import { useCreateDiary, useDiariesToUserId, useDiary, useUpdateDiary } from '@/lib/hooks/useDiaries';
-// import BlankNote from '@/components/molecules/parchment/BlankNote';
+import BlankNote from '@/components/molecules/parchment/BlankNote';
 
 type ParamTypes = {
   [key: string]: string;
@@ -209,6 +209,8 @@ const DiaryParchmentPage = () => {
         <TenMinPlanner />
       ) : page.parchment_style === 'lineNote' ? (
         <LineNote userId={userId} className="w-full max-w-screen-md max-h-screen overflow-auto mt-20" />
+      ) : page.parchment_style === 'BlankNote' ? (
+        <BlankNote />
       ) : (
         <img className="w-full h-full object-cover" />
       )}

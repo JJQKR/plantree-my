@@ -11,8 +11,8 @@ export const addParchment = async (parchmentData: any) => {
   return data;
 };
 
-export const getParchment = async (diaryID: string) => {
-  const response = await fetch(`http://localhost:3000/apis/diaryparchment/${diaryID}`, {
+export const getParchment = async (diaryId: string) => {
+  const response = await fetch(`http://localhost:3000/apis/diaryparchment/${diaryId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -23,8 +23,8 @@ export const getParchment = async (diaryID: string) => {
   return data;
 };
 
-export const deleteParchment = async (diaryID: string) => {
-  const response = await fetch(`http://localhost:3000/apis/diaryparchment/${diaryID}`, {
+export const deleteParchment = async (diaryId: string) => {
+  const response = await fetch(`http://localhost:3000/apis/diaryparchment/${diaryId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json'
@@ -35,8 +35,8 @@ export const deleteParchment = async (diaryID: string) => {
   return data;
 };
 
-export const updateParchment = async (diaryID: string, parchmentData: any) => {
-  const response = await fetch(`http://localhost:3000/apis/diaryparchment/${diaryID}`, {
+export const updateParchment = async (diaryId: string, parchmentData: any) => {
+  const response = await fetch(`http://localhost:3000/apis/diaryparchment/${diaryId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'

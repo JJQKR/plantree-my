@@ -1,16 +1,19 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import { supabase } from '@/supabase/client';
 
-const BlankNote: React.FC<{ blankId: string }> = ({ blankId }) => {
+const BlankNote: React.FC = () => {
+  const { diaryId } = useParams();
+
   const [bgColor, setBgColor] = useState('#ffffff');
   const [globalTextColor, setGlobalTextColor] = useState('#000000');
   const [content, setContent] = useState('');
   const [date, setDate] = useState('');
   const [title, setTitle] = useState('');
   const [currentHeight, setCurrentHeight] = useState(0);
-  const [isEditMode, setIsEditMode] = useState(!blankId);
+  const [isEditMode, setIsEditMode] = useState(!diaryId);
   const [originalContent, setOriginalContent] = useState({
     bgColor: '#ffffff',
     globalTextColor: '#000000',
@@ -23,10 +26,10 @@ const BlankNote: React.FC<{ blankId: string }> = ({ blankId }) => {
   const maxHeight = 400;
 
   useEffect(() => {
-    if (blankId) {
+    if (diaryId) {
       fetchDiaryData();
     }
-  }, [blankId]);
+  }, [diaryId]);
 
   useEffect(() => {
     if (editableDivRef.current && editableDivRef.current.innerText !== content) {
@@ -41,7 +44,7 @@ const BlankNote: React.FC<{ blankId: string }> = ({ blankId }) => {
   }, []);
 
   const fetchDiaryData = async () => {
-    const { data, error } = await supabase.from('blank_note').select('*').eq('id', blankId).single();
+    const { data, error } = await supabase.from('blank_note').select('*').eq('diary_id', diaryId).single();
 
     if (error) {
       console.error('데이터 불러오기 오류:', error);
@@ -49,17 +52,17 @@ const BlankNote: React.FC<{ blankId: string }> = ({ blankId }) => {
     }
 
     if (data) {
-      setBgColor(data.bgColor);
-      setGlobalTextColor(data.globalTextColor);
-      setContent(data.content);
-      setDate(data.date);
-      setTitle(data.title);
+      setBgColor(data.bgColor ?? '#ffffff');
+      setGlobalTextColor(data.globalTextColor ?? '#000000');
+      setContent(JSON.stringify(data.content));
+      setDate(data.date ?? '');
+      setTitle(data.title ?? '');
       setOriginalContent({
-        bgColor: data.bgColor,
-        globalTextColor: data.globalTextColor,
-        content: data.content,
-        date: data.date,
-        title: data.title
+        bgColor: data.bgColor ?? '#ffffff',
+        globalTextColor: data.globalTextColor ?? '#000000',
+        content: JSON.stringify(data.content),
+        date: data.date ?? '',
+        title: data.title ?? ''
       });
     }
   };
@@ -106,7 +109,7 @@ const BlankNote: React.FC<{ blankId: string }> = ({ blankId }) => {
 
     const user = session.session.user;
 
-    if (blankId) {
+    if (diaryId) {
       if (confirm('수정 하시겠습니까?')) {
         // 업데이트
         const { error } = await supabase
@@ -118,7 +121,7 @@ const BlankNote: React.FC<{ blankId: string }> = ({ blankId }) => {
             bgColor: bgColor,
             globalTextColor: globalTextColor
           })
-          .eq('id', blankId)
+          .eq('diary_id', diaryId)
           .eq('user_id', user.id);
 
         if (error) {
@@ -145,7 +148,8 @@ const BlankNote: React.FC<{ blankId: string }> = ({ blankId }) => {
             title: title,
             content: content,
             bgColor: bgColor,
-            globalTextColor: globalTextColor
+            globalTextColor: globalTextColor,
+            diary_id: diaryId
           }
         ]);
 
@@ -170,13 +174,12 @@ const BlankNote: React.FC<{ blankId: string }> = ({ blankId }) => {
     const user = session.session.user;
 
     if (confirm('내용을 삭제 하시겠습니까?')) {
-      const { error } = await supabase.from('blank_note').delete().eq('id', blankId).eq('user_id', user.id);
+      const { error } = await supabase.from('blank_note').delete().eq('diary_id', diaryId).eq('user_id', user.id);
 
       if (error) {
         alert('삭제 중 오류가 발생했습니다: ' + error.message);
       } else {
         alert('삭제되었습니다!');
-        // 상태값 초기화
       }
     }
   };
@@ -203,7 +206,7 @@ const BlankNote: React.FC<{ blankId: string }> = ({ blankId }) => {
   };
 
   return (
-    <div className="bg-white w-[512px] h-[600px] p-[2rem]" style={{ backgroundColor: bgColor }}>
+    <div className="bg-white w-full h-[600px] p-[2rem]" style={{ backgroundColor: bgColor }}>
       <div>
         <label htmlFor="date">날짜 : </label>
         <input
@@ -212,7 +215,7 @@ const BlankNote: React.FC<{ blankId: string }> = ({ blankId }) => {
           className="border w-[7rem] text-[0.7rem]"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          disabled={!!blankId && !isEditMode}
+          disabled={!!diaryId && !isEditMode}
         />
       </div>
       <div className="flex flex-row w-full mb=2">
@@ -225,7 +228,7 @@ const BlankNote: React.FC<{ blankId: string }> = ({ blankId }) => {
           className="border w-full text-[0.7rem]"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          disabled={!!blankId && !isEditMode}
+          disabled={!!diaryId && !isEditMode}
         />
       </div>
       <div>
@@ -236,7 +239,7 @@ const BlankNote: React.FC<{ blankId: string }> = ({ blankId }) => {
             value={bgColor}
             onChange={(e) => setBgColor(e.target.value)}
             className="ml-2 p-1 border"
-            disabled={!!blankId && !isEditMode}
+            disabled={!!diaryId && !isEditMode}
           />
         </label>
         <label className="block m-2">
@@ -246,13 +249,13 @@ const BlankNote: React.FC<{ blankId: string }> = ({ blankId }) => {
             value={globalTextColor}
             onChange={(e) => setGlobalTextColor(e.target.value)}
             className="ml-2 p-1 border"
-            disabled={!!blankId && !isEditMode}
+            disabled={!!diaryId && !isEditMode}
           />
         </label>
       </div>
       <div
         ref={editableDivRef}
-        contentEditable={isEditMode || !blankId}
+        contentEditable={isEditMode || !diaryId}
         className="border w-full overflow-hidden mb-2"
         style={{
           height: `${maxHeight}px`,
@@ -266,7 +269,7 @@ const BlankNote: React.FC<{ blankId: string }> = ({ blankId }) => {
         onInput={handleInput}
         onKeyDown={handleKeyDown}
       ></div>
-      {blankId ? (
+      {diaryId ? (
         isEditMode ? (
           <>
             <button onClick={handleSaveOrUpdate} className="p-2 bg-blue-500 text-white rounded mr-2">
