@@ -27,7 +27,6 @@ export const useTenMinPlanner = (id: string) => {
     queryKey: ['tenMinPlanner', id],
     queryFn: () => tenMinplannerApi.selectTenMinPlannerOfPlannerId(id)
   });
-  console.log({ data, error });
   return { data, isLoading, error };
 };
 
