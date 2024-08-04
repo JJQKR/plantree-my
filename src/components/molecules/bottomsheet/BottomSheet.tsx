@@ -45,8 +45,6 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
     setCurrentPage(pageIndex - (pageIndex % 2));
   };
 
-  console.log(bottomSheetList);
-
   const scrollLeft = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollBy({ left: -200, behavior: 'smooth' });

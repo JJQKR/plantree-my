@@ -44,7 +44,6 @@ const ParchmentOptionsModal: React.FC = () => {
     // addPage(newPage);
     togglePageOptions();
     createPage(newPage);
-    console.log(pages);
   };
 
   const handleNextOptionPage = () => {
