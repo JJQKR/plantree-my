@@ -8,11 +8,18 @@ import { useRouter } from 'next/navigation';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
 import { getCover, updateCover, deleteCover } from '@/services/diarycover.service';
 import useDiaryStore from '@/stores/diary.store';
+import { useParams } from 'next/navigation';
+
+type ParamTypes = {
+  [key: string]: string;
+  diaryId: string;
+};
 
 const DiaryCoverPage: React.FC = () => {
   const router = useRouter();
-  const { diaryId } = useDiaryStore((state) => state);
-  const diaryIdString = Array.isArray(diaryId) ? diaryId[0] : diaryId;
+  // const { diaryId } = useDiaryStore((state) => state);
+  const { diaryId } = useParams<ParamTypes>();
+  // const diaryIdString = Array.isArray(diaryId) ? diaryId[0] : diaryId;
 
   const {
     coverTitle,
@@ -59,23 +66,24 @@ const DiaryCoverPage: React.FC = () => {
   useEffect(() => {
     const fetchDiaryCover = async () => {
       try {
-        const data = await getCover(diaryIdString);
+        const data = await getCover(diaryId);
+        const parsedData = {
+          cover_title: data.cover_title,
+          cover_title_position: JSON.parse(data.cover_title_position),
+          cover_title_fontsize: data.cover_title_fontsize,
+          cover_title_width: data.cover_title_width,
+          cover_title_rotation: data.cover_title_rotation,
+          cover_image: data.cover_image,
+          cover_image_position: JSON.parse(data.cover_image_position),
+          cover_image_size: JSON.parse(data.cover_image_size),
+          cover_image_rotation: data.cover_image_rotation,
+          cover_bg_color: data.cover_bg_color,
+          cover_scale: data.cover_scale,
+          cover_stage_size: JSON.parse(data.cover_stage_size)
+        };
+        console.log(data);
         if (data) {
           setIsEditMode(true);
-          const parsedData = {
-            cover_title: data.cover_title,
-            cover_title_position: JSON.parse(data.cover_title_position),
-            cover_title_fontsize: data.cover_title_fontsize,
-            cover_title_width: data.cover_title_width,
-            cover_title_rotation: data.cover_title_rotation,
-            cover_image: data.cover_image,
-            cover_image_position: JSON.parse(data.cover_image_position),
-            cover_image_size: JSON.parse(data.cover_image_size),
-            cover_image_rotation: data.cover_image_rotation,
-            cover_bg_color: data.cover_bg_color,
-            cover_scale: data.cover_scale,
-            cover_stage_size: JSON.parse(data.cover_stage_size)
-          };
           setCoverTitle(parsedData.cover_title);
           setCoverTitlePosition(parsedData.cover_title_position);
           setCoverTitleFontSize(parsedData.cover_title_fontsize);
@@ -97,6 +105,27 @@ const DiaryCoverPage: React.FC = () => {
             };
           }
         } else {
+          setCoverTitle('표지 제목 작성');
+          setCoverTitlePosition({ x: 150, y: 150 });
+          setCoverTitleFontSize(30);
+          setCoverTitleWidth(220);
+          setCoverTitleRotation(0);
+          setCoverBackgroundColor('#ffffff');
+          setCoverScale(1);
+          setCoverStageSize({ width: 512, height: 800 });
+
+          if (!parsedData.cover_image) {
+            const img = new window.Image();
+            img.src = parsedData.cover_image;
+            img.onload = () => {
+              setLoadedImage(null);
+              setCoverImage(null);
+              setCoverImagePosition({ x: 50, y: 50 });
+              setCoverImageSize({ width: 0, height: 0 });
+              setCoverImageRotation(0);
+            };
+          }
+
           setIsEditMode(false);
         }
       } catch (error) {
@@ -107,7 +136,6 @@ const DiaryCoverPage: React.FC = () => {
 
     fetchDiaryCover();
   }, [
-    diaryIdString,
     setCoverTitle,
     setCoverTitlePosition,
     setCoverTitleFontSize,
@@ -392,7 +420,8 @@ const DiaryCoverPage: React.FC = () => {
       cover_image_rotation: coverImageRotation,
       cover_bg_color: coverBackgroundColor,
       cover_scale: coverScale,
-      cover_stage_size: coverStageSize
+      cover_stage_size: coverStageSize,
+      diary_id: diaryId
     };
 
     setCoverData(coverData);
@@ -453,11 +482,12 @@ const DiaryCoverPage: React.FC = () => {
       cover_image_rotation: coverImageRotation,
       cover_bg_color: coverBackgroundColor,
       cover_scale: coverScale,
-      cover_stage_size: JSON.stringify(coverStageSize)
+      cover_stage_size: JSON.stringify(coverStageSize),
+      diary_id: diaryId
     };
 
     try {
-      await updateCover(diaryIdString, coverData);
+      await updateCover(diaryId, coverData);
       alert('Cover저장성공!');
     } catch (error) {
       console.error('Cover 저장실패:', error);
@@ -469,12 +499,22 @@ const DiaryCoverPage: React.FC = () => {
     if (!confirm('다이어리를 삭제하시겠습니까?')) {
       return;
     }
+    /**
+     * 1. 현재 diary_covers의 cover_image(url)을 가져온다.
+     *   const { data, error } supabase.from("diary_covers").select("cover_image").eq("id", id)
+     *   // data: { cover_image: ~~~~~~/cover_img/172199~~~~.jpg }
+     *
+     * 2. 이미지 이름을 잘라온다
+     *   // split 해서 뒤에 이미지 이름(172199~~~~.jpg)을 가져온다
+     *
+     * 3. 삭제한ㄷ
+     */
     let coverImage: string | null | undefined;
     try {
       const coverImageUrl = coverImage;
       const fileName = coverImageUrl ? coverImageUrl.split('/').pop() : null;
 
-      const result = await deleteCover(diaryIdString);
+      const result = await deleteCover(diaryId);
       if (result.error) {
         console.error('삭제 실패:', result.error);
         alert('삭제 실패');

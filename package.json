@@ -11,8 +11,8 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.44.4",
     "@tanstack/react-query": "^5.51.9",
-    "flipping-pages": "^3.1.0",
     "canvas": "^2.11.2",
+    "flipping-pages": "^3.1.0",
     "konva": "^9.3.14",
     "next": "14.2.5",
     "phoenix": "^1.7.14",
@@ -25,6 +25,7 @@
     "react-icons": "^5.2.1",
     "react-konva": "^18.2.10",
     "react-uuid": "^2.0.0",
+    "sweetalert2": "^11.12.4",
     "swiper": "^11.1.6",
     "ws": "^8.18.0",
     "zustand": "^4.5.4"

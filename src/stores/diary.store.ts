@@ -1,12 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '@/supabase/client';
 
-// interface Page {
-//   id: string;
-//   pageType: string | null;
-//   url: string;
-// }
-
 interface DiaryStore {
   diaryId: string; // 현재 선택된 다이어리 ID
   diaries: any[]; // 다이어리 목록
@@ -15,14 +9,11 @@ interface DiaryStore {
   addDiary: (diary: any) => void; // 다이어리 추가 함수
   setDiaries: (diaries: any[]) => void; // 다이어리 목록 설정 함수
   fetchDiaries: () => Promise<void>; // 다이어리 목록을 가져오는 함수
-  // addPage: (newPage: Page) => void;
-  // removePage: (id: string) => void;
 }
 
 const useDiaryStore = create<DiaryStore>((set) => ({
   diaryId: '',
   diaries: [],
-  // pages: [],
   setDiaryId: (id: string) => set({ diaryId: id }), // 다이어리 ID 설정
   addDiary: (diary: any) => set((state) => ({ diaries: [...state.diaries, diary] })), // 다이어리 목록에 추가
   setDiaries: (diaries: any[]) => set({ diaries }), // 다이어리 목록 설정
@@ -45,14 +36,6 @@ const useDiaryStore = create<DiaryStore>((set) => ({
       }
     }
   }
-  // addPage: (newPage: Page) =>
-  //   set((state) => ({
-  //     pages: [...state.pages, newPage]
-  //   })),
-  // removePage: (id: string) =>
-  //   set((state) => ({
-  //     pages: state.pages.filter((page) => page.id !== id)
-  //   }))
 }));
 
 export default useDiaryStore;

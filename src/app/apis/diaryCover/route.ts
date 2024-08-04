@@ -14,7 +14,8 @@ export async function POST(request: NextRequest) {
     cover_scale,
     cover_stage_size,
     cover_title_rotation,
-    cover_image_rotation
+    cover_image_rotation,
+    diary_id
   } = await request.json();
 
   const { data, error } = await supabase
@@ -32,7 +33,8 @@ export async function POST(request: NextRequest) {
         cover_scale,
         cover_stage_size: JSON.stringify(cover_stage_size),
         cover_title_rotation,
-        cover_image_rotation
+        cover_image_rotation,
+        diary_id
       }
     ])
     .select();

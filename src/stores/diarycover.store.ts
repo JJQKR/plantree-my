@@ -55,9 +55,9 @@ type DiaryCoverState = {
   setCurrentPage: (pageIndex: number) => void;
   showPageOptions: boolean;
   togglePageOptions: () => void;
-  addPage: (newPageUrl: string) => number;
-  deletePage: (pageId: string) => void;
-  setPages: (newPages: Page[]) => void;
+  // addPage: (newPageUrl: string) => number;
+  // deletePage: (pageId: string) => void;
+  // setPages: (newPages: Page[]) => void;
 };
 
 export const useDiaryCoverStore = create<DiaryCoverState>((set, get) => ({
@@ -79,7 +79,7 @@ export const useDiaryCoverStore = create<DiaryCoverState>((set, get) => ({
   setCoverImageSize: (size) => set({ coverImageSize: size }),
   coverImageRotation: 0,
   setCoverImageRotation: (rotation) => set({ coverImageRotation: rotation }),
-  coverBackgroundColor: '#eeeeee',
+  coverBackgroundColor: '#ffffff',
   setCoverBackgroundColor: (color) => set({ coverBackgroundColor: color }),
   coverSelectedElement: null,
   setCoverSelectedElement: (element) => set({ coverSelectedElement: element }),
@@ -97,18 +97,18 @@ export const useDiaryCoverStore = create<DiaryCoverState>((set, get) => ({
   currentPage: 0,
   setCurrentPage: (pageIndex: number) => set({ currentPage: pageIndex }),
   showPageOptions: false,
-  togglePageOptions: () => set((state) => ({ showPageOptions: !state.showPageOptions })),
-  addPage: (newPageUrl: string) => {
-    const newPage: Page = { id: uuid(), url: newPageUrl };
-    set((state) => ({
-      pages: [...state.pages, newPage]
-    }));
-    return get().pages.length - 1;
-  },
-  deletePage: (pageId: string) => {
-    set((state) => ({
-      pages: state.pages.filter((page) => page.id !== pageId)
-    }));
-  },
-  setPages: (newPages: Page[]) => set({ pages: newPages })
+  togglePageOptions: () => set((state) => ({ showPageOptions: !state.showPageOptions }))
+  // addPage: (newPageUrl: string) => {
+  //   const newPage: Page = { id: uuid(), url: newPageUrl };
+  //   set((state) => ({
+  //     pages: [...state.pages, newPage]
+  //   }));
+  //   return get().pages.length - 1;
+  // },
+  // deletePage: (pageId: string) => {
+  //   set((state) => ({
+  //     pages: state.pages.filter((page) => page.id !== pageId)
+  //   }));
+  // },
+  // setPages: (newPages: Page[]) => set({ pages: newPages })
 }));

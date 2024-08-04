@@ -8,9 +8,14 @@ import { useCreateTenMinPlanner, useTenMinPlanner, useUpdateTenMinPlanner } from
 import useTimetableStore, { ActiveCellsObject } from '@/stores/timetable.store';
 import useUserStore from '@/stores/user.store';
 import useTenMinPlannerStore from '@/stores/tenMinPlanner.store';
-import useDiaryStore from '@/stores/diary.store';
 import useTodoListStore, { TodoObjectType } from '@/stores/todoList.store';
 import uuid from 'react-uuid';
+import { useParams } from 'next/navigation';
+
+type ParamTypes = {
+  [key: string]: string;
+  diaryId: string;
+};
 
 const TenMinPlanner = () => {
   const [date, setDate] = useState('');
@@ -18,10 +23,10 @@ const TenMinPlanner = () => {
   const [dday, setDday] = useState('');
   const [goal, setGoal] = useState('');
   const [memo, setMemo] = useState('');
+  const { diaryId } = useParams<ParamTypes>();
 
   const { activeCells, setActiveCells } = useTimetableStore((state) => state);
   const { userId } = useUserStore((state) => state);
-  const { diaryId } = useDiaryStore((state) => state);
   const { tenMinPlannerId, setTenMinPlannerId } = useTenMinPlannerStore((state) => state);
   const { todoList, setTodoList } = useTodoListStore((state) => state);
 
@@ -97,8 +102,11 @@ const TenMinPlanner = () => {
       return;
     }
 
+    // TODO: 사실 DB에서 가져온 ID를 써야한다.
+    const newId = uuid();
+
     const newTenMinPlanner = {
-      id: uuid(),
+      id: newId,
       date: date,
       d_day_date: ddayDate,
       d_day: dday,
@@ -110,18 +118,17 @@ const TenMinPlanner = () => {
       todo_list: todoList
     };
 
-    console.log(newTenMinPlanner);
-
     if (tenMinPlannerId) {
-      console.log(tenMinPlannerId);
-      if (confirm('이대로 저장하시겠습니까?')) {
+      console.log({ tenMinPlannerId });
+      if (confirm('이대로 수정하시겠습니까?')) {
         updateTenMinPlanner({ id: tenMinPlannerId, updateTenMinPlanner: newTenMinPlanner });
-        alert('저장되었습니다.');
+        alert('수정되었습니다.');
         console.log(newTenMinPlanner);
       }
     } else {
-      setTenMinPlannerId(uuid());
+      setTenMinPlannerId(newId);
       createTenMinPlanner(newTenMinPlanner);
+      alert('새로운 내용을 저장했습니다.');
     }
   };
 

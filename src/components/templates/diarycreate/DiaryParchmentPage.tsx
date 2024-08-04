@@ -4,19 +4,37 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
 import { addCover, deleteCover, updateCover } from '@/services/diarycover.service';
-import useBottomSheetStore from '@/stores/bottomsheet.store';
-import TenMinplanner from '@/components/molecules/parchment/TenMinPlanner';
+// import useBottomSheetStore from '@/stores/bottomsheet.store';
 import LineNote from '@/components/molecules/parchment/LineNote';
 import useUserStore from '@/stores/user.store';
 // import { addParchment, deleteParchment, updateParchment } from '@/services/diaryparchment.service';
 import { supabase } from '@/supabase/client';
+import usePageStore from '@/stores/pages.store';
+import TenMinPlanner from '@/components/molecules/parchment/TenMinPlanner';
+import { useDeletePage, usePageToDiaryId, useUpdatePage } from '@/lib/hooks/usePages';
+import { AddPageType } from '@/api/pages.api';
+import { useCreateDiary, useDiariesToUserId, useDiary } from '@/lib/hooks/useDiaries';
+// import BlankNote from '@/components/molecules/parchment/BlankNote';
+
+type ParamTypes = {
+  [key: string]: string;
+  diaryId: string;
+};
 
 const DiaryParchmentPage = () => {
   const router = useRouter();
-  const { pages, setPages, currentPage, setCurrentPage } = useDiaryCoverStore();
-  const setBottomSheetList = useBottomSheetStore((state) => state.setBottomSheetList);
+  const { currentPage, setCurrentPage, coverTitle } = useDiaryCoverStore();
+  // const setBottomSheetList = useBottomSheetStore((state) => state.setBottomSheetList);
+  // const { pages, removePage } = usePageStore((state) => state);
   const userId = useUserStore((state) => state.userId);
-  const { diaryId } = useParams();
+  const { diaryId } = useParams<ParamTypes>();
+  const { mutate: deletePage } = useDeletePage();
+  const { mutate: updatePage } = useUpdatePage();
+  const { data: pages, isLoading, error } = usePageToDiaryId(diaryId);
+  const { mutate: createDiary } = useCreateDiary();
+  const { data: diaries } = useDiariesToUserId(userId);
+
+  // const { data: Page } = usePage();
 
   const diaryIdString = Array.isArray(diaryId) ? diaryId[0] : diaryId;
 
@@ -30,20 +48,58 @@ const DiaryParchmentPage = () => {
     return <div>로그인 해주세요.</div>;
   }
 
-  const handleDeletePage = (pageIndex: number) => {
+  const handleDeletePage = async (deletedPage: AddPageType) => {
     const confirmDelete = confirm('이 페이지를 삭제하시겠습니까?');
     if (!confirmDelete) return;
 
-    const newPages = [...pages];
-    newPages.splice(pageIndex, 1);
-    setPages(newPages);
+    // const newPages = [...pages];
+    // newPages.splice(pageIndex, 1);
+    // setPages(newPages);
 
-    const reorderedBottomSheetList = newPages.map((page, index) => ({
-      id: page.id,
-      title: `Page ${index + 1}`,
-      content: page.url
-    }));
-    setBottomSheetList(reorderedBottomSheetList);
+    // const newPages = pages.map((page) => ({
+    //   id: page.id,
+    //   content_id: page.content_id,
+    //   parchment_style: page.parchment_style,
+    //   index: page.index,
+    //   diary_id: page.diary_id
+    //   // id: page.id,
+    //   // title: `Page ${index + 1}`,
+    //   // content: page.url
+    // }));
+    // removePage(page.id);
+
+    // deletePage(deletedPage.id);
+    // pages?.map((page) => {
+    //   updatePage({
+    //     id: page.id,
+    //     updatePage: {
+    //       content_id: page.content_id,
+    //       parchment_style: page.parchment_style,
+    //       diary_id: page.diary_id,
+    //       index: page.index > deletedPage.index ? page.index - 1 : page.index
+    //     }
+    //   });
+    // });
+    // updatePage({ id: page.id, updatePage: newPageIndex });
+    try {
+      await deletePage(deletedPage.id);
+      const updatePromises = pages
+        ?.filter((page) => page.index > deletedPage.index)
+        .map(async (page) => {
+          return updatePage({
+            id: page.id,
+            updatePage: {
+              ...page,
+              index: page.index - 1
+            }
+          });
+        });
+      if (updatePromises && updatePromises.length > 0) {
+        await Promise.all(updatePromises);
+      }
+    } catch (error) {
+      console.error('Error during update:', error);
+    }
   };
 
   const handleFinalSave = async () => {
@@ -60,7 +116,17 @@ const DiaryParchmentPage = () => {
         // await updateParchment(diaryIdString, parchmentData);
         alert('Diary 업데이트 성공!');
       } else {
+        const maxOrder = diaries?.reduce((max, diary) => Math.max(max, diary.bookshelf_order), 0) || 0;
+        const newOrder = maxOrder + 1;
+
+        const newDiary = {
+          id: diaryId,
+          user_id: userId,
+          bookshelf_order: newOrder,
+          name: coverTitle
+        };
         await addCover(coverData);
+        await createDiary(newDiary);
         // await addParchment(parchmentData);
         alert('Diary 저장 성공!');
       }
@@ -71,15 +137,14 @@ const DiaryParchmentPage = () => {
     }
   };
 
-  const handleNextPage = () => {
-    if (currentPage + 1 < pages.length && pages[currentPage] && pages[currentPage + 1]) {
-      setCurrentPage(currentPage + 2);
-    }
-  };
-
   const handlePrevPage = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 2);
+    // if (currentPage > 0) {
+    //   setCurrentPage(currentPage - 2);
+    // }
+    // temporaryPages.map((page)=>page.index)
+    const prevPageIndex = currentPage - 2;
+    if (prevPageIndex >= 0) {
+      setCurrentPage(prevPageIndex);
     }
   };
 
@@ -129,24 +194,21 @@ const DiaryParchmentPage = () => {
     }
   };
 
-  const renderPage = (pageUrl: string | undefined, pageIndex: number) => (
-    <div key={pageIndex} className="relative w-[512px] h-[800px] bg-white shadow-lg p-2">
+  const renderPage = (page: AddPageType) => (
+    <div key={page.id} className="relative w-[512px] h-[800px] bg-white shadow-lg p-2">
       <button
-        onClick={() => handleDeletePage(pageIndex)}
+        onClick={() => handleDeletePage(page)}
         className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
       >
         &times;
       </button>
-      <div className="absolute top-2 left-2 text-gray-800 text-3xl px-2 py-1 rounded">Page {pageIndex + 1}</div>
-
-      {pageUrl ===
-      'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA3MDlfNjkg%2FMDAxNjg4OTE0NTM5NDIy.BqIsAefGkbiPvhFb1AOv_2jHyDJBKHFoKK4b0EBOCQEg.WcVvf2YLvLnup2mXQSXuapJMZrWvXmo0hY15gB0SHJ4g.JPEG.simone18%2FIMG_3596.JPG&type=a340' ? (
-        <TenMinplanner />
-      ) : pageUrl ===
-        'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzA0MDNfMTYg%2FMDAxNDkxMTQ3OTg5MTE0.LgXNxgiumuZL55kTdDozdNvqDeTJCN7Blm2b8ANfrNQg.Q81ksE4O3Q-DxFw8K_MtLZ_mRosfRL0m-UCLE8Axglsg.JPEG.ut_era%2F%25BC%25F6%25C7%25D0%25B3%25EB%25C6%25AE_6mm_png.png&type=a340' ? (
+      <div className="absolute top-2 left-2 text-gray-800 text-3xl px-2 py-1 rounded">Page {page.index}</div>
+      {page.parchment_style === 'tenMinPlanner' ? (
+        <TenMinPlanner />
+      ) : page.parchment_style === 'lineNote' ? (
         <LineNote userId={userId} className="w-full max-w-screen-md max-h-screen overflow-auto mt-20" />
       ) : (
-        <img src={pageUrl} className="w-full h-full object-cover" />
+        <img className="w-full h-full object-cover" />
       )}
     </div>
   );
@@ -158,6 +220,31 @@ const DiaryParchmentPage = () => {
     }
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading pages. Please try again later.</div>;
+  }
+
+  if (!pages) {
+    return <div>No pages available.</div>;
+  }
+
+  if (!userId) {
+    return <div>Please log in.</div>;
+  }
+
+  const handleNextPage = () => {
+    // if (currentPage + 1 < pages.length && pages[currentPage] && pages[currentPage + 1]) {
+    //   setCurrentPage(currentPage + 2);
+    // }
+    const nextPageIndex = currentPage + 2;
+    if (nextPageIndex < pages.length) {
+      setCurrentPage(nextPageIndex);
+    }
+  };
   return (
     <div className="flex flex-col overflow-hidden px-4">
       <div className="flex justify-between mt-2">
@@ -170,7 +257,8 @@ const DiaryParchmentPage = () => {
         </button>
         <button
           onClick={handleNextPage}
-          disabled={currentPage + 1 >= pages.length || !pages[currentPage] || !pages[currentPage + 1]}
+          // disabled={currentPage + 1 >= pages.length || !pages[currentPage] || !pages[currentPage + 1]}
+          disabled={currentPage >= pages.length - 1}
           className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300"
         >
           다음
@@ -195,7 +283,7 @@ const DiaryParchmentPage = () => {
       <div className="grid grid-cols-2 gap-4">
         <div className="border-r border-gray-300 flex items-center justify-center">
           {pages[currentPage] ? (
-            renderPage(pages[currentPage].url, currentPage)
+            renderPage(pages[currentPage])
           ) : (
             <div
               className="w-[512px] h-[800px] flex items-center justify-center border-2 border-dashed border-gray-600 cursor-pointer"
@@ -208,7 +296,7 @@ const DiaryParchmentPage = () => {
 
         <div className="flex items-center justify-center">
           {pages[currentPage + 1] ? (
-            renderPage(pages[currentPage + 1].url, currentPage + 1)
+            renderPage(pages[currentPage + 1])
           ) : pages[currentPage] ? (
             <div
               className="w-[512px] h-[800px] flex items-center justify-center border-2 border-dashed border-gray-600 cursor-pointer"

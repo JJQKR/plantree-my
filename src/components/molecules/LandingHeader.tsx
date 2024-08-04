@@ -6,6 +6,7 @@ import LoginModal from './LoginModal';
 import SignupModal from './SignupModal';
 import Image from 'next/image';
 import PlantreeLoginModal from './PlantreeLoginModal';
+import Swal from 'sweetalert2';
 
 const LandingHeader = () => {
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
@@ -40,7 +41,14 @@ const LandingHeader = () => {
       console.error('로그아웃 실패:', error);
     } else {
       setIsLoggedIn(false);
-      window.location.reload();
+      Swal.fire({
+        title: '로그아웃 성공!',
+        text: '또 볼 수 있으면 좋겠어요!',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        window.location.reload();
+      });
     }
   };
 
@@ -50,7 +58,7 @@ const LandingHeader = () => {
   };
 
   return (
-    <header className="bg-blue-200 text-white p-4">
+    <header className="bg-blue-200 text-white p-4 h-[80px]">
       <div className="container mx-auto flex justify-between items-center">
         <h1 className="text-2xl font-bold">
           <Image
