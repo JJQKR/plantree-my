@@ -3,11 +3,7 @@ import BlankNote from '@/components/molecules/parchment/BlankNote';
 import React from 'react';
 
 const page = () => {
-  return (
-    <div>
-      <BlankNote />
-    </div>
-  );
+  return <div>{/* <BlankNote /> */}</div>;
 };
 
 export default page;
