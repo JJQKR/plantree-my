@@ -90,7 +90,7 @@ const DiaryParchmentPage = () => {
     // });
     // updatePage({ id: page.id, updatePage: newPageIndex });
     try {
-      await deletePage(deletedPage.id);
+      deletePage(deletedPage.id);
       const updatePromises = pages
         ?.filter((page) => page.index > deletedPage.index)
         .map(async (page) => {
@@ -112,6 +112,7 @@ const DiaryParchmentPage = () => {
 
   const handleFinalSave = async () => {
     const { coverData } = useDiaryCoverStore.getState();
+    console.log(coverData);
 
     if (!coverData) {
       console.error('커버 데이터가 없습니다.');
@@ -132,12 +133,12 @@ const DiaryParchmentPage = () => {
     try {
       if (diary) {
         await updateCover(diaryId, coverData);
-        await updateDiary({ id: diaryId, updateDiary: newDiary });
+        updateDiary({ id: diaryId, updateDiary: newDiary });
 
         alert('diary 업데이트 성공!');
       } else {
         await addCover(coverData);
-        await createDiary(newDiary);
+        createDiary(newDiary);
 
         alert('diary 저장 성공!');
       }
