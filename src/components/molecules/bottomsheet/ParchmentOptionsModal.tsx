@@ -21,7 +21,7 @@ type ParamTypes = {
 const parchments = [
   { id: 1, parchmentStyle: 'tenMinPlanner', url: '/images/tenMinPlanner.png' },
   { id: 2, parchmentStyle: 'lineNote', url: '/images/lineNote.png' },
-  { id: 3, parchmentStyle: 'BlankNote', url: 'https://via.placeholder.com/384x600?text=New+Page+3' }
+  { id: 3, parchmentStyle: 'BlankNote', url: '/images/blankNote.png' }
 ];
 
 const ParchmentOptionsModal: React.FC = () => {

@@ -9,7 +9,7 @@ import LineNote from '@/components/molecules/parchment/LineNote';
 import useUserStore from '@/stores/user.store';
 // import { addParchment, deleteParchment, updateParchment } from '@/services/diaryparchment.service';
 import { supabase } from '@/supabase/client';
-import usePageStore from '@/stores/pages.store';
+
 import TenMinPlanner from '@/components/molecules/parchment/TenMinPlanner';
 import { useDeletePage, usePageToDiaryId, useUpdatePage } from '@/lib/hooks/usePages';
 import { AddPageType } from '@/api/pages.api';
