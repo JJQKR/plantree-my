@@ -14,7 +14,8 @@ import TenMinPlanner from '@/components/molecules/parchment/TenMinPlanner';
 import { useDeletePage, usePageToDiaryId, useUpdatePage } from '@/lib/hooks/usePages';
 import { AddPageType } from '@/api/pages.api';
 import { useCreateDiary, useDiariesToUserId, useDiary, useUpdateDiary } from '@/lib/hooks/useDiaries';
-// import BlankNote from '@/components/molecules/parchment/BlankNote';
+import { UpdateDiaryType } from '@/api/diaries.api';
+import BlankNote from '@/components/molecules/parchment/BlankNote';
 
 type ParamTypes = {
   [key: string]: string;
@@ -34,6 +35,7 @@ const DiaryParchmentPage = () => {
   const { mutate: createDiary } = useCreateDiary();
   const { mutate: updateDiary } = useUpdateDiary();
   const { data: diaries } = useDiariesToUserId(userId);
+  const { data: diary } = useDiary(diaryId);
 
   // const { data: Page } = usePage();
 
@@ -42,8 +44,13 @@ const DiaryParchmentPage = () => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
   // useEffect(() => {
-  //   setIsEditMode(pages.length > 0);
+  //   setIsEditMode(pages!.length > 0);
   // }, [pages]);
+  // useEffect(() => {
+  //   if (pages) {
+  //     setIsEditMode(true);
+  //   }
+  // }, []);
 
   if (!userId) {
     return <div>로그인 해주세요.</div>;
@@ -111,26 +118,27 @@ const DiaryParchmentPage = () => {
       return;
     }
 
+    const maxOrder =
+      diaries?.reduce((max: number, diary: UpdateDiaryType) => Math.max(max, diary.bookshelf_order), 0) || 0;
+    const newOrder = maxOrder + 1;
+
+    const newDiary = {
+      id: diaryId,
+      user_id: userId,
+      bookshelf_order: newOrder,
+      name: coverTitle
+    };
+
     try {
-      if (isEditMode) {
+      if (diary) {
         await updateCover(diaryId, coverData);
-        // await updateParchment(diaryIdString, parchmentData);
+        await updateDiary({ id: diaryId, updateDiary: newDiary });
+
         alert('diary 업데이트 성공!');
       } else {
-        const maxOrder = diaries?.reduce((max, diary) => Math.max(max, diary.bookshelf_order), 0) || 0;
-        const newOrder = maxOrder + 1;
-
-        const newDiary = {
-          id: diaryId,
-          user_id: userId,
-          bookshelf_order: newOrder,
-          name: coverTitle
-        };
-
         await addCover(coverData);
         await createDiary(newDiary);
-        await updateDiary({ id: diaryId, updateDiary: newDiary });
-        // await addParchment(parchmentData);
+
         alert('diary 저장 성공!');
       }
       router.push('/member');
@@ -210,6 +218,8 @@ const DiaryParchmentPage = () => {
         <TenMinPlanner />
       ) : page.parchment_style === 'lineNote' ? (
         <LineNote userId={userId} className="w-full max-w-screen-md max-h-screen overflow-auto mt-20" />
+      ) : page.parchment_style === 'BlankNote' ? (
+        <BlankNote diaryId={diaryId} userId={userId} pageId={page.id} />
       ) : (
         <img className="w-full h-full object-cover" />
       )}
