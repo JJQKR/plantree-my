@@ -37,13 +37,15 @@ const GrowthSummary = () => {
         <h3 className="font-semibold mt-1 mb-3 text-[14px]">
           {levelName}, {nickname} 님의 정원✨
         </h3>
-        <Link href="/member">
-          <p className="ml-2 text-blue-500">허브로 이동</p>
-        </Link>
       </div>
       <div className="mb-4">
         <p>플랜트리와 함께 {membershipDays}일째,</p>
-        <p>열심히 나무를 키우고 계시네요!</p>
+        <div className="flex justify-between">
+          열심히 나무를 키우고 계시네요!{' '}
+          <Link href="/member">
+            <p className="  text-blue-800 bg-slate-600 bg-opacity-10">➡️허브로 이동</p>
+          </Link>
+        </div>
       </div>
     </div>
   );
