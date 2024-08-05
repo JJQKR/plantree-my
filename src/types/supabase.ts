@@ -21,7 +21,7 @@ export type Database = {
       blank_note: {
         Row: {
           bgColor: string | null;
-          content: Json | null;
+          content: string | null;
           created_at: string;
           date: string | null;
           globalTextColor: string | null;
@@ -31,7 +31,7 @@ export type Database = {
         };
         Insert: {
           bgColor?: string | null;
-          content?: Json | null;
+          content?: string | null;
           created_at?: string;
           date?: string | null;
           globalTextColor?: string | null;
@@ -41,7 +41,7 @@ export type Database = {
         };
         Update: {
           bgColor?: string | null;
-          content?: Json | null;
+          content?: string | null;
           created_at?: string;
           date?: string | null;
           globalTextColor?: string | null;
