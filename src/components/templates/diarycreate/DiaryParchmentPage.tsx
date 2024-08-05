@@ -112,6 +112,7 @@ const DiaryParchmentPage = () => {
 
   const handleFinalSave = async () => {
     const { coverData } = useDiaryCoverStore.getState();
+    console.log(coverData);
 
     if (!coverData) {
       console.error('커버 데이터가 없습니다.');
