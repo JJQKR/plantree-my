@@ -1,12 +1,10 @@
-'use client';
-
 import React, { useRef, useState, useEffect } from 'react';
 import { supabase } from '@/supabase/client';
 
 type BlankNoteProps = {
   diaryId: string;
   userId: string;
-  pageId?: string;
+  pageId: string;
 };
 
 const BlankNote: React.FC<BlankNoteProps> = ({ diaryId, userId, pageId }) => {
@@ -16,7 +14,7 @@ const BlankNote: React.FC<BlankNoteProps> = ({ diaryId, userId, pageId }) => {
   const [date, setDate] = useState('');
   const [title, setTitle] = useState('');
   const [currentHeight, setCurrentHeight] = useState(0);
-  const [isEditMode, setIsEditMode] = useState(!pageId);
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [originalContent, setOriginalContent] = useState({
     bgColor: '#ffffff',
     globalTextColor: '#000000',
@@ -25,15 +23,11 @@ const BlankNote: React.FC<BlankNoteProps> = ({ diaryId, userId, pageId }) => {
     title: ''
   });
 
-  console.log('Page ID:', pageId);
-
   const editableDivRef = useRef<HTMLDivElement>(null);
   const maxHeight = 400;
 
   useEffect(() => {
-    if (pageId) {
-      fetchDiaryData();
-    }
+    fetchDiaryData();
   }, [pageId]);
 
   useEffect(() => {
@@ -49,14 +43,12 @@ const BlankNote: React.FC<BlankNoteProps> = ({ diaryId, userId, pageId }) => {
   }, []);
 
   const fetchDiaryData = async () => {
-    if (!pageId) return;
-
     const { data, error } = await supabase
       .from('blank_note')
       .select('*')
       .eq('diary_id', diaryId)
       .eq('page_id', pageId)
-      .single();
+      .maybeSingle();
 
     if (error) {
       console.error('데이터 불러오기 오류:', error);
@@ -66,16 +58,24 @@ const BlankNote: React.FC<BlankNoteProps> = ({ diaryId, userId, pageId }) => {
     if (data) {
       setBgColor(data.bgColor ?? '#ffffff');
       setGlobalTextColor(data.globalTextColor ?? '#000000');
-      setContent(JSON.stringify(data.content));
+      setContent(JSON.stringify(data.content ?? ''));
       setDate(data.date ?? '');
       setTitle(data.title ?? '');
       setOriginalContent({
         bgColor: data.bgColor ?? '#ffffff',
         globalTextColor: data.globalTextColor ?? '#000000',
-        content: JSON.stringify(data.content),
+        content: JSON.stringify(data.content ?? ''),
         date: data.date ?? '',
         title: data.title ?? ''
       });
+      setIsEditMode(false);
+    } else {
+      setBgColor('#ffffff');
+      setGlobalTextColor('#000000');
+      setContent('');
+      setDate('');
+      setTitle('');
+      setIsEditMode(true);
     }
   };
 
@@ -113,57 +113,38 @@ const BlankNote: React.FC<BlankNoteProps> = ({ diaryId, userId, pageId }) => {
       return;
     }
 
-    if (pageId) {
-      if (confirm('수정 하시겠습니까?')) {
-        const { error } = await supabase
-          .from('blank_note')
-          .update({
-            date: date,
-            title: title,
-            content: content,
-            bgColor: bgColor,
-            globalTextColor: globalTextColor,
-            page_id: pageId
-          })
-          .eq('diary_id', diaryId)
-          .eq('page_id', pageId);
+    const newData = {
+      user_id: userId,
+      date: date,
+      title: title,
+      content: content,
+      bgColor: bgColor,
+      globalTextColor: globalTextColor,
+      diary_id: diaryId,
+      page_id: pageId
+    };
 
-        if (error) {
-          alert('수정 중 오류가 발생했습니다: ' + error.message);
-        } else {
-          alert('수정되었습니다!');
-          setOriginalContent({
-            bgColor: bgColor,
-            globalTextColor: globalTextColor,
-            content: content,
-            date: date,
-            title: title
-          });
-          setIsEditMode(false);
-        }
-      }
+    let result;
+    if (originalContent.content) {
+      // 기존 데이터가 있으면 업데이트
+      result = await supabase.from('blank_note').update(newData).eq('diary_id', diaryId).eq('page_id', pageId);
     } else {
-      if (confirm('저장 하시겠습니까?')) {
-        const { error } = await supabase.from('blank_note').insert([
-          {
-            user_id: userId,
-            date: date,
-            title: title,
-            content: content,
-            bgColor: bgColor,
-            globalTextColor: globalTextColor,
-            diary_id: diaryId,
-            page_id: pageId
-          }
-        ]);
+      // 새 데이터면 삽입
+      result = await supabase.from('blank_note').insert([newData]);
+    }
 
-        if (error) {
-          alert('저장 중 오류가 발생했습니다: ' + error.message);
-        } else {
-          alert('저장되었습니다!');
-          setIsEditMode(false);
-        }
-      }
+    if (result.error) {
+      alert((originalContent.content ? '수정' : '저장') + ' 중 오류가 발생했습니다: ' + result.error.message);
+    } else {
+      alert((originalContent.content ? '수정' : '저장') + '되었습니다!');
+      setOriginalContent({
+        bgColor: bgColor,
+        globalTextColor: globalTextColor,
+        content: content,
+        date: date,
+        title: title
+      });
+      setIsEditMode(false);
     }
   };
 
@@ -171,7 +152,7 @@ const BlankNote: React.FC<BlankNoteProps> = ({ diaryId, userId, pageId }) => {
     if (confirm('내용을 삭제 하시겠습니까?')) {
       if (!pageId) return;
 
-      const { error } = await supabase.from('blank_note').delete().eq('diary_id', diaryId).eq('id', pageId);
+      const { error } = await supabase.from('blank_note').delete().eq('diary_id', diaryId).eq('page_id', pageId);
 
       if (error) {
         alert('삭제 중 오류가 발생했습니다: ' + error.message);
@@ -210,7 +191,7 @@ const BlankNote: React.FC<BlankNoteProps> = ({ diaryId, userId, pageId }) => {
           className="border w-[7rem] text-[0.7rem]"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          disabled={!!pageId && !isEditMode}
+          disabled={!isEditMode}
         />
       </div>
       <div className="flex flex-row w-full mb=2">
@@ -223,7 +204,7 @@ const BlankNote: React.FC<BlankNoteProps> = ({ diaryId, userId, pageId }) => {
           className="border w-full text-[0.7rem]"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          disabled={!!pageId && !isEditMode}
+          disabled={!isEditMode}
         />
       </div>
       <div>
@@ -234,7 +215,7 @@ const BlankNote: React.FC<BlankNoteProps> = ({ diaryId, userId, pageId }) => {
             value={bgColor}
             onChange={(e) => setBgColor(e.target.value)}
             className="ml-2 p-1 border"
-            disabled={!!pageId && !isEditMode}
+            disabled={!isEditMode}
           />
         </label>
         <label className="block m-2">
@@ -244,13 +225,13 @@ const BlankNote: React.FC<BlankNoteProps> = ({ diaryId, userId, pageId }) => {
             value={globalTextColor}
             onChange={(e) => setGlobalTextColor(e.target.value)}
             className="ml-2 p-1 border"
-            disabled={!!pageId && !isEditMode}
+            disabled={!isEditMode}
           />
         </label>
       </div>
       <div
         ref={editableDivRef}
-        contentEditable={isEditMode || !pageId}
+        contentEditable={isEditMode}
         className="border w-full overflow-hidden mb-2"
         style={{
           height: `${maxHeight}px`,
@@ -264,27 +245,23 @@ const BlankNote: React.FC<BlankNoteProps> = ({ diaryId, userId, pageId }) => {
         onInput={handleInput}
         onKeyDown={handleKeyDown}
       ></div>
-      {pageId ? (
-        isEditMode ? (
-          <>
-            <button onClick={handleSaveOrUpdate} className="p-2 bg-blue-500 text-white rounded mr-2">
-              수정
-            </button>
+      {isEditMode ? (
+        <>
+          <button onClick={handleSaveOrUpdate} className="p-2 bg-blue-500 text-white rounded mr-2">
+            저장
+          </button>
+          {pageId && originalContent.content && (
             <button onClick={handleDelete} className="p-2 bg-red-500 text-white rounded mr-2">
               삭제
             </button>
-            <button onClick={handleEditModeToggle} className="p-2 bg-gray-500 text-white rounded">
-              편집 취소
-            </button>
-          </>
-        ) : (
-          <button onClick={handleEditModeToggle} className="p-2 bg-green-500 text-white rounded">
-            편집 모드
+          )}
+          <button onClick={handleEditModeToggle} className="p-2 bg-gray-500 text-white rounded">
+            편집 취소
           </button>
-        )
+        </>
       ) : (
-        <button onClick={handleSaveOrUpdate} className="p-2 bg-blue-500 text-white rounded mr-2">
-          저장
+        <button onClick={handleEditModeToggle} className="p-2 bg-green-500 text-white rounded">
+          편집 모드
         </button>
       )}
     </div>
