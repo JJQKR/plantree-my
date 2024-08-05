@@ -1,3 +1,4 @@
+'use client';
 import React, { useRef, useState, useEffect } from 'react';
 import { supabase } from '@/supabase/client';
 
@@ -58,13 +59,13 @@ const BlankNote: React.FC<BlankNoteProps> = ({ diaryId, userId, pageId }) => {
     if (data) {
       setBgColor(data.bgColor ?? '#ffffff');
       setGlobalTextColor(data.globalTextColor ?? '#000000');
-      setContent(JSON.stringify(data.content ?? ''));
+      setContent(data.content ?? '');
       setDate(data.date ?? '');
       setTitle(data.title ?? '');
       setOriginalContent({
         bgColor: data.bgColor ?? '#ffffff',
         globalTextColor: data.globalTextColor ?? '#000000',
-        content: JSON.stringify(data.content ?? ''),
+        content: data.content ?? '',
         date: data.date ?? '',
         title: data.title ?? ''
       });
