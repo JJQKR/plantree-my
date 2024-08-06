@@ -82,7 +82,7 @@ const NicknameModal: React.FC = () => {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
           onClick={handleBackGroundClick}
         >
-          <div className="bg-white p-4 rounded-[10px]" style={{ width: '20rem' }}>
+          <div className="bg-white p-9 rounded-[10px]" style={{ width: '20em' }}>
             <div onClick={(e) => e.stopPropagation()}>
               <div className="flex justify-between items-center mb-4">
                 <h1 className="text-xl font-bold text-left text-black">닉네임 변경</h1>

@@ -89,7 +89,7 @@ const GardenCarousel: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="w-[600px] h-[300px]">
+      <div className="w-[600px] h-[300px] ">
         <Swiper
           effect="coverflow"
           grabCursor={true}
@@ -108,7 +108,7 @@ const GardenCarousel: React.FC = () => {
           {displayStages.map((stage, index) => (
             <SwiperSlide key={stage.id}>
               <div className="w-[600px] h-[300px] relative">
-                <div className="absolute inset-0 flex items-center justify-center">{stage.content}</div>
+                <div className="absolute inset-0 flex  rounded-20px items-center justify-center">{stage.content}</div>
               </div>
             </SwiperSlide>
           ))}

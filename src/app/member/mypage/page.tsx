@@ -37,7 +37,7 @@ const MyPage: React.FC = () => {
 
   return (
     <>
-      <div>
+      <div className="m-10">
         <GrowthSummary />
         <GardenCarousel />
 
