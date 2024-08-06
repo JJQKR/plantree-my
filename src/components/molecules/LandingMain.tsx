@@ -7,7 +7,7 @@ const LandingMain = () => {
       <div className="text-center mb-12">
         <h1 className="text-5xl font-bold mb-4">환영합니다!</h1>
         <p className="text-xl mb-6">함께 다이어리를 만들어봐요!</p>
-        <Link href="/member" className="bg-white text-black px-6 py-3 rounded-lg">
+        <Link href="/member/hub" className="bg-white text-black px-6 py-3 rounded-lg">
           다이어리 만들어보기!
         </Link>
       </div>

@@ -14,16 +14,15 @@ import useDiaryStore from '@/stores/diary.store';
 import uuid from 'react-uuid';
 import Swal from 'sweetalert2';
 import { useDiariesToUserId } from '@/lib/hooks/useDiaries';
-import { UpdateDiaryType } from '@/api/diaries.api';
 import useUserStore from '@/stores/user.store';
 
 const DiaryCase: React.FC = () => {
-  // const [userId, setUserId] = useState<string | null>(null);
   const { userId, setUserId } = useUserStore((state) => state);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
   const { gridView } = useStore();
   const router = useRouter();
   const setDiaryId = useDiaryStore((state) => state.setDiaryId);
+  const fetchDiaries = useDiaryStore((state) => state.fetchDiaries); // fetchDiaries를 가져옵니다.
 
   // 현재 세션을 가져와서 userId를 반환하는 함수입니다.
   const fetchSession = async () => {
@@ -50,9 +49,8 @@ const DiaryCase: React.FC = () => {
   const { data: diaries } = useDiariesToUserId(userId);
 
   // 다이어리 생성 버튼 클릭 시 호출되는 함수입니다.
-  const handleCreateDiary = () => {
+  const handleCreateDiary = async () => {
     if (!isLoggedIn) {
-      // 로그인되어 있지 않은 경우 경고창을 띄우고 홈으로 이동합니다.
       Swal.fire({
         icon: 'error',
         title: '로그인 필요',
@@ -62,14 +60,12 @@ const DiaryCase: React.FC = () => {
       });
       return;
     }
-    // 새로운 다이어리 ID를 생성하고 diaryId를 설정한 후 다이어리 커버 페이지로 이동합니다.
     const diaryId = uuid();
-
     setDiaryId(diaryId);
+    await fetchDiaries(); // 다이어리 목록을 업데이트합니다.
     router.push(`/member/diary/${diaryId}/cover`);
   };
 
-  // 다이어리 클릭 시 호출되는 함수입니다.
   const handleDiaryClick = (id: string) => {
     setDiaryId(id);
     router.push(`/member/diary/${id}/cover`);
@@ -83,10 +79,8 @@ const DiaryCase: React.FC = () => {
         }`}
       >
         {gridView ? (
-          // gridView가 true일 때의 레이아웃입니다.
           <div className="grid grid-cols-4 gap-10 max-w-full">
             {diaries && diaries.length > 0 ? (
-              // 다이어리 목록을 그리드로 표시합니다.
               diaries.map((diary) => (
                 <div
                   key={diary.id}
@@ -99,25 +93,12 @@ const DiaryCase: React.FC = () => {
                 </div>
               ))
             ) : (
-              // 다이어리가 없는 경우의 표시입니다.
               <div className="flex items-center justify-center w-[250px] h-[400px] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
                 다이어리가 없습니다
               </div>
             )}
-            {isLoggedIn && (
-              // 로그인된 경우 다이어리 생성 버튼을 표시합니다.
-              <div className="flex flex-col items-center justify-center">
-                <button
-                  onClick={handleCreateDiary}
-                  className="flex items-center justify-center w-[250px] h-[400px] bg-red-300 rounded shadow-md text-2xl font-bold text-black"
-                >
-                  +<br /> 다이어리 생성
-                </button>
-              </div>
-            )}
           </div>
         ) : (
-          // gridView가 false일 때 Swiper를 사용하여 다이어리를 슬라이드로 표시합니다.
           <Swiper
             effect="coverflow"
             grabCursor={true}
@@ -135,7 +116,6 @@ const DiaryCase: React.FC = () => {
             className="mySwiper"
           >
             {diaries && diaries.length > 0 ? (
-              // 다이어리 목록을 SwiperSlide로 표시합니다.
               diaries.map((diary) => (
                 <SwiperSlide
                   key={diary.id}
@@ -146,14 +126,6 @@ const DiaryCase: React.FC = () => {
                 </SwiperSlide>
               ))
             ) : (
-              // 다이어리가 없는 경우와 로그인된 경우 다이어리 생성 버튼을 표시합니다.
-              <SwiperSlide className="flex items-center justify-center w-[350px] h-[570px] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
-                <button onClick={handleCreateDiary} className="flex items-center justify-center w-full h-full">
-                  +<br /> 다이어리 생성
-                </button>
-              </SwiperSlide>
-            )}
-            {isLoggedIn && (
               <SwiperSlide className="flex items-center justify-center w-[350px] h-[570px] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
                 <button onClick={handleCreateDiary} className="flex items-center justify-center w-full h-full">
                   +<br /> 다이어리 생성

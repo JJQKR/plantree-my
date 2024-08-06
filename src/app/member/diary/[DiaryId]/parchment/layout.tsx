@@ -1,8 +1,8 @@
 import MyPageLayout from '@/components/templates/MypageLayout';
 import React, { PropsWithChildren } from 'react';
 
-const MyLayout = ({ children }: PropsWithChildren) => {
+const MyParchmentLayout = ({ children }: PropsWithChildren) => {
   return <MyPageLayout>{children}</MyPageLayout>;
 };
 
-export default MyLayout;
+export default MyParchmentLayout;
