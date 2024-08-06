@@ -42,7 +42,7 @@ const GrowthSummary = () => {
         <p>플랜트리와 함께 {membershipDays}일째,</p>
         <div className="flex justify-between">
           열심히 나무를 키우고 계시네요!{' '}
-          <Link href="/member">
+          <Link href="/member/hub">
             <p className="  text-blue-800 bg-slate-600 bg-opacity-10">➡️허브로 이동</p>
           </Link>
         </div>

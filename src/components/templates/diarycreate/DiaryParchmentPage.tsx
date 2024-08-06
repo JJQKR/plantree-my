@@ -142,7 +142,7 @@ const DiaryParchmentPage = () => {
 
         alert('diary 저장 성공!');
       }
-      router.push('/member');
+      router.push('/member/hub');
     } catch (error) {
       console.error('diary 저장 실패:', error);
       alert('diary 저장 실패');
