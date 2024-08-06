@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { useStore } from '@/stores/sidebar.store';
 import DiaryCase from '@/components/templates/DiaryCase';
 import Swal from 'sweetalert2';
+import '@/app/globals.css'; // 전역 스타일 시트 임포트
 
 const HomePage = () => {
   const { sidebarOpen } = useStore(); // 사이드바의 열림 상태를 가져옵니다.
@@ -18,6 +19,15 @@ const HomePage = () => {
       });
       localStorage.removeItem('loginSuccess');
     }
+  }, []);
+
+  useEffect(() => {
+    // 페이지 로드 시 body 태그에 noScroll 클래스 추가
+    document.body.classList.add('noScroll');
+    // 페이지 언마운트 시 body 태그에서 noScroll 클래스 제거
+    return () => {
+      document.body.classList.remove('noScroll');
+    };
   }, []);
 
   return (
