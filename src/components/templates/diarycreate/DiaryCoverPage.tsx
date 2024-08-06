@@ -6,12 +6,9 @@ import { KonvaEventObject } from 'konva/lib/Node';
 import { supabase } from '@/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
-import { getCover, updateCover, deleteCover, addCover } from '@/services/diarycover.service';
-// import useDiaryStore from '@/stores/diary.store';
+import { getCover, updateCover, addCover } from '@/services/diarycover.service';
 import { useParams } from 'next/navigation';
-
 import useUserStore from '@/stores/user.store';
-import { UpdateDiaryType } from '@/api/diaries.api';
 
 type ParamTypes = {
   [key: string]: string;
@@ -70,6 +67,7 @@ const DiaryCoverPage: React.FC = () => {
     const fetchDiaryCover = async () => {
       try {
         const data = await getCover(diaryId);
+
         if (data) {
           const parsedData = {
             cover_title: data.cover_title,
@@ -107,25 +105,26 @@ const DiaryCoverPage: React.FC = () => {
               setCoverImageRotation(parsedData.cover_image_rotation);
             };
           }
+          // console.log('diary test', data);
+        } else {
+          setCoverTitle('표지 제목 작성');
+          setCoverTitlePosition({ x: 150, y: 150 });
+          setCoverTitleFontSize(30);
+          setCoverTitleWidth(220);
+          setCoverTitleRotation(0);
+          setCoverBackgroundColor('#ffffff');
+          setCoverScale(1);
+          setCoverStageSize({ width: 512, height: 800 });
+          setCoverSelectedElement(null);
+
+          setLoadedImage(null);
+          setCoverImage(null);
+          setCoverImagePosition({ x: 50, y: 50 });
+          setCoverImageSize({ width: 0, height: 0 });
+          setCoverImageRotation(0);
+
+          setIsEditMode(false);
         }
-        // else {
-        //   setCoverTitle('표지 제목 작성');
-        //   setCoverTitlePosition({ x: 150, y: 150 });
-        //   setCoverTitleFontSize(30);
-        //   setCoverTitleWidth(220);
-        //   setCoverTitleRotation(0);
-        //   setCoverBackgroundColor('#ffffff');
-        //   setCoverScale(1);
-        //   setCoverStageSize({ width: 512, height: 800 });
-
-        //   setLoadedImage(null);
-        //   setCoverImage(null);
-        //   setCoverImagePosition({ x: 50, y: 50 });
-        //   setCoverImageSize({ width: 0, height: 0 });
-        //   setCoverImageRotation(0);
-
-        //   setIsEditMode(false);
-        // }
       } catch (error) {
         console.error('Failed to fetch diary cover:', error);
         setIsEditMode(false);
@@ -134,6 +133,7 @@ const DiaryCoverPage: React.FC = () => {
 
     fetchDiaryCover();
   }, [
+    diaryId,
     setCoverTitle,
     setCoverTitlePosition,
     setCoverTitleFontSize,
@@ -378,55 +378,6 @@ const DiaryCoverPage: React.FC = () => {
     }
   };
 
-  // const handleSaveAndContinue = async () => {
-  //   if (!confirm('커버임시저장후 내용을 작성하러 가시겠습니까?')) {
-  //     return;
-  //   }
-
-  //   let publicUrl: string | null = null;
-
-  //   if (imageFile) {
-  //     const fileName = `${Date.now()}_${imageFile.name}`;
-  //     const { data: uploadData, error: uploadError } = await supabase.storage
-  //       .from('cover_img')
-  //       .upload(fileName, imageFile);
-
-  //     if (uploadError) {
-  //       console.error('이미지 업로드 실패:', uploadError);
-  //       return;
-  //     }
-
-  //     const { data: publicUrlData } = supabase.storage.from('cover_img').getPublicUrl(fileName);
-
-  //     if (!publicUrlData) {
-  //       console.error('공개 URL 가져오기 실패');
-  //       return;
-  //     }
-
-  //     publicUrl = publicUrlData.publicUrl;
-  //   }
-
-  //   const coverData = {
-  //     cover_title: coverTitle || null,
-  //     cover_title_position: coverTitlePosition,
-  //     cover_title_fontsize: coverTitleFontSize,
-  //     cover_title_width: coverTitleWidth,
-  //     cover_title_rotation: coverTitleRotation,
-  //     cover_image: publicUrl,
-  //     cover_image_position: coverImagePosition,
-  //     cover_image_size: coverImageSize,
-  //     cover_image_rotation: coverImageRotation,
-  //     cover_bg_color: coverBackgroundColor,
-  //     cover_scale: coverScale,
-  //     cover_stage_size: coverStageSize,
-  //     diary_id: diaryId
-  //   };
-
-  //   setCoverData(coverData);
-
-  //   router.push(`/member/diary/${diaryId}/parchment`);
-  // };
-
   const handleSaveCover = async () => {
     if (!confirm('커버를 저장하시겠습니까?')) {
       return;
@@ -496,46 +447,176 @@ const DiaryCoverPage: React.FC = () => {
     }
   };
 
-  const handleDeleteDiary = async () => {
-    if (!confirm('다이어리를 삭제하시겠습니까?')) {
+  const handleUpdateDiary = async () => {
+    if (!confirm('다이어리를 수정하시겠습니까?')) {
       return;
     }
-    /**
-     * 1. 현재 diary_covers의 cover_image(url)을 가져온다.
-     *   const { data, error } supabase.from("diary_covers").select("cover_image").eq("id", id)
-     *   // data: { cover_image: ~~~~~~/cover_img/172199~~~~.jpg }
-     *
-     * 2. 이미지 이름을 잘라온다
-     *   // split 해서 뒤에 이미지 이름(172199~~~~.jpg)을 가져온다
-     *
-     * 3. 삭제한ㄷ
-     */
-    let coverImage: string | null | undefined;
+    let publicUrl: string | null = null;
     try {
-      const coverImageUrl = coverImage;
-      const fileName = coverImageUrl ? coverImageUrl.split('/').pop() : null;
+      // 1. 현재 diary_covers의 cover_image(url)을 가져온다.
+      const { data, error } = await supabase
+        .from('diary_covers')
+        .select('cover_image')
+        .eq('diary_id', diaryId)
+        .single();
 
-      const result = await deleteCover(diaryId);
-      if (result.error) {
-        console.error('삭제 실패:', result.error);
-        alert('삭제 실패');
+      if (error || !data) {
+        console.error('데이터 가져오기 실패:', error);
+        alert('데이터 가져오기 실패');
         return;
       }
 
+      const coverImageUrl = data.cover_image;
+      const fileName = coverImageUrl ? coverImageUrl.split('/').pop() : null;
+
+      if (imageFile) {
+        // 기존 이미지가 있는 경우 삭제
+        if (fileName) {
+          const { error: deleteError } = await supabase.storage.from('cover_img').remove([fileName]);
+          if (deleteError) {
+            console.error('기존 이미지 삭제 실패:', deleteError);
+            alert(`기존 이미지 삭제 실패: ${deleteError.message}`);
+            return;
+          }
+        }
+
+        // 새로운 이미지를 업로드
+        const newFileName = `${Date.now()}_${imageFile.name}`;
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('cover_img')
+          .upload(newFileName, imageFile);
+
+        if (uploadError) {
+          console.error('이미지 업로드 실패:', uploadError);
+          alert(`이미지 업로드 실패: ${uploadError.message}`);
+          return;
+        }
+
+        const { data: publicUrlData } = supabase.storage.from('cover_img').getPublicUrl(newFileName);
+
+        if (!publicUrlData || !publicUrlData.publicUrl) {
+          console.error('공개 URL 가져오기 실패');
+          alert('공개 URL 가져오기 실패');
+          return;
+        }
+
+        publicUrl = publicUrlData.publicUrl;
+      } else if (typeof coverImageUrl === 'string') {
+        publicUrl = coverImageUrl;
+      }
+
+      const coverData = {
+        cover_title: coverTitle,
+        cover_title_position: JSON.stringify(coverTitlePosition),
+        cover_title_fontsize: coverTitleFontSize,
+        cover_title_width: coverTitleWidth,
+        cover_title_rotation: coverTitleRotation,
+        cover_image: publicUrl,
+        cover_image_position: JSON.stringify(coverImagePosition),
+        cover_image_size: JSON.stringify(coverImageSize),
+        cover_image_rotation: coverImageRotation,
+        cover_bg_color: coverBackgroundColor,
+        cover_scale: coverScale,
+        cover_stage_size: JSON.stringify(coverStageSize),
+        diary_id: diaryId,
+        user_id: userId
+      };
+
+      const result = await updateCover(diaryId, coverData);
+
+      if (result.error) {
+        console.error('수정 실패:', result.error);
+        alert(`수정 실패: ${result.error}`);
+        return;
+      }
+
+      alert('Cover 수정 성공!');
+    } catch (error) {
+      console.error('Cover 수정 실패:', error);
+      alert('Cover 수정 실패');
+    }
+  };
+
+  const handleResetDiary = async () => {
+    if (!confirm('다이어리를 초기화 하시겠습니까?')) {
+      return;
+    }
+
+    try {
+      // 1. 현재 diary_covers의 cover_image(url)을 가져온다.
+      const { data, error } = await supabase
+        .from('diary_covers')
+        .select('cover_image')
+        .eq('diary_id', diaryId)
+        .single();
+
+      if (error || !data) {
+        console.error('데이터 가져오기 실패:', error);
+        alert('데이터 가져오기 실패');
+        return;
+      }
+
+      const coverImageUrl = data.cover_image;
+      const fileName = coverImageUrl ? coverImageUrl.split('/').pop() : null;
+
+      // 기존 이미지를 삭제
       if (fileName) {
         const { error: deleteError } = await supabase.storage.from('cover_img').remove([fileName]);
         if (deleteError) {
           console.error('이미지 파일 삭제 실패:', deleteError);
-          alert('이미지 파일 삭제 실패');
-          return;
+          alert(`이미지 파일 삭제 실패: ${deleteError.message}`);
+        } else {
+          alert('초기화 성공');
         }
+      } else {
+        alert('초기화 성공');
       }
 
-      alert('삭제 성공');
-      router.push('/member');
+      // router.push('/member/hub');
     } catch (error) {
-      console.error('삭제 실패:', error);
-      alert('삭제 실패');
+      console.error('초기화 실패:', error);
+      alert(`초기화 실패: `);
+    }
+
+    setCoverTitle('표지 제목 작성');
+    setCoverTitlePosition({ x: 150, y: 150 });
+    setCoverTitleFontSize(30);
+    setCoverTitleWidth(220);
+    setCoverTitleRotation(0);
+    setCoverBackgroundColor('#ffffff');
+    setCoverScale(1);
+    setCoverStageSize({ width: 512, height: 800 });
+    setCoverSelectedElement(null);
+    setCoverImage(null);
+    setCoverImagePosition({ x: 50, y: 50 });
+    setCoverImageSize({ width: 0, height: 0 });
+    setCoverImageRotation(0);
+
+    setImageFile(null);
+
+    const coverData = {
+      cover_title: '표지 제목 작성',
+      cover_title_position: JSON.stringify({ x: 150, y: 150 }),
+      cover_title_fontsize: 30,
+      cover_title_width: 220,
+      cover_title_rotation: 0,
+      cover_image: null,
+      cover_image_position: JSON.stringify({ x: 50, y: 50 }),
+      cover_image_size: JSON.stringify({ width: 0, height: 0 }),
+      cover_image_rotation: 0,
+      cover_bg_color: '#ffffff',
+      cover_scale: 1,
+      cover_stage_size: JSON.stringify({ width: 512, height: 800 }),
+      diary_id: diaryId,
+      user_id: userId
+    };
+
+    const result = await updateCover(diaryId, coverData);
+
+    if (result.error) {
+      console.error('수정 실패:', result.error);
+      alert(`수정 실패: ${result.error}`);
+      return;
     }
   };
 
@@ -570,7 +651,8 @@ const DiaryCoverPage: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.key === 'Delete' || e.key === 'Backspace') && coverSelectedElement) {
+      if ((e.key === 'Delete' || (e.key === 'Backspace' && e.metaKey)) && coverSelectedElement) {
+        e.preventDefault();
         handleDeleteElement();
       }
     };
@@ -696,18 +778,27 @@ const DiaryCoverPage: React.FC = () => {
             >
               커버 다운로드
             </button>
-            <button
-              onClick={handleSaveCover}
-              className="mb-2 px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300 mr-2"
-            >
-              커버 저장
-            </button>
-            {isEditMode && (
+            {isEditMode ? (
+              <button
+                onClick={handleUpdateDiary}
+                className="mb-2 px-2 py-1 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded transition duration-300 mr-2"
+              >
+                커버 수정
+              </button>
+            ) : (
               <button
                 onClick={handleSaveCover}
-                className="mb-2 px-2 py-1 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded transition duration-300"
+                className="mb-2 px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300 mr-2"
               >
                 커버 저장
+              </button>
+            )}
+            {isEditMode && (
+              <button
+                onClick={handleResetDiary}
+                className="mb-2 px-2 py-1 bg-red-500 hover:bg-red-600 text-white font-semibold rounded transition duration-300 "
+              >
+                커버 초기화
               </button>
             )}
             <div className="flex items-center mb-2 mr-2">
@@ -723,14 +814,6 @@ const DiaryCoverPage: React.FC = () => {
                 ref={fileInputRef}
               />
             </div>
-            {isEditMode && (
-              <button
-                onClick={handleDeleteDiary}
-                className="mb-2 px-2 py-1 bg-red-500 hover:bg-red-600 text-white font-semibold rounded transition duration-300"
-              >
-                다이어리 삭제
-              </button>
-            )}
           </div>
         </div>
       </div>
