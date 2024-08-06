@@ -5,7 +5,8 @@ import { createClient } from '@supabase/supabase-js';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
-import { EffectCoverflow } from 'swiper/modules';
+import 'swiper/css/pagination';
+import { EffectCoverflow, Pagination } from 'swiper/modules';
 import useUserStore from '@/stores/user.store';
 import Image from 'next/image';
 
@@ -78,8 +79,16 @@ const GardenCarousel: React.FC = () => {
     fetchUserEmailAndLevel();
   }, [gardenStages, levelName]);
 
+  const pagination = {
+    clickable: true,
+    renderBullet: function (index: number, className: string) {
+      const stageName = displayStages[index]?.name || '';
+      return `<span class="${className} custom-bullet">${stageName}</span>`;
+    }
+  };
+
   return (
-    <div className="flex">
+    <div className="flex flex-col items-center">
       <div className="w-[600px] h-[300px]">
         <Swiper
           effect="coverflow"
@@ -93,23 +102,38 @@ const GardenCarousel: React.FC = () => {
             modifier: 1,
             slideShadows: true
           }}
-          modules={[EffectCoverflow]}
+          pagination={pagination}
+          modules={[EffectCoverflow, Pagination]}
         >
           {displayStages.map((stage, index) => (
             <SwiperSlide key={stage.id}>
               <div className="w-[600px] h-[300px] relative">
                 <div className="absolute inset-0 flex items-center justify-center">{stage.content}</div>
-                <h3 className="absolute top-0 w-full text-center text-white bg-slate-900 bg-opacity-40 py-1">
-                  {`${index + 1} / ${totalStages}`}
-                </h3>
-                <h3 className="absolute bottom-0 w-full text-center text-white bg-slate-900 bg-opacity-40 py-1">
-                  {stage.name}
-                </h3>
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
       </div>
+      <style jsx global>{`
+        .custom-bullet {
+          width: 50px;
+          height: 30px;
+          background-color: rgba(0, 0, 0, 0.5) !important; /* opacity-50의 검정색 */
+          border-radius: 0.5rem !important; /* 직사각형 모양 */
+          text-align: center;
+          line-height: 30px; /* 텍스트가 중앙에 오도록 */
+          color: white !important; /* 선택되지 않은 페이지의 글씨색 */
+          font-weight: 600; /* semi-bold */
+        }
+        .swiper-pagination-bullet-active.custom-bullet {
+          width: 50px;
+          height: 30px;
+          background-color: white !important; /* 선택된 페이지의 흰색 */
+          color: green !important; /* 선택된 페이지의 글씨색 */
+          font-weight: 600; /* semi-bold */
+          line-height: 30px; /* 텍스트가 중앙에 오도록 */
+        }
+      `}</style>
     </div>
   );
 };
