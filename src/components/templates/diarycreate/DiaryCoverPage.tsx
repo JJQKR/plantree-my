@@ -7,9 +7,12 @@ import { supabase } from '@/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
 import { getCover, updateCover, deleteCover } from '@/services/diarycover.service';
-import useDiaryStore from '@/stores/diary.store';
+// import useDiaryStore from '@/stores/diary.store';
 import { useParams } from 'next/navigation';
-import { useDiary } from '@/lib/hooks/useDiaries';
+import { useDiariesToUserId, useUpdateDiary } from '@/lib/hooks/useDiaries';
+import useUserStore from '@/stores/user.store';
+import { UpdateDiaryType } from '@/api/diaries.api';
+// import { useDiary } from '@/lib/hooks/useDiaries';
 
 type ParamTypes = {
   [key: string]: string;
@@ -18,7 +21,9 @@ type ParamTypes = {
 
 const DiaryCoverPage: React.FC = () => {
   const router = useRouter();
-
+  const userId = useUserStore((state) => state.userId);
+  const { mutate: updateDiary } = useUpdateDiary();
+  const { data: diaries } = useDiariesToUserId(userId);
   const { diaryId } = useParams<ParamTypes>();
 
   const {
@@ -93,41 +98,36 @@ const DiaryCoverPage: React.FC = () => {
           setCoverScale(parsedData.cover_scale);
           setCoverStageSize(parsedData.cover_stage_size);
 
-          // if (parsedData.cover_image) {
-          //   const img = new window.Image();
-          //   img.src = parsedData.cover_image;
-          //   img.onload = () => {
-          //     setLoadedImage(img);
-          //     setCoverImage(parsedData.cover_image);
-          //     setCoverImagePosition(parsedData.cover_image_position);
-          //     setCoverImageSize(parsedData.cover_image_size);
-          //     setCoverImageRotation(parsedData.cover_image_rotation);
-          //   };
-          // }
-        } else {
-          setCoverTitle('표지 제목 작성');
-          setCoverTitlePosition({ x: 150, y: 150 });
-          setCoverTitleFontSize(30);
-          setCoverTitleWidth(220);
-          setCoverTitleRotation(0);
-          setCoverBackgroundColor('#ffffff');
-          setCoverScale(1);
-          setCoverStageSize({ width: 512, height: 800 });
-
-          // if (!parsedData.cover_image) {
-          //   const img = new window.Image();
-          //   img.src = parsedData.cover_image;
-          //   img.onload = () => {
-          //     setLoadedImage(null);
-          //     setCoverImage(null);
-          //     setCoverImagePosition({ x: 50, y: 50 });
-          //     setCoverImageSize({ width: 0, height: 0 });
-          //     setCoverImageRotation(0);
-          //   };
-          // }
-
-          setIsEditMode(false);
+          if (parsedData.cover_image) {
+            const img = new window.Image();
+            img.src = parsedData.cover_image;
+            img.onload = () => {
+              setLoadedImage(img);
+              setCoverImage(parsedData.cover_image);
+              setCoverImagePosition(parsedData.cover_image_position);
+              setCoverImageSize(parsedData.cover_image_size);
+              setCoverImageRotation(parsedData.cover_image_rotation);
+            };
+          }
         }
+        // else {
+        //   setCoverTitle('표지 제목 작성');
+        //   setCoverTitlePosition({ x: 150, y: 150 });
+        //   setCoverTitleFontSize(30);
+        //   setCoverTitleWidth(220);
+        //   setCoverTitleRotation(0);
+        //   setCoverBackgroundColor('#ffffff');
+        //   setCoverScale(1);
+        //   setCoverStageSize({ width: 512, height: 800 });
+
+        //   setLoadedImage(null);
+        //   setCoverImage(null);
+        //   setCoverImagePosition({ x: 50, y: 50 });
+        //   setCoverImageSize({ width: 0, height: 0 });
+        //   setCoverImageRotation(0);
+
+        //   setIsEditMode(false);
+        // }
       } catch (error) {
         console.error('Failed to fetch diary cover:', error);
         setIsEditMode(false);
@@ -486,8 +486,19 @@ const DiaryCoverPage: React.FC = () => {
       diary_id: diaryId
     };
 
+    const maxOrder =
+      diaries?.reduce((max: number, diary: UpdateDiaryType) => Math.max(max, diary.bookshelf_order), 0) || 0;
+    const newOrder = maxOrder + 1;
+
+    const newDiary = {
+      id: diaryId,
+      user_id: userId,
+      bookshelf_order: newOrder,
+      name: coverTitle
+    };
     try {
       await updateCover(diaryId, coverData);
+      updateDiary({ id: diaryId, updateDiary: newDiary });
       alert('Cover저장성공!');
     } catch (error) {
       console.error('Cover 저장실패:', error);
