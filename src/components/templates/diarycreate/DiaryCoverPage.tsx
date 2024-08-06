@@ -6,13 +6,12 @@ import { KonvaEventObject } from 'konva/lib/Node';
 import { supabase } from '@/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
-import { getCover, updateCover, deleteCover } from '@/services/diarycover.service';
+import { getCover, updateCover, deleteCover, addCover } from '@/services/diarycover.service';
 // import useDiaryStore from '@/stores/diary.store';
 import { useParams } from 'next/navigation';
-import { useDiariesToUserId, useUpdateDiary } from '@/lib/hooks/useDiaries';
+
 import useUserStore from '@/stores/user.store';
 import { UpdateDiaryType } from '@/api/diaries.api';
-// import { useDiary } from '@/lib/hooks/useDiaries';
 
 type ParamTypes = {
   [key: string]: string;
@@ -22,8 +21,7 @@ type ParamTypes = {
 const DiaryCoverPage: React.FC = () => {
   const router = useRouter();
   const userId = useUserStore((state) => state.userId);
-  const { mutate: updateDiary } = useUpdateDiary();
-  const { data: diaries } = useDiariesToUserId(userId);
+
   const { diaryId } = useParams<ParamTypes>();
 
   const {
@@ -380,54 +378,54 @@ const DiaryCoverPage: React.FC = () => {
     }
   };
 
-  const handleSaveAndContinue = async () => {
-    if (!confirm('커버임시저장후 내용을 작성하러 가시겠습니까?')) {
-      return;
-    }
+  // const handleSaveAndContinue = async () => {
+  //   if (!confirm('커버임시저장후 내용을 작성하러 가시겠습니까?')) {
+  //     return;
+  //   }
 
-    let publicUrl: string | null = null;
+  //   let publicUrl: string | null = null;
 
-    if (imageFile) {
-      const fileName = `${Date.now()}_${imageFile.name}`;
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('cover_img')
-        .upload(fileName, imageFile);
+  //   if (imageFile) {
+  //     const fileName = `${Date.now()}_${imageFile.name}`;
+  //     const { data: uploadData, error: uploadError } = await supabase.storage
+  //       .from('cover_img')
+  //       .upload(fileName, imageFile);
 
-      if (uploadError) {
-        console.error('이미지 업로드 실패:', uploadError);
-        return;
-      }
+  //     if (uploadError) {
+  //       console.error('이미지 업로드 실패:', uploadError);
+  //       return;
+  //     }
 
-      const { data: publicUrlData } = supabase.storage.from('cover_img').getPublicUrl(fileName);
+  //     const { data: publicUrlData } = supabase.storage.from('cover_img').getPublicUrl(fileName);
 
-      if (!publicUrlData) {
-        console.error('공개 URL 가져오기 실패');
-        return;
-      }
+  //     if (!publicUrlData) {
+  //       console.error('공개 URL 가져오기 실패');
+  //       return;
+  //     }
 
-      publicUrl = publicUrlData.publicUrl;
-    }
+  //     publicUrl = publicUrlData.publicUrl;
+  //   }
 
-    const coverData = {
-      cover_title: coverTitle || null,
-      cover_title_position: coverTitlePosition,
-      cover_title_fontsize: coverTitleFontSize,
-      cover_title_width: coverTitleWidth,
-      cover_title_rotation: coverTitleRotation,
-      cover_image: publicUrl,
-      cover_image_position: coverImagePosition,
-      cover_image_size: coverImageSize,
-      cover_image_rotation: coverImageRotation,
-      cover_bg_color: coverBackgroundColor,
-      cover_scale: coverScale,
-      cover_stage_size: coverStageSize,
-      diary_id: diaryId
-    };
+  //   const coverData = {
+  //     cover_title: coverTitle || null,
+  //     cover_title_position: coverTitlePosition,
+  //     cover_title_fontsize: coverTitleFontSize,
+  //     cover_title_width: coverTitleWidth,
+  //     cover_title_rotation: coverTitleRotation,
+  //     cover_image: publicUrl,
+  //     cover_image_position: coverImagePosition,
+  //     cover_image_size: coverImageSize,
+  //     cover_image_rotation: coverImageRotation,
+  //     cover_bg_color: coverBackgroundColor,
+  //     cover_scale: coverScale,
+  //     cover_stage_size: coverStageSize,
+  //     diary_id: diaryId
+  //   };
 
-    setCoverData(coverData);
+  //   setCoverData(coverData);
 
-    router.push(`/member/diary/${diaryId}/parchment`);
-  };
+  //   router.push(`/member/diary/${diaryId}/parchment`);
+  // };
 
   const handleSaveCover = async () => {
     if (!confirm('커버를 저장하시겠습니까?')) {
@@ -472,34 +470,26 @@ const DiaryCoverPage: React.FC = () => {
 
     const coverData = {
       cover_title: coverTitle,
-      cover_title_position: JSON.stringify(coverTitlePosition),
+      cover_title_position: coverTitlePosition,
       cover_title_fontsize: coverTitleFontSize,
       cover_title_width: coverTitleWidth,
       cover_title_rotation: coverTitleRotation,
       cover_image: publicUrl,
-      cover_image_position: JSON.stringify(coverImagePosition),
-      cover_image_size: JSON.stringify(coverImageSize),
+      cover_image_position: coverImagePosition,
+      cover_image_size: coverImageSize,
       cover_image_rotation: coverImageRotation,
       cover_bg_color: coverBackgroundColor,
       cover_scale: coverScale,
-      cover_stage_size: JSON.stringify(coverStageSize),
-      diary_id: diaryId
+      cover_stage_size: coverStageSize,
+      diary_id: diaryId,
+      user_id: userId
     };
 
-    const maxOrder =
-      diaries?.reduce((max: number, diary: UpdateDiaryType) => Math.max(max, diary.bookshelf_order), 0) || 0;
-    const newOrder = maxOrder + 1;
-
-    const newDiary = {
-      id: diaryId,
-      user_id: userId,
-      bookshelf_order: newOrder,
-      name: coverTitle
-    };
     try {
-      await updateCover(diaryId, coverData);
-      updateDiary({ id: diaryId, updateDiary: newDiary });
+      await addCover(coverData);
+
       alert('Cover저장성공!');
+      router.push(`/member/hub`);
     } catch (error) {
       console.error('Cover 저장실패:', error);
       alert('Cover 저장실패');
@@ -707,10 +697,10 @@ const DiaryCoverPage: React.FC = () => {
               커버 다운로드
             </button>
             <button
-              onClick={handleSaveAndContinue}
+              onClick={handleSaveCover}
               className="mb-2 px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300 mr-2"
             >
-              속지 작성
+              커버 저장
             </button>
             {isEditMode && (
               <button
