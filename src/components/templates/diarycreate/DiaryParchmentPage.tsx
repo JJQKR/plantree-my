@@ -112,6 +112,7 @@ const DiaryParchmentPage = () => {
 
   const handleFinalSave = async () => {
     const { coverData } = useDiaryCoverStore.getState();
+    console.log(coverData);
 
     if (!coverData) {
       console.error('커버 데이터가 없습니다.');
@@ -138,9 +139,10 @@ const DiaryParchmentPage = () => {
       } else {
         await addCover(coverData);
         createDiary(newDiary);
+
         alert('diary 저장 성공!');
       }
-      router.push('/member');
+      router.push('/member/hub');
     } catch (error) {
       console.error('diary 저장 실패:', error);
       alert('diary 저장 실패');
