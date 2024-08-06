@@ -7,9 +7,9 @@ export const addCover = async (coverData: any) => {
     body: JSON.stringify(coverData),
     cache: 'no-store'
   });
-  
+
   const data = await response.json();
-console.log(data);
+  console.log(data);
 
   return data;
 };
