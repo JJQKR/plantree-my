@@ -23,18 +23,6 @@ class DiariesAPI {
 
   /**
    * @param userId {string} 사용자 ID
-   * @returns 사용자 ID에 대한 다이어리 커버 데이터
-   */
-  async selectDiaryCoversByUserId(userId: string) {
-    const { data, error } = await this.supabase.from('diary_covers').select().eq('user_id', userId);
-    if (error) {
-      console.error('Error fetching diary covers:', error);
-    }
-    return data;
-  }
-
-  /**
-   * @param userId {string} 사용자 ID
    * @returns 사용자 ID에 대한 다이어리 데이터
    */
   async selectPagesOfUserId(userId: string) {

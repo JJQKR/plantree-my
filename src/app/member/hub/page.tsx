@@ -21,20 +21,11 @@ const HomePage = () => {
     }
   }, []);
 
-  useEffect(() => {
-    // 페이지 로드 시 body 태그에 noScroll 클래스 추가
-    document.body.classList.add('noScroll');
-    // 페이지 언마운트 시 body 태그에서 noScroll 클래스 제거
-    return () => {
-      document.body.classList.remove('noScroll');
-    };
-  }, []);
-
   return (
     <div
       className={`${
         sidebarOpen ? 'w-[1280px]' : 'w-full'
-      } h-[930px] flex items-center justify-center transition-all duration-300`} // 사이드바 상태에 따라 너비 조정
+      } flex items-center justify-center transition-all duration-300`} // 사이드바 상태에 따라 너비 조정
     >
       <DiaryCase />
     </div>

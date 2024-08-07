@@ -11,12 +11,13 @@ import { useRouter } from 'next/navigation';
 import { useStore } from '@/stores/sidebar.store';
 import useDiaryStore from '@/stores/diary.store';
 import Swal from 'sweetalert2';
-import { useDiaryCoversToUserId, useCreateDiary } from '@/lib/hooks/useDiaries';
+import { useCreateDiary } from '@/lib/hooks/useDiaries';
 import useUserStore from '@/stores/user.store';
 import uuid from 'react-uuid';
 import { supabase } from '@/supabase/client';
 import { AddDiaryType } from '@/types/main';
 import Image from 'next/image';
+import { getCoversByUserId } from '@/services/diarycover.service';
 
 const DiaryCase: React.FC = () => {
   const { userId, setUserId } = useUserStore((state) => state);
@@ -24,9 +25,7 @@ const DiaryCase: React.FC = () => {
   const { gridView } = useStore(); // 그리드 뷰 상태
   const router = useRouter(); // Next.js 라우터
   const setDiaryId = useDiaryStore((state) => state.setDiaryId); // 다이어리 ID 설정 함수
-
-  // 다이어리 커버 데이터 훅
-  const { data: diaryCovers } = useDiaryCoversToUserId(userId);
+  const [diaryCovers, setDiaryCovers] = useState<any[]>([]); // 다이어리 커버 상태
 
   // 다이어리 생성 함수 훅
   const { mutate: createDiary } = useCreateDiary();
@@ -39,17 +38,21 @@ const DiaryCase: React.FC = () => {
     return session?.user?.id || null; // 사용자 ID 반환
   };
 
+  // 사용자 ID를 설정하고 다이어리 커버 데이터를 가져오는 함수
+  const getUserIdAndFetchCovers = async () => {
+    const id = await fetchSession();
+    if (!id) {
+      setIsLoggedIn(false); // 로그인되지 않은 경우 상태 설정
+      return;
+    }
+    setUserId(id); // 사용자 ID 설정
+    const covers = await getCoversByUserId(id); // 사용자 ID를 이용하여 다이어리 커버 가져오기
+    setDiaryCovers(covers);
+  };
+
   // 컴포넌트가 마운트될 때 사용자 ID를 설정하는 useEffect
   useEffect(() => {
-    const getUserId = async () => {
-      const id = await fetchSession();
-      if (!id) {
-        setIsLoggedIn(false); // 로그인되지 않은 경우 상태 설정
-        return;
-      }
-      setUserId(id); // 사용자 ID 설정
-    };
-    getUserId();
+    getUserIdAndFetchCovers();
   }, []);
 
   // 다이어리를 생성하는 함수
@@ -170,7 +173,7 @@ const DiaryCase: React.FC = () => {
                     >
                       {/* 배경 색상 */}
                       <div className="relative flex flex-col items-center justify-center w-full h-full rounded">
-                        <span className="absolute top-10 left-1/2 transform -translate-x-1/2 text-center text-black">
+                        <span className="absolute top-10 left-1/2 transform -translate-x-1/2 text-center">
                           {cover.cover_title || '제목 없음'}
                         </span>
                         {/* 이미지 */}
@@ -179,8 +182,8 @@ const DiaryCase: React.FC = () => {
                             <Image
                               src={cover.cover_image}
                               alt={cover.cover_title || 'Cover Image'}
-                              width={200} // 이미지 너비
-                              height={200} // 이미지 높이
+                              width={250} // 이미지 너비
+                              height={250} // 이미지 높이
                               className="object-cover rounded"
                             />
                           </div>
@@ -190,7 +193,7 @@ const DiaryCase: React.FC = () => {
                   )
               )
             ) : (
-              <SwiperSlide className="flex items-center justify-center w-[350px] h-[570px] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
+              <SwiperSlide className="relative flex flex-col items-center justify-center w-[350px] h-[570px] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
                 <button onClick={handleCreateDiary} className="flex items-center justify-center w-full h-full">
                   +<br /> 다이어리 생성
                 </button>
@@ -199,7 +202,7 @@ const DiaryCase: React.FC = () => {
           </Swiper>
         )}
       </div>
-      <div className="absolute bottom-[20px] right-4">
+      <div className="fixed bottom-16 right-16">
         <CreateDiaryButton onClick={handleCreateDiary} /> {/* 다이어리 생성 버튼 */}
       </div>
     </div>

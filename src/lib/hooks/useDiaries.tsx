@@ -5,15 +5,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const diariesApi = new DiariesAPI();
 
-// diary_covers 테이블에 userId가 같은 diary 여러개 불러오기
-export const useDiaryCoversToUserId = (userId: string) => {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['diaryCovers', userId],
-    queryFn: () => diariesApi.selectDiaryCoversByUserId(userId)
-  });
-  return { data, isLoading, error };
-};
-
 // userId가 같은 diary 여러개 불러오기
 export const useDiariesToUserId = (userId: string) => {
   const { data, isLoading, error } = useQuery({

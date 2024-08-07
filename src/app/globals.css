@@ -47,7 +47,3 @@ body {
 .custom-height {
   height: 80vh;
 }
-
-.noScroll {
-  overflow: hidden;
-}
