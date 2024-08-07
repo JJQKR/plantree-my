@@ -60,7 +60,7 @@ const NicknameModal: React.FC = () => {
         if (userError) throw userError;
 
         if (user) {
-          const { error } = await supabase.auth.updateUser({ data: { Display_Name: newNickname } });
+          const { error } = await supabase.auth.updateUser({ data: { display_name: newNickname } });
           if (error) {
             console.error('닉네임 업데이트 실패:', error);
           } else {

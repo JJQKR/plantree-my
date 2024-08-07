@@ -1,6 +1,5 @@
 export const addCover = async (coverData: any) => {
   const response = await fetch(`http://localhost:3000/apis/diaryCover/`, {
-  const response = await fetch(`http://localhost:3000/apis/diaryCover/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -16,7 +15,7 @@ export const addCover = async (coverData: any) => {
 };
 
 export const getCover = async (diaryId: string) => {
-  const response = await fetch(`http://localhost:3000/apis/diaryCover/${diaryId}`, {
+  const response = await fetch(`http://localhost:3000/apis/diarycover/${diaryId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -30,7 +29,7 @@ export const getCover = async (diaryId: string) => {
 };
 
 export const deleteCover = async (diaryId: string) => {
-  const response = await fetch(`http://localhost:3000/apis/diaryCover/${diaryId}`, {
+  const response = await fetch(`http://localhost:3000/apis/diarycover/${diaryId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json'
@@ -62,14 +61,4 @@ export const updateCover = async (diaryId: string, coverData: any) => {
   } catch (error) {
     return { data: null, error: error instanceof Error ? error.message : 'An unknown error occurred' };
   }
-  const response = await fetch(`http://localhost:3000/apis/diaryCover/${diaryId}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(coverData),
-    cache: 'no-store'
-  });
-  const data = await response.json();
-  return data;
 };
