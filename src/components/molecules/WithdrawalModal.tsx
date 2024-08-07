@@ -1,8 +1,10 @@
 import useMyModalStore from '@/stores/my.modal.store';
 import { supabase } from '@/supabase/client';
 import React, { useState } from 'react';
+import useUserStore from '@/stores/user.store';
 
 const WithdrawalModal: React.FC = () => {
+  const { nickname, membershipDays } = useUserStore((state) => state);
   const { isWithdrawalModalOpen, toggleWithdrawalModal } = useMyModalStore((state) => state);
   const handleBackGroundClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (e.target === e.currentTarget) {
@@ -55,12 +57,22 @@ const WithdrawalModal: React.FC = () => {
         className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
         onClick={handleBackGroundClick}
       >
-        <div className="bg-white p-4 rounded-[10px]">
+        <div className="bg-white p-9 rounded-[10px] style={{ width: '20em' }}">
           <div onClick={(e) => e.stopPropagation()}>
-            <div className="text-xl font-bold mb-4">
+            <div className="flex justify-between items-center mb-4">
+              <div className="text-xl font-bold text-left">회원 탈퇴</div>
+              <button className="text-black" onClick={toggleWithdrawalModal} type="button">
+                &#10005;
+              </button>
+            </div>
+            <div className="text-lg font-bold mb-4">
+              <p>{nickname} 님은</p>
+              <p>플랜트리와 {membershipDays}일 동안 기록을 키워나갔어요.</p>
               <p>정말 탈퇴하시겠어요?</p>
+
               <p>아래 텍스트를 입력해주세요.</p>
             </div>
+
             <input
               type="text"
               placeholder="플랜트리잘있어"
@@ -71,17 +83,17 @@ const WithdrawalModal: React.FC = () => {
             />
             <div className="flex flex-col gap-2">
               <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
-                <button className="px-4 py-2 bg-red-400 w-full text-white rounded" type="submit" disabled={loading}>
+                <button
+                  className="px-4 py-2 w-full text-white rounded"
+                  type="submit"
+                  disabled={loading}
+                  style={{ backgroundColor: '#9E9E9E' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#8A0000')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#9E9E9E')}
+                >
                   {loading ? '탈퇴 중...' : '탈퇴하기'}
                 </button>
               </form>
-              <button
-                className="px-4 py-2 bg-red-400 w-full text-white rounded"
-                onClick={toggleWithdrawalModal}
-                disabled={loading}
-              >
-                취소
-              </button>
             </div>
           </div>
         </div>

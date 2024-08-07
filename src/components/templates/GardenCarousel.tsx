@@ -5,7 +5,8 @@ import { createClient } from '@supabase/supabase-js';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
-import { EffectCoverflow } from 'swiper/modules';
+import 'swiper/css/pagination';
+import { EffectCoverflow, Pagination } from 'swiper/modules';
 import useUserStore from '@/stores/user.store';
 import Image from 'next/image';
 
@@ -35,14 +36,82 @@ interface GardenStage {
 
 const GardenCarousel: React.FC = () => {
   const [gardenStages, setGardenStages] = useState<GardenStage[]>([
-    { id: 1, content: <Image src="/images/garden1.png" alt="badge_example" width="600" height="300" />, name: '씨앗' },
-    { id: 2, content: <Image src="/images/garden2.png" alt="badge_example" width="600" height="300" />, name: '새싹' },
-    { id: 3, content: <Image src="/images/garden3.jpg" alt="badge_example" width="600" height="300" />, name: '풀' },
-    { id: 4, content: <Image src="/images/garden4.png" alt="badge_example" width="600" height="300" />, name: '묘목' },
-    { id: 5, content: <Image src="/images/garden5.jpg" alt="badge_example" width="600" height="300" />, name: '나무' },
+    {
+      id: 1,
+      content: (
+        <Image
+          src="/images/garden1.png"
+          alt="garden1"
+          className="rounded-bl-[20px] rounded-br-[20px]"
+          width="600"
+          height="300"
+        />
+      ),
+      name: '씨앗'
+    },
+    {
+      id: 2,
+      content: (
+        <Image
+          src="/images/garden2.png"
+          alt="garden2"
+          className="rounded-bl-[20px] rounded-br-[20px]"
+          width="600"
+          height="300"
+        />
+      ),
+      name: '새싹'
+    },
+    {
+      id: 3,
+      content: (
+        <Image
+          src="/images/garden3.jpg"
+          alt="garden3"
+          className="rounded-bl-[20px] rounded-br-[20px]"
+          width="600"
+          height="300"
+        />
+      ),
+      name: '풀'
+    },
+    {
+      id: 4,
+      content: (
+        <Image
+          src="/images/garden4.png"
+          alt="garden4"
+          className="rounded-bl-[20px] rounded-br-[20px]"
+          width="600"
+          height="300"
+        />
+      ),
+      name: '묘목'
+    },
+    {
+      id: 5,
+      content: (
+        <Image
+          src="/images/garden5.jpg"
+          alt="garden5"
+          className="rounded-bl-[20px] rounded-br-[20px]"
+          width="600"
+          height="300"
+        />
+      ),
+      name: '나무'
+    },
     {
       id: 6,
-      content: <Image src="/images/garden6.png" alt="badge_example" width="600" height="300" />,
+      content: (
+        <Image
+          src="/images/garden6.png"
+          alt="garden6"
+          className="rounded-bl-[20px] rounded-br-[20px]"
+          width="600"
+          height="300"
+        />
+      ),
       name: '열매나무'
     }
   ]);
@@ -78,9 +147,17 @@ const GardenCarousel: React.FC = () => {
     fetchUserEmailAndLevel();
   }, [gardenStages, levelName]);
 
+  const pagination = {
+    clickable: true,
+    renderBullet: function (index: number, className: string) {
+      const stageName = displayStages[index]?.name || '';
+      return `<span class="${className} custom-bullet">${stageName}</span>`;
+    }
+  };
+
   return (
-    <div className="flex">
-      <div className="w-[600px] h-[300px]">
+    <div className="flex flex-col items-center">
+      <div className="w-[600px] h-[300px] ">
         <Swiper
           effect="coverflow"
           grabCursor={true}
@@ -93,23 +170,40 @@ const GardenCarousel: React.FC = () => {
             modifier: 1,
             slideShadows: true
           }}
-          modules={[EffectCoverflow]}
+          pagination={pagination}
+          modules={[EffectCoverflow, Pagination]}
         >
           {displayStages.map((stage, index) => (
             <SwiperSlide key={stage.id}>
-              <div className="w-[600px] h-[300px] relative">
-                <div className="absolute inset-0 flex items-center justify-center">{stage.content}</div>
-                <h3 className="absolute top-0 w-full text-center text-white bg-slate-900 bg-opacity-40 py-1">
-                  {`${index + 1} / ${totalStages}`}
-                </h3>
-                <h3 className="absolute bottom-0 w-full text-center text-white bg-slate-900 bg-opacity-40 py-1">
-                  {stage.name}
-                </h3>
+              <div className="w-[600px] h-[300px] rounded-br-[20px] rounded-bl-[20px] relative">
+                <div className="absolute inset-0 flex rounded-br-[20px] rounded-bl-[20px] items-center justify-center">
+                  {stage.content}
+                </div>
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
       </div>
+      <style jsx global>{`
+        .custom-bullet {
+          width: 50px;
+          height: 30px;
+          background-color: rgba(0, 0, 0, 0.5) !important; /* opacity-50의 검정색 */
+          border-radius: 0.5rem !important; /* 직사각형 모양 */
+          text-align: center;
+          line-height: 30px; /* 텍스트가 중앙에 오도록 */
+          color: white !important; /* 선택되지 않은 페이지의 글씨색 */
+          font-weight: 600; /* semi-bold */
+        }
+        .swiper-pagination-bullet-active.custom-bullet {
+          width: 50px;
+          height: 30px;
+          background-color: white !important; /* 선택된 페이지의 흰색 */
+          color: green !important; /* 선택된 페이지의 글씨색 */
+          font-weight: 600; /* semi-bold */
+          line-height: 30px; /* 텍스트가 중앙에 오도록 */
+        }
+      `}</style>
     </div>
   );
 };
