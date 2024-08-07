@@ -44,7 +44,7 @@ const NicknameModal: React.FC = () => {
   };
 
   const handleNicknameSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    // e.preventDefault();
+    e.preventDefault();
     if (nicknameRef.current) {
       const newNickname = nicknameRef.current.value.trim();
       if (newNickname.length < 2 || newNickname.length > 8) {
@@ -60,7 +60,7 @@ const NicknameModal: React.FC = () => {
         if (userError) throw userError;
 
         if (user) {
-          const { error } = await supabase.from('users').update({ nickname: newNickname }).eq('id', user.id);
+          const { error } = await supabase.auth.updateUser({ data: { Display_Name: newNickname } });
           if (error) {
             console.error('닉네임 업데이트 실패:', error);
           } else {
