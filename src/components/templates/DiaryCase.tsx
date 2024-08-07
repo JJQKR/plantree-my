@@ -164,7 +164,7 @@ const DiaryCase: React.FC = () => {
                   cover.diary_id && ( // 다이어리 ID가 존재하는 경우
                     <SwiperSlide
                       key={cover.diary_id}
-                      onClick={() => handleDiaryClick(cover.diary_id as string)} // 타입 단언 사용
+                      onClick={() => handleDiaryClick(cover.diary_id as string)}
                       className="relative cursor-pointer flex flex-col items-center justify-center w-[350px] h-[570px] rounded shadow-md text-2xl font-bold text-black"
                       style={{ backgroundColor: cover.cover_bg_color || 'bg-red-300' }}
                     >
