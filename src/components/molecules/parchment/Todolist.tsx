@@ -3,12 +3,12 @@
 import React, { useState } from 'react';
 import uuid from 'react-uuid';
 import { FaPlus } from 'react-icons/fa6';
-import useMyModalStore from '@/stores/my.modal.store';
 import { FaCircle } from 'react-icons/fa';
 import ColorModal from './ColorModal';
 import useTodoListStore from '@/stores/todoList.store';
 import { getBackgroundColorClass, getColorClass } from '@/lib/utils/tenMinPlannerColor';
 import useTenMinplannerStore from '@/stores/tenMinPlanner.store';
+import useParchmentModalStore from '@/stores/parchment.modal.store';
 
 type Todo = {
   id: string;
@@ -35,7 +35,7 @@ const Todolist: React.FC = () => {
     editTodo
   } = useTodoListStore((state) => state);
   const { tenMinPlannerId } = useTenMinplannerStore();
-  const { isTenMinplannerColorModalOpen, toggleTenMinplannerColorModal } = useMyModalStore((state) => state);
+  const { isTenMinplannerColorModalOpen, toggleTenMinplannerColorModal } = useParchmentModalStore((state) => state);
   // const { mutate: createTenMinTodo } = useCreateTenMinTodo();
 
   const updateTodoInput = (e: React.ChangeEvent<HTMLInputElement>) => {

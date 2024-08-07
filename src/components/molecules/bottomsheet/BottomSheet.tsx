@@ -18,8 +18,8 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
   // const { diaryId } = useDiaryStore((state) => state);
   const pathname = usePathname();
   const scrollRef = useRef<HTMLDivElement>(null);
-  const togglePageOptions = useDiaryCoverStore((state) => state.togglePageOptions);
-  const { setCurrentPage, currentPage } = useDiaryCoverStore((state) => state);
+  // const togglePageOptions = useDiaryCoverStore((state) => state.togglePageOptions);
+  // const { setCurrentPage, currentPage } = useDiaryCoverStore((state) => state);
   const {
     coverTitle,
     coverTitlePosition,
@@ -41,9 +41,9 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
     router.push(`/member/diary/${diaryId}/cover`);
   };
 
-  const handleCardClick = (pageIndex: number) => {
-    setCurrentPage(pageIndex - (pageIndex % 2));
-  };
+  // const handleCardClick = (pageIndex: number) => {
+  //   setCurrentPage(pageIndex - (pageIndex % 2));
+  // };
 
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -61,7 +61,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
     if (pathname.includes('diarycover')) {
       handleSaveAndContinue();
     } else {
-      togglePageOptions();
+      // togglePageOptions();
     }
   };
 
@@ -137,14 +137,14 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
           >
             <h2 className="text-xl font-bold">커버 페이지</h2>
           </div>
-          {bottomSheetList.map((page) => (
+          {/* {bottomSheetList.map((page) => (
             <BottomSheetCard
               page={page}
               key={page.index}
               moveCard={moveCard}
-              onClick={() => handleCardClick(page.index)}
+              // onClick={() => handleCardClick(page.index)}
             />
-          ))}
+          ))} */}
           <div
             onClick={handleAddPageClick}
             className="bg-gray-100 rounded-lg shadow-md p-4 w-32 h-40 flex-none cursor-pointer"
