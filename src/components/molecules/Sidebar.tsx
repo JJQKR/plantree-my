@@ -97,7 +97,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
               diaryCovers.map((cover) => (
                 <li
                   key={cover.id}
-                  className="h-[50px] p-3 rounded-lg shadow-md text-black"
+                  className="h-[50px] p-5 rounded-lg shadow-md text-black"
                   style={{ backgroundColor: cover.cover_bg_color || 'bg-red-300' }} // 배경색 설정
                 >
                   {cover.cover_title || '제목 없음'}
