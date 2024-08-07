@@ -60,7 +60,7 @@ type DiaryCoverState = {
 export const useDiaryCoverStore = create<DiaryCoverState>((set, get) => ({
   coverTitle: '표지 제목 작성',
   setCoverTitle: (title) => set({ coverTitle: title }),
-  coverTitlePosition: { x: 150, y: 150 },
+  coverTitlePosition: { x: 140, y: 150 },
   setCoverTitlePosition: (position) => set({ coverTitlePosition: position }),
   coverTitleFontSize: 30,
   setCoverTitleFontSize: (size) => set({ coverTitleFontSize: size }),
@@ -82,7 +82,7 @@ export const useDiaryCoverStore = create<DiaryCoverState>((set, get) => ({
   setCoverSelectedElement: (element) => set({ coverSelectedElement: element }),
   coverScale: 1,
   setCoverScale: (scale) => set({ coverScale: scale }),
-  coverStageSize: { width: 512, height: 800 },
+  coverStageSize: { width: 480, height: 720 },
   setCoverStageSize: (size) => set({ coverStageSize: size }),
   tempImageUrl: null,
   setTempImageUrl: (url) => set({ tempImageUrl: url }),

@@ -108,13 +108,13 @@ const DiaryCoverPage: React.FC = () => {
           // console.log('diary test', data);
         } else {
           setCoverTitle('표지 제목 작성');
-          setCoverTitlePosition({ x: 150, y: 150 });
+          setCoverTitlePosition({ x: 140, y: 150 });
           setCoverTitleFontSize(30);
           setCoverTitleWidth(220);
           setCoverTitleRotation(0);
           setCoverBackgroundColor('#ffffff');
           setCoverScale(1);
-          setCoverStageSize({ width: 512, height: 800 });
+          setCoverStageSize({ width: 480, height: 720 });
           setCoverSelectedElement(null);
 
           setLoadedImage(null);
@@ -579,13 +579,13 @@ const DiaryCoverPage: React.FC = () => {
     }
 
     setCoverTitle('표지 제목 작성');
-    setCoverTitlePosition({ x: 150, y: 150 });
+    setCoverTitlePosition({ x: 140, y: 150 });
     setCoverTitleFontSize(30);
     setCoverTitleWidth(220);
     setCoverTitleRotation(0);
     setCoverBackgroundColor('#ffffff');
     setCoverScale(1);
-    setCoverStageSize({ width: 512, height: 800 });
+    setCoverStageSize({ width: 480, height: 720 });
     setCoverSelectedElement(null);
     setCoverImage(null);
     setCoverImagePosition({ x: 50, y: 50 });
@@ -596,7 +596,7 @@ const DiaryCoverPage: React.FC = () => {
 
     const coverData = {
       cover_title: '표지 제목 작성',
-      cover_title_position: JSON.stringify({ x: 150, y: 150 }),
+      cover_title_position: JSON.stringify({ x: 140, y: 150 }),
       cover_title_fontsize: 30,
       cover_title_width: 220,
       cover_title_rotation: 0,
@@ -606,7 +606,7 @@ const DiaryCoverPage: React.FC = () => {
       cover_image_rotation: 0,
       cover_bg_color: '#ffffff',
       cover_scale: 1,
-      cover_stage_size: JSON.stringify({ width: 512, height: 800 }),
+      cover_stage_size: JSON.stringify({ width: 480, height: 720 }),
       diary_id: diaryId,
       user_id: userId
     };
@@ -621,10 +621,10 @@ const DiaryCoverPage: React.FC = () => {
   };
 
   const handleResize = () => {
-    const newWidth = window.innerWidth > 512 ? 512 : window.innerWidth;
-    const newHeight = (newWidth / 512) * 800;
+    const newWidth = window.innerWidth > 480 ? 480 : window.innerWidth;
+    const newHeight = (newWidth / 480) * 720;
     setCoverStageSize({ width: newWidth, height: newHeight });
-    setCoverScale(newWidth / 512);
+    setCoverScale(newWidth / 480);
   };
 
   useEffect(() => {
@@ -665,17 +665,17 @@ const DiaryCoverPage: React.FC = () => {
 
   const handleAddText = () => {
     setCoverTitle('표지 제목 작성');
-    setCoverTitlePosition({ x: 150, y: 150 });
+    setCoverTitlePosition({ x: 140, y: 150 });
     setCoverTitleFontSize(30);
     setCoverTitleWidth(220);
     setCoverTitleRotation(0);
   };
 
   return (
-    <div className="flex flex-col min-h-screen overflow-hidden">
-      <div className="flex-grow flex flex-col justify-center items-center">
-        <div className="w-full max-w-lg mb-4">
-          <div className="grid aspect-w-9 aspect-h-16 w-full">
+    <div className="flex flex-col overflow-hidden">
+      <div className="flex-grow flex justify-center items-center overflow-auto">
+        <div className="w-full max-w-[480rem] mb-4 mr-4">
+          <div className="grid aspect-w-2 aspect-h-3 w-full">
             <Stage
               className="col-start-1 col-end-2 row-start-1 row-end-2 w-full h-full"
               width={coverStageSize.width}
@@ -752,9 +752,9 @@ const DiaryCoverPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-col items-center max-w-lg w-full">
-          <div className="flex flex-wrap items-center mb-2 w-full">
-            <div className="flex items-center mb-2 mr-2">
+        <div className="flex flex-col items-start max-w-[10rem] w-full">
+          <div className="flex flex-col items-start mb-2 w-full">
+            <div className="flex items-center mb-2">
               <label htmlFor="colorPicker" className="mr-2 font-semibold">
                 색 선택:
               </label>
@@ -768,27 +768,27 @@ const DiaryCoverPage: React.FC = () => {
             </div>
             <button
               onClick={handleAddText}
-              className="mb-2 px-2 py-1 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300 mr-2"
+              className="mb-2 px-2 py-1 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300 w-full"
             >
               글씨 생성
             </button>
             <button
               onClick={handleDownload}
-              className="mb-2 px-2 py-1 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300 mr-2"
+              className="mb-2 px-2 py-1 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300 w-full"
             >
               커버 다운로드
             </button>
             {isEditMode ? (
               <button
                 onClick={handleUpdateDiary}
-                className="mb-2 px-2 py-1 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded transition duration-300 mr-2"
+                className="mb-2 px-2 py-1 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded transition duration-300 w-full"
               >
                 커버 수정
               </button>
             ) : (
               <button
                 onClick={handleSaveCover}
-                className="mb-2 px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300 mr-2"
+                className="mb-2 px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300 w-full"
               >
                 커버 저장
               </button>
@@ -796,13 +796,13 @@ const DiaryCoverPage: React.FC = () => {
             {isEditMode && (
               <button
                 onClick={handleResetDiary}
-                className="mb-2 px-2 py-1 bg-red-500 hover:bg-red-600 text-white font-semibold rounded transition duration-300 "
+                className="mb-2 px-2 py-1 bg-red-500 hover:bg-red-600 text-white font-semibold rounded transition duration-300 w-full"
               >
                 커버 초기화
               </button>
             )}
-            <div className="flex items-center mb-2 mr-2">
-              <label htmlFor="imgChoice" className="mr-2 font-semibold">
+            <div className="flex flex-col items-start mb-2">
+              <label htmlFor="imgChoice" className="mb-1 font-semibold">
                 이미지 선택:
               </label>
               <input
@@ -810,7 +810,7 @@ const DiaryCoverPage: React.FC = () => {
                 type="file"
                 accept="image/*"
                 onChange={handleImageUpload}
-                className="mb-2 border border-gray-300 rounded p-1 w-1/2 md:w-auto "
+                className="border border-gray-300 rounded p-1 w-full"
                 ref={fileInputRef}
               />
             </div>
