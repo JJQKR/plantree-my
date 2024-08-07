@@ -68,7 +68,7 @@ const DiaryCase: React.FC = () => {
 
   const handleDiaryClick = (id: string) => {
     setDiaryId(id);
-    router.push(`/member/diary/${id}/cover`);
+    router.push(`/member/diary/${id}/parchment`);
   };
 
   return (
