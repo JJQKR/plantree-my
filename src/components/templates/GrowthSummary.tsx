@@ -32,7 +32,7 @@ const GrowthSummary = () => {
     <>
       <FetchUserData />
       <FetchMembershipDays />
-      <div className="flex flex-row">
+      <div className="flex flex-row bg-white rounded-tr-[20px] rounded-tl-[20px]">
         <div>{levelId && <ProfileStages levelId={levelId} size={90} />}</div>
         <div className="items-center">
           <h3 className="font-semibold text-[1rem] text-[#008A02]">{levelName}</h3>

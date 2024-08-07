@@ -38,8 +38,9 @@ const MyPage: React.FC = () => {
   return (
     <>
       <div>
-        <div className="my-5 rounded-[10px] shadow-md bg-white">
+        <div className="my-5">
           <GrowthSummary />
+
           <GardenCarousel />
         </div>
         <div>

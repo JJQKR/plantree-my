@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, Session } from '@supabase/supabase-js';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
@@ -157,7 +157,7 @@ const GardenCarousel: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="w-[600px] h-[300px] ">
+      <div className="w-[600px] h-[300px]">
         <Swiper
           effect="coverflow"
           grabCursor={true}
@@ -166,19 +166,17 @@ const GardenCarousel: React.FC = () => {
           coverflowEffect={{
             rotate: 50,
             stretch: 0,
-            depth: 0,
+            depth: 100,
             modifier: 1,
-            slideShadows: true
+            slideShadows: false // 이 부분을 수정
           }}
           pagination={pagination}
           modules={[EffectCoverflow, Pagination]}
         >
           {displayStages.map((stage, index) => (
             <SwiperSlide key={stage.id}>
-              <div className="w-[600px] h-[300px] rounded-br-[20px] rounded-bl-[20px] relative">
-                <div className="absolute inset-0 flex rounded-br-[20px] rounded-bl-[20px] items-center justify-center">
-                  {stage.content}
-                </div>
+              <div className="w-[600px] h-[300px] rounded-bl-[20px] rounded-br-[20px] overflow-hidden">
+                {stage.content}
               </div>
             </SwiperSlide>
           ))}
@@ -188,20 +186,20 @@ const GardenCarousel: React.FC = () => {
         .custom-bullet {
           width: 50px;
           height: 30px;
-          background-color: rgba(0, 0, 0, 0.5) !important; /* opacity-50의 검정색 */
-          border-radius: 0.5rem !important; /* 직사각형 모양 */
+          background-color: rgba(0, 0, 0, 0.5) !important;
+          border-radius: 0.5rem !important;
           text-align: center;
-          line-height: 30px; /* 텍스트가 중앙에 오도록 */
-          color: white !important; /* 선택되지 않은 페이지의 글씨색 */
-          font-weight: 600; /* semi-bold */
+          line-height: 30px;
+          color: white !important;
+          font-weight: 600;
         }
         .swiper-pagination-bullet-active.custom-bullet {
           width: 50px;
           height: 30px;
-          background-color: white !important; /* 선택된 페이지의 흰색 */
-          color: green !important; /* 선택된 페이지의 글씨색 */
-          font-weight: 600; /* semi-bold */
-          line-height: 30px; /* 텍스트가 중앙에 오도록 */
+          background-color: white !important;
+          color: green !important;
+          font-weight: 600;
+          line-height: 30px;
         }
       `}</style>
     </div>
