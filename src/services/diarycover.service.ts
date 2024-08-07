@@ -1,7 +1,7 @@
 import { supabase } from '@/supabase/client';
 
 export const addCover = async (coverData: any) => {
-  const response = await fetch(`http://localhost:3000/apis/diaryCover/`, {
+  const response = await fetch(`http://localhost:3000/apis/diarycover/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

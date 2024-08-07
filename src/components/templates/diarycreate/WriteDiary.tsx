@@ -35,6 +35,7 @@ const WriteDiary = () => {
   const { mutate: createDbDiary } = useCreateDiary();
   const { mutate: updateDbDiary } = useUpdateDiary();
   const { mutate: deleteDbDiary } = useDeleteDiary();
+
   // db Pages 테이블과 상호작용
   const { data: dbPages } = usePageToDiaryId(diaryId);
   const { mutate: createDbPage } = useCreatePage();
@@ -46,7 +47,7 @@ const WriteDiary = () => {
   useEffect(() => {
     setDiary(dbDiary as AddDiaryType);
     setPages(dbPages || []);
-  }, [dbDiary]);
+  }, [dbPages, dbDiary]);
 
   // 로그인이 되어있지 않다면 로그인 해달라는 문구를 리턴합니다.
   if (!userId) {
@@ -101,7 +102,10 @@ const WriteDiary = () => {
           return dbPage.id !== page.id;
         });
 
-        deletedPages.map((deletedPage) => deleteDbPage(deletedPage.id)); // 새로 변경된 Pages에 없는 Page 삭제
+        deletedPages.map((deletedPage) => {
+          console.log(deletedPage);
+          return deleteDbPage(deletedPage.id);
+        }); // 새로 변경된 Pages에 없는 Page 삭제
         updateDbPage({ id: page.id, updatePage: pageForStorage }); // 새로 변경된 Pages에 있는 Page 변경
       });
     };
