@@ -13,6 +13,9 @@ import useParchmentModalStore from '@/stores/parchment.modal.store';
 import { useCreatePage, useDeletePage, useDeletePages, usePageToDiaryId, useUpdatePage } from '@/lib/hooks/usePages';
 import useDiaryStore from '@/stores/diary.store';
 import { AddDiaryType } from '@/api/diaries.api';
+import { AddPageType, UpdatePageType } from '@/api/pages.api';
+import { useDiaryCoverStore } from '@/stores/diarycover.store';
+import { getCover } from '@/services/diarycover.service';
 
 type ParamTypes = {
   [key: string]: string;
@@ -28,6 +31,7 @@ const WriteDiary = () => {
   const { diary, setDiary } = useDiaryStore((state) => state);
   const { pageIndex, setPageIndex, pages, setPages } = usePageStore((state) => state);
   const { toggleParchmentOptionModal } = useParchmentModalStore((state) => state);
+  const { coverTitle } = useDiaryCoverStore((state) => state);
 
   // db Diaries 테이블과 상호작용
   const { data: dbDiary, isPending: isDbDiaryPending, isError: isDbDiaryError } = useDiary(diaryId);
@@ -48,6 +52,8 @@ const WriteDiary = () => {
     setDiary(dbDiary as AddDiaryType);
     setPages(dbPages || []);
   }, [dbPages, dbDiary]);
+
+  console.log(dbDiary);
 
   // 로그인이 되어있지 않다면 로그인 해달라는 문구를 리턴합니다.
   if (!userId) {
@@ -84,48 +90,86 @@ const WriteDiary = () => {
       id: diaryId,
       user_id: userId,
       bookshelf_order: diaryOrder,
-      name: diary?.name || ''
+      name: coverTitle || ''
     };
 
-    console.log(pages);
+    const currentPageIds = pages.map((page) => page.id);
+    const pagesToUpdate: AddPageType[] = [];
 
-    const saveNewPage = () => {
-      pages.map((page) => {
-        const pageForStorage = {
-          ...page,
-          index: pages.indexOf(page)
-        };
+    dbPages.forEach((dbPage) => {
+      if (!currentPageIds.includes(dbPage.id)) {
+        deleteDbPage(dbPage.id); // 페이지 삭제
+      } else {
+        pagesToUpdate.push(dbPage);
+      }
+    });
 
-        if (!diary) createDbPage(pageForStorage); // 생성
+    pages.forEach((page) => {
+      const index = pages.indexOf(page);
+      const pageForStorage = { ...page, index };
 
-        const deletedPages = dbPages.filter((dbPage) => {
-          return dbPage.id !== page.id;
-        });
+      if (pagesToUpdate.find((p) => p.id === page.id)) {
+        updateDbPage({ id: page.id, updatePage: pageForStorage });
+      } else {
+        createDbPage(pageForStorage);
+      }
+    });
 
-        deletedPages.map((deletedPage) => {
-          console.log(deletedPage);
-          return deleteDbPage(deletedPage.id);
-        }); // 새로 변경된 Pages에 없는 Page 삭제
-        updateDbPage({ id: page.id, updatePage: pageForStorage }); // 새로 변경된 Pages에 있는 Page 변경
-      });
-    };
-
-    saveNewPage();
-    setPages([]);
-
-    if (diary) {
-      // 수정
-      updateDbDiary({ id: diaryId, updateDiary: newDiary });
-
-      alert('다이어리가 저장 되었습니다');
-    } else {
-      // 생성
+    if (dbDiary === null) {
       createDbDiary(newDiary);
       alert('다이어리가 저장 되었습니다');
+    } else {
+      updateDbDiary({ id: diaryId, updateDiary: newDiary });
+      alert('다이어리가 수정저장 되었습니다');
     }
-    setDiary(null);
 
+    setPages([]);
+    setDiary(null);
     router.push('/member/hub');
+
+    // const saveNewPage = () => {
+    //   pages.map((page) => {
+    //     const pageForStorage = {
+    //       ...page,
+    //       index: pages.indexOf(page)
+    //     };
+
+    //     if (!diary) createDbPage(pageForStorage); // 생성
+
+    //     const deletedPages = dbPages.filter((dbPage) => {
+    //       return dbPage.id !== page.id;
+    //     });
+
+    //     deletedPages.map((deletedPage) => {
+    //       console.log(deletedPage);
+    //       return deleteDbPage(deletedPage.id);
+    //     }); // 새로 변경된 Pages에 없는 Page 삭제
+    //     updateDbPage({ id: page.id, updatePage: pageForStorage }); // 새로 변경된 Pages에 있는 Page 변경
+    //   });
+    // };
+
+    // saveNewPage();
+
+    // if (dbDiary === null) {
+    //   // 생성
+
+    //   pages.map((page) => createDbPage({ ...page, index: pages.indexOf(page) }));
+    //   createDbDiary(newDiary);
+    //   setPages([]);
+    //   setDiary(null);
+    //   alert('다이어리가 저장 되었습니다');
+    //   router.push('/member/hub');
+    // } else {
+    //   // 수정
+
+    //   updateDbDiary({ id: diaryId, updateDiary: newDiary });
+    //   pages.map((page) => updateDbPage({ id: page.id, updatePage: { ...page, index: pages.indexOf(page) } }));
+
+    //   setPages([]);
+    //   setDiary(null);
+    //   alert('다이어리가 수정저장 되었습니다');
+    //   router.push('/member/hub');
+    // }
   };
 
   // 앞페이지로 이동합니다.
@@ -157,7 +201,7 @@ const WriteDiary = () => {
         <div className="flex flex-row justify-between ">
           <div className="flex flex-row">
             <IoIosArrowBack />
-            <h2>{diary?.name}</h2>
+            <h2>{coverTitle}</h2>
           </div>
           <div className="flex flex-row gap-3">
             <div onClick={deleteDiary}>
