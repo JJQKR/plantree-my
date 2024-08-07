@@ -38,9 +38,10 @@ const MyPage: React.FC = () => {
   return (
     <>
       <div>
-        <GrowthSummary />
-        <GardenCarousel />
-
+        <div className="my-5 rounded-[10px] shadow-md bg-white">
+          <GrowthSummary />
+          <GardenCarousel />
+        </div>
         <div>
           <div className="flex flex-row justify-between max-w-[600px] mt-4 mb-1">
             <h2 className="font-semibold ml-1">

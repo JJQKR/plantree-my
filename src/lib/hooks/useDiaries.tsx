@@ -23,7 +23,7 @@ export const useDiary = (id: string) => {
   return { data, isLoading, error };
 };
 
-// 새로운 diary 생성하기
+// diary 생성하기
 export const useCreateDiary = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -37,7 +37,7 @@ export const useCreateDiary = () => {
 };
 
 // diary 삭제하기
-export const useDeletePage = () => {
+export const useDeleteDiary = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => diariesApi.deletePage(id),

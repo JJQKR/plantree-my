@@ -91,7 +91,7 @@ const DiaryCase: React.FC = () => {
   // 다이어리 클릭 핸들러
   const handleDiaryClick = (id: string) => {
     setDiaryId(id); // 선택된 다이어리 ID 설정
-    router.push(`/member/diary/${id}/cover`); // 해당 다이어리 페이지로 리다이렉트
+    router.push(`/member/diary/${id}/parchment`); // 해당 다이어리 페이지로 리다이렉트
   };
 
   return (

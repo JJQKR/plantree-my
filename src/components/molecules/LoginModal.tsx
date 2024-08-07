@@ -212,7 +212,7 @@ const ForgotPasswordModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
     event.preventDefault();
     try {
       const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: 'http://localhost:3000/member/hub/reset-password?token=YOUR_TOKEN'
+        redirectTo: 'http://localhost:3000/member/reset-password?token=YOUR_TOKEN'
       });
       if (error) throw error;
       setMessage('인증 메일이 전송되었습니다.');

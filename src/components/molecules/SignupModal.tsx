@@ -26,7 +26,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
         password,
         options: {
           data: {
-            nickname
+            display_name: nickname
           }
         }
       });

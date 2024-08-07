@@ -5,6 +5,7 @@ import { supabase } from '@/supabase/client';
 import { Json } from '@/types/supabase';
 import { isNoteLineArray } from '@/stores/noteline.store';
 import Swal from 'sweetalert2';
+import useUserStore from '@/stores/user.store';
 
 export interface NoteLine {
   text: string;
@@ -12,12 +13,7 @@ export interface NoteLine {
   textColor: string;
 }
 
-interface LineNoteProps {
-  userId: string;
-  className?: string;
-}
-
-const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
+const LineNote = () => {
   const [lines, setLines] = useState<NoteLine[]>(
     Array.from({ length: 15 }, () => ({ text: '', fontSize: 16, textColor: '#000000' }))
   );
@@ -27,6 +23,7 @@ const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
   const [globalTextColor, setGlobalTextColor] = useState('#000000');
   const [dataExists, setDataExists] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const { userId } = useUserStore((state) => state);
 
   const measureTextWidth = useCallback((text: string, fontSize: number) => {
     const canvas = document.createElement('canvas');
@@ -258,7 +255,7 @@ const LineNote: React.FC<LineNoteProps> = ({ userId }) => {
   }, [userId, loadData]);
 
   return (
-    <div>
+    <div className="w-full max-w-screen-md max-h-screen overflow-auto mt-20">
       <div className="flex justify-between mb-4 bg-white">
         <div>
           <label className="block m-2">

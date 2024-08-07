@@ -22,52 +22,42 @@ interface DiaryCover {
 }
 
 const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
-  const [nickname, setNickname] = useState<string | null>(null);
-  const { levelName, attendance } = useUserStore((state) => state);
+  const { nickname, levelName, attendance, userId } = useUserStore((state) => state); // 유저 상태 관리 스토어에서 닉네임 가져오기
   const [diaryCovers, setDiaryCovers] = useState<DiaryCover[]>([]);
   const [levelId, setLevelId] = useState<string | null>(null);
 
   // 컴포넌트 마운트 시 사용자 정보 및 다이어리 커버를 가져오는 useEffect
   useEffect(() => {
     const fetchData = async () => {
-      // 현재 사용자 정보 가져오기
-      const {
-        data: { user }
-      } = await supabase.auth.getUser();
-
-      if (user) {
-        // 사용자 닉네임 및 레벨 ID 가져오기
-        const { data: nicknameData, error: nicknameError } = await supabase
+      if (userId) {
+        // 사용자 레벨 ID 가져오기
+        const { data: user, error: userError } = await supabase
           .from('users')
-          .select('nickname, level_id')
-          .eq('id', user.id)
+          .select('id, level_id')
+          .eq('id', userId)
           .single();
-
-        if (nicknameError) {
-          console.error('닉네임 가져오기 실패:', nicknameError);
+        if (userError) {
+          console.error('레벨 ID 가져오기 실패:', userError);
         } else {
-          setNickname(nicknameData.nickname);
-          setLevelId(nicknameData.level_id);
-        }
+          setLevelId(user.level_id);
 
-        // diary_covers 테이블에서 다이어리 커버 정보 가져오기
-        const { data: coversData, error: coversError } = await supabase
-          .from('diary_covers')
-          .select('*')
-          .eq('user_id', user.id);
+          // diary_covers 테이블에서 다이어리 커버 정보 가져오기
+          const { data: coversData, error: coversError } = await supabase
+            .from('diary_covers')
+            .select('*')
+            .eq('user_id', user.id);
 
-        if (coversError) {
-          console.error('다이어리 커버 정보 가져오기 실패:', coversError);
-        } else {
-          setDiaryCovers(coversData);
+          if (coversError) {
+            console.error('다이어리 커버 정보 가져오기 실패:', coversError);
+          } else {
+            setDiaryCovers(coversData);
+          }
         }
-      } else {
-        setNickname('Guest'); // 로그인하지 않은 경우 기본 닉네임 설정
       }
     };
 
     fetchData();
-  }, []);
+  }, [userId]);
 
   return (
     <div className="fixed top-40 left-0 w-[320px] bg-green-200 text-white">
