@@ -1,19 +1,23 @@
 import { create } from 'zustand';
 import { supabase } from '@/supabase/client';
+import { AddDiaryType, UpdateDiaryType } from '@/api/diaries.api';
 
 interface DiaryStore {
   diaryId: string; // 현재 선택된 다이어리 ID
-  diaries: any[]; // 다이어리 목록
+  diaries: AddDiaryType[]; // 다이어리 목록
+  diary: AddDiaryType | null; // 하나의 다이어리
   // pages: Page[];
   setDiaryId: (id: string) => void; // 다이어리 ID 설정 함수
-  addDiary: (diary: any) => void; // 다이어리 추가 함수
-  setDiaries: (diaries: any[]) => void; // 다이어리 목록 설정 함수
+  addDiary: (Diary: AddDiaryType) => void; // 다이어리 추가 함수
+  setDiaries: (Diaries: AddDiaryType[]) => void; // 다이어리 목록 설정 함수
   fetchDiaries: () => Promise<void>; // 다이어리 목록을 가져오는 함수
+  setDiary: (newDiary: AddDiaryType) => void;
 }
 
 const useDiaryStore = create<DiaryStore>((set) => ({
   diaryId: '',
   diaries: [],
+  diary: null,
   setDiaryId: (id: string) => set({ diaryId: id }), // 다이어리 ID 설정
   addDiary: (diary: any) => set((state) => ({ diaries: [...state.diaries, diary] })), // 다이어리 목록에 추가
   setDiaries: (diaries: any[]) => set({ diaries }), // 다이어리 목록 설정
@@ -35,7 +39,8 @@ const useDiaryStore = create<DiaryStore>((set) => ({
         set({ diaries: diaries || [] });
       }
     }
-  }
+  },
+  setDiary: (newDiary) => set({ diary: newDiary })
 }));
 
 export default useDiaryStore;
