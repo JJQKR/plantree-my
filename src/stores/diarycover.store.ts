@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import Konva from 'konva';
-import uuid from 'react-uuid';
 
 type CoverPosition = {
   x: number;
@@ -12,10 +11,10 @@ type CoverSize = {
   height: number;
 };
 
-type Page = {
-  id: string;
-  url: string;
-};
+// type Page = {
+//   id: string;
+//   url: string;
+// };
 
 type DiaryCoverState = {
   coverTitle: string | null;
@@ -50,11 +49,9 @@ type DiaryCoverState = {
   setImageFile: (file: File | null) => void;
   coverData: object | null;
   setCoverData: (data: object | null) => void;
-  pages: Page[];
-  currentPage: number;
-  setCurrentPage: (pageIndex: number) => void;
-  showPageOptions: boolean;
-  togglePageOptions: () => void;
+  // pages: Page[];
+  // currentPage: number;
+  // setCurrentPage: (pageIndex: number) => void;
   // addPage: (newPageUrl: string) => number;
   // deletePage: (pageId: string) => void;
   // setPages: (newPages: Page[]) => void;
@@ -92,12 +89,10 @@ export const useDiaryCoverStore = create<DiaryCoverState>((set, get) => ({
   imageFile: null,
   setImageFile: (file) => set({ imageFile: file }),
   coverData: null,
-  setCoverData: (data) => set({ coverData: data }),
-  pages: [],
-  currentPage: 0,
-  setCurrentPage: (pageIndex: number) => set({ currentPage: pageIndex }),
-  showPageOptions: false,
-  togglePageOptions: () => set((state) => ({ showPageOptions: !state.showPageOptions }))
+  setCoverData: (data) => set({ coverData: data })
+  // pages: [],
+  // currentPage: 0,
+  // setCurrentPage: (pageIndex: number) => set({ currentPage: pageIndex })
   // addPage: (newPageUrl: string) => {
   //   const newPage: Page = { id: uuid(), url: newPageUrl };
   //   set((state) => ({

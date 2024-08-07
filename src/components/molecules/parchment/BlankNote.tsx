@@ -1,14 +1,11 @@
 'use client';
 import React, { useRef, useState, useEffect } from 'react';
 import { supabase } from '@/supabase/client';
+import useUserStore from '@/stores/user.store';
+import { useParams } from 'next/navigation';
+import usePageStore from '@/stores/pages.store';
 
-type BlankNoteProps = {
-  diaryId: string;
-  userId: string;
-  pageId: string;
-};
-
-const BlankNote: React.FC<BlankNoteProps> = ({ diaryId, userId, pageId }) => {
+const BlankNote = () => {
   const [bgColor, setBgColor] = useState('#ffffff');
   const [globalTextColor, setGlobalTextColor] = useState('#000000');
   const [content, setContent] = useState('');
@@ -23,6 +20,9 @@ const BlankNote: React.FC<BlankNoteProps> = ({ diaryId, userId, pageId }) => {
     date: '',
     title: ''
   });
+  const { userId } = useUserStore((state) => state);
+  const { pageId } = usePageStore((state) => state);
+  const { diaryId } = useParams();
 
   const editableDivRef = useRef<HTMLDivElement>(null);
   const maxHeight = 400;

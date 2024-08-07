@@ -75,10 +75,11 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
                 ) : (
                   <div style={{ width: 120, height: 120 }} className="bg-gray-400 rounded-full mb-2"></div>
                 )}
+                <span className="font-semibold text-sm text-[#008A02]">{levelName || 'Level not set'}</span>
                 <span className="text-black text-lg font-bold">{nickname}</span>
-                <div className="text-black text-sm">{levelName || 'Level not set'}</div>
+
                 <div className="text-black text-sm">출석 횟수: {attendance}</div>
-                <div className="text-black text-sm">열심히 나무를 키워보세요!</div>
+                <div className="text-black text-sm">levelText</div>
               </div>
             </li>
           </ul>
