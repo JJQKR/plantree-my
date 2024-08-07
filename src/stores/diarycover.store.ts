@@ -49,12 +49,8 @@ type DiaryCoverState = {
   setImageFile: (file: File | null) => void;
   coverData: object | null;
   setCoverData: (data: object | null) => void;
-  // pages: Page[];
-  // currentPage: number;
-  // setCurrentPage: (pageIndex: number) => void;
-  // addPage: (newPageUrl: string) => number;
-  // deletePage: (pageId: string) => void;
-  // setPages: (newPages: Page[]) => void;
+  activeSection: string | null;
+  setActiveSection: (section: string | null) => void;
 };
 
 export const useDiaryCoverStore = create<DiaryCoverState>((set, get) => ({
@@ -89,21 +85,7 @@ export const useDiaryCoverStore = create<DiaryCoverState>((set, get) => ({
   imageFile: null,
   setImageFile: (file) => set({ imageFile: file }),
   coverData: null,
-  setCoverData: (data) => set({ coverData: data })
-  // pages: [],
-  // currentPage: 0,
-  // setCurrentPage: (pageIndex: number) => set({ currentPage: pageIndex })
-  // addPage: (newPageUrl: string) => {
-  //   const newPage: Page = { id: uuid(), url: newPageUrl };
-  //   set((state) => ({
-  //     pages: [...state.pages, newPage]
-  //   }));
-  //   return get().pages.length - 1;
-  // },
-  // deletePage: (pageId: string) => {
-  //   set((state) => ({
-  //     pages: state.pages.filter((page) => page.id !== pageId)
-  //   }));
-  // },
-  // setPages: (newPages: Page[]) => set({ pages: newPages })
+  setCoverData: (data) => set({ coverData: data }),
+  activeSection: null,
+  setActiveSection: (section) => set({ activeSection: section })
 }));
