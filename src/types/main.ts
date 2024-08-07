@@ -29,3 +29,11 @@ export type GridToggleButtonProps = {
   onClick: () => void; // 클릭 이벤트 핸들러
   gridView: boolean; // 그리드 뷰 상태
 };
+
+export type AddDiaryType = {
+  id: string;
+  user_id: string;
+  name: string;
+  bookshelf_order: number;
+  cover_image: string | null;
+};
