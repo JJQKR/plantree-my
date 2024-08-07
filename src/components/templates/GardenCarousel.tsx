@@ -157,7 +157,7 @@ const GardenCarousel: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="w-[600px] h-[300px]">
+      <div className="w-[600px] h-[300px] ">
         <Swiper
           effect="coverflow"
           grabCursor={true}
@@ -168,12 +168,12 @@ const GardenCarousel: React.FC = () => {
             stretch: 0,
             depth: 100,
             modifier: 1,
-            slideShadows: false // 이 부분을 수정
+            slideShadows: false
           }}
           pagination={pagination}
           modules={[EffectCoverflow, Pagination]}
         >
-          {displayStages.map((stage, index) => (
+          {displayStages.map((stage) => (
             <SwiperSlide key={stage.id}>
               <div className="w-[600px] h-[300px] rounded-bl-[20px] rounded-br-[20px] overflow-hidden">
                 {stage.content}
