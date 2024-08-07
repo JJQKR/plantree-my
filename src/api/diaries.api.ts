@@ -1,5 +1,5 @@
-import { Tables } from '@/types/supabase';
 import { supabase } from '@/supabase/client';
+import { Tables } from '@/types/supabase';
 
 export type AddDiaryType = {
   id: string;
@@ -22,77 +22,87 @@ class DiariesAPI {
   }
 
   /**
-   *
-   * @param id {string}  user 데이터 id
-   * @returns diaries 테이블 데이터 중 같은 user 데이터 전부
+   * @param userId {string} 사용자 ID
+   * @returns 사용자 ID에 대한 다이어리 커버 데이터
+   */
+  async selectDiaryCoversByUserId(userId: string) {
+    const { data, error } = await this.supabase.from('diary_covers').select().eq('user_id', userId);
+    if (error) {
+      console.error('Error fetching diary covers:', error);
+    }
+    return data;
+  }
+
+  /**
+   * @param userId {string} 사용자 ID
+   * @returns 사용자 ID에 대한 다이어리 데이터
    */
   async selectPagesOfUserId(userId: string) {
     const { data, error } = await this.supabase
       .from('diaries')
       .select()
       .eq('user_id', userId)
+      .order('bookshelf_order', { ascending: true })
       .returns<Tables<'diaries'>[]>();
+    if (error) {
+      console.error('Error fetching diaries:', error);
+    }
     return data;
   }
 
   /**
-   *
-   *  @param id {string}  diary id
-   * @returns diaries 테이블 데이터 중 1개
+   * @param id {string} 다이어리 ID
+   * @returns 단일 다이어리 데이터
    */
   async selectDiaryOfDiaryId(id: string) {
     if (id) {
-      const { data } = await this.supabase.from('diaries').select('*').eq('id', id).maybeSingle();
+      const { data, error } = await this.supabase.from('diaries').select('*').eq('id', id).maybeSingle();
+      if (error) {
+        console.error('Error fetching diary:', error);
+      }
       return data;
     }
     return null;
   }
+
   /**
-   *
-   * @param insertData  {
-   *   id: string;
-   *   user_id: string;
-   *   bookshelf_order: number;
-   *   name: string | null;
-   * };
-   * @returns pages에 추가된 data
+   * @param insertData { AddDiaryType }
+   * @returns 새로 추가된 다이어리 데이터
    */
   async insertDiary(insertData: AddDiaryType) {
     const { id, user_id, bookshelf_order, name } = insertData;
-    const { data } = await this.supabase.from('diaries').insert({
+    const { data, error } = await this.supabase.from('diaries').insert({
       id,
       user_id,
       bookshelf_order,
       name
     });
-
+    if (error) {
+      console.error('Error inserting diary:', error);
+    }
     return data;
   }
 
   /**
-   *
-   * @param id {string} diary 아이디
-   * @returns 삭제된 data
+   * @param id {string} 다이어리 ID
+   * @returns 삭제된 다이어리 데이터
    */
   async deletePage(id: string) {
-    const { data } = await this.supabase.from('diaries').delete().eq('id', id).select();
+    const { data, error } = await this.supabase.from('diaries').delete().eq('id', id).select();
+    if (error) {
+      console.error('Error deleting diary:', error);
+    }
     return data;
   }
 
   /**
-   *
-   * @param id  {string} diary 아이디
-   * @param updateData {
-   *   id: string;
-   *   user_id: string;
-   *   bookshelf_order: number;
-   *   name: string | null;
-   * };
-   * @returns
+   * @param id {string} 다이어리 ID
+   * @param updateData { UpdateDiaryType }
+   * @returns 업데이트된 다이어리 데이터
    */
   async updatePage(id: string, updateData: UpdateDiaryType) {
     const { user_id, bookshelf_order, name } = updateData;
-    const { data } = await this.supabase
+    const { data, error } = await this.supabase
       .from('diaries')
       .update({
         user_id,
@@ -100,6 +110,9 @@ class DiariesAPI {
         name
       })
       .eq('id', id);
+    if (error) {
+      console.error('Error updating diary:', error);
+    }
     return data;
   }
 }
