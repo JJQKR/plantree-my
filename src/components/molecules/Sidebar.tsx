@@ -12,8 +12,7 @@ import { supabase } from '@/supabase/client';
 import { MainSidebarProps } from '@/types/main';
 
 const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
-  const [nickname, setNickname] = useState<string | null>(null); // 사용자 닉네임 상태
-  const { levelName, attendance } = useUserStore((state) => state); // 사용자 레벨과 출석 상태 가져오기
+  const { nickname, levelName, attendance, userId } = useUserStore((state) => state); // 유저 상태 관리 스토어에서 닉네임 가져오기
   const { diaries, fetchDiaries } = useDiaryStore((state) => ({
     diaries: state.diaries,
     fetchDiaries: state.fetchDiaries
@@ -24,35 +23,26 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
   // 컴포넌트가 마운트되었을 때 실행되는 useEffect
   useEffect(() => {
     const fetchData = async () => {
-      // 현재 사용자 정보 가져오기
-      const {
-        data: { user }
-      } = await supabase.auth.getUser();
-
-      if (user) {
-        // 사용자 닉네임 및 레벨 ID 가져오기
-        const { data: nicknameData, error: nicknameError } = await supabase
+      if (userId) {
+        // 사용자 레벨 ID 가져오기
+        const { data: user, error: userError } = await supabase
           .from('users')
-          .select('nickname, level_id')
-          .eq('id', user.id)
+          .select('level_id')
+          .eq('id', userId)
           .single();
-
-        if (nicknameError) {
-          console.error('닉네임 가져오기 실패:', nicknameError);
+        if (userError) {
+          console.error('레벨 ID 가져오기 실패:', userError);
         } else {
-          setNickname(nicknameData.nickname);
-          setLevelId(nicknameData.level_id);
+          setLevelId(user.level_id);
         }
 
         // 다이어리 목록 가져오기
         await fetchDiaries();
-      } else {
-        setNickname('Guest'); // 로그인하지 않은 경우 기본 닉네임 설정
       }
     };
 
     fetchData();
-  }, [fetchDiaries]);
+  }, [fetchDiaries, userId]);
 
   return (
     <div className="fixed top-40 left-0 w-[320px] bg-green-200 text-white ">
