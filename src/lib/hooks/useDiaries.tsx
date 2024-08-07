@@ -5,20 +5,20 @@ const diariesApi = new DiariesAPI();
 
 // userId가 같은 diary 여러개 불러오기
 export const useDiariesToUserId = (userId: string) => {
-  const { data, isLoading, error } = useQuery({
+  const { data, isPending, isError } = useQuery({
     queryKey: ['diaries', userId],
     queryFn: () => diariesApi.selectPagesOfUserId(userId)
   });
-  return { data, isLoading, error };
+  return { data, isPending, isError };
 };
 
 // diary 한개 불러오기
 export const useDiary = (id: string) => {
-  const { data, isLoading, error } = useQuery({
+  const { data, isPending, isError } = useQuery({
     queryKey: ['diaries', id],
     queryFn: () => diariesApi.selectDiaryOfDiaryId(id)
   });
-  return { data, isLoading, error };
+  return { data, isPending, isError };
 };
 
 // diary 생성하기

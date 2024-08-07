@@ -10,7 +10,9 @@ import { useParams, useRouter } from 'next/navigation';
 import DiaryContents from './DiaryContents';
 import usePageStore from '@/stores/pages.store';
 import useParchmentModalStore from '@/stores/parchment.modal.store';
-import { useCreatePage } from '@/lib/hooks/usePages';
+import { useCreatePage, useDeletePage, useDeletePages, usePageToDiaryId, useUpdatePage } from '@/lib/hooks/usePages';
+import useDiaryStore from '@/stores/diary.store';
+import { AddDiaryType } from '@/api/diaries.api';
 
 type ParamTypes = {
   [key: string]: string;
@@ -19,42 +21,63 @@ type ParamTypes = {
 
 const WriteDiary = () => {
   const router = useRouter();
-  const { userId } = useUserStore((state) => state);
   const { diaryId } = useParams<ParamTypes>();
-  const { data: diary } = useDiary(diaryId);
-  const { data: diaries } = useDiariesToUserId(userId);
-  const { mutate: deletePage } = useDeleteDiary();
-  const { mutate: createDiary } = useCreateDiary();
-  const { mutate: updateDiary } = useUpdateDiary();
-  const { mutate: createPage } = useCreatePage();
-  const [diaryName, setDiaryName] = useState('');
-  const { pageIndex, setPageIndex, pages } = usePageStore((state) => state);
+
+  // const [diaryName, setDiaryName] = useState('');
+  const { userId } = useUserStore((state) => state);
+  const { diary, setDiary } = useDiaryStore((state) => state);
+  const { pageIndex, setPageIndex, pages, setPages } = usePageStore((state) => state);
   const { toggleParchmentOptionModal } = useParchmentModalStore((state) => state);
 
-  // diaries 테이블에서 다이어리 이름을 가져옵니다.
+  // db Diaries 테이블과 상호작용
+  const { data: dbDiary, isPending: isDbDiaryPending, isError: isDbDiaryError } = useDiary(diaryId);
+  const { data: dbDiaries } = useDiariesToUserId(userId);
+  const { mutate: createDbDiary } = useCreateDiary();
+  const { mutate: updateDbDiary } = useUpdateDiary();
+  const { mutate: deleteDbDiary } = useDeleteDiary();
+  // db Pages 테이블과 상호작용
+  const { data: dbPages } = usePageToDiaryId(diaryId);
+  const { mutate: createDbPage } = useCreatePage();
+  const { mutate: updateDbPage } = useUpdatePage();
+  const { mutate: deleteDbPage } = useDeletePage();
+  const { mutate: deleteDbPages } = useDeletePages();
+
+  // 다이어리 가져오기 : db diary 가져오기, db page 가져오기
   useEffect(() => {
-    setDiaryName(diary?.name || '');
-  }, [diary]);
+    setDiary(dbDiary as AddDiaryType);
+    setPages(dbPages || []);
+  }, [dbDiary]);
 
   // 로그인이 되어있지 않다면 로그인 해달라는 문구를 리턴합니다.
   if (!userId) {
     return <div>로그인 해주세요.</div>;
   }
 
-  // diaries 테이블에서 다이어리를 삭제합니다.
+  if (isDbDiaryPending) {
+    return <div>로딩중~</div>;
+  }
+  if (isDbDiaryError) {
+    return <div> 오류가 발생했습니다. </div>;
+  }
+
+  if (!dbPages) return;
+
+  // 다이어리를 삭제 :  db diary 삭제 , db pages 삭제
   const deleteDiary = () => {
     const confirmDeleteDiary = confirm('정말 다이어리를 삭제하시겠습니까? 되돌릴 수 없습니다.');
     if (confirmDeleteDiary) {
-      deletePage(diaryId);
+      deleteDbDiary(diaryId);
+      deleteDbPages(diaryId);
       alert('다이어리가 삭제 되었습니다.');
       router.replace('/member/hub');
     }
   };
 
-  // 다이어리 저장 : diaries 테이블에 생성,업데이트 합니다.
-  // 다이어리 저장 : pages 테이블에 생성, 업데이트 합니다.
+  console.log(pages);
+
+  // 다이어리 저장 : db diaries 생성, 업데이트 , db pages 생성, 업데이트
   const saveDiary = () => {
-    const diaryOrder = diaries!.length + 1;
+    const diaryOrder = dbDiaries!.length + 1;
 
     const newDiary = {
       id: diaryId,
@@ -63,14 +86,41 @@ const WriteDiary = () => {
       name: diary?.name || ''
     };
 
+    console.log(pages);
+
+    const saveNewPage = () => {
+      pages.map((page) => {
+        const pageForStorage = {
+          ...page,
+          index: pages.indexOf(page)
+        };
+
+        if (!diary) createDbPage(pageForStorage); // 생성
+
+        const deletedPages = dbPages.filter((dbPage) => {
+          return dbPage.id !== page.id;
+        });
+
+        deletedPages.map((deletedPage) => deleteDbPage(deletedPage.id)); // 새로 변경된 Pages에 없는 Page 삭제
+        updateDbPage({ id: page.id, updatePage: pageForStorage }); // 새로 변경된 Pages에 있는 Page 변경
+      });
+    };
+
+    saveNewPage();
+    setPages([]);
+
     if (diary) {
-      updateDiary({ id: diaryId, updateDiary: newDiary });
-      alert('다이어리가 저장 되었습니다');
-    } else {
-      createDiary(newDiary);
+      // 수정
+      updateDbDiary({ id: diaryId, updateDiary: newDiary });
 
       alert('다이어리가 저장 되었습니다');
+    } else {
+      // 생성
+      createDbDiary(newDiary);
+      alert('다이어리가 저장 되었습니다');
     }
+    setDiary(null);
+
     router.push('/member/hub');
   };
 
@@ -103,7 +153,7 @@ const WriteDiary = () => {
         <div className="flex flex-row justify-between ">
           <div className="flex flex-row">
             <IoIosArrowBack />
-            <h2>{diaryName}</h2>
+            <h2>{diary?.name}</h2>
           </div>
           <div className="flex flex-row gap-3">
             <div onClick={deleteDiary}>
@@ -115,7 +165,7 @@ const WriteDiary = () => {
           </div>
         </div>
         <div className="flex flex-row">
-          <div className="w-[80rem] h-[40rem] border-2 border-gray-500">
+          <div className="w-[91.6rem] h-[60rem] border-2 border-gray-500">
             <DiaryContents />
           </div>
         </div>
@@ -126,5 +176,4 @@ const WriteDiary = () => {
     </div>
   );
 };
-
 export default WriteDiary;
