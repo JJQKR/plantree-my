@@ -672,12 +672,12 @@ const DiaryCoverPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col overflow-hidden">
-      <div className="flex-grow flex flex-col justify-center items-center overflow-auto">
-        <div className="max-w-lg w-full mb-4">
-          <div className="relative w-full pb-[156.25%] overflow-hidden">
+    <div className="flex flex-col min-h-screen overflow-hidden">
+      <div className="flex-grow flex flex-col justify-center items-center">
+        <div className="w-full max-w-lg mb-4">
+          <div className="grid aspect-w-9 aspect-h-16 w-full">
             <Stage
-              className="absolute top-0 left-0 w-full h-full"
+              className="col-start-1 col-end-2 row-start-1 row-end-2 w-full h-full"
               width={coverStageSize.width}
               height={coverStageSize.height}
               ref={stageRef}
