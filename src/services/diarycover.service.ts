@@ -1,5 +1,5 @@
 export const addCover = async (coverData: any) => {
-  const response = await fetch(`http://localhost:3000/apis/diarycover/`, {
+  const response = await fetch(`http://localhost:3000/apis/diaryCover/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

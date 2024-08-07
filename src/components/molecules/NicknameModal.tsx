@@ -82,9 +82,14 @@ const NicknameModal: React.FC = () => {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
           onClick={handleBackGroundClick}
         >
-          <div className="bg-white p-4 rounded-[10px]">
+          <div className="bg-white p-9 rounded-[10px]" style={{ width: '20em' }}>
             <div onClick={(e) => e.stopPropagation()}>
-              <h1 className="text-xl font-bold mb-4 text-left text-emerald-400">닉네임 변경하기</h1>
+              <div className="flex justify-between items-center mb-4">
+                <h1 className="text-xl font-bold text-left text-black">닉네임 변경</h1>
+                <button className="text-black" onClick={toggleNicknameModal} type="button">
+                  &#10005;
+                </button>
+              </div>
               <form className="flex flex-col gap-2" onSubmit={handleNicknameSubmit}>
                 <input
                   type="text"
@@ -95,18 +100,14 @@ const NicknameModal: React.FC = () => {
                 />
                 {error && <p className="text-red-500">{error}</p>}
                 <div className="flex flex-col gap-2">
-                  <button type="submit" className="px-4 py-2 bg-red-400 w-full text-white rounded">
-                    저장
-                  </button>
-                </div>
-
-                <div className="flex flex-col gap-2">
                   <button
-                    className="px-4 py-2 bg-red-400 w-full text-white rounded"
-                    onClick={toggleNicknameModal}
-                    type="button"
+                    type="submit"
+                    className="px-4 py-2 w-full text-white rounded"
+                    style={{ backgroundColor: '#9E9E9E' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#008A02')}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#9E9E9E')}
                   >
-                    취소
+                    변경하기
                   </button>
                 </div>
               </form>
