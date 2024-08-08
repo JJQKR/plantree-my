@@ -5,7 +5,6 @@ import useMyModalStore from '@/stores/my.modal.store';
 import BadgeModal from '@/components/molecules/BadgeModal';
 import BadgeCollection from '@/components/templates/BadgeCollection';
 import NicknameButton from '@/components/atoms/NicknameButton';
-import AccountBar from '@/components/molecules/AccountBar';
 import WithdrawalButton from '@/components/atoms/WithdrawalButton';
 import NicknameModal from '@/components/molecules/NicknameModal';
 import WithdrawalModal from '@/components/molecules/WithdrawalModal';
@@ -13,6 +12,9 @@ import GrowthSummary from '@/components/templates/GrowthSummary';
 import GardenCarousel from '@/components/templates/GardenCarousel';
 import { totalBadges } from '@/components/atoms/TotalBadges';
 import ObtainedBadgesCount from '@/components/atoms/ObtainedBadges';
+import AccountBarButton from '@/components/atoms/AccountBarButton';
+import useUserStore from '@/stores/user.store';
+import AccountBarModal from '@/components/molecules/AccountBarModal';
 
 const MyPage: React.FC = () => {
   const {
@@ -21,7 +23,9 @@ const MyPage: React.FC = () => {
     isNicknameModalOpen,
     toggleNicknameModal,
     isWithdrawalModalOpen,
-    toggleWithdrawalModal
+    toggleWithdrawalModal,
+    isAccountBarModalOpen,
+    toggleAccountBarModal
   } = useMyModalStore((state) => state);
 
   const handleToggleBadgeModal = () => {
@@ -35,11 +39,18 @@ const MyPage: React.FC = () => {
     toggleWithdrawalModal();
   };
 
+  const handleAccountBarModal = () => {
+    toggleAccountBarModal();
+  };
+
+  const { email } = useUserStore((state) => state); // email 속성만 추출
+
   return (
     <>
       <div>
-        <div className="my-5 rounded-[10px] shadow-md bg-white">
+        <div className="my-5">
           <GrowthSummary />
+
           <GardenCarousel />
         </div>
         <div>
@@ -61,9 +72,14 @@ const MyPage: React.FC = () => {
             {isNicknameModalOpen && <NicknameModal />}
           </div>
         </NicknameButton>
-        <AccountBar />
+        <AccountBarButton>
+          <div className="flex items-center justify-between mt-3 pl-3 p-2 bg-white rounded-[10px] shadow-md w-[600px] h-[50px]">
+            <button onClick={handleAccountBarModal}>계정 설정</button>
+            <p className="mr-5">{email}</p>
+            {isAccountBarModalOpen && <AccountBarModal />}
+          </div>
+        </AccountBarButton>
         <WithdrawalButton>
-          {' '}
           <div className="flex items-center justify-start my-3 pl-3 p-2 bg-white rounded-[10px] shadow-md w-[600px] h-[50px]">
             <button onClick={handleToggleWithdrawalModal}>회원 탈퇴</button>
             {isWithdrawalModalOpen && <WithdrawalModal />}

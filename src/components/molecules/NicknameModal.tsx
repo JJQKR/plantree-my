@@ -5,7 +5,8 @@ import useUserStore from '@/stores/user.store'; // 유저 상태 관리 스토�
 
 const NicknameModal: React.FC = () => {
   const { isNicknameModalOpen, toggleNicknameModal } = useMyModalStore((state) => state);
-  const { nickname, setNickname } = useUserStore((state) => state); // 유저 상태 관리 스토어에서 닉네임 가져오기
+  const { nickname, setNickname } = useUserStore((state) => state);
+  // 유저 상태 관리 스토어에서 닉네임 가져오기
   const nicknameRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
 
