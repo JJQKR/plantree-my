@@ -47,7 +47,7 @@ const Timetable = () => {
   };
 
   return (
-    <div className="border-2 relative h-full" onMouseUp={handleMouseUp}>
+    <div className="border-2 relative" onMouseUp={handleMouseUp}>
       <h4>Time Table</h4>
       <div className="flex flex-row gap-4 absolute right-1">
         {minutes.map((minute) => {
@@ -59,7 +59,7 @@ const Timetable = () => {
           return <div key={hour}>{hour}</div>;
         })}
       </div>
-      <table className="w-5/6 h-72 border-collapse absolute top-12 right-1">
+      <table className="w-5/6 h-[35rem] border-collapse absolute top-12 right-1">
         <tbody>
           {Array.from({ length: rows }, (_, rowIndex) => (
             <tr key={rowIndex}>

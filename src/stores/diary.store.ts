@@ -3,23 +3,33 @@ import { supabase } from '@/supabase/client';
 import { AddDiaryType, UpdateDiaryType } from '@/api/diaries.api';
 
 interface DiaryStore {
-  diaryId: string; // 현재 선택된 다이어리 ID
+  // diaryId 임시저장
+  diaryId: string;
+  setDiaryId: (id: string) => void;
+
+  // diary 1개 임시저장
+  diary: AddDiaryType | null;
+  setDiary: (newDiary: AddDiaryType | null) => void;
+  addDiary: (Diary: AddDiaryType) => void;
+
+  // diary 여러개 임시저장
   diaries: AddDiaryType[]; // 다이어리 목록
-  diary: AddDiaryType | null; // 하나의 다이어리
-  // pages: Page[];
-  setDiaryId: (id: string) => void; // 다이어리 ID 설정 함수
-  addDiary: (Diary: AddDiaryType) => void; // 다이어리 추가 함수
-  setDiaries: (Diaries: AddDiaryType[]) => void; // 다이어리 목록 설정 함수
+  setDiaries: (Diaries: AddDiaryType[]) => void;
   fetchDiaries: () => Promise<void>; // 다이어리 목록을 가져오는 함수
-  setDiary: (newDiary: AddDiaryType) => void;
 }
 
 const useDiaryStore = create<DiaryStore>((set) => ({
+  // diaryId 임시저장
   diaryId: '',
-  diaries: [],
+  setDiaryId: (id: string) => set({ diaryId: id }),
+
+  // diary 1개 임시저장
   diary: null,
-  setDiaryId: (id: string) => set({ diaryId: id }), // 다이어리 ID 설정
-  addDiary: (diary: any) => set((state) => ({ diaries: [...state.diaries, diary] })), // 다이어리 목록에 추가
+  setDiary: (newDiary) => set({ diary: newDiary }),
+  addDiary: (diary: any) => set((state) => ({ diaries: [...state.diaries, diary] })),
+
+  // diary 여러개 임시저장
+  diaries: [],
   setDiaries: (diaries: any[]) => set({ diaries }), // 다이어리 목록 설정
   fetchDiaries: async () => {
     // 현재 사용자 정보 가져오기
@@ -39,8 +49,7 @@ const useDiaryStore = create<DiaryStore>((set) => ({
         set({ diaries: diaries || [] });
       }
     }
-  },
-  setDiary: (newDiary) => set({ diary: newDiary })
+  }
 }));
 
 export default useDiaryStore;
