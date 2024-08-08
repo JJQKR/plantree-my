@@ -1,16 +1,17 @@
+'use client';
+
 import useMyModalStore from '@/stores/my.modal.store';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react'; // useEffect를 여기서 명시적으로 import
 import { supabase } from '@/supabase/client';
 import useUserStore from '@/stores/user.store'; // 유저 상태 관리 스토어 추가
 
 const AccountBarModal: React.FC = () => {
   const { isAccountBarModalOpen, toggleAccountBarModal } = useMyModalStore((state) => state);
-  const { nickname, setNickname } = useUserStore((state) => state); // 유저 상태 관리 스토어에서 닉네임 가져오기
-  const nicknameRef = useRef<HTMLInputElement>(null);
-  const [error, setError] = useState<string | null>(null);
+  const { email, setEmail, provider, setProvider } = useUserStore((state) => state);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchNickname = async () => {
+    const fetchUserInfo = async () => {
       try {
         const {
           data: { user },
@@ -19,14 +20,11 @@ const AccountBarModal: React.FC = () => {
         if (userError) throw userError;
 
         if (user) {
-          const { data, error } = await supabase.from('users').select('nickname').eq('id', user.id).single();
-          if (error) {
-            console.error('닉네임 페치 실패:', error);
-          } else {
-            console.log('닉네임 페치 성공:', data.nickname);
-            if (data.nickname !== null) {
-              setNickname(data.nickname); // 전역 상태에 닉네임 설정
-            }
+          if (user.email) {
+            setEmail(user.email); // 전역 상태에 이메일 설정
+          }
+          if (user.app_metadata && user.app_metadata.provider) {
+            setProvider(user.app_metadata.provider); // 전역 상태에 제공자 설정
           }
         }
       } catch (error) {
@@ -34,50 +32,29 @@ const AccountBarModal: React.FC = () => {
       }
     };
 
-    fetchNickname();
-  }, [setNickname]);
+    fetchUserInfo();
+  }, [setEmail, setProvider]);
 
   const handleBackGroundClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (e.target === e.currentTarget) {
-      toggleNicknameModal();
+      toggleAccountBarModal();
     }
   };
 
-  const handleNicknameSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (nicknameRef.current) {
-      const newNickname = nicknameRef.current.value.trim();
-      if (newNickname.length < 2 || newNickname.length > 10) {
-        setError('닉네임은 최소 2글자, 최대 10글자입니다.');
-        return;
-      }
-
-      try {
-        const {
-          data: { user },
-          error: userError
-        } = await supabase.auth.getUser();
-        if (userError) throw userError;
-
-        if (user) {
-          const { error } = await supabase.auth.updateUser({ data: { display_name: newNickname } });
-          if (error) {
-            console.error('닉네임 업데이트 실패:', error);
-          } else {
-            console.log('닉네임 업데이트 성공:', newNickname);
-            setNickname(newNickname); // 전역 상태에 닉네임 업데이트
-            toggleNicknameModal();
-          }
-        }
-      } catch (error) {
-        console.error('닉네임 업데이트 중 오류 발생:', error);
-      }
+  const handleLogout = async (e: React.FormEvent) => {
+    e.preventDefault(); // 폼의 기본 동작을 막음
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error('로그아웃 실패:', error);
+    } else {
+      setIsLoggedIn(false);
+      window.location.href = '/'; // 홈 페이지로 리다이렉션
     }
   };
 
   return (
     <>
-      {isNicknameModalOpen && (
+      {isAccountBarModalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
           onClick={handleBackGroundClick}
@@ -85,32 +62,28 @@ const AccountBarModal: React.FC = () => {
           <div className="bg-white p-9 rounded-[10px]" style={{ width: '20em' }}>
             <div onClick={(e) => e.stopPropagation()}>
               <div className="flex justify-between items-center mb-4">
-                <h1 className="text-xl font-bold text-left text-black">닉네임 변경</h1>
-                <button className="text-black" onClick={toggleNicknameModal} type="button">
+                <h1 className="text-xl font-bold text-left text-black">계정 정보</h1>
+                <button className="text-black" onClick={toggleAccountBarModal} type="button">
                   &#10005;
                 </button>
               </div>
-              <form className="flex flex-col gap-2" onSubmit={handleNicknameSubmit}>
-                <input
-                  type="text"
-                  placeholder="새 닉네임 입력"
-                  className="mb-4 p-2 border rounded w-full text-black"
-                  ref={nicknameRef}
-                  defaultValue={nickname ?? ''}
-                />
-                {error && <p className="text-red-500">{error}</p>}
+              <div className="flex flex-col gap-2">
+                <p className="text-black">계정 : {email}</p>
+                <p className="text-black">로그인 경로 : {provider}</p>
                 <div className="flex flex-col gap-2">
-                  <button
-                    type="submit"
-                    className="px-4 py-2 w-full text-white rounded"
-                    style={{ backgroundColor: '#9E9E9E' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#008A02')}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#9E9E9E')}
-                  >
-                    변경하기
-                  </button>
+                  <form onSubmit={handleLogout}>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 w-full text-white rounded"
+                      style={{ backgroundColor: '#9E9E9E' }}
+                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#8A0000')}
+                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#9E9E9E')}
+                    >
+                      로그아웃
+                    </button>
+                  </form>
                 </div>
-              </form>
+              </div>
             </div>
           </div>
         </div>
@@ -119,4 +92,4 @@ const AccountBarModal: React.FC = () => {
   );
 };
 
-export default NicknameModal;
+export default AccountBarModal;

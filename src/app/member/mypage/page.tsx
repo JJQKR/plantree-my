@@ -13,6 +13,8 @@ import GardenCarousel from '@/components/templates/GardenCarousel';
 import { totalBadges } from '@/components/atoms/TotalBadges';
 import ObtainedBadgesCount from '@/components/atoms/ObtainedBadges';
 import AccountBarButton from '@/components/atoms/AccountBarButton';
+import useUserStore from '@/stores/user.store';
+import AccountBarModal from '@/components/molecules/AccountBarModal';
 
 const MyPage: React.FC = () => {
   const {
@@ -21,7 +23,9 @@ const MyPage: React.FC = () => {
     isNicknameModalOpen,
     toggleNicknameModal,
     isWithdrawalModalOpen,
-    toggleWithdrawalModal
+    toggleWithdrawalModal,
+    isAccountBarModalOpen,
+    toggleAccountBarModal
   } = useMyModalStore((state) => state);
 
   const handleToggleBadgeModal = () => {
@@ -34,6 +38,12 @@ const MyPage: React.FC = () => {
   const handleToggleWithdrawalModal = () => {
     toggleWithdrawalModal();
   };
+
+  const handleAccountBarModal = () => {
+    toggleAccountBarModal();
+  };
+
+  const { email } = useUserStore((state) => state); // email 속성만 추출
 
   return (
     <>
@@ -64,12 +74,12 @@ const MyPage: React.FC = () => {
         </NicknameButton>
         <AccountBarButton>
           <div className="flex items-center justify-between mt-3 pl-3 p-2 bg-white rounded-[10px] shadow-md w-[600px] h-[50px]">
-            <h3>계정 설정</h3>
-            <p className="mr-5">email</p>
+            <button onClick={handleAccountBarModal}>계정 설정</button>
+            <p className="mr-5">{email}</p>
+            {isAccountBarModalOpen && <AccountBarModal />}
           </div>
         </AccountBarButton>
         <WithdrawalButton>
-          {' '}
           <div className="flex items-center justify-start my-3 pl-3 p-2 bg-white rounded-[10px] shadow-md w-[600px] h-[50px]">
             <button onClick={handleToggleWithdrawalModal}>회원 탈퇴</button>
             {isWithdrawalModalOpen && <WithdrawalModal />}
