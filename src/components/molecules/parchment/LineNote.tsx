@@ -15,7 +15,7 @@ export interface NoteLine {
 
 const LineNote = () => {
   const [lines, setLines] = useState<NoteLine[]>(
-    Array.from({ length: 15 }, () => ({ text: '', fontSize: 16, textColor: '#000000' }))
+    Array.from({ length: 12 }, () => ({ text: '', fontSize: 16, textColor: '#000000' }))
   );
   const [lineColor, setLineColor] = useState('#000000');
   const [lineThickness, setLineThickness] = useState(1);
@@ -302,15 +302,15 @@ const LineNote = () => {
         </div>
       </div>
       <div
-        className="border p-4 w-[495px]"
+        className="border p-4 ml-3 w-[428px] h-[400px]"
         style={{
           backgroundColor: bgColor,
-          minHeight: '480px',
+          minHeight: '400px',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 1)',
           borderRadius: '8px'
         }}
       >
-        <div className="relative w-full overflow-hidden" style={{ height: '450px' }}>
+        <div className="relative w-full overflow-hidden" style={{ height: '400px' }}>
           {lines.map((line, index) => (
             <div
               key={index}
@@ -327,7 +327,8 @@ const LineNote = () => {
                 className="absolute top-0 left-0 w-full border-none outline-none bg-transparent"
                 style={{
                   fontSize: `${line.fontSize}px`,
-                  color: globalTextColor
+                  color: globalTextColor,
+                  width: '100%'
                 }}
               />
             </div>
