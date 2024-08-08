@@ -10,6 +10,7 @@ import { getCover, updateCover, addCover } from '@/services/diarycover.service';
 import { useParams } from 'next/navigation';
 import useUserStore from '@/stores/user.store';
 import DiaryCoverSidebar from '@/components/molecules/diarycoversidebar/DiaryCoverSidebar';
+import useDiaryStore from '@/stores/diary.store';
 
 type ParamTypes = {
   [key: string]: string;
