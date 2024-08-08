@@ -439,11 +439,20 @@ const DiaryCoverPage: React.FC = () => {
     try {
       await addCover(coverData);
 
-      alert('Cover저장성공!');
+      // 다이어리 이름을 cover_title로 설정
+      const { error: diaryError } = await supabase.from('diaries').update({ name: coverTitle }).eq('id', diaryId);
+
+      if (diaryError) {
+        console.error('다이어리 이름 업데이트 실패:', diaryError);
+        alert('다이어리 이름 업데이트 실패');
+        return;
+      }
+
+      alert('Cover 저장 성공!');
       router.push(`/member/hub`);
     } catch (error) {
-      console.error('Cover 저장실패:', error);
-      alert('Cover 저장실패');
+      console.error('Cover 저장 실패:', error);
+      alert('Cover 저장 실패');
     }
   };
 
