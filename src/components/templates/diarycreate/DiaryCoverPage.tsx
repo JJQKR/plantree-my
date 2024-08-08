@@ -66,29 +66,6 @@ const DiaryCoverPage: React.FC = () => {
   const [selectedMenu, setSelectedMenu] = useState<string | null>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  const renderMenuContent = () => {
-    switch (selectedMenu) {
-      case 'Templates':
-        return <div>템플릿 내용</div>;
-      case 'Text':
-        return <div>텍스트 내용</div>;
-      case 'Photos':
-        return <div>사진 내용</div>;
-      case 'Elements':
-        return <div>요소 내용</div>;
-      case 'Upload':
-        return <div>업로드 내용</div>;
-      case 'Background':
-        return <div>배경 내용</div>;
-      case 'Layers':
-        return <div>레이어 내용</div>;
-      case 'Resize':
-        return <div>크기 조정 내용</div>;
-      default:
-        return null;
-    }
-  };
-
   useEffect(() => {
     const fetchDiaryCover = async () => {
       try {
@@ -705,12 +682,111 @@ const DiaryCoverPage: React.FC = () => {
     }
   };
 
+  const renderMenuContent = () => {
+    switch (selectedMenu) {
+      case 'Templates':
+        return <div>템플릿</div>;
+      case 'Text':
+        return (
+          <div>
+            <button
+              onClick={handleAddText}
+              className="mb-2 px-2 py-1 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300 w-full"
+            >
+              글씨 생성
+            </button>
+          </div>
+        );
+      case 'Photos':
+        return <div>사진</div>;
+      case 'Elements':
+        return <div>요소</div>;
+      case 'Upload':
+        return (
+          <div>
+            <label htmlFor="imgChoice" className="mb-1 font-semibold">
+              이미지 선택:
+            </label>
+            <input
+              id="imgChoice"
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="border border-gray-300 rounded p-1 w-full"
+              ref={fileInputRef}
+            />
+          </div>
+        );
+      case 'Background':
+        return (
+          <div>
+            <label htmlFor="colorPicker" className="mr-2 font-semibold">
+              색 선택:
+            </label>
+            <input
+              type="color"
+              id="colorPicker"
+              value={coverBackgroundColor}
+              onChange={handleBackgroundColorChange}
+              className="border border-gray-300 rounded w-16"
+            />
+          </div>
+        );
+      case 'Edit':
+        return (
+          <div>
+            <button
+              onClick={handleDownload}
+              className="mb-2 px-2 py-1 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300 w-full"
+            >
+              커버 다운로드
+            </button>
+            {isEditMode ? (
+              <button
+                onClick={handleUpdateDiary}
+                className="mb-2 px-2 py-1 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded transition duration-300 w-full"
+              >
+                커버 수정
+              </button>
+            ) : (
+              <button
+                onClick={handleSaveCover}
+                className="mb-2 px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300 w-full"
+              >
+                커버 저장
+              </button>
+            )}
+            {isEditMode && (
+              <button
+                onClick={handleResetDiary}
+                className="mb-2 px-2 py-1 bg-red-500 hover:bg-red-600 text-white font-semibold rounded transition duration-300 w-full"
+              >
+                커버 초기화
+              </button>
+            )}
+          </div>
+        );
+      case 'Layers':
+        return <div>레이어</div>;
+      case 'Resize':
+        return <div>크기 조정</div>;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="flex h-full relative">
       <div ref={sidebarRef} className="relative z-5">
         <DiaryCoverSidebar onSelectMenu={handleSelectMenu} />
         {selectedMenu && (
-          <div className="absolute top-0 left-full w-80 h-full bg-white shadow-lg p-4 overflow-y-auto z-10">
+          <div className="absolute top-0 left-full w-80 h-full bg-gray-100 shadow-lg p-4 overflow-y-auto z-10">
+            <button
+              onClick={() => setSelectedMenu(null)}
+              className="absolute right-2 top-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full px-2 py-0.3 transition duration-300"
+            >
+              X
+            </button>
             {renderMenuContent()}
           </div>
         )}
@@ -718,7 +794,7 @@ const DiaryCoverPage: React.FC = () => {
       <div className="relative flex-grow flex z-0">
         <div className="flex flex-col overflow-hidden w-full">
           <div className="flex-grow flex justify-center items-center overflow-auto">
-            <div className="w-full max-w-[48rem]  mr-4">
+            <div className="w-full max-w-[48rem] mr-4">
               <div className="grid aspect-w-2 aspect-h-3 w-full">
                 <Stage
                   className="col-start-1 col-end-2 row-start-1 row-end-2 w-full h-full"
@@ -796,70 +872,7 @@ const DiaryCoverPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex flex-col items-start max-w-[10rem] w-full">
-              <div className="flex flex-col items-start mb-2 w-full">
-                <div className="flex items-center mb-2">
-                  <label htmlFor="colorPicker" className="mr-2 font-semibold">
-                    색 선택:
-                  </label>
-                  <input
-                    type="color"
-                    id="colorPicker"
-                    value={coverBackgroundColor}
-                    onChange={handleBackgroundColorChange}
-                    className="border border-gray-300 rounded w-16"
-                  />
-                </div>
-                <button
-                  onClick={handleAddText}
-                  className="mb-2 px-2 py-1 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300 w-full"
-                >
-                  글씨 생성
-                </button>
-                <button
-                  onClick={handleDownload}
-                  className="mb-2 px-2 py-1 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300 w-full"
-                >
-                  커버 다운로드
-                </button>
-                {isEditMode ? (
-                  <button
-                    onClick={handleUpdateDiary}
-                    className="mb-2 px-2 py-1 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded transition duration-300 w-full"
-                  >
-                    커버 수정
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleSaveCover}
-                    className="mb-2 px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300 w-full"
-                  >
-                    커버 저장
-                  </button>
-                )}
-                {isEditMode && (
-                  <button
-                    onClick={handleResetDiary}
-                    className="mb-2 px-2 py-1 bg-red-500 hover:bg-red-600 text-white font-semibold rounded transition duration-300 w-full"
-                  >
-                    커버 초기화
-                  </button>
-                )}
-                <div className="flex flex-col items-start mb-2">
-                  <label htmlFor="imgChoice" className="mb-1 font-semibold">
-                    이미지 선택:
-                  </label>
-                  <input
-                    id="imgChoice"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="border border-gray-300 rounded p-1 w-full"
-                    ref={fileInputRef}
-                  />
-                </div>
-              </div>
-            </div>
+            <div className="flex flex-col items-start max-w-[10rem] w-full"></div>
           </div>
         </div>
       </div>

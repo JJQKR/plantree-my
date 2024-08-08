@@ -1,35 +1,68 @@
 import React from 'react';
+import { FaThLarge, FaTextHeight, FaImage, FaShapes, FaUpload, FaPalette, FaLayerGroup, FaEdit } from 'react-icons/fa';
 
-type DiaryCoverSidebar = {
+type DiaryCoverSidebarProps = {
   onSelectMenu: (menu: string) => void;
 };
 
-const DiaryCoverSidebar: React.FC<DiaryCoverSidebar> = ({ onSelectMenu }) => {
+const DiaryCoverSidebar: React.FC<DiaryCoverSidebarProps> = ({ onSelectMenu }) => {
   return (
-    <div className="w-32 h-full bg-gray-700 text-white flex flex-col p-4">
-      <div className="cursor-pointer p-2 hover:bg-gray-600" onClick={() => onSelectMenu('Templates')}>
-        템플릿
+    <div className="w-32 h-full bg-gray-50 text-black border-r-[.1rem] flex flex-col">
+      <div
+        className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
+        onClick={() => onSelectMenu('Templates')}
+      >
+        <FaThLarge className="mb-1" />
+        <span>템플릿</span>
       </div>
-      <div className="cursor-pointer p-2 hover:bg-gray-600" onClick={() => onSelectMenu('Text')}>
-        텍스트
+      <div
+        className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
+        onClick={() => onSelectMenu('Text')}
+      >
+        <FaTextHeight className="mb-1" />
+        <span>텍스트</span>
       </div>
-      <div className="cursor-pointer p-2 hover:bg-gray-600" onClick={() => onSelectMenu('Photos')}>
-        사진
+      <div
+        className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
+        onClick={() => onSelectMenu('Photos')}
+      >
+        <FaImage className="mb-1" />
+        <span>사진</span>
       </div>
-      <div className="cursor-pointer p-2 hover:bg-gray-600" onClick={() => onSelectMenu('Elements')}>
-        요소
+      <div
+        className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
+        onClick={() => onSelectMenu('Elements')}
+      >
+        <FaShapes className="mb-1" />
+        <span>요소</span>
       </div>
-      <div className="cursor-pointer p-2 hover:bg-gray-600" onClick={() => onSelectMenu('Upload')}>
-        업로드
+      <div
+        className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
+        onClick={() => onSelectMenu('Upload')}
+      >
+        <FaUpload className="mb-1" />
+        <span>업로드</span>
       </div>
-      <div className="cursor-pointer p-2 hover:bg-gray-600" onClick={() => onSelectMenu('Background')}>
-        배경
+      <div
+        className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
+        onClick={() => onSelectMenu('Background')}
+      >
+        <FaPalette className="mb-1" />
+        <span>배경</span>
       </div>
-      <div className="cursor-pointer p-2 hover:bg-gray-600" onClick={() => onSelectMenu('Layers')}>
-        레이어
+      <div
+        className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
+        onClick={() => onSelectMenu('Layers')}
+      >
+        <FaLayerGroup className="mb-1" />
+        <span>레이어</span>
       </div>
-      <div className="cursor-pointer p-2 hover:bg-gray-600" onClick={() => onSelectMenu('Resize')}>
-        크기 조정
+      <div
+        className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
+        onClick={() => onSelectMenu('Edit')}
+      >
+        <FaEdit className="mb-1" />
+        <span>수정</span>
       </div>
     </div>
   );
