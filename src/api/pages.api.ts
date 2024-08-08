@@ -87,8 +87,18 @@ class PagesAPI {
    * @param id {string} page 아이디
    * @returns 삭제된 data
    */
-  async deletePage(id: string) {
+  async deletePageOfPageId(id: string) {
     const { data } = await this.supabase.from('pages').delete().eq('id', id).select();
+    return data;
+  }
+
+  /**
+   *
+   * @param id {string} page 아이디
+   * @returns 삭제된 data
+   */
+  async deletePageOfDiaryId(id: string) {
+    const { data } = await this.supabase.from('pages').delete().eq('diary_id', id).select();
     return data;
   }
 

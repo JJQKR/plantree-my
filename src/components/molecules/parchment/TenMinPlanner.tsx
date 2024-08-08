@@ -131,8 +131,8 @@ const TenMinPlanner = () => {
   };
 
   return (
-    <div className="w-full h-full max-w-screen-md max-h-screen overflow-auto mt-1">
-      <div className="relative custom-height border-2 border-red-400 flex flex-col gap-4 m-auto p-4">
+    <div className="w-full max-w-screen-md h-[60rem] overflow-auto mt-1">
+      <div className="relative border-2 flex flex-col gap-4 m-auto p-4 h-[60rem]">
         <button className="absolute top-0 right-0 bg-red-400" onClick={updatePlanner}>
           저장하기
         </button>
@@ -166,13 +166,13 @@ const TenMinPlanner = () => {
           <div className="w-1/2">
             <Todolist />
           </div>
-          <div className="w-1/2">
+          <div className="w-1/2 h-[40rem]">
             <Timetable />
           </div>
         </div>
         <div>
           <label htmlFor="memo">memo</label>
-          <textarea id="memo" className="h-20 w-full" onChange={handleMemo} value={memo} />
+          <textarea id="memo" className="h-[3rem] w-full" onChange={handleMemo} value={memo} />
         </div>
       </div>
     </div>
