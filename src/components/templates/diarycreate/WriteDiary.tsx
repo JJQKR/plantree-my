@@ -16,6 +16,7 @@ import { AddDiaryType } from '@/api/diaries.api';
 import { AddPageType, UpdatePageType } from '@/api/pages.api';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
 import { getCover } from '@/services/diarycover.service';
+import { useDeleteTenMinPlanners } from '@/lib/hooks/useTenMinPlanner';
 
 type ParamTypes = {
   [key: string]: string;
@@ -33,27 +34,32 @@ const WriteDiary = () => {
   const { toggleParchmentOptionModal } = useParchmentModalStore((state) => state);
   const { coverTitle } = useDiaryCoverStore((state) => state);
 
-  // db Diaries 테이블과 상호작용
+  // db diaries 테이블과 상호작용
   const { data: dbDiary, isPending: isDbDiaryPending, isError: isDbDiaryError } = useDiary(diaryId);
   const { data: dbDiaries } = useDiariesToUserId(userId);
   const { mutate: createDbDiary } = useCreateDiary();
   const { mutate: updateDbDiary } = useUpdateDiary();
   const { mutate: deleteDbDiary } = useDeleteDiary();
 
-  // db Pages 테이블과 상호작용
+  // db pages 테이블과 상호작용
   const { data: dbPages } = usePageToDiaryId(diaryId);
   const { mutate: createDbPage } = useCreatePage();
   const { mutate: updateDbPage } = useUpdatePage();
   const { mutate: deleteDbPage } = useDeletePage();
   const { mutate: deleteDbPages } = useDeletePages();
 
+  // db ten_min_planner 테이블과 상호작용
+  const { mutate: deleteDbTenMinPlanners } = useDeleteTenMinPlanners();
+
   // 다이어리 가져오기 : db diary 가져오기, db page 가져오기
   useEffect(() => {
     setDiary(dbDiary as AddDiaryType);
-    setPages(dbPages || []);
+
+    const sortedPages = (dbPages ?? []).sort((a, b) => a.index - b.index);
+    setPages(sortedPages);
   }, [dbPages, dbDiary]);
 
-  console.log(dbDiary);
+  // console.log(dbDiary);
 
   // 로그인이 되어있지 않다면 로그인 해달라는 문구를 리턴합니다.
   if (!userId) {
@@ -75,6 +81,14 @@ const WriteDiary = () => {
     if (confirmDeleteDiary) {
       deleteDbDiary(diaryId);
       deleteDbPages(diaryId);
+      console.log(diaryId);
+      pages.map((page) => {
+        if (page.parchment_style === 'ten_min_planner') {
+          deleteDbTenMinPlanners(diaryId);
+        }
+        return;
+      });
+
       alert('다이어리가 삭제 되었습니다.');
       router.replace('/member/hub');
     }
@@ -83,93 +97,42 @@ const WriteDiary = () => {
   console.log(pages);
 
   // 다이어리 저장 : db diaries 생성, 업데이트 , db pages 생성, 업데이트
-  const saveDiary = () => {
-    const diaryOrder = dbDiaries!.length + 1;
+  const savePages = () => {
+    const confirmSavePage = confirm('정말 다이어리를 저장하시겠습니까?');
+    if (confirmSavePage) {
+      const currentPageIds = pages.map((page) => page.id);
 
-    const newDiary = {
-      id: diaryId,
-      user_id: userId,
-      bookshelf_order: diaryOrder,
-      name: coverTitle || ''
-    };
+      // 데이터베이스에 저장된 페이지를 업데이트하거나 삭제합니다.
+      dbPages.forEach((dbPage) => {
+        if (!currentPageIds.includes(dbPage.id)) {
+          deleteDbPage(dbPage.id); // 페이지 삭제
+        } else {
+          // const pagesToUpdate: AddPageType[] = [];
+          const pageToUpdate = pages.find((p) => p.id === dbPage.id);
 
-    const currentPageIds = pages.map((page) => page.id);
-    const pagesToUpdate: AddPageType[] = [];
+          if (pageToUpdate) {
+            const updatedPage = { ...pageToUpdate, index: pages.indexOf(pageToUpdate) };
+            updateDbPage({ id: dbPage.id, updatePage: updatedPage });
+          }
+        }
+      });
 
-    dbPages.forEach((dbPage) => {
-      if (!currentPageIds.includes(dbPage.id)) {
-        deleteDbPage(dbPage.id); // 페이지 삭제
-      } else {
-        pagesToUpdate.push(dbPage);
-      }
-    });
+      // 새 페이지를 데이터베이스에 추가합니다.
+      pages.forEach((page, index) => {
+        // const index = pages.indexOf(page);
+        console.log(page.id, index);
+        const pageForStorage = { ...page, index };
 
-    pages.forEach((page) => {
-      const index = pages.indexOf(page);
-      const pageForStorage = { ...page, index };
+        if (!dbPages.some((p) => p.id === page.id)) {
+          createDbPage(pageForStorage);
+        }
+      });
 
-      if (pagesToUpdate.find((p) => p.id === page.id)) {
-        updateDbPage({ id: page.id, updatePage: pageForStorage });
-      } else {
-        createDbPage(pageForStorage);
-      }
-    });
-
-    if (dbDiary === null) {
-      createDbDiary(newDiary);
-      alert('다이어리가 저장 되었습니다');
-    } else {
-      updateDbDiary({ id: diaryId, updateDiary: newDiary });
-      alert('다이어리가 수정저장 되었습니다');
+      // // 상태 초기화 및 리디렉션
+      setPages([]);
+      setDiary(null);
+      router.push('/member/hub');
     }
-
-    setPages([]);
-    setDiary(null);
-    router.push('/member/hub');
-
-    // const saveNewPage = () => {
-    //   pages.map((page) => {
-    //     const pageForStorage = {
-    //       ...page,
-    //       index: pages.indexOf(page)
-    //     };
-
-    //     if (!diary) createDbPage(pageForStorage); // 생성
-
-    //     const deletedPages = dbPages.filter((dbPage) => {
-    //       return dbPage.id !== page.id;
-    //     });
-
-    //     deletedPages.map((deletedPage) => {
-    //       console.log(deletedPage);
-    //       return deleteDbPage(deletedPage.id);
-    //     }); // 새로 변경된 Pages에 없는 Page 삭제
-    //     updateDbPage({ id: page.id, updatePage: pageForStorage }); // 새로 변경된 Pages에 있는 Page 변경
-    //   });
-    // };
-
-    // saveNewPage();
-
-    // if (dbDiary === null) {
-    //   // 생성
-
-    //   pages.map((page) => createDbPage({ ...page, index: pages.indexOf(page) }));
-    //   createDbDiary(newDiary);
-    //   setPages([]);
-    //   setDiary(null);
-    //   alert('다이어리가 저장 되었습니다');
-    //   router.push('/member/hub');
-    // } else {
-    //   // 수정
-
-    //   updateDbDiary({ id: diaryId, updateDiary: newDiary });
-    //   pages.map((page) => updateDbPage({ id: page.id, updatePage: { ...page, index: pages.indexOf(page) } }));
-
-    //   setPages([]);
-    //   setDiary(null);
-    //   alert('다이어리가 수정저장 되었습니다');
-    //   router.push('/member/hub');
-    // }
   };
 
   // 앞페이지로 이동합니다.
@@ -207,7 +170,7 @@ const WriteDiary = () => {
             <div onClick={deleteDiary}>
               <RiDeleteBin5Line />
             </div>
-            <div onClick={saveDiary}>
+            <div onClick={savePages}>
               <IoIosSave />
             </div>
           </div>

@@ -57,6 +57,19 @@ export const useDeleteTenMinPlanner = () => {
   });
 };
 
+// diaryId가 같은 tenMinPlanners 삭제하기
+export const useDeleteTenMinPlanners = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => tenMinplannerApi.deleteTenMinPlannerOfDiaryId(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['tenMinPlanner']
+      });
+    }
+  });
+};
+
 // tenMinPlanner 수정하기
 export const useUpdateTenMinPlanner = () => {
   const queryClient = useQueryClient();

@@ -94,7 +94,7 @@ class PagesAPI {
 
   /**
    *
-   * @param id {string} page 아이디
+   * @param id {string} diary 아이디
    * @returns 삭제된 data
    */
   async deletePageOfDiaryId(id: string) {
