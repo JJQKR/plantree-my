@@ -41,14 +41,15 @@ const BadgeCards: React.FC = () => {
   }, [diaryCount, membershipDays]);
 
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-4 ml-[1.25rem]">
       {badgesState.map((badge, index) => (
-        <div key={index} className="m-5">
+        <div key={index} className="relative" style={{ width: '13.25rem', height: '22.25rem' }}>
           <Image
             src={badge.content}
             alt={badge.isObtained ? 'Obtained Badge' : 'Unobtained Badge'}
-            width={100}
-            height={150}
+            layout="fill" // Make the image fill the parent div
+            objectFit="contain" // Ensure the image covers the parent div without distortion
+            className="rounded-[10px]" // Optional: apply additional styling
           />
         </div>
       ))}
