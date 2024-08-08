@@ -68,24 +68,8 @@ const DiaryCase: React.FC = () => {
       return;
     }
     const diaryId = uuid(); // 새로운 다이어리 ID 생성
-    const coverTitle = '기본 커버 제목'; // 기본 커버 제목
-    const coverImage = null; // 기본 커버 이미지 URL (없을 경우 null)
 
-    // 새로운 다이어리 객체 생성
-    const newDiary: AddDiaryType = {
-      id: diaryId,
-      user_id: userId,
-      name: coverTitle,
-      bookshelf_order: 0,
-      cover_image: coverImage // 추가된 커버 이미지 필드
-    };
-
-    createDiary(newDiary, {
-      onSuccess: () => {
-        setDiaryId(diaryId); // 생성된 다이어리 ID 설정
-        router.push(`/member/diary/${diaryId}/cover`); // 새 다이어리 페이지로 리다이렉트
-      }
-    });
+    router.push(`/member/diary/${diaryId}/cover`);
   };
 
   // 다이어리 클릭 핸들러
