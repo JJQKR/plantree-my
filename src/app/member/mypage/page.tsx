@@ -47,23 +47,23 @@ const MyPage: React.FC = () => {
 
   return (
     <>
-      <div>
-        <div className="my-5">
+      <div className="w-[80rem] h-[117.5rem] grid grid-cols-1 justify-items-center ">
+        <div className="my-5 w-[61.25rem] h-[40.13rem] shadow-sm ">
           <GrowthSummary />
           <GardenCarousel />
         </div>
-        <div>
-          <div className="flex flex-row justify-between max-w-[600px] mt-4 mb-1">
-            <h2 className="font-semibold ml-1">
+        <div className="w-[61.25rem] h-[29.56rem] bg-white rounded-[20px] shadow-md">
+          <div className="flex flex-row justify-between mt-4 mb-1">
+            <h2 className="font-semibold ml-10">
               도전과제 <ObtainedBadgesCount /> / {totalBadges.length}
             </h2>
-            <button className="font-semibold rounded-[5px] mr-1" onClick={handleToggleBadgeModal}>
+            <button className="font-semibold text-[#008A02] rounded-[5px] mr-10" onClick={handleToggleBadgeModal}>
               전체 보기
             </button>
             {isBadgeModalOpen && <BadgeModal />}
           </div>
+          <BadgeCollection />
         </div>
-        <BadgeCollection />
 
         <NicknameButton>
           <div className="flex items-center justify-start mt-3 pl-3 p-2 bg-white rounded-[10px] shadow-md w-[600px] h-[50px]">

@@ -6,7 +6,6 @@ import FetchMembershipDays from '@/lib/utils/FetchMembershipDays';
 import useUserStore from '@/stores/user.store';
 import ProfileStages from '../molecules/ProfileStages';
 import { supabase } from '@/supabase/client';
-import Link from 'next/link';
 
 const GrowthSummary = () => {
   const { nickname, levelName, membershipDays, userId } = useUserStore((state) => state);
@@ -32,7 +31,7 @@ const GrowthSummary = () => {
     <>
       <FetchUserData />
       <FetchMembershipDays />
-      <div className="flex flex-row bg-white rounded-tr-[20px] rounded-tl-[20px]">
+      <div className="flex flex-row w-[61.25rem] h-[9.5rem] bg-white rounded-tr-[20px] rounded-tl-[20px]">
         <div>{levelId && <ProfileStages levelId={levelId} size={90} />}</div>
         <div className="items-center">
           <h3 className="font-semibold text-[1rem] text-[#008A02]">{levelName}</h3>
@@ -40,12 +39,7 @@ const GrowthSummary = () => {
 
           <div className="mb-4 text-[#727272]">
             <p>플랜트리와 함께 {membershipDays}일째,</p>
-            <div className="flex justify-between">
-              열심히 나무를 키우고 계시네요!{' '}
-              {/* <Link href="/member/hub">
-              <p className="  text-blue-800 bg-slate-600 bg-opacity-10">➡️허브로 이동</p>
-            </Link> */}
-            </div>
+            <div className="flex justify-between">열심히 나무를 키우고 계시네요!</div>
           </div>
         </div>
       </div>
