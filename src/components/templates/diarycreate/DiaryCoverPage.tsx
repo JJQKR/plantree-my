@@ -9,6 +9,10 @@ import { useDiaryCoverStore } from '@/stores/diarycover.store';
 import { getCover, updateCover, addCover } from '@/services/diarycover.service';
 import { useParams } from 'next/navigation';
 import useUserStore from '@/stores/user.store';
+import DiaryCoverSidebar from '@/components/molecules/diarycoversidebar/DiaryCoverSidebar';
+import useDiaryStore from '@/stores/diary.store';
+import { AddDiaryType } from '@/api/diaries.api';
+import { useCreateDiary } from '@/lib/hooks/useDiaries';
 
 type ParamTypes = {
   [key: string]: string;
@@ -18,6 +22,8 @@ type ParamTypes = {
 const DiaryCoverPage: React.FC = () => {
   const router = useRouter();
   const userId = useUserStore((state) => state.userId);
+  const { mutate: createDiary } = useCreateDiary();
+  const setDiaryId = useDiaryStore((state) => state.setDiaryId);
 
   const { diaryId } = useParams<ParamTypes>();
 
@@ -62,6 +68,8 @@ const DiaryCoverPage: React.FC = () => {
 
   const [loadedImage, setLoadedImage] = useState<HTMLImageElement | null>(null);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [selectedMenu, setSelectedMenu] = useState<string | null>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchDiaryCover = async () => {
@@ -105,7 +113,6 @@ const DiaryCoverPage: React.FC = () => {
               setCoverImageRotation(parsedData.cover_image_rotation);
             };
           }
-          // console.log('diary test', data);
         } else {
           setCoverTitle('표지 제목 작성');
           setCoverTitlePosition({ x: 140, y: 150 });
@@ -218,7 +225,12 @@ const DiaryCoverPage: React.FC = () => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    setImageFile(file);
+    const fileExtension = file.name.split('.').pop();
+    const newFileName = `${Date.now()}_${Math.random().toString(36).substring(2, 15)}.${fileExtension}`;
+
+    const newFile = new File([file], newFileName, { type: file.type });
+
+    setImageFile(newFile);
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -253,7 +265,7 @@ const DiaryCoverPage: React.FC = () => {
         console.error('이미지 로드 에러:', error);
       };
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(newFile);
   };
 
   const handleImageChange = () => {
@@ -397,17 +409,16 @@ const DiaryCoverPage: React.FC = () => {
         }
       }
 
-      const fileName = `${Date.now()}_${imageFile.name}`;
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('cover_img')
-        .upload(fileName, imageFile);
+        .upload(imageFile.name, imageFile);
 
       if (uploadError) {
         console.error('이미지 업로드 실패:', uploadError);
         return;
       }
 
-      const { data: publicUrlData } = supabase.storage.from('cover_img').getPublicUrl(fileName);
+      const { data: publicUrlData } = supabase.storage.from('cover_img').getPublicUrl(imageFile.name);
 
       if (!publicUrlData || !publicUrlData.publicUrl) {
         console.error('공개 URL 가져오기 실패');
@@ -439,11 +450,34 @@ const DiaryCoverPage: React.FC = () => {
     try {
       await addCover(coverData);
 
-      alert('Cover저장성공!');
+      // 다이어리 이름을 cover_title로 설정
+      const { error: diaryError } = await supabase.from('diaries').update({ name: coverTitle }).eq('id', diaryId);
+
+      // 새로운 다이어리 객체 생성
+      const newDiary: AddDiaryType = {
+        id: diaryId,
+        user_id: userId,
+        name: coverTitle,
+        bookshelf_order: 0
+      };
+
+      createDiary(newDiary, {
+        onSuccess: () => {
+          setDiaryId(diaryId); // 생성된 다이어리 ID 설정
+        }
+      });
+
+      if (diaryError) {
+        console.error('다이어리 이름 업데이트 실패:', diaryError);
+        alert('다이어리 이름 업데이트 실패');
+        return;
+      }
+
+      alert('Cover 저장 성공!');
       router.push(`/member/hub`);
     } catch (error) {
-      console.error('Cover 저장실패:', error);
-      alert('Cover 저장실패');
+      console.error('Cover 저장 실패:', error);
+      alert('Cover 저장 실패');
     }
   };
 
@@ -453,7 +487,6 @@ const DiaryCoverPage: React.FC = () => {
     }
     let publicUrl: string | null = null;
     try {
-      // 1. 현재 diary_covers의 cover_image(url)을 가져온다.
       const { data, error } = await supabase
         .from('diary_covers')
         .select('cover_image')
@@ -470,7 +503,6 @@ const DiaryCoverPage: React.FC = () => {
       const fileName = coverImageUrl ? coverImageUrl.split('/').pop() : null;
 
       if (imageFile) {
-        // 기존 이미지가 있는 경우 삭제
         if (fileName) {
           const { error: deleteError } = await supabase.storage.from('cover_img').remove([fileName]);
           if (deleteError) {
@@ -480,7 +512,6 @@ const DiaryCoverPage: React.FC = () => {
           }
         }
 
-        // 새로운 이미지를 업로드
         const newFileName = `${Date.now()}_${imageFile.name}`;
         const { data: uploadData, error: uploadError } = await supabase.storage
           .from('cover_img')
@@ -543,7 +574,6 @@ const DiaryCoverPage: React.FC = () => {
     }
 
     try {
-      // 1. 현재 diary_covers의 cover_image(url)을 가져온다.
       const { data, error } = await supabase
         .from('diary_covers')
         .select('cover_image')
@@ -559,7 +589,6 @@ const DiaryCoverPage: React.FC = () => {
       const coverImageUrl = data.cover_image;
       const fileName = coverImageUrl ? coverImageUrl.split('/').pop() : null;
 
-      // 기존 이미지를 삭제
       if (fileName) {
         const { error: deleteError } = await supabase.storage.from('cover_img').remove([fileName]);
         if (deleteError) {
@@ -571,8 +600,6 @@ const DiaryCoverPage: React.FC = () => {
       } else {
         alert('초기화 성공');
       }
-
-      // router.push('/member/hub');
     } catch (error) {
       console.error('초기화 실패:', error);
       alert(`초기화 실패: `);
@@ -637,11 +664,15 @@ const DiaryCoverPage: React.FC = () => {
 
   const handleDeleteElement = () => {
     if (coverSelectedElement === textRef.current) {
-      setCoverTitle(null);
+      setCoverTitle('');
       setCoverSelectedElement(null);
     } else if (coverSelectedElement === imageRef.current) {
       setCoverImage(null);
       setImageFile(null);
+      setLoadedImage(null);
+      setCoverImagePosition({ x: 50, y: 50 });
+      setCoverImageSize({ width: 0, height: 0 });
+      setCoverImageRotation(0);
       setCoverSelectedElement(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
@@ -651,7 +682,7 @@ const DiaryCoverPage: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.key === 'Delete' || (e.key === 'Backspace' && e.metaKey)) && coverSelectedElement) {
+      if ((e.key === 'Delete' || e.key === 'Backspace') && coverSelectedElement) {
         e.preventDefault();
         handleDeleteElement();
       }
@@ -671,107 +702,67 @@ const DiaryCoverPage: React.FC = () => {
     setCoverTitleRotation(0);
   };
 
-  return (
-    <div className="flex flex-col overflow-hidden">
-      <div className="flex-grow flex justify-center items-center overflow-auto">
-        <div className="w-full max-w-[480rem] mb-4 mr-4">
-          <div className="grid aspect-w-2 aspect-h-3 w-full">
-            <Stage
-              className="col-start-1 col-end-2 row-start-1 row-end-2 w-full h-full"
-              width={coverStageSize.width}
-              height={coverStageSize.height}
-              ref={stageRef}
-              onClick={handleStageClick}
-            >
-              <Layer>
-                <Rect
-                  x={0}
-                  y={0}
-                  width={coverStageSize.width}
-                  height={coverStageSize.height}
-                  fill={coverBackgroundColor}
-                />
-                {loadedImage && (
-                  <KonvaImage
-                    image={loadedImage}
-                    x={coverImagePosition.x * coverScale}
-                    y={coverImagePosition.y * coverScale}
-                    width={coverImageSize.width}
-                    height={coverImageSize.height}
-                    draggable
-                    ref={imageRef}
-                    onDragEnd={handleImageChange}
-                    onTransformEnd={handleImageTransform}
-                    onClick={handleImageSelect}
-                    onTap={handleImageSelect}
-                    scaleX={coverScale}
-                    scaleY={coverScale}
-                    rotation={coverImageRotation}
-                  />
-                )}
-                <Text
-                  text={coverTitle ?? ''}
-                  fontSize={coverTitleFontSize}
-                  x={coverTitlePosition.x * coverScale}
-                  y={coverTitlePosition.y * coverScale}
-                  width={coverTitleWidth}
-                  fill="black"
-                  draggable
-                  ref={textRef}
-                  onDragEnd={handleTextChange}
-                  onTransformEnd={handleTextTransform}
-                  onClick={handleTextSelect}
-                  onTap={handleTextSelect}
-                  onDblClick={handleTextDblClick}
-                  onDblTap={handleTextDblClick}
-                  wrap="word"
-                  scaleX={coverScale}
-                  scaleY={coverScale}
-                />
-                {coverSelectedElement && (
-                  <Transformer
-                    ref={trRef}
-                    boundBoxFunc={(oldBox, newBox) => ({
-                      ...newBox,
-                      width: Math.max(20, newBox.width),
-                      height: Math.max(20, newBox.height)
-                    })}
-                    resizeEnabled={true}
-                    enabledAnchors={[
-                      'top-left',
-                      'top-right',
-                      'bottom-left',
-                      'bottom-right',
-                      'middle-left',
-                      'middle-right'
-                    ]}
-                  />
-                )}
-              </Layer>
-            </Stage>
-          </div>
-        </div>
+  const handleSelectMenu = (menu: string) => {
+    if (selectedMenu === menu) {
+      setSelectedMenu(null);
+    } else {
+      setSelectedMenu(menu);
+    }
+  };
 
-        <div className="flex flex-col items-start max-w-[10rem] w-full">
-          <div className="flex flex-col items-start mb-2 w-full">
-            <div className="flex items-center mb-2">
-              <label htmlFor="colorPicker" className="mr-2 font-semibold">
-                색 선택:
-              </label>
-              <input
-                type="color"
-                id="colorPicker"
-                value={coverBackgroundColor}
-                onChange={handleBackgroundColorChange}
-                className="border border-gray-300 rounded w-16"
-              />
-            </div>
+  const renderMenuContent = () => {
+    switch (selectedMenu) {
+      case 'Templates':
+        return <div>템플릿</div>;
+      case 'Text':
+        return (
+          <div>
             <button
               onClick={handleAddText}
               className="mb-2 px-2 py-1 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300 w-full"
             >
               글씨 생성
             </button>
+          </div>
+        );
+      case 'Photos':
+        return <div>사진</div>;
+      case 'Elements':
+        return <div>요소</div>;
+      case 'Upload':
+        return (
+          <div>
+            <label htmlFor="imgChoice" className="mb-1 font-semibold">
+              이미지 선택:
+            </label>
+            <input
+              id="imgChoice"
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="border border-gray-300 rounded p-1 w-full"
+              ref={fileInputRef}
+            />
+          </div>
+        );
+      case 'Background':
+        return (
+          <div>
+            <label htmlFor="colorPicker" className="mr-2 font-semibold">
+              색 선택:
+            </label>
+            <input
+              type="color"
+              id="colorPicker"
+              value={coverBackgroundColor}
+              onChange={handleBackgroundColorChange}
+              className="border border-gray-300 rounded w-16"
+            />
+          </div>
+        );
+      case 'Edit':
+        return (
+          <div>
             <button
               onClick={handleDownload}
               className="mb-2 px-2 py-1 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300 w-full"
@@ -801,19 +792,115 @@ const DiaryCoverPage: React.FC = () => {
                 커버 초기화
               </button>
             )}
-            <div className="flex flex-col items-start mb-2">
-              <label htmlFor="imgChoice" className="mb-1 font-semibold">
-                이미지 선택:
-              </label>
-              <input
-                id="imgChoice"
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="border border-gray-300 rounded p-1 w-full"
-                ref={fileInputRef}
-              />
+          </div>
+        );
+      case 'Layers':
+        return <div>레이어</div>;
+      case 'Resize':
+        return <div>크기 조정</div>;
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="flex h-full relative">
+      <div ref={sidebarRef} className="relative z-5">
+        <DiaryCoverSidebar onSelectMenu={handleSelectMenu} />
+        {selectedMenu && (
+          <div className="absolute top-0 left-full w-80 h-full bg-gray-100 shadow-lg p-4 overflow-y-auto z-10">
+            <button
+              onClick={() => setSelectedMenu(null)}
+              className="absolute right-2 top-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full px-2 py-0.3 transition duration-300"
+            >
+              X
+            </button>
+            {renderMenuContent()}
+          </div>
+        )}
+      </div>
+      <div className="relative flex-grow flex z-0">
+        <div className="flex flex-col overflow-hidden w-full">
+          <div className="flex-grow flex justify-center items-center overflow-auto">
+            <div className="w-full max-w-[48rem] mr-4">
+              <div className="grid aspect-w-2 aspect-h-3 w-full">
+                <Stage
+                  className="col-start-1 col-end-2 row-start-1 row-end-2 w-full h-full"
+                  width={coverStageSize.width}
+                  height={coverStageSize.height}
+                  ref={stageRef}
+                  onClick={handleStageClick}
+                >
+                  <Layer>
+                    <Rect
+                      x={0}
+                      y={0}
+                      width={coverStageSize.width}
+                      height={coverStageSize.height}
+                      fill={coverBackgroundColor}
+                    />
+                    {loadedImage && (
+                      <KonvaImage
+                        image={loadedImage}
+                        x={coverImagePosition.x * coverScale}
+                        y={coverImagePosition.y * coverScale}
+                        width={coverImageSize.width}
+                        height={coverImageSize.height}
+                        draggable
+                        ref={imageRef}
+                        onDragEnd={handleImageChange}
+                        onTransformEnd={handleImageTransform}
+                        onClick={handleImageSelect}
+                        onTap={handleImageSelect}
+                        scaleX={coverScale}
+                        scaleY={coverScale}
+                        rotation={coverImageRotation}
+                      />
+                    )}
+                    <Text
+                      text={coverTitle ?? ''}
+                      fontSize={coverTitleFontSize}
+                      x={coverTitlePosition.x * coverScale}
+                      y={coverTitlePosition.y * coverScale}
+                      width={coverTitleWidth}
+                      fill="black"
+                      draggable
+                      ref={textRef}
+                      onDragEnd={handleTextChange}
+                      onTransformEnd={handleTextTransform}
+                      onClick={handleTextSelect}
+                      onTap={handleTextSelect}
+                      onDblClick={handleTextDblClick}
+                      onDblTap={handleTextDblClick}
+                      wrap="word"
+                      scaleX={coverScale}
+                      scaleY={coverScale}
+                    />
+                    {coverSelectedElement && (
+                      <Transformer
+                        ref={trRef}
+                        boundBoxFunc={(oldBox, newBox) => ({
+                          ...newBox,
+                          width: Math.max(20, newBox.width),
+                          height: Math.max(20, newBox.height)
+                        })}
+                        resizeEnabled={true}
+                        enabledAnchors={[
+                          'top-left',
+                          'top-right',
+                          'bottom-left',
+                          'bottom-right',
+                          'middle-left',
+                          'middle-right'
+                        ]}
+                      />
+                    )}
+                  </Layer>
+                </Stage>
+              </div>
             </div>
+
+            <div className="flex flex-col items-start max-w-[10rem] w-full"></div>
           </div>
         </div>
       </div>

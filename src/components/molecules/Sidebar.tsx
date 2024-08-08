@@ -8,18 +8,7 @@ import AttendanceCheck from '@/lib/utils/AttendanceCheck';
 import FetchUserData from '@/lib/utils/FetchUserData';
 import ProfileStages from './ProfileStages';
 import { supabase } from '@/supabase/client';
-import { MainSidebarProps } from '@/types/main';
-
-interface DiaryCover {
-  id: string;
-  cover_bg_color: string | null;
-  cover_image: string | null;
-  cover_image_position: any | null; // JSON 타입으로 변경 가능
-  cover_image_rotation: number | null;
-  cover_image_size: any | null; // JSON 타입으로 변경 가능
-  cover_scale: number | null;
-  cover_title: string | null;
-}
+import { DiaryCover, MainSidebarProps } from '@/types/main';
 
 const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
   const { nickname, levelName, attendance, userId } = useUserStore((state) => state); // 유저 상태 관리 스토어에서 닉네임 가져오기
@@ -97,7 +86,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
               diaryCovers.map((cover) => (
                 <li
                   key={cover.id}
-                  className="h-[50px] p-3 rounded-lg shadow-md text-black"
+                  className="h-[50px] p-5 rounded-lg shadow-md text-black"
                   style={{ backgroundColor: cover.cover_bg_color || 'bg-red-300' }} // 배경색 설정
                 >
                   {cover.cover_title || '제목 없음'}

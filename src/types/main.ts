@@ -37,3 +37,14 @@ export type AddDiaryType = {
   bookshelf_order: number;
   cover_image: string | null;
 };
+
+export type DiaryCover = {
+  id: string;
+  cover_bg_color: string | null;
+  cover_image: string | null;
+  cover_image_position: any | null; // JSON 타입으로 변경 가능
+  cover_image_rotation: number | null;
+  cover_image_size: any | null; // JSON 타입으로 변경 가능
+  cover_scale: number | null;
+  cover_title: string | null;
+};
