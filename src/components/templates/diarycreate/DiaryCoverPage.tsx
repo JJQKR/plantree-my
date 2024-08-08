@@ -11,6 +11,8 @@ import { useParams } from 'next/navigation';
 import useUserStore from '@/stores/user.store';
 import DiaryCoverSidebar from '@/components/molecules/diarycoversidebar/DiaryCoverSidebar';
 import useDiaryStore from '@/stores/diary.store';
+import { AddDiaryType } from '@/api/diaries.api';
+import { useCreateDiary } from '@/lib/hooks/useDiaries';
 
 type ParamTypes = {
   [key: string]: string;
@@ -20,6 +22,8 @@ type ParamTypes = {
 const DiaryCoverPage: React.FC = () => {
   const router = useRouter();
   const userId = useUserStore((state) => state.userId);
+  const { mutate: createDiary } = useCreateDiary();
+  const setDiaryId = useDiaryStore((state) => state.setDiaryId);
 
   const { diaryId } = useParams<ParamTypes>();
 
@@ -448,6 +452,20 @@ const DiaryCoverPage: React.FC = () => {
 
       // 다이어리 이름을 cover_title로 설정
       const { error: diaryError } = await supabase.from('diaries').update({ name: coverTitle }).eq('id', diaryId);
+
+      // 새로운 다이어리 객체 생성
+      const newDiary: AddDiaryType = {
+        id: diaryId,
+        user_id: userId,
+        name: coverTitle,
+        bookshelf_order: 0
+      };
+
+      createDiary(newDiary, {
+        onSuccess: () => {
+          setDiaryId(diaryId); // 생성된 다이어리 ID 설정
+        }
+      });
 
       if (diaryError) {
         console.error('다이어리 이름 업데이트 실패:', diaryError);
