@@ -13,6 +13,8 @@ import DiaryCoverSidebar from '@/components/molecules/diarycoversidebar/DiaryCov
 import useDiaryStore from '@/stores/diary.store';
 import { AddDiaryType } from '@/api/diaries.api';
 import { useCreateDiary } from '@/lib/hooks/useDiaries';
+import UnsplashImageSearch from '@/components/molecules/diarycoversidebar/UnsplashImageSearch';
+import UnsplashBackgroundSearch from '@/components/molecules/diarycoversidebar/UnsplashBackgroundSearch';
 
 type ParamTypes = {
   [key: string]: string;
@@ -710,6 +712,36 @@ const DiaryCoverPage: React.FC = () => {
     }
   };
 
+  const handleSelectImage = (imageUrl: string) => {
+    const img = new window.Image();
+    img.src = imageUrl;
+    img.onload = () => {
+      if (stageRef.current) {
+        const stageWidth = stageRef.current.width();
+        const stageHeight = stageRef.current.height();
+        const maxWidth = stageWidth * 0.5;
+        const maxHeight = stageHeight * 0.5;
+
+        let newWidth = img.width;
+        let newHeight = img.height;
+
+        if (newWidth > maxWidth || newHeight > maxHeight) {
+          const scale = Math.min(maxWidth / newWidth, maxHeight / newHeight);
+          newWidth *= scale;
+          newHeight *= scale;
+        }
+
+        setCoverImageSize({ width: newWidth, height: newHeight });
+        setCoverImagePosition({
+          x: (stageWidth - newWidth) / 2,
+          y: (stageHeight - newHeight) / 2
+        });
+        setCoverImage(img);
+        setLoadedImage(img);
+      }
+    };
+  };
+
   const renderMenuContent = () => {
     switch (selectedMenu) {
       case 'Templates':
@@ -726,7 +758,11 @@ const DiaryCoverPage: React.FC = () => {
           </div>
         );
       case 'Photos':
-        return <div>사진</div>;
+        return (
+          <div>
+            <UnsplashImageSearch onSelectImage={handleSelectImage} />
+          </div>
+        );
       case 'Elements':
         return <div>요소</div>;
       case 'Upload':
@@ -754,10 +790,11 @@ const DiaryCoverPage: React.FC = () => {
             <input
               type="color"
               id="colorPicker"
-              value={coverBackgroundColor}
+              value={coverBackgroundColor.startsWith('url(') ? '#ffffff' : coverBackgroundColor}
               onChange={handleBackgroundColorChange}
               className="border border-gray-300 rounded w-16"
             />
+            <UnsplashBackgroundSearch onSelectBackground={handleBackgroundImageChange} />
           </div>
         );
       case 'Edit':
@@ -803,19 +840,23 @@ const DiaryCoverPage: React.FC = () => {
     }
   };
 
+  const handleBackgroundImageChange = (imageUrl: string) => {
+    setCoverBackgroundColor(`url(${imageUrl})`);
+  };
+
   return (
     <div className="flex h-full relative">
       <div ref={sidebarRef} className="relative z-5">
         <DiaryCoverSidebar onSelectMenu={handleSelectMenu} />
         {selectedMenu && (
-          <div className="absolute top-0 left-full w-80 h-full bg-gray-100 shadow-lg p-4 overflow-y-auto z-10">
+          <div className="absolute top-0 left-full w-[24rem] h-full bg-gray-100 shadow-lg p-6 overflow-y-auto z-10">
             <button
               onClick={() => setSelectedMenu(null)}
               className="absolute right-2 top-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full px-2 py-0.3 transition duration-300"
             >
               X
             </button>
-            {renderMenuContent()}
+            <div className="mt-10">{renderMenuContent()}</div>
           </div>
         )}
       </div>
@@ -837,8 +878,18 @@ const DiaryCoverPage: React.FC = () => {
                       y={0}
                       width={coverStageSize.width}
                       height={coverStageSize.height}
-                      fill={coverBackgroundColor}
+                      fillPatternImage={
+                        coverBackgroundColor.startsWith('url(')
+                          ? (() => {
+                              const img = new window.Image();
+                              img.src = coverBackgroundColor.slice(4, -1).replace(/"/g, '');
+                              return img;
+                            })()
+                          : undefined
+                      }
+                      fill={coverBackgroundColor.startsWith('url(') ? undefined : coverBackgroundColor}
                     />
+
                     {loadedImage && (
                       <KonvaImage
                         image={loadedImage}
