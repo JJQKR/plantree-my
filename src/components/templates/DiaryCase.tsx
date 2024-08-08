@@ -116,7 +116,7 @@ const DiaryCase: React.FC = () => {
                         {/* 배경 색상 */}
                         <div
                           className="relative flex flex-col items-center justify-center w-full h-full rounded"
-                          style={{ backgroundColor: cover.cover_bg_color || 'bg-red-300' }} // 기본 배경 색상
+                          style={{ backgroundColor: cover.cover_bg_color || 'bg-white' }} // 기본 배경 색상
                         >
                           <span className="absolute top-10 left-1/2 transform -translate-x-1/2 text-center text-black">
                             {cover.cover_title || '제목 없음'}
@@ -139,7 +139,7 @@ const DiaryCase: React.FC = () => {
                   )
               )
             ) : (
-              <div className="flex items-center justify-center w-[250px] h-[400px] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
+              <div className="flex items-center justify-center w-[250px] h-[400px] bg-white rounded shadow-md text-2xl font-bold text-black">
                 다이어리가 없습니다
               </div>
             )}
@@ -168,8 +168,8 @@ const DiaryCase: React.FC = () => {
                     <SwiperSlide
                       key={cover.diary_id}
                       onClick={() => handleDiaryClick(cover.diary_id as string)}
-                      className="relative cursor-pointer flex flex-col items-center justify-center w-[350px] h-[570px] rounded shadow-md text-2xl font-bold text-black"
-                      style={{ backgroundColor: cover.cover_bg_color || 'bg-red-300' }}
+                      className="relative cursor-pointer flex flex-col items-center justify-center w-[480px] h-[720px] rounded shadow-md text-2xl font-bold text-black"
+                      style={{ backgroundColor: cover.cover_bg_color || 'bg-white' }}
                     >
                       {/* 배경 색상 */}
                       <div className="relative flex flex-col items-center justify-center w-full h-full rounded">
@@ -193,7 +193,7 @@ const DiaryCase: React.FC = () => {
                   )
               )
             ) : (
-              <SwiperSlide className="relative flex flex-col items-center justify-center w-[350px] h-[570px] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
+              <SwiperSlide className="relative flex flex-col items-center justify-center w-[480px] h-[720px] bg-white rounded shadow-md text-2xl font-bold text-black">
                 <button onClick={handleCreateDiary} className="flex items-center justify-center w-full h-full">
                   +<br /> 다이어리 생성
                 </button>
