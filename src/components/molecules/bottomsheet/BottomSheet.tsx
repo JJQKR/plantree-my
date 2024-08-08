@@ -113,11 +113,11 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
     <div
       className={`fixed bottom-0 left-1/2 transform -translate-x-1/2 w-4/5 h-48 bg-white shadow-lg rounded-t-2xl transition-transform duration-300 ${
         isOpen ? 'translate-y-0' : 'translate-y-44'
-      }`}
+      } z-20`} // z-index 설정
     >
       <div className="flex justify-center">
         <div
-          className="absolute top-[-32px] w-28 h-8 bg-white rounded-t-xl cursor-pointer flex items-center justify-center z-50"
+          className="absolute top-[-20px] w-28 h-8 bg-white rounded-t-xl cursor-pointer flex items-center justify-center z-50"
           onClick={onToggle}
         >
           <span>{isOpen ? '▼' : '▲'}</span>
@@ -133,21 +133,13 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
         <div ref={scrollRef} className="p-4 text-center overflow-x-auto flex space-x-4">
           <div
             onClick={handleCoverPageClick}
-            className="bg-gray-100 rounded-lg shadow-md p-4 w-32 h-40 flex-none cursor-pointer"
+            className="bg-gray-100 rounded-lg shadow-md p-4 w-32 h-40 flex-none cursor-pointer z-30" // z-index 설정
           >
             <h2 className="text-xl font-bold">커버 페이지</h2>
           </div>
-          {/* {bottomSheetList.map((page) => (
-            <BottomSheetCard
-              page={page}
-              key={page.index}
-              moveCard={moveCard}
-              // onClick={() => handleCardClick(page.index)}
-            />
-          ))} */}
           <div
             onClick={handleAddPageClick}
-            className="bg-gray-100 rounded-lg shadow-md p-4 w-32 h-40 flex-none cursor-pointer"
+            className="bg-gray-100 rounded-lg shadow-md p-4 w-32 h-40 flex-none cursor-pointer z-30" // z-index 설정
           >
             <h2 className="text-xl font-bold">+ 속지 추가</h2>
           </div>
