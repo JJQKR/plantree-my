@@ -172,6 +172,7 @@ const GardenCarousel: React.FC = () => {
           }}
           pagination={pagination}
           modules={[EffectCoverflow, Pagination]}
+          style={{ height: '300px' }} // Set the height of the Swiper component
         >
           {displayStages.map((stage) => (
             <SwiperSlide key={stage.id}>
@@ -183,6 +184,12 @@ const GardenCarousel: React.FC = () => {
         </Swiper>
       </div>
       <style jsx global>{`
+        .swiper-container {
+          height: 300px; /* Ensure Swiper container height is fixed */
+        }
+        .swiper-slide {
+          height: 300px; /* Ensure each slide fits within the container */
+        }
         .custom-bullet {
           width: 50px;
           height: 30px;

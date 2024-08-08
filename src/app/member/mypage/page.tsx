@@ -50,7 +50,6 @@ const MyPage: React.FC = () => {
       <div>
         <div className="my-5">
           <GrowthSummary />
-
           <GardenCarousel />
         </div>
         <div>

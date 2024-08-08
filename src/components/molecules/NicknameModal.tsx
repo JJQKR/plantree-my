@@ -81,7 +81,7 @@ const NicknameModal: React.FC = () => {
       {isNicknameModalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-          onClick={handleBackGroundClick}
+          // onClick={handleBackGroundClick}
         >
           <div className="bg-white p-9 rounded-[10px]" style={{ width: '20em' }}>
             <div onClick={(e) => e.stopPropagation()}>
