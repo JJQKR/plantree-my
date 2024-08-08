@@ -86,7 +86,7 @@ const Todolist: React.FC = () => {
   };
 
   return (
-    <div className="border-2 border-gray-500 h-96">
+    <div className="border-2 border-gray-500 h-[40rem]">
       <h2>todolist</h2>
       <div className="w-ful">
         <ul className="relative">

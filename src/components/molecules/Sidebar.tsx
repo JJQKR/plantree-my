@@ -7,45 +7,60 @@ import useUserStore from '@/stores/user.store';
 import AttendanceCheck from '@/lib/utils/AttendanceCheck';
 import FetchUserData from '@/lib/utils/FetchUserData';
 import ProfileStages from './ProfileStages';
-import useDiaryStore from '@/stores/diary.store';
 import { supabase } from '@/supabase/client';
 import { MainSidebarProps } from '@/types/main';
 
+interface DiaryCover {
+  id: string;
+  cover_bg_color: string | null;
+  cover_image: string | null;
+  cover_image_position: any | null; // JSON 타입으로 변경 가능
+  cover_image_rotation: number | null;
+  cover_image_size: any | null; // JSON 타입으로 변경 가능
+  cover_scale: number | null;
+  cover_title: string | null;
+}
+
 const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
   const { nickname, levelName, attendance, userId } = useUserStore((state) => state); // 유저 상태 관리 스토어에서 닉네임 가져오기
-  const { diaries, fetchDiaries } = useDiaryStore((state) => ({
-    diaries: state.diaries,
-    fetchDiaries: state.fetchDiaries
-  }));
+  const [diaryCovers, setDiaryCovers] = useState<DiaryCover[]>([]);
+  const [levelId, setLevelId] = useState<string | null>(null);
 
-  const [levelId, setLevelId] = useState<string | null>(null); // 사용자 레벨 ID 상태
-
-  // 컴포넌트가 마운트되었을 때 실행되는 useEffect
+  // 컴포넌트 마운트 시 사용자 정보 및 다이어리 커버를 가져오는 useEffect
   useEffect(() => {
     const fetchData = async () => {
       if (userId) {
         // 사용자 레벨 ID 가져오기
         const { data: user, error: userError } = await supabase
           .from('users')
-          .select('level_id')
+          .select('id, level_id')
           .eq('id', userId)
           .single();
         if (userError) {
           console.error('레벨 ID 가져오기 실패:', userError);
         } else {
           setLevelId(user.level_id);
-        }
 
-        // 다이어리 목록 가져오기
-        await fetchDiaries();
+          // diary_covers 테이블에서 다이어리 커버 정보 가져오기
+          const { data: coversData, error: coversError } = await supabase
+            .from('diary_covers')
+            .select('*')
+            .eq('user_id', user.id);
+
+          if (coversError) {
+            console.error('다이어리 커버 정보 가져오기 실패:', coversError);
+          } else {
+            setDiaryCovers(coversData);
+          }
+        }
       }
     };
 
     fetchData();
-  }, [fetchDiaries, userId]);
+  }, [userId]);
 
   return (
-    <div className="fixed top-40 left-0 w-[320px] bg-green-200 text-white ">
+    <div className="fixed top-40 left-0 w-[320px] bg-green-200 text-white">
       <FetchUserData />
       <AttendanceCheck />
       <div className="p-4">
@@ -61,15 +76,14 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
               </Link>
               <div className="flex flex-col items-center mb-10">
                 {levelId ? (
-                  <ProfileStages levelId={levelId} size={120} /> // levelId가 존재할 때만 렌더링
+                  <ProfileStages levelId={levelId} size={120} /> // 레벨 ID가 존재할 때만 렌더링
                 ) : (
                   <div style={{ width: 120, height: 120 }} className="bg-gray-400 rounded-full mb-2"></div>
                 )}
-                <span className="font-semibold text-sm text-[#008A02]">{levelName || 'Level not set'}</span>
                 <span className="text-black text-lg font-bold">{nickname}</span>
-
+                <div className="text-black text-sm">{levelName || 'Level not set'}</div>
                 <div className="text-black text-sm">출석 횟수: {attendance}</div>
-                <div className="text-black text-sm">levelText</div>
+                <div className="text-black text-sm">열심히 나무를 키워보세요!</div>
               </div>
             </li>
           </ul>
@@ -79,10 +93,14 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
         </div>
         <div className="w-full bg-white p-4 rounded-[20px]">
           <ul className="list-none space-y-2 text-center">
-            {diaries.length > 0 ? (
-              diaries.map((diary) => (
-                <li key={diary.id} className="bg-red-300 h-[50px] p-3 rounded-lg shadow-md text-black">
-                  {diary.name}
+            {diaryCovers.length > 0 ? (
+              diaryCovers.map((cover) => (
+                <li
+                  key={cover.id}
+                  className="h-[50px] p-3 rounded-lg shadow-md text-black"
+                  style={{ backgroundColor: cover.cover_bg_color || 'bg-red-300' }} // 배경색 설정
+                >
+                  {cover.cover_title || '제목 없음'}
                 </li>
               ))
             ) : (
