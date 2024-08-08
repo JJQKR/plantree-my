@@ -1,4 +1,5 @@
-// addCover 함수
+import { supabase } from '@/supabase/client';
+
 export const addCover = async (coverData: any) => {
   try {
     const response = await fetch(`http://localhost:3000/apis/diarycover/`, {
@@ -93,4 +94,16 @@ export const updateCover = async (diaryId: string, coverData: any) => {
   } catch (error) {
     return { data: null, error: error instanceof Error ? error.message : 'An unknown error occurred' };
   }
+};
+
+// 새로운 getCoversByUserId 함수 (사용자 ID로 모든 다이어리 커버를 가져옴)
+export const getCoversByUserId = async (userId: string) => {
+  const { data, error } = await supabase.from('diary_covers').select('*').eq('user_id', userId);
+
+  if (error) {
+    console.error('Error fetching diary covers:', error);
+    return [];
+  }
+
+  return data;
 };
