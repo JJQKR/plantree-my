@@ -15,7 +15,7 @@ export interface NoteLine {
 
 const LineNote = () => {
   const [lines, setLines] = useState<NoteLine[]>(
-    Array.from({ length: 12 }, () => ({ text: '', fontSize: 16, textColor: '#000000' }))
+    Array.from({ length: 16 }, () => ({ text: '', fontSize: 16, textColor: '#000000' }))
   );
   const [lineColor, setLineColor] = useState('#000000');
   const [lineThickness, setLineThickness] = useState(1);
@@ -194,7 +194,7 @@ const LineNote = () => {
           });
         } else {
           console.log('Data deleted:', data);
-          setLines(Array.from({ length: 15 }, () => ({ text: '', fontSize: 16, textColor: '#000000' })));
+          setLines(Array.from({ length: 16 }, () => ({ text: '', fontSize: 16, textColor: '#000000' })));
           setLineColor('#000000');
           setLineThickness(1);
           setBgColor('#ffffff');
@@ -255,7 +255,7 @@ const LineNote = () => {
   }, [userId, loadData]);
 
   return (
-    <div className="w-full max-w-screen-md max-h-screen overflow-auto mt-20">
+    <div className="w-full  max-w-screen-md max-h-screen overflow-auto mt-20">
       <div className="flex justify-between mb-4 bg-white">
         <div>
           <label className="block m-2">
@@ -302,15 +302,15 @@ const LineNote = () => {
         </div>
       </div>
       <div
-        className="border p-4 ml-3 w-[428px] h-[400px]"
+        className="border p-4 ml-3 mr-3"
         style={{
           backgroundColor: bgColor,
-          minHeight: '400px',
+          minHeight: '530px',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 1)',
           borderRadius: '8px'
         }}
       >
-        <div className="relative w-full overflow-hidden" style={{ height: '400px' }}>
+        <div className="relative w-full overflow-hidden" style={{ height: '510px' }}>
           {lines.map((line, index) => (
             <div
               key={index}

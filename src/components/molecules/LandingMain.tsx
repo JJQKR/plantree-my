@@ -1,33 +1,36 @@
 import Link from 'next/link';
 import React from 'react';
+import Image from 'next/image';
 
 const LandingMain = () => {
   return (
-    <main className="bg-green-900 text-white h-screen flex flex-col items-center justify-center p-6">
+    <main className="w-[80rem] bg-white text-black flex flex-col flex-grow items-center justify-center p-6">
+      <div className="w-full relative mb-12 image-container">
+        <Image
+          src="/images/main2.jpg"
+          alt="Main Image"
+          layout="responsive"
+          width={1600}
+          height={900}
+          className="rounded-2xl"
+        />
+        <div className="overlay"></div>
+      </div>
       <div className="text-center mb-12">
-        <h1 className="text-5xl font-bold mb-4">환영합니다!</h1>
-        <p className="text-xl mb-6">함께 다이어리를 만들어봐요!</p>
-        <Link href="/member/hub" className="bg-white text-black px-6 py-3 rounded-lg">
-          다이어리 만들어보기!
-        </Link>
+        <p className="text-4xl font-bold mb-4">소중한 우리의 일상을</p>
+        <p className="text-4xl font-bold mb-4 text-lime-500">
+          자유롭게<span className="text-black">,</span> 재미있게<span className="text-black">,</span> 언제 어디든지
+        </p>
+        <p className="text-4xl mb-8">기록하는 새로운 방법</p>
+        <p className="text-5xl font-bold mb-4">
+          <span className="text-lime-400">Plantree</span> 에 오신것을 환영합니다!
+        </p>
+        {/* <Link href="/member/hub" className="bg-white text-black px-6 py-3 rounded-lg">
+        다이어리 만들어보기!
+      </Link> */}
       </div>
 
-      <section className="w-full max-w-4xl mx-auto">
-        <div className="space-y-12">
-          <div className="text-center bg-green-700 p-8 rounded-lg shadow-lg">
-            <h3 className="text-3xl font-bold mb-4">커버 커스텀과 속지 선택</h3>
-            <p className="text-lg">10분 단위로 색칠이 가능한 일정관리 다이어리로 나만의 스타일을 만드세요!</p>
-          </div>
-          <div className="text-center bg-green-700 p-8 rounded-lg shadow-lg">
-            <h3 className="text-3xl font-bold mb-4">레벨 업과 나만의 정원</h3>
-            <p className="text-lg">플랜트리를 사용할수록 레벨이 오르고 나만의 정원을 가꿀 수 있어요!</p>
-          </div>
-          <div className="text-center bg-green-700 p-8 rounded-lg shadow-lg">
-            <h3 className="text-3xl font-bold mb-4">다꾸의 재미와 생산성 향상</h3>
-            <p className="text-lg">다꾸의 재미와 생산성 향상이라는 두 마리 토끼를 잡을 수 있습니다.</p>
-          </div>
-        </div>
-      </section>
+      <section className="w-full max-w-4xl mx-auto"></section>
     </main>
   );
 };

@@ -25,7 +25,7 @@ const BlankNote = () => {
   const { diaryId } = useParams();
 
   const editableDivRef = useRef<HTMLDivElement>(null);
-  const maxHeight = 400;
+  const maxHeight = 1000;
 
   useEffect(() => {
     fetchDiaryData();
@@ -235,9 +235,8 @@ const BlankNote = () => {
       <div
         ref={editableDivRef}
         contentEditable={isEditMode}
-        className="border p-4 w-[428px] h-[400px] overflow-hidden mb-1 mt-5 ml-4 mr-3"
+        className="border p-4 w-[43rem] h-[53rem] overflow-hidden mb-1 mt-5 ml-4 mr-3"
         style={{
-          height: `${maxHeight}px`,
           color: globalTextColor,
           fontSize: '16px',
           backgroundColor: bgColor,

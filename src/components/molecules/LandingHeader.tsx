@@ -58,15 +58,10 @@ const LandingHeader = () => {
   };
 
   return (
-    <header className="bg-blue-200 text-white p-4 h-[80px]">
-      <div className="container mx-auto flex justify-between items-center">
+    <header className="bg-white text-black p-4 w-full h-[6rem] flex justify-center shadow-b z-10">
+      <div className="w-[80rem] flex justify-between items-center">
         <h1 className="text-2xl font-bold">
-          <Image
-            src="/images/Plantree.png"
-            alt="Logo"
-            width={200} // 원하는 너비
-            height={50} // 원하는 높이
-          />
+          <Image src="/images/Plantree.png" alt="Logo" width={200} height={50} />
         </h1>
         <div className="flex gap-4">
           {isLoggedIn ? (
@@ -76,13 +71,13 @@ const LandingHeader = () => {
           ) : (
             <>
               <button
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                className="px-4 py-2 bg-lime-700 text-white rounded hover:bg-lime-900"
                 onClick={() => setPlantreeLoginModalOpen(true)}
               >
                 로그인
               </button>
               <button
-                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+                className="px-4 py-2 bg-white text-lime-700 border border-lime-700 rounded hover:bg-lime-900 hover:text-white mr-5"
                 onClick={() => setSignupModalOpen(true)}
               >
                 회원가입
