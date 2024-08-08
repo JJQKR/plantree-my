@@ -9,6 +9,7 @@ import FetchUserData from '@/lib/utils/FetchUserData';
 import ProfileStages from './ProfileStages';
 import { supabase } from '@/supabase/client';
 import { DiaryCover, MainSidebarProps } from '@/types/main';
+import Image from 'next/image';
 
 const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
   const { nickname, levelName, attendance, userId } = useUserStore((state) => state); // 유저 상태 관리 스토어에서 닉네임 가져오기
@@ -56,18 +57,30 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
         <button onClick={onClose} className="mb-4 text-[20px] text-black">
           Close
         </button>
-        <h1 className="ml-8 mb-2 text-black text-[16px]">내 정보</h1>
+        <h1 className="ml-8 mb-2 text-[#727272] text-[1rem]">내 정보</h1>
         <nav>
           <ul className="flex flex-col items-center justify-center space-y-4">
-            <li className="w-[240px] h-[300px] bg-white rounded-[20px] mb-4 flex flex-col items-center justify-center relative">
+            <li className="w-[15rem] h-[16.31rem] bg-white rounded-[20px] mb-4 flex flex-col items-center justify-center relative">
               <Link href="/member/mypage">
-                <DiAptana size={30} className="text-black absolute top-3 right-3" />
+                <div className="bg-[#E6F3E6] rounded-full w-[2.25rem] h-[2.25rem] border-white border-2 flex items-center justify-center absolute top-3 right-3">
+                  <DiAptana className="text-[#008A02] w-[1.25rem] h-[1.25rem]" />
+                </div>
               </Link>
               <div className="flex flex-col items-center mb-10">
                 {levelId ? (
-                  <ProfileStages levelId={levelId} size={120} /> // 레벨 ID가 존재할 때만 렌더링
+                  <div className="w-[7.5rem] h-[7.5rem]">
+                    <ProfileStages levelId={levelId} />
+                  </div> // 레벨 ID가 존재할 때만 렌더링
                 ) : (
-                  <div style={{ width: 120, height: 120 }} className="bg-gray-400 rounded-full mb-2"></div>
+                  <div style={{ width: '7.5rem', height: '7.5rem' }} className="relative">
+                    <Image
+                      src="/images/levelNotSet.png"
+                      alt="garden1"
+                      layout="fill"
+                      objectFit="cover"
+                      className="rounded-full w-[7.5rem] h-[7.5rem]"
+                    />
+                  </div>
                 )}
                 <span className="text-black text-lg font-bold">{nickname}</span>
                 <div className="text-black text-sm">{levelName || 'Level not set'}</div>
