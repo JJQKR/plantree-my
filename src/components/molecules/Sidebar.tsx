@@ -50,7 +50,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
   }, [userId]);
 
   return (
-    <div className="fixed top-40 left-0 w-[320px] bg-green-200 text-white">
+    <div className="fixed top-40 left-0 w-[20rem] bg-[#E6F3E6] text-white">
       <FetchUserData />
       <AttendanceCheck />
       <div className="p-4">
@@ -76,8 +76,8 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
                     <Image
                       src="/images/levelNotSet.png"
                       alt="garden1"
-                      layout="fill"
-                      objectFit="cover"
+                      fill
+                      style={{ objectFit: 'contain' }}
                       className="rounded-full w-[7.5rem] h-[7.5rem]"
                     />
                   </div>
@@ -91,7 +91,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
           </ul>
         </nav>
         <div>
-          <p className="text-[16px] text-black mb-2">내 다이어리</p>
+          <h1 className="ml-8 mb-2 text-[#727272] text-[1rem]">내 다이어리</h1>
         </div>
         <div className="w-full bg-white p-4 rounded-[20px]">
           <ul className="list-none space-y-2 text-center">

@@ -43,7 +43,7 @@ const MyPage: React.FC = () => {
     toggleAccountBarModal();
   };
 
-  const { email } = useUserStore((state) => state); // email 속성만 추출
+  const { email } = useUserStore((state) => state);
 
   return (
     <>

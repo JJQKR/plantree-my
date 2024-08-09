@@ -1,3 +1,5 @@
+'use client';
+
 import useMyModalStore from '@/stores/my.modal.store';
 import React, { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/supabase/client';
