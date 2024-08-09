@@ -5,10 +5,12 @@ import React from 'react';
 
 const page = () => {
   return (
-    <div>
-      <LandingHeader />
-      <LandingMain />
-      <LandingFooter />
+    <div className="bg-white min-h-screen flex flex-col">
+      <div className="flex flex-col items-center flex-grow">
+        <LandingHeader />
+        <LandingMain />
+        <LandingFooter />
+      </div>
     </div>
   );
 };

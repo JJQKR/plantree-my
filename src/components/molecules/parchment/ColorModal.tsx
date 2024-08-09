@@ -1,11 +1,11 @@
-import useMyModalStore from '@/stores/my.modal.store';
+import useParchmentModalStore from '@/stores/parchment.modal.store';
 import useTodoListStore from '@/stores/todoList.store';
 import React from 'react';
 import { FaCircle } from 'react-icons/fa';
 
 const ColorModal = () => {
   const { todoId, changeTodoColor } = useTodoListStore();
-  const { toggleTenMinplannerColorModal } = useMyModalStore((state) => state);
+  const { toggleTenMinplannerColorModal } = useParchmentModalStore((state) => state);
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
