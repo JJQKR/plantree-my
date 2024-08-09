@@ -867,32 +867,31 @@ const DiaryCoverPage: React.FC = () => {
       case 'Photos':
         return (
           <div>
+            <div>
+              <label htmlFor="imgChoice" className="mb-1 font-semibold">
+                이미지 넣기:
+              </label>
+              <input
+                id="imgChoice"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="border border-gray-300 rounded p-1 w-full"
+                ref={fileInputRef}
+              />
+            </div>
             <UnsplashImageSearch onSelectImage={handleSelectImage} />
           </div>
         );
       case 'Elements':
         return <div>요소</div>;
       case 'Upload':
-        return (
-          <div>
-            <label htmlFor="imgChoice" className="mb-1 font-semibold">
-              이미지 선택:
-            </label>
-            <input
-              id="imgChoice"
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="border border-gray-300 rounded p-1 w-full"
-              ref={fileInputRef}
-            />
-          </div>
-        );
+        return <div></div>;
       case 'Background':
         return (
           <div>
             <label htmlFor="colorPicker" className="mr-2 font-semibold">
-              색 선택:
+              기본 색상 선택 :
             </label>
             <input
               type="color"

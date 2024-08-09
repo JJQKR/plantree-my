@@ -8,13 +8,13 @@ type DiaryCoverSidebarProps = {
 const DiaryCoverSidebar: React.FC<DiaryCoverSidebarProps> = ({ onSelectMenu }) => {
   return (
     <div className="w-[6.3rem] h-full bg-gray-50 text-black border-r-[.1rem] flex flex-col">
-      <div
+      {/* <div
         className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
         onClick={() => onSelectMenu('Templates')}
       >
         <FaThLarge className="mb-1" />
         <span>템플릿</span>
-      </div>
+      </div> */}
       <div
         className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
         onClick={() => onSelectMenu('Text')}
@@ -36,13 +36,13 @@ const DiaryCoverSidebar: React.FC<DiaryCoverSidebarProps> = ({ onSelectMenu }) =
         <FaShapes className="mb-1" />
         <span>요소</span>
       </div>
-      <div
+      {/* <div
         className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
         onClick={() => onSelectMenu('Upload')}
       >
         <FaUpload className="mb-1" />
         <span>업로드</span>
-      </div>
+      </div> */}
       <div
         className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
         onClick={() => onSelectMenu('Background')}
