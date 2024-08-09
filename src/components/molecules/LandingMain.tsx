@@ -1,15 +1,64 @@
+'use client';
+
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
+import Swal from 'sweetalert2';
+import { supabase } from '@/supabase/client';
+import PlantreeLoginModal from './PlantreeLoginModal';
+import LoginModal from './LoginModal';
+import SignupModal from './SignupModal';
 
 const LandingMain = () => {
+  const [showPlantreeLoginModal, setShowPlantreeLoginModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showSignupModal, setShowSignupModal] = useState(false);
+
+  const handleLinkClick = async (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+
+    const {
+      data: { user }
+    } = await supabase.auth.getUser();
+    if (user) {
+      window.location.href = href;
+    } else {
+      Swal.fire({
+        title: '로그인이 필요합니다',
+        text: '이 기능을 사용하려면 로그인이 필요합니다.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: '로그인',
+        cancelButtonText: '취소'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setShowPlantreeLoginModal(true);
+        }
+      });
+    }
+  };
+
+  const handlePlantreeLoginClick = () => {
+    setShowPlantreeLoginModal(false);
+    setShowLoginModal(true);
+  };
+
+  const handleSignupClick = () => {
+    setShowPlantreeLoginModal(false);
+    setShowSignupModal(true);
+  };
+
+  const handleSignupSuccess = () => {
+    setShowSignupModal(false);
+    setShowLoginModal(true);
+  };
+
   return (
     <main className="max-w-[80rem] w-full bg-white text-black flex flex-col flex-grow items-center justify-center mx-auto">
       <div className="w-full relative mb-12 image-container">
         <Image
           src="/images/main11.jpg"
           alt="Main Image"
-          layout="fixed"
           width={1600}
           height={900}
           className="rounded-2xl mt-3 w-full h-[450px] object-cover"
@@ -75,12 +124,13 @@ const LandingMain = () => {
                 <p>유저의 자유도를 높힌 서비스를 기획 해봤어요!</p>
               </div>
             </div>
-            <Link
+            <a
               href="/member/hub"
               className="bg-green-600 text-white px-6 py-5 rounded-lg mt-4 text-center hover:bg-green-900 shadow-2xl"
+              onClick={(e) => handleLinkClick(e, '/member/hub')}
             >
               자유롭게 다이어리를 꾸며볼까요?
-            </Link>
+            </a>
           </div>
         </div>
       </section>
@@ -130,12 +180,13 @@ const LandingMain = () => {
                 <p>느낄만한 서비스를 만들고자 했습니다.</p>
               </div>
             </div>
-            <Link
+            <a
               href="/member/hub"
               className="bg-green-600 text-white px-6 py-5 rounded-lg mt-4 text-center hover:bg-green-900 shadow-2xl"
+              onClick={(e) => handleLinkClick(e, '/member/hub')}
             >
               기억나무와 함께 일상을 기록해볼까요?
-            </Link>
+            </a>
           </div>
         </div>
       </section>
@@ -187,15 +238,27 @@ const LandingMain = () => {
                 <p>유저의 자유도를 높힌 서비스를 기획 해봤어요!</p>
               </div>
             </div>
-            <Link
+            <a
               href="/member/hub"
               className="bg-green-600 text-white px-6 py-5 rounded-lg mt-4 text-center hover:bg-green-900 shadow-2xl"
+              onClick={(e) => handleLinkClick(e, '/member/hub')}
             >
               Plantree 를 사용해볼까요?
-            </Link>
+            </a>
           </div>
         </div>
       </section>
+      {showPlantreeLoginModal && (
+        <PlantreeLoginModal
+          onClose={() => setShowPlantreeLoginModal(false)}
+          onSignupClick={handleSignupClick}
+          onPlantreeLoginClick={handlePlantreeLoginClick}
+        />
+      )}
+      {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} onSignupClick={handleSignupClick} />}
+      {showSignupModal && (
+        <SignupModal onClose={() => setShowSignupModal(false)} onSignupSuccess={handleSignupSuccess} />
+      )}
     </main>
   );
 };

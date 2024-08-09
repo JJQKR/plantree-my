@@ -2,7 +2,7 @@
 
 import { supabase } from '@/supabase/client';
 import React, { useState, useEffect } from 'react';
-import { Session } from '@supabase/supabase-js'; // Import Session type
+import { Session } from '@supabase/supabase-js';
 
 const PlantreeLoginModal: React.FC<{
   onClose: () => void;
