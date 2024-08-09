@@ -28,7 +28,7 @@ const DiaryCase: React.FC = () => {
   const [diaryCovers, setDiaryCovers] = useState<any[]>([]); // 다이어리 커버 상태
 
   // 다이어리 생성 함수 훅
-  const { mutate: createDiary } = useCreateDiary();
+  // const { mutate: createDiary } = useCreateDiary();
 
   // 세션을 통해 사용자 ID를 가져오는 비동기 함수
   const fetchSession = async () => {
