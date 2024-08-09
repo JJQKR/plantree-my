@@ -93,6 +93,8 @@ const DiaryCoverPage: React.FC = () => {
       try {
         const data = await getCover(diaryId);
 
+        // console.log('Fetched cover data:', data);
+
         if (data) {
           const parsedData = {
             cover_title: data.cover_title,
