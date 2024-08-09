@@ -59,20 +59,19 @@ const WithdrawalModal: React.FC = () => {
         className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
         onClick={handleBackGroundClick}
       >
-        <div className="bg-white p-9 rounded-[10px] style={{ width: '20em' }}">
+        <div className="bg-white p-[2.5rem] rounded-[10px] w-[31.25rem] h-[28rem]">
           <div onClick={(e) => e.stopPropagation()}>
-            <div className="flex justify-between items-center mb-4">
-              <div className="text-xl font-bold text-left">회원 탈퇴</div>
+            <div className="flex justify-between items-center mb-[1.75rem]">
+              <h1 className="text-[1.63rem] font-bold text-left text-black">계정 탈퇴</h1>
               <button className="text-black" onClick={toggleWithdrawalModal} type="button">
                 &#10005;
               </button>
             </div>
-            <div className="text-lg font-bold mb-4">
+            <div className="text-[1.25rem] mb-[1.75rem]">
               <p>{nickname} 님은</p>
               <p>플랜트리와 {membershipDays}일 동안 기록을 키워나갔어요.</p>
-
-              <p>정말 탈퇴하시겠어요?</p>
-              <div className="my-3">
+              <div className="mb-[1.75rem] mt-[1.75rem]">
+                <p>정말 탈퇴하시겠어요?</p>
                 <p>아래 텍스트를 입력해주세요.</p>
               </div>
             </div>
@@ -80,7 +79,7 @@ const WithdrawalModal: React.FC = () => {
             <input
               type="text"
               placeholder="플랜트리잘있어"
-              className="mb-4 p-2 border rounded w-full text-black"
+              className="mb-[1.75rem] p-2 border rounded w-full text-[1.13rem] text-black"
               value={goodbye}
               onChange={(e) => setGoodbye(e.target.value)}
               disabled={loading}
@@ -88,7 +87,7 @@ const WithdrawalModal: React.FC = () => {
             <div className="flex flex-col gap-2">
               <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
                 <button
-                  className="px-4 py-2 w-full text-white rounded"
+                  className="px-4 w-full h-[3.25rem] text-white text-[1.13rem] rounded-[5px]"
                   type="submit"
                   disabled={loading}
                   style={{ backgroundColor: '#9E9E9E' }}
