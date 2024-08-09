@@ -76,5 +76,12 @@ body {
     rgba(255, 255, 255, 0) 0%,
     rgba(255, 255, 255, 1)
   );
-  border-radius: 8px;
+  border-radius: 5px;
+}
+
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
 }
