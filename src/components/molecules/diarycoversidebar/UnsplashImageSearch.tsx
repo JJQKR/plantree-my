@@ -78,7 +78,7 @@ const UnsplashImageSearch: React.FC<UnsplashImageSearchProps> = ({ onSelectImage
       <div>
         {images.map((image) => (
           <img
-            key={image.id}
+            key={`image-${image.id}`}
             src={image.urls.thumb}
             alt={image.alt_description}
             onClick={() => onSelectImage(image.urls.regular)}

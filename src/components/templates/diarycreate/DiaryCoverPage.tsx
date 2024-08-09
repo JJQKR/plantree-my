@@ -15,6 +15,7 @@ import { AddDiaryType } from '@/api/diaries.api';
 import { useCreateDiary } from '@/lib/hooks/useDiaries';
 import UnsplashImageSearch from '@/components/molecules/diarycoversidebar/UnsplashImageSearch';
 import UnsplashBackgroundSearch from '@/components/molecules/diarycoversidebar/UnsplashBackgroundSearch';
+import Swal from 'sweetalert2';
 
 type ParamTypes = {
   [key: string]: string;
@@ -479,7 +480,15 @@ const DiaryCoverPage: React.FC = () => {
   };
 
   const handleSaveCover = async () => {
-    if (!confirm('커버를 저장하시겠습니까?')) {
+    const result = await Swal.fire({
+      title: '커버를 저장하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '네',
+      cancelButtonText: '아니요'
+    });
+
+    if (!result.isConfirmed) {
       return;
     }
 
@@ -566,7 +575,7 @@ const DiaryCoverPage: React.FC = () => {
         return;
       }
 
-      alert('Cover 저장 성공!');
+      Swal.fire('Cover 저장 성공!', '', 'success');
       router.push(`/member/hub`);
     } catch (error) {
       console.error('Cover 저장 실패:', error);
@@ -575,9 +584,18 @@ const DiaryCoverPage: React.FC = () => {
   };
 
   const handleUpdateDiary = async () => {
-    if (!confirm('다이어리를 수정하시겠습니까?')) {
+    const result = await Swal.fire({
+      title: '표지를 수정 하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '네',
+      cancelButtonText: '아니요'
+    });
+
+    if (!result.isConfirmed) {
       return;
     }
+
     let publicUrl: string | null = null;
     try {
       const { data, error } = await supabase
@@ -659,7 +677,7 @@ const DiaryCoverPage: React.FC = () => {
         return;
       }
 
-      alert('Cover 수정 성공!');
+      Swal.fire('Cover 수정 성공!', '', 'success');
     } catch (error) {
       console.error('Cover 수정 실패:', error);
       alert('Cover 수정 실패');
@@ -667,7 +685,15 @@ const DiaryCoverPage: React.FC = () => {
   };
 
   const handleResetDiary = async () => {
-    if (!confirm('다이어리를 초기화 하시겠습니까?')) {
+    const confirmResult = await Swal.fire({
+      title: '다이어리를 초기화 하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '네',
+      cancelButtonText: '아니요'
+    });
+
+    if (!confirmResult.isConfirmed) {
       return;
     }
 
@@ -680,7 +706,7 @@ const DiaryCoverPage: React.FC = () => {
 
       if (error || !data) {
         console.error('데이터 가져오기 실패:', error);
-        alert('데이터 가져오기 실패');
+        Swal.fire('데이터 가져오기 실패', '', 'error');
         return;
       }
 
@@ -691,16 +717,16 @@ const DiaryCoverPage: React.FC = () => {
         const { error: deleteError } = await supabase.storage.from('cover_img').remove([fileName]);
         if (deleteError) {
           console.error('이미지 파일 삭제 실패:', deleteError);
-          alert(`이미지 파일 삭제 실패: ${deleteError.message}`);
+          Swal.fire(`이미지 파일 삭제 실패: ${deleteError.message}`, '', 'error');
         } else {
-          alert('초기화 성공');
+          Swal.fire('초기화 성공', '', 'success');
         }
       } else {
-        alert('초기화 성공');
+        Swal.fire('초기화 성공', '', 'success');
       }
     } catch (error) {
       console.error('초기화 실패:', error);
-      alert(`초기화 실패: `);
+      Swal.fire(`초기화 실패`, '', 'error');
     }
 
     resetCoverState();
@@ -727,11 +753,11 @@ const DiaryCoverPage: React.FC = () => {
       unsplash_scale: 1
     };
 
-    const result = await updateCover(diaryId, coverData);
+    const Result = await updateCover(diaryId, coverData);
 
-    if (result.error) {
-      console.error('수정 실패:', result.error);
-      alert(`수정 실패: ${result.error}`);
+    if (Result.error) {
+      console.error('초기화 실패:', Result.error);
+      Swal.fire(`초기화 실패: ${Result.error}`, '', 'error');
       return;
     }
   };
@@ -920,8 +946,21 @@ const DiaryCoverPage: React.FC = () => {
   };
 
   const handleBackgroundImageChange = (imageUrl: string) => {
-    setCoverBackgroundColor(`url(${imageUrl})`);
+    const img = new window.Image();
+    img.src = imageUrl;
+    img.onload = () => {
+      setCoverBackgroundColor(imageUrl);
+      if (stageRef.current) {
+        stageRef.current.batchDraw();
+      }
+    };
   };
+
+  useEffect(() => {
+    if (coverBackgroundColor && stageRef.current) {
+      stageRef.current.batchDraw();
+    }
+  }, [coverBackgroundColor]);
 
   return (
     <div className="flex h-full relative">
@@ -959,15 +998,15 @@ const DiaryCoverPage: React.FC = () => {
                       width={coverStageSize.width}
                       height={coverStageSize.height}
                       fillPatternImage={
-                        coverBackgroundColor.startsWith('url(')
+                        coverBackgroundColor.startsWith('http')
                           ? (() => {
                               const img = new window.Image();
-                              img.src = coverBackgroundColor.slice(4, -1).replace(/"/g, '');
+                              img.src = coverBackgroundColor;
                               return img;
                             })()
                           : undefined
                       }
-                      fill={coverBackgroundColor.startsWith('url(') ? undefined : coverBackgroundColor}
+                      fill={coverBackgroundColor.startsWith('http') ? undefined : coverBackgroundColor}
                     />
 
                     {/* 로컬 이미지 */}

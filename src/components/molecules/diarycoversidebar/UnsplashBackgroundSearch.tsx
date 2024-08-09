@@ -40,9 +40,9 @@ const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({ onS
     <div>
       <p className="text-center text-sm font-bold">Photos by UnSplash</p>
       <div>
-        {images.map((image) => (
+        {images.map((image, index) => (
           <img
-            key={image.id}
+            key={`background-${image.id}-${index}`}
             src={image.urls.thumb}
             alt={image.alt_description}
             onClick={() => onSelectBackground(image.urls.regular)}
