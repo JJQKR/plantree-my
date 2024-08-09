@@ -946,8 +946,21 @@ const DiaryCoverPage: React.FC = () => {
   };
 
   const handleBackgroundImageChange = (imageUrl: string) => {
-    setCoverBackgroundColor(`url(${imageUrl})`);
+    const img = new window.Image();
+    img.src = imageUrl;
+    img.onload = () => {
+      setCoverBackgroundColor(imageUrl);
+      if (stageRef.current) {
+        stageRef.current.batchDraw();
+      }
+    };
   };
+
+  useEffect(() => {
+    if (coverBackgroundColor && stageRef.current) {
+      stageRef.current.batchDraw();
+    }
+  }, [coverBackgroundColor]);
 
   return (
     <div className="flex h-full relative">
@@ -985,15 +998,15 @@ const DiaryCoverPage: React.FC = () => {
                       width={coverStageSize.width}
                       height={coverStageSize.height}
                       fillPatternImage={
-                        coverBackgroundColor.startsWith('url(')
+                        coverBackgroundColor.startsWith('http')
                           ? (() => {
                               const img = new window.Image();
-                              img.src = coverBackgroundColor.slice(4, -1).replace(/"/g, '');
+                              img.src = coverBackgroundColor;
                               return img;
                             })()
                           : undefined
                       }
-                      fill={coverBackgroundColor.startsWith('url(') ? undefined : coverBackgroundColor}
+                      fill={coverBackgroundColor.startsWith('http') ? undefined : coverBackgroundColor}
                     />
 
                     {/* 로컬 이미지 */}
