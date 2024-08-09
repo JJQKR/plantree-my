@@ -17,7 +17,7 @@ import { supabase } from '@/supabase/client';
 import Image from 'next/image';
 import { getCoversByUserId } from '@/services/diarycover.service';
 
-// CoverData와 관련된 타입 정의
+// Define types for CoverData and related types
 interface Position {
   x: number;
   y: number;
@@ -41,7 +41,7 @@ interface CoverData {
   cover_bg_color: string;
   cover_scale: number;
   cover_stage_size: Size;
-  diary_id?: string; // 다이어리 ID (선택적 속성)
+  diary_id?: string; // Optional property for diary_id
 }
 
 const DiaryCase: React.FC = () => {
@@ -70,7 +70,7 @@ const DiaryCase: React.FC = () => {
     setUserId(id); // 사용자 ID 설정
     const rawCovers = await getCoversByUserId(id);
 
-    // raw 커버 데이터를 CoverData로 변환
+    // Convert raw covers to CoverData
     const covers: CoverData[] = rawCovers.map((cover: any) => ({
       cover_title: cover.cover_title ?? '',
       cover_title_position: JSON.parse(cover.cover_title_position) as Position,
@@ -134,23 +134,11 @@ const DiaryCase: React.FC = () => {
                     key={cover.diary_id}
                     className="flex flex-col items-center justify-center cursor-pointer"
                     onClick={() => handleDiaryClick(cover.diary_id as string)}
-                    style={{
-                      transform: `scale(${cover.cover_scale})`,
-                      width: cover.cover_stage_size.width,
-                      height: cover.cover_stage_size.height
-                    }}
                   >
-                    <div
-                      className="relative flex flex-col items-center justify-center rounded shadow-md text-2xl font-bold text-white overflow-hidden"
-                      style={{ backgroundColor: cover.cover_bg_color, width: '100%', height: '100%' }}
-                    >
+                    <div className="relative flex flex-col items-center justify-center w-[250px] h-[400px] rounded shadow-md text-2xl font-bold text-white overflow-hidden">
                       <div
                         className="relative flex flex-col items-center justify-center w-full h-full rounded"
-                        style={{
-                          backgroundColor: cover.cover_bg_color,
-                          width: '100%',
-                          height: '100%'
-                        }}
+                        style={{ backgroundColor: cover.cover_bg_color }}
                       >
                         <span
                           className="absolute text-center text-black"
@@ -217,6 +205,7 @@ const DiaryCase: React.FC = () => {
             pagination={{ clickable: true }}
             modules={[EffectCoverflow, Pagination]}
             className="mySwiper"
+            style={{ width: '100%', height: '100%' }}
           >
             {diaryCovers.length > 0 ? (
               diaryCovers.map((cover) =>
@@ -224,7 +213,7 @@ const DiaryCase: React.FC = () => {
                   <SwiperSlide
                     key={cover.diary_id}
                     onClick={() => handleDiaryClick(cover.diary_id as string)}
-                    className="relative cursor-pointer flex flex-col mt-10 items-center justify-center rounded shadow-md text-2xl font-bold text-black"
+                    className="relative cursor-pointer flex flex-col items-center justify-center rounded shadow-md text-2xl font-bold text-black"
                     style={{
                       backgroundColor: cover.cover_bg_color,
                       width: cover.cover_stage_size.width * cover.cover_scale,
@@ -235,11 +224,11 @@ const DiaryCase: React.FC = () => {
                       <span
                         className="absolute text-center text-black"
                         style={{
-                          top: cover.cover_title_position.y,
-                          left: cover.cover_title_position.x,
+                          top: cover.cover_title_position.y * cover.cover_scale,
+                          left: cover.cover_title_position.x * cover.cover_scale,
                           transform: `translate(10%, -40%) rotate(${cover.cover_title_rotation}deg)`,
-                          fontSize: cover.cover_title_fontsize,
-                          width: cover.cover_title_width
+                          fontSize: cover.cover_title_fontsize * cover.cover_scale,
+                          width: cover.cover_title_width * cover.cover_scale
                         }}
                       >
                         {cover.cover_title || '제목 없음'}
@@ -248,18 +237,18 @@ const DiaryCase: React.FC = () => {
                         <div
                           className="absolute"
                           style={{
-                            width: cover.cover_image_size.width,
-                            height: cover.cover_image_size.height,
-                            top: cover.cover_image_position.y,
-                            left: cover.cover_image_position.x,
+                            width: cover.cover_image_size.width * cover.cover_scale,
+                            height: cover.cover_image_size.height * cover.cover_scale,
+                            top: cover.cover_image_position.y * cover.cover_scale,
+                            left: cover.cover_image_position.x * cover.cover_scale,
                             transform: `translate(10%, -40%) rotate(${cover.cover_image_rotation}deg)`
                           }}
                         >
                           <Image
                             src={cover.cover_image}
                             alt={cover.cover_title || 'Cover Image'}
-                            width={cover.cover_image_size.width}
-                            height={cover.cover_image_size.height}
+                            width={cover.cover_image_size.width * cover.cover_scale}
+                            height={cover.cover_image_size.height * cover.cover_scale}
                             className="object-cover rounded"
                           />
                         </div>
@@ -269,7 +258,7 @@ const DiaryCase: React.FC = () => {
                 ) : null
               )
             ) : (
-              <SwiperSlide className="flex items-center justify-center bg-red-300 rounded shadow-md text-2xl font-bold text-black">
+              <SwiperSlide className="flex items-center justify-center w-[480px] h-[720px] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
                 <button
                   onClick={handleCreateDiary}
                   className="flex flex-col items-center justify-center text-center"
