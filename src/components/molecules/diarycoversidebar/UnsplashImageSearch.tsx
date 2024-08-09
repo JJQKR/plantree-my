@@ -59,7 +59,7 @@ const UnsplashImageSearch: React.FC<UnsplashImageSearchProps> = ({ onSelectImage
 
   return (
     <div>
-      <p className="text-center text-sm font-bold">UnSplash by</p>
+      <p className="text-center text-sm font-bold">Photos by UnSplash</p>
       <form onSubmit={handleSubmit}>
         <input
           type="text"

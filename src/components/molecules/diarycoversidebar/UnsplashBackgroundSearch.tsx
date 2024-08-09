@@ -14,7 +14,7 @@ const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({ onS
   const fetchRandomImages = async () => {
     setLoading(true);
     try {
-      const results = await fetchImages('gradient', page); // 'gradient' 키워드로 검색
+      const results = await fetchImages('gradient', page);
       if (results.length === 0) {
         setHasMore(false);
       } else {
@@ -38,7 +38,7 @@ const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({ onS
 
   return (
     <div>
-      <p className="text-center text-sm font-bold">UnSplash by</p>
+      <p className="text-center text-sm font-bold">Photos by UnSplash</p>
       <div>
         {images.map((image) => (
           <img
