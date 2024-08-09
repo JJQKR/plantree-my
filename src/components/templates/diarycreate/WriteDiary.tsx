@@ -53,7 +53,7 @@ const WriteDiary = () => {
     setPages(dbPages || []);
   }, [dbPages, dbDiary]);
 
-  console.log(dbDiary);
+  // console.log(dbDiary);
 
   // 로그인이 되어있지 않다면 로그인 해달라는 문구를 리턴합니다.
   if (!userId) {
@@ -80,7 +80,7 @@ const WriteDiary = () => {
     }
   };
 
-  console.log(pages);
+  // console.log(pages);
 
   // 다이어리 저장 : db diaries 생성, 업데이트 , db pages 생성, 업데이트
   const saveDiary = () => {

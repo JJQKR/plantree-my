@@ -68,9 +68,11 @@ const WithdrawalModal: React.FC = () => {
             <div className="text-lg font-bold mb-4">
               <p>{nickname} 님은</p>
               <p>플랜트리와 {membershipDays}일 동안 기록을 키워나갔어요.</p>
-              <p>정말 탈퇴하시겠어요?</p>
 
-              <p>아래 텍스트를 입력해주세요.</p>
+              <p>정말 탈퇴하시겠어요?</p>
+              <div className="my-3">
+                <p>아래 텍스트를 입력해주세요.</p>
+              </div>
             </div>
 
             <input

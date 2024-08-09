@@ -51,6 +51,18 @@ type DiaryCoverState = {
   setCoverData: (data: object | null) => void;
   activeSection: string | null;
   setActiveSection: (section: string | null) => void;
+
+  //언스플레쉬
+  unsplashImage: HTMLImageElement | null;
+  setUnsplashImage: (image: HTMLImageElement | null) => void;
+  unsplashImagePosition: CoverPosition;
+  setUnsplashImagePosition: (position: CoverPosition) => void;
+  unsplashImageSize: CoverSize;
+  setUnsplashImageSize: (size: CoverSize) => void;
+  unsplashScale: number;
+  setUnsplashScale: (scale: number) => void;
+  unsplashImageRotation: number;
+  setUnsplashImageRotation: (rotation: number) => void;
 };
 
 export const useDiaryCoverStore = create<DiaryCoverState>((set, get) => ({
@@ -87,5 +99,17 @@ export const useDiaryCoverStore = create<DiaryCoverState>((set, get) => ({
   coverData: null,
   setCoverData: (data) => set({ coverData: data }),
   activeSection: null,
-  setActiveSection: (section) => set({ activeSection: section })
+  setActiveSection: (section) => set({ activeSection: section }),
+
+  //언스플레쉬
+  unsplashImage: null,
+  setUnsplashImage: (image) => set({ unsplashImage: image }),
+  unsplashImagePosition: { x: 50, y: 60 },
+  setUnsplashImagePosition: (position) => set({ unsplashImagePosition: position }),
+  unsplashImageSize: { width: 0, height: 0 },
+  setUnsplashImageSize: (size) => set({ unsplashImageSize: size }),
+  unsplashScale: 1,
+  setUnsplashScale: (scale) => set({ unsplashScale: scale }),
+  unsplashImageRotation: 0,
+  setUnsplashImageRotation: (rotation) => set({ unsplashImageRotation: rotation })
 }));

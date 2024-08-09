@@ -31,7 +31,7 @@ const ObtainedBadgesCount: React.FC = () => {
     calculateObtainedBadges();
   }, [diaryCount, membershipDays]);
 
-  return <span>{obtainedBadgesCount}</span>;
+  return <span className="text-[#008A02]">{obtainedBadgesCount}</span>;
 };
 
 export default ObtainedBadgesCount;

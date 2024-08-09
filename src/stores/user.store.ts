@@ -17,6 +17,8 @@ interface UserState {
   setCreatedAt: (createdAt: string) => void; // created_at 설정 함수
   diaryCount: number; // nullable not allowed
   setDiaryCount: (diaryCounts: number) => void;
+  provider: string;
+  setProvider: (provider: string) => void;
 }
 
 const useUserStore = create<UserState>((set) => ({
@@ -35,7 +37,9 @@ const useUserStore = create<UserState>((set) => ({
   createdAt: new Date().toISOString(), // 초기값 설정
   setCreatedAt: (createdAt) => set({ createdAt }), // 설정 함수 정의
   diaryCount: 0,
-  setDiaryCount: (diaryCount) => set({ diaryCount })
+  setDiaryCount: (diaryCount) => set({ diaryCount }),
+  provider: '',
+  setProvider: (provider) => set({ provider })
 }));
 
 export default useUserStore;
