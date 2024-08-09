@@ -42,6 +42,7 @@ interface CoverData {
   cover_scale: number;
   cover_stage_size: Size;
   diary_id?: string; // 다이어리 ID (선택적 속성)
+  cover_id: string;
 }
 
 const DiaryCase: React.FC = () => {
@@ -84,7 +85,8 @@ const DiaryCase: React.FC = () => {
       cover_bg_color: cover.cover_bg_color ?? '#ffffff',
       cover_scale: cover.cover_scale ?? 1,
       cover_stage_size: JSON.parse(cover.cover_stage_size) as Size,
-      diary_id: cover.id
+      diary_id: cover.diary_id,
+      cover_id: cover.id
     }));
 
     setDiaryCovers(covers);
@@ -129,11 +131,14 @@ const DiaryCase: React.FC = () => {
           <div className="grid grid-cols-4 gap-10 max-w-full">
             {diaryCovers.length > 0 ? (
               diaryCovers.map((cover) =>
-                cover.diary_id ? (
+                cover.cover_id ? (
                   <div
-                    key={cover.diary_id}
+                    key={cover.cover_id}
                     className="flex flex-col items-center justify-center cursor-pointer"
-                    onClick={() => handleDiaryClick(cover.diary_id as string)}
+                    onClick={() => {
+                      console.log('cover.diary_id 온클릭', cover.diary_id);
+                      handleDiaryClick(cover.diary_id as string);
+                    }}
                     style={{
                       transform: `scale(${cover.cover_scale})`,
                       width: cover.cover_stage_size.width,
@@ -220,10 +225,13 @@ const DiaryCase: React.FC = () => {
           >
             {diaryCovers.length > 0 ? (
               diaryCovers.map((cover) =>
-                cover.diary_id ? (
+                cover.cover_id ? (
                   <SwiperSlide
-                    key={cover.diary_id}
-                    onClick={() => handleDiaryClick(cover.diary_id as string)}
+                    key={cover.cover_id}
+                    onClick={() => {
+                      console.log('cover_idary찐', cover);
+                      handleDiaryClick(cover.diary_id as string);
+                    }}
                     className="relative cursor-pointer flex flex-col mt-10 items-center justify-center rounded shadow-md text-2xl font-bold text-black"
                     style={{
                       backgroundColor: cover.cover_bg_color,
