@@ -46,4 +46,5 @@ export type DiaryCover = {
   cover_image_size: any | null; // JSON 타입으로 변경 가능
   cover_scale: number | null;
   cover_title: string | null;
+  unsplash_image?: string;
 };
