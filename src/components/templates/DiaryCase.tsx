@@ -11,13 +11,38 @@ import { useRouter } from 'next/navigation';
 import { useStore } from '@/stores/sidebar.store';
 import useDiaryStore from '@/stores/diary.store';
 import Swal from 'sweetalert2';
-import { useCreateDiary } from '@/lib/hooks/useDiaries';
 import useUserStore from '@/stores/user.store';
 import uuid from 'react-uuid';
 import { supabase } from '@/supabase/client';
-import { AddDiaryType } from '@/types/main';
 import Image from 'next/image';
 import { getCoversByUserId } from '@/services/diarycover.service';
+
+// CoverData와 관련된 타입 정의
+interface Position {
+  x: number;
+  y: number;
+}
+
+interface Size {
+  width: number;
+  height: number;
+}
+
+interface CoverData {
+  cover_title: string;
+  cover_title_position: Position;
+  cover_title_fontsize: number;
+  cover_title_width: number;
+  cover_title_rotation: number;
+  cover_image: string;
+  cover_image_position: Position;
+  cover_image_size: Size;
+  cover_image_rotation: number;
+  cover_bg_color: string;
+  cover_scale: number;
+  cover_stage_size: Size;
+  diary_id?: string; // 다이어리 ID (선택적 속성)
+}
 
 const DiaryCase: React.FC = () => {
   const { userId, setUserId } = useUserStore((state) => state);
@@ -25,10 +50,7 @@ const DiaryCase: React.FC = () => {
   const { gridView } = useStore(); // 그리드 뷰 상태
   const router = useRouter(); // Next.js 라우터
   const setDiaryId = useDiaryStore((state) => state.setDiaryId); // 다이어리 ID 설정 함수
-  const [diaryCovers, setDiaryCovers] = useState<any[]>([]); // 다이어리 커버 상태
-
-  // 다이어리 생성 함수 훅
-  // const { mutate: createDiary } = useCreateDiary();
+  const [diaryCovers, setDiaryCovers] = useState<CoverData[]>([]); // 다이어리 커버 상태
 
   // 세션을 통해 사용자 ID를 가져오는 비동기 함수
   const fetchSession = async () => {
@@ -46,7 +68,25 @@ const DiaryCase: React.FC = () => {
       return;
     }
     setUserId(id); // 사용자 ID 설정
-    const covers = await getCoversByUserId(id); // 사용자 ID를 이용하여 다이어리 커버 가져오기
+    const rawCovers = await getCoversByUserId(id);
+
+    // raw 커버 데이터를 CoverData로 변환
+    const covers: CoverData[] = rawCovers.map((cover: any) => ({
+      cover_title: cover.cover_title ?? '',
+      cover_title_position: JSON.parse(cover.cover_title_position) as Position,
+      cover_title_fontsize: cover.cover_title_fontsize ?? 20,
+      cover_title_width: cover.cover_title_width ?? 200,
+      cover_title_rotation: cover.cover_title_rotation ?? 0,
+      cover_image: cover.cover_image ?? '',
+      cover_image_position: JSON.parse(cover.cover_image_position) as Position,
+      cover_image_size: JSON.parse(cover.cover_image_size) as Size,
+      cover_image_rotation: cover.cover_image_rotation ?? 0,
+      cover_bg_color: cover.cover_bg_color ?? '#ffffff',
+      cover_scale: cover.cover_scale ?? 1,
+      cover_stage_size: JSON.parse(cover.cover_stage_size) as Size,
+      diary_id: cover.id
+    }));
+
     setDiaryCovers(covers);
   };
 
@@ -87,43 +127,76 @@ const DiaryCase: React.FC = () => {
       >
         {gridView ? (
           <div className="grid grid-cols-4 gap-10 max-w-full">
-            {diaryCovers && diaryCovers.length > 0 ? (
-              diaryCovers.map(
-                (cover) =>
-                  cover.diary_id && ( // 다이어리 ID가 존재하는 경우
+            {diaryCovers.length > 0 ? (
+              diaryCovers.map((cover) =>
+                cover.diary_id ? (
+                  <div
+                    key={cover.diary_id}
+                    className="flex flex-col items-center justify-center cursor-pointer"
+                    onClick={() => handleDiaryClick(cover.diary_id as string)}
+                    style={{
+                      transform: `scale(${cover.cover_scale})`,
+                      width: cover.cover_stage_size.width,
+                      height: cover.cover_stage_size.height
+                    }}
+                  >
                     <div
-                      key={cover.diary_id}
-                      className="flex flex-col items-center justify-center cursor-pointer"
-                      onClick={() => handleDiaryClick(cover.diary_id as string)} // 타입 단언 사용
+                      className="relative flex flex-col items-center justify-center rounded shadow-md text-2xl font-bold text-white overflow-hidden"
+                      style={{ backgroundColor: cover.cover_bg_color, width: '100%', height: '100%' }}
                     >
-                      <div className="relative flex flex-col items-center justify-center w-[250px] h-[400px] rounded shadow-md text-2xl font-bold text-white">
-                        {/* 배경 색상 */}
-                        <div
-                          className="relative flex flex-col items-center justify-center w-full h-full rounded"
-                          style={{ backgroundColor: cover.cover_bg_color || 'bg-white' }} // 기본 배경 색상
+                      <div
+                        className="relative flex flex-col items-center justify-center w-full h-full rounded"
+                        style={{
+                          backgroundColor: cover.cover_bg_color,
+                          width: '100%',
+                          height: '100%'
+                        }}
+                      >
+                        <span
+                          className="absolute text-center text-black"
+                          style={{
+                            top: cover.cover_title_position.y,
+                            left: cover.cover_title_position.x,
+                            transform: `translate(5%, -30%) rotate(${cover.cover_title_rotation}deg)`,
+                            fontSize: cover.cover_title_fontsize,
+                            width: cover.cover_title_width,
+                            maxWidth: '100%',
+                            maxHeight: '100%',
+                            whiteSpace: 'nowrap', // 제목이 한 줄로 나오도록
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis' // 제목이 길어지면 생략 부호로 표시
+                          }}
                         >
-                          <span className="absolute top-10 left-1/2 transform -translate-x-1/2 text-center text-black">
-                            {cover.cover_title || '제목 없음'}
-                          </span>
-                          {/* 이미지 */}
-                          {cover.cover_image && (
-                            <div className="absolute w-full flex items-center justify-center">
-                              <Image
-                                src={cover.cover_image}
-                                alt={cover.cover_title || 'Cover Image'}
-                                width={150} // 이미지 너비
-                                height={150} // 이미지 높이
-                                className="object-cover rounded"
-                              />
-                            </div>
-                          )}
-                        </div>
+                          {cover.cover_title || '제목 없음'}
+                        </span>
+                        {cover.cover_image && (
+                          <div
+                            className="absolute"
+                            style={{
+                              width: cover.cover_image_size.width,
+                              height: cover.cover_image_size.height,
+                              top: cover.cover_image_position.y,
+                              left: cover.cover_image_position.x,
+                              transform: `translate(5%, -30%) rotate(${cover.cover_image_rotation}deg)`,
+                              overflow: 'hidden'
+                            }}
+                          >
+                            <Image
+                              src={cover.cover_image}
+                              alt={cover.cover_title || 'Cover Image'}
+                              width={cover.cover_image_size.width}
+                              height={cover.cover_image_size.height}
+                              className="object-cover rounded"
+                            />
+                          </div>
+                        )}
                       </div>
                     </div>
-                  )
+                  </div>
+                ) : null
               )
             ) : (
-              <div className="flex items-center justify-center w-[250px] h-[400px] bg-white rounded shadow-md text-2xl font-bold text-black">
+              <div className="flex items-center justify-center w-[250px] h-[400px] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
                 다이어리가 없습니다
               </div>
             )}
@@ -145,40 +218,63 @@ const DiaryCase: React.FC = () => {
             modules={[EffectCoverflow, Pagination]}
             className="mySwiper"
           >
-            {diaryCovers && diaryCovers.length > 0 ? (
-              diaryCovers.map(
-                (cover) =>
-                  cover.diary_id && ( // 다이어리 ID가 존재하는 경우
-                    <SwiperSlide
-                      key={cover.diary_id}
-                      onClick={() => handleDiaryClick(cover.diary_id as string)}
-                      className="relative cursor-pointer flex flex-col items-center justify-center w-[480px] h-[720px] rounded shadow-md text-2xl font-bold text-black"
-                      style={{ backgroundColor: cover.cover_bg_color || 'bg-white' }}
-                    >
-                      {/* 배경 색상 */}
-                      <div className="relative flex flex-col items-center justify-center w-full h-full rounded">
-                        <span className="absolute top-10 left-1/2 transform -translate-x-1/2 text-center">
-                          {cover.cover_title || '제목 없음'}
-                        </span>
-                        {/* 이미지 */}
-                        {cover.cover_image && (
-                          <div className="absolute w-full flex items-center justify-center">
-                            <Image
-                              src={cover.cover_image}
-                              alt={cover.cover_title || 'Cover Image'}
-                              width={250} // 이미지 너비
-                              height={250} // 이미지 높이
-                              className="object-cover rounded"
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </SwiperSlide>
-                  )
+            {diaryCovers.length > 0 ? (
+              diaryCovers.map((cover) =>
+                cover.diary_id ? (
+                  <SwiperSlide
+                    key={cover.diary_id}
+                    onClick={() => handleDiaryClick(cover.diary_id as string)}
+                    className="relative cursor-pointer flex flex-col mt-10 items-center justify-center rounded shadow-md text-2xl font-bold text-black"
+                    style={{
+                      backgroundColor: cover.cover_bg_color,
+                      width: cover.cover_stage_size.width * cover.cover_scale,
+                      height: cover.cover_stage_size.height * cover.cover_scale
+                    }}
+                  >
+                    <div className="relative w-full h-full">
+                      <span
+                        className="absolute text-center text-black"
+                        style={{
+                          top: cover.cover_title_position.y,
+                          left: cover.cover_title_position.x,
+                          transform: `translate(10%, -40%) rotate(${cover.cover_title_rotation}deg)`,
+                          fontSize: cover.cover_title_fontsize,
+                          width: cover.cover_title_width
+                        }}
+                      >
+                        {cover.cover_title || '제목 없음'}
+                      </span>
+                      {cover.cover_image && (
+                        <div
+                          className="absolute"
+                          style={{
+                            width: cover.cover_image_size.width,
+                            height: cover.cover_image_size.height,
+                            top: cover.cover_image_position.y,
+                            left: cover.cover_image_position.x,
+                            transform: `translate(10%, -40%) rotate(${cover.cover_image_rotation}deg)`
+                          }}
+                        >
+                          <Image
+                            src={cover.cover_image}
+                            alt={cover.cover_title || 'Cover Image'}
+                            width={cover.cover_image_size.width}
+                            height={cover.cover_image_size.height}
+                            className="object-cover rounded"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </SwiperSlide>
+                ) : null
               )
             ) : (
-              <SwiperSlide className="relative flex flex-col items-center justify-center w-[480px] h-[720px] bg-white rounded shadow-md text-2xl font-bold text-black">
-                <button onClick={handleCreateDiary} className="flex items-center justify-center w-full h-full">
+              <SwiperSlide className="flex items-center justify-center bg-red-300 rounded shadow-md text-2xl font-bold text-black">
+                <button
+                  onClick={handleCreateDiary}
+                  className="flex flex-col items-center justify-center text-center"
+                  style={{ transform: 'translateY(-20%)' }}
+                >
                   +<br /> 다이어리 생성
                 </button>
               </SwiperSlide>
@@ -187,7 +283,7 @@ const DiaryCase: React.FC = () => {
         )}
       </div>
       <div className="fixed bottom-16 right-16">
-        <CreateDiaryButton onClick={handleCreateDiary} /> {/* 다이어리 생성 버튼 */}
+        <CreateDiaryButton onClick={handleCreateDiary} />
       </div>
     </div>
   );

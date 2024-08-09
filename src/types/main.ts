@@ -35,7 +35,6 @@ export type AddDiaryType = {
   user_id: string;
   name: string;
   bookshelf_order: number;
-  cover_image: string | null;
 };
 
 export type DiaryCover = {
