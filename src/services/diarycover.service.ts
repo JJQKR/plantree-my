@@ -101,7 +101,7 @@ export const getCoversByUserId = async (userId: string) => {
   const { data, error } = await supabase.from('diary_covers').select('*').eq('user_id', userId);
 
   if (error) {
-    console.error('Error fetching diary covers:', error);
+    console.error('Error fetching covers:', error.message);
     return [];
   }
 
