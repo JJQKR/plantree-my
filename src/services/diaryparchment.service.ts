@@ -1,5 +1,5 @@
 export const addParchment = async (parchmentData: any) => {
-  const response = await fetch(`http://localhost:3000/apis/diaryparchment/`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diaryparchment/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -12,7 +12,7 @@ export const addParchment = async (parchmentData: any) => {
 };
 
 export const getParchment = async (diaryId: string) => {
-  const response = await fetch(`http://localhost:3000/apis/diaryparchment/${diaryId}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diaryparchment/${diaryId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -24,7 +24,7 @@ export const getParchment = async (diaryId: string) => {
 };
 
 export const deleteParchment = async (diaryId: string) => {
-  const response = await fetch(`http://localhost:3000/apis/diaryparchment/${diaryId}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diaryparchment/${diaryId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json'
@@ -36,7 +36,7 @@ export const deleteParchment = async (diaryId: string) => {
 };
 
 export const updateParchment = async (diaryId: string, parchmentData: any) => {
-  const response = await fetch(`http://localhost:3000/apis/diaryparchment/${diaryId}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diaryparchment/${diaryId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'

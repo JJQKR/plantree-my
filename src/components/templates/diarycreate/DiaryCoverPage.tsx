@@ -13,6 +13,9 @@ import DiaryCoverSidebar from '@/components/molecules/diarycoversidebar/DiaryCov
 import useDiaryStore from '@/stores/diary.store';
 import { AddDiaryType } from '@/api/diaries.api';
 import { useCreateDiary } from '@/lib/hooks/useDiaries';
+import UnsplashImageSearch from '@/components/molecules/diarycoversidebar/UnsplashImageSearch';
+import UnsplashBackgroundSearch from '@/components/molecules/diarycoversidebar/UnsplashBackgroundSearch';
+import Swal from 'sweetalert2';
 
 type ParamTypes = {
   [key: string]: string;
@@ -56,17 +59,31 @@ const DiaryCoverPage: React.FC = () => {
     setCoverImageRotation,
     imageFile,
     setImageFile,
-    setCoverData
+    setCoverData,
+    // 언스플레쉬
+    unsplashImage,
+    setUnsplashImage,
+    unsplashImagePosition,
+    setUnsplashImagePosition,
+    unsplashImageSize,
+    setUnsplashImageSize,
+    unsplashScale,
+    setUnsplashScale,
+    unsplashImageRotation,
+    setUnsplashImageRotation
   } = useDiaryCoverStore();
 
   const stageRef = useRef<Konva.Stage | null>(null);
   const textRef = useRef<Konva.Text | null>(null);
-  const imageRef = useRef<Konva.Image | null>(null);
   const trRef = useRef<Konva.Transformer | null>(null);
+  const coverImageRef = useRef<Konva.Image>(null); // 로컬 이미지 참조
+  const unsplashImageRef = useRef<Konva.Image>(null); // 언스플레쉬 이미지 참조
+
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [loadedImage, setLoadedImage] = useState<HTMLImageElement | null>(null);
+  const [loadedUnsplashImage, setLoadedUnsplashImage] = useState<HTMLImageElement | null>(null);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [selectedMenu, setSelectedMenu] = useState<string | null>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -89,7 +106,12 @@ const DiaryCoverPage: React.FC = () => {
             cover_image_rotation: data.cover_image_rotation,
             cover_bg_color: data.cover_bg_color,
             cover_scale: data.cover_scale,
-            cover_stage_size: JSON.parse(data.cover_stage_size)
+            cover_stage_size: JSON.parse(data.cover_stage_size),
+            unsplash_image: data.unsplash_image,
+            unsplash_image_position: JSON.parse(data.unsplash_image_position),
+            unsplash_image_size: JSON.parse(data.unsplash_image_size),
+            unsplash_image_rotation: data.unsplash_image_rotation,
+            unsplash_scale: data.unsplash_scale
           };
 
           setIsEditMode(true);
@@ -113,24 +135,20 @@ const DiaryCoverPage: React.FC = () => {
               setCoverImageRotation(parsedData.cover_image_rotation);
             };
           }
+          if (parsedData.unsplash_image) {
+            const unsplashImg = new window.Image();
+            unsplashImg.src = parsedData.unsplash_image;
+            unsplashImg.onload = () => {
+              setLoadedUnsplashImage(unsplashImg);
+              setUnsplashImage(unsplashImg);
+              setUnsplashImagePosition(parsedData.unsplash_image_position);
+              setUnsplashImageSize(parsedData.unsplash_image_size);
+              setUnsplashImageRotation(parsedData.unsplash_image_rotation);
+              setUnsplashScale(parsedData.unsplash_scale);
+            };
+          }
         } else {
-          setCoverTitle('표지 제목 작성');
-          setCoverTitlePosition({ x: 140, y: 150 });
-          setCoverTitleFontSize(30);
-          setCoverTitleWidth(220);
-          setCoverTitleRotation(0);
-          setCoverBackgroundColor('#ffffff');
-          setCoverScale(1);
-          setCoverStageSize({ width: 480, height: 720 });
-          setCoverSelectedElement(null);
-
-          setLoadedImage(null);
-          setCoverImage(null);
-          setCoverImagePosition({ x: 50, y: 50 });
-          setCoverImageSize({ width: 0, height: 0 });
-          setCoverImageRotation(0);
-
-          setIsEditMode(false);
+          resetCoverState();
         }
       } catch (error) {
         console.error('Failed to fetch diary cover:', error);
@@ -152,7 +170,12 @@ const DiaryCoverPage: React.FC = () => {
     setCoverImageRotation,
     setCoverBackgroundColor,
     setCoverScale,
-    setCoverStageSize
+    setCoverStageSize,
+    setUnsplashImage,
+    setUnsplashImagePosition,
+    setUnsplashImageSize,
+    setUnsplashImageRotation,
+    setUnsplashScale
   ]);
 
   useEffect(() => {
@@ -175,68 +198,106 @@ const DiaryCoverPage: React.FC = () => {
     }
   }, [coverTitle, coverTitleWidth, coverTitleFontSize, coverTitleRotation]);
 
+  // 이미지 렌더링 시점 조정
   useEffect(() => {
-    if (imageRef.current) {
-      imageRef.current.rotation(coverImageRotation);
+    if (coverImageRef.current && loadedImage) {
+      coverImageRef.current.image(loadedImage);
+      coverImageRef.current.getLayer()?.batchDraw();
     }
-  }, [coverImageRotation, coverImagePosition, coverImageSize]);
+    if (unsplashImageRef.current && loadedUnsplashImage) {
+      unsplashImageRef.current.image(loadedUnsplashImage);
+      unsplashImageRef.current.getLayer()?.batchDraw();
+    }
+  }, [loadedImage, loadedUnsplashImage]);
 
-  const handleDownload = () => {
-    if (stageRef.current) {
-      const uri = stageRef.current.toDataURL();
-      const link = document.createElement('a');
-      link.download = 'diary_cover.png';
-      link.href = uri;
-      link.click();
-    }
+  const resetCoverState = () => {
+    setCoverTitle('표지 제목 작성');
+    setCoverTitlePosition({ x: 140, y: 150 });
+    setCoverTitleFontSize(30);
+    setCoverTitleWidth(220);
+    setCoverTitleRotation(0);
+    setCoverBackgroundColor('#ffffff');
+    setCoverScale(1);
+    setCoverStageSize({ width: 480, height: 720 });
+    setCoverSelectedElement(null);
+
+    setLoadedImage(null);
+    setCoverImage(null);
+    setCoverImagePosition({ x: 50, y: 50 });
+    setCoverImageSize({ width: 0, height: 0 });
+    setCoverImageRotation(0);
+
+    setUnsplashImage(null);
+    setUnsplashImagePosition({ x: 50, y: 50 });
+    setUnsplashImageSize({ width: 0, height: 0 });
+    setUnsplashImageRotation(0);
+
+    setIsEditMode(false);
   };
 
-  const handleTextChange = () => {
-    if (textRef.current) {
-      setCoverTitlePosition({ x: textRef.current.x(), y: textRef.current.y() });
+  const handleImageUpload = (eventOrFile?: React.ChangeEvent<HTMLInputElement> | File, imageUrl?: string) => {
+    let file: File | undefined;
+
+    if (eventOrFile && (eventOrFile as React.ChangeEvent<HTMLInputElement>).target) {
+      // 이벤트 객체가 전달된 경우 (로컬 이미지 업로드)
+      const event = eventOrFile as React.ChangeEvent<HTMLInputElement>;
+      file = event.target.files?.[0];
+    } else if (eventOrFile instanceof File) {
+      // 파일 객체가 직접 전달된 경우 (로컬 이미지 업로드)
+      file = eventOrFile;
     }
-  };
 
-  const handleTextTransform = () => {
-    if (textRef.current) {
-      const node = textRef.current;
-      const scaleX = node.scaleX();
-      const scaleY = node.scaleY();
-      const width = node.width() * scaleX;
+    if (file) {
+      // 로컬 이미지 처리
+      const fileExtension = file.name.split('.').pop();
+      const newFileName = `${Date.now()}_${Math.random().toString(36).substring(2, 15)}.${fileExtension}`;
 
-      if (Math.abs(scaleX - scaleY) < 0.1) {
-        const scaleFactor = Math.min(scaleX, scaleY);
-        const newFontSize = coverTitleFontSize * scaleFactor;
-        setCoverTitleFontSize(newFontSize);
-        setCoverTitleWidth(width);
-      } else if (Math.abs(scaleY - 1) < 0.1) {
-        setCoverTitleWidth(width);
-      }
+      const newFile = new File([file], newFileName, { type: file.type });
 
-      setCoverTitlePosition({ x: node.x(), y: node.y() });
-      setCoverTitleRotation(node.rotation());
+      setImageFile(newFile);
 
-      node.scaleX(1);
-      node.scaleY(1);
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new window.Image();
+        img.src = reader.result as string;
+        img.onload = () => {
+          setLoadedImage(img);
+          if (stageRef.current) {
+            const stageWidth = stageRef.current.width();
+            const stageHeight = stageRef.current.height();
+            const maxWidth = stageWidth * 0.5;
+            const maxHeight = stageHeight * 0.5;
+
+            let newWidth = img.width;
+            let newHeight = img.height;
+
+            if (newWidth > maxWidth || newHeight > maxHeight) {
+              const scale = Math.min(maxWidth / newWidth, maxHeight / newHeight);
+              newWidth *= scale;
+              newHeight *= scale;
+            }
+
+            setCoverImageSize({ width: newWidth, height: newHeight });
+            setCoverImagePosition({
+              x: (stageWidth - newWidth) / 2,
+              y: (stageHeight - newHeight) / 2
+            });
+            setCoverImage(img);
+          }
+        };
+        img.onerror = (error) => {
+          console.error('이미지 로드 에러:', error);
+        };
+      };
+      reader.readAsDataURL(newFile);
     }
-  };
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const fileExtension = file.name.split('.').pop();
-    const newFileName = `${Date.now()}_${Math.random().toString(36).substring(2, 15)}.${fileExtension}`;
-
-    const newFile = new File([file], newFileName, { type: file.type });
-
-    setImageFile(newFile);
-
-    const reader = new FileReader();
-    reader.onload = () => {
+    if (imageUrl) {
+      // 언스플레쉬 이미지 처리
       const img = new window.Image();
-      img.src = reader.result as string;
+      img.src = imageUrl;
       img.onload = () => {
+        setLoadedUnsplashImage(img);
         if (stageRef.current) {
           const stageWidth = stageRef.current.width();
           const stageHeight = stageRef.current.height();
@@ -252,34 +313,38 @@ const DiaryCoverPage: React.FC = () => {
             newHeight *= scale;
           }
 
-          setCoverImageSize({ width: newWidth, height: newHeight });
-          setCoverImagePosition({
+          setUnsplashImageSize({ width: newWidth, height: newHeight });
+          setUnsplashImagePosition({
             x: (stageWidth - newWidth) / 2,
             y: (stageHeight - newHeight) / 2
           });
-          setCoverImage(img);
-          setLoadedImage(img);
+          setUnsplashImage(img);
         }
       };
-      img.onerror = (error) => {
-        console.error('이미지 로드 에러:', error);
-      };
-    };
-    reader.readAsDataURL(newFile);
+    }
   };
 
   const handleImageChange = () => {
-    if (imageRef.current) {
+    if (coverImageRef.current) {
       setCoverImagePosition({
-        x: imageRef.current.x(),
-        y: imageRef.current.y()
+        x: coverImageRef.current.x(),
+        y: coverImageRef.current.y()
+      });
+    }
+  };
+
+  const handleUnsplashImageChange = () => {
+    if (unsplashImageRef.current) {
+      setUnsplashImagePosition({
+        x: unsplashImageRef.current.x(),
+        y: unsplashImageRef.current.y()
       });
     }
   };
 
   const handleImageTransform = () => {
-    if (imageRef.current) {
-      const node = imageRef.current;
+    if (coverImageRef.current) {
+      const node = coverImageRef.current;
       const scaleX = node.scaleX();
       const scaleY = node.scaleY();
       const scale = Math.max(scaleX, scaleY);
@@ -290,6 +355,25 @@ const DiaryCoverPage: React.FC = () => {
       setCoverImageSize({ width: newWidth, height: newHeight });
       setCoverImagePosition({ x: node.x(), y: node.y() });
       setCoverImageRotation(node.rotation());
+
+      node.scaleX(1);
+      node.scaleY(1);
+    }
+  };
+
+  const handleUnsplashImageTransform = () => {
+    if (unsplashImageRef.current) {
+      const node = unsplashImageRef.current;
+      const scaleX = node.scaleX();
+      const scaleY = node.scaleY();
+      const scale = Math.max(scaleX, scaleY);
+
+      const newWidth = unsplashImageSize.width * scale;
+      const newHeight = unsplashImageSize.height * scale;
+
+      setUnsplashImageSize({ width: newWidth, height: newHeight });
+      setUnsplashImagePosition({ x: node.x(), y: node.y() });
+      setUnsplashImageRotation(node.rotation());
 
       node.scaleX(1);
       node.scaleY(1);
@@ -363,7 +447,12 @@ const DiaryCoverPage: React.FC = () => {
 
   const handleImageSelect = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
     e.cancelBubble = true;
-    setCoverSelectedElement(imageRef.current);
+    setCoverSelectedElement(coverImageRef.current);
+  };
+
+  const handleUnsplashImageSelect = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
+    e.cancelBubble = true;
+    setCoverSelectedElement(unsplashImageRef.current);
   };
 
   const handleTextSelect = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
@@ -391,7 +480,15 @@ const DiaryCoverPage: React.FC = () => {
   };
 
   const handleSaveCover = async () => {
-    if (!confirm('커버를 저장하시겠습니까?')) {
+    const result = await Swal.fire({
+      title: '커버를 저장하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '네',
+      cancelButtonText: '아니요'
+    });
+
+    if (!result.isConfirmed) {
       return;
     }
 
@@ -436,15 +533,20 @@ const DiaryCoverPage: React.FC = () => {
       cover_title_fontsize: coverTitleFontSize,
       cover_title_width: coverTitleWidth,
       cover_title_rotation: coverTitleRotation,
-      cover_image: publicUrl,
-      cover_image_position: coverImagePosition,
-      cover_image_size: coverImageSize,
-      cover_image_rotation: coverImageRotation,
+      cover_image: publicUrl ?? null,
+      cover_image_position: coverImagePosition ?? { x: 0, y: 0 },
+      cover_image_size: coverImageSize ?? { width: 0, height: 0 },
+      cover_image_rotation: coverImageRotation ?? 0,
       cover_bg_color: coverBackgroundColor,
-      cover_scale: coverScale,
-      cover_stage_size: coverStageSize,
+      cover_scale: coverScale ?? 1,
+      cover_stage_size: coverStageSize ?? { width: 480, height: 720 },
       diary_id: diaryId,
-      user_id: userId
+      user_id: userId,
+      unsplash_image: unsplashImage ? unsplashImage.src : null, // URL로 저장
+      unsplash_image_position: unsplashImage ? unsplashImagePosition : null,
+      unsplash_image_size: unsplashImage ? unsplashImageSize : null,
+      unsplash_scale: unsplashScale,
+      unsplash_image_rotation: unsplashImageRotation
     };
 
     try {
@@ -473,7 +575,7 @@ const DiaryCoverPage: React.FC = () => {
         return;
       }
 
-      alert('Cover 저장 성공!');
+      Swal.fire('Cover 저장 성공!', '', 'success');
       router.push(`/member/hub`);
     } catch (error) {
       console.error('Cover 저장 실패:', error);
@@ -482,9 +584,18 @@ const DiaryCoverPage: React.FC = () => {
   };
 
   const handleUpdateDiary = async () => {
-    if (!confirm('다이어리를 수정하시겠습니까?')) {
+    const result = await Swal.fire({
+      title: '표지를 수정 하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '네',
+      cancelButtonText: '아니요'
+    });
+
+    if (!result.isConfirmed) {
       return;
     }
+
     let publicUrl: string | null = null;
     try {
       const { data, error } = await supabase
@@ -550,7 +661,12 @@ const DiaryCoverPage: React.FC = () => {
         cover_scale: coverScale,
         cover_stage_size: JSON.stringify(coverStageSize),
         diary_id: diaryId,
-        user_id: userId
+        user_id: userId,
+        unsplash_image: unsplashImage ? unsplashImage.src : null,
+        unsplash_image_position: JSON.stringify(unsplashImagePosition),
+        unsplash_image_size: JSON.stringify(unsplashImageSize),
+        unsplash_image_rotation: unsplashImageRotation,
+        unsplash_scale: unsplashScale
       };
 
       const result = await updateCover(diaryId, coverData);
@@ -561,7 +677,7 @@ const DiaryCoverPage: React.FC = () => {
         return;
       }
 
-      alert('Cover 수정 성공!');
+      Swal.fire('Cover 수정 성공!', '', 'success');
     } catch (error) {
       console.error('Cover 수정 실패:', error);
       alert('Cover 수정 실패');
@@ -569,7 +685,15 @@ const DiaryCoverPage: React.FC = () => {
   };
 
   const handleResetDiary = async () => {
-    if (!confirm('다이어리를 초기화 하시겠습니까?')) {
+    const confirmResult = await Swal.fire({
+      title: '다이어리를 초기화 하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '네',
+      cancelButtonText: '아니요'
+    });
+
+    if (!confirmResult.isConfirmed) {
       return;
     }
 
@@ -582,7 +706,7 @@ const DiaryCoverPage: React.FC = () => {
 
       if (error || !data) {
         console.error('데이터 가져오기 실패:', error);
-        alert('데이터 가져오기 실패');
+        Swal.fire('데이터 가져오기 실패', '', 'error');
         return;
       }
 
@@ -593,33 +717,19 @@ const DiaryCoverPage: React.FC = () => {
         const { error: deleteError } = await supabase.storage.from('cover_img').remove([fileName]);
         if (deleteError) {
           console.error('이미지 파일 삭제 실패:', deleteError);
-          alert(`이미지 파일 삭제 실패: ${deleteError.message}`);
+          Swal.fire(`이미지 파일 삭제 실패: ${deleteError.message}`, '', 'error');
         } else {
-          alert('초기화 성공');
+          Swal.fire('초기화 성공', '', 'success');
         }
       } else {
-        alert('초기화 성공');
+        Swal.fire('초기화 성공', '', 'success');
       }
     } catch (error) {
       console.error('초기화 실패:', error);
-      alert(`초기화 실패: `);
+      Swal.fire(`초기화 실패`, '', 'error');
     }
 
-    setCoverTitle('표지 제목 작성');
-    setCoverTitlePosition({ x: 140, y: 150 });
-    setCoverTitleFontSize(30);
-    setCoverTitleWidth(220);
-    setCoverTitleRotation(0);
-    setCoverBackgroundColor('#ffffff');
-    setCoverScale(1);
-    setCoverStageSize({ width: 480, height: 720 });
-    setCoverSelectedElement(null);
-    setCoverImage(null);
-    setCoverImagePosition({ x: 50, y: 50 });
-    setCoverImageSize({ width: 0, height: 0 });
-    setCoverImageRotation(0);
-
-    setImageFile(null);
+    resetCoverState();
 
     const coverData = {
       cover_title: '표지 제목 작성',
@@ -635,14 +745,19 @@ const DiaryCoverPage: React.FC = () => {
       cover_scale: 1,
       cover_stage_size: JSON.stringify({ width: 480, height: 720 }),
       diary_id: diaryId,
-      user_id: userId
+      user_id: userId,
+      unsplash_image: null,
+      unsplash_image_position: JSON.stringify({ x: 50, y: 60 }),
+      unsplash_image_size: JSON.stringify({ width: 0, height: 0 }),
+      unsplash_image_rotation: 0,
+      unsplash_scale: 1
     };
 
-    const result = await updateCover(diaryId, coverData);
+    const Result = await updateCover(diaryId, coverData);
 
-    if (result.error) {
-      console.error('수정 실패:', result.error);
-      alert(`수정 실패: ${result.error}`);
+    if (Result.error) {
+      console.error('초기화 실패:', Result.error);
+      Swal.fire(`초기화 실패: ${Result.error}`, '', 'error');
       return;
     }
   };
@@ -650,8 +765,11 @@ const DiaryCoverPage: React.FC = () => {
   const handleResize = () => {
     const newWidth = window.innerWidth > 480 ? 480 : window.innerWidth;
     const newHeight = (newWidth / 480) * 720;
+    const newScale = newWidth / 480;
+
     setCoverStageSize({ width: newWidth, height: newHeight });
-    setCoverScale(newWidth / 480);
+    setCoverScale(newScale);
+    setUnsplashScale(newScale);
   };
 
   useEffect(() => {
@@ -666,7 +784,7 @@ const DiaryCoverPage: React.FC = () => {
     if (coverSelectedElement === textRef.current) {
       setCoverTitle('');
       setCoverSelectedElement(null);
-    } else if (coverSelectedElement === imageRef.current) {
+    } else if (coverSelectedElement === coverImageRef.current) {
       setCoverImage(null);
       setImageFile(null);
       setLoadedImage(null);
@@ -677,6 +795,12 @@ const DiaryCoverPage: React.FC = () => {
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
+    } else if (coverSelectedElement === unsplashImageRef.current) {
+      setUnsplashImage(null);
+      setUnsplashImagePosition({ x: 50, y: 50 });
+      setUnsplashImageSize({ width: 0, height: 0 });
+      setUnsplashImageRotation(0);
+      setCoverSelectedElement(null);
     }
   };
 
@@ -701,6 +825,15 @@ const DiaryCoverPage: React.FC = () => {
     setCoverTitleWidth(220);
     setCoverTitleRotation(0);
   };
+  const handleDownload = () => {
+    if (stageRef.current) {
+      const uri = stageRef.current.toDataURL();
+      const link = document.createElement('a');
+      link.download = 'diary_cover.png';
+      link.href = uri;
+      link.click();
+    }
+  };
 
   const handleSelectMenu = (menu: string) => {
     if (selectedMenu === menu) {
@@ -708,6 +841,10 @@ const DiaryCoverPage: React.FC = () => {
     } else {
       setSelectedMenu(menu);
     }
+  };
+
+  const handleSelectImage = (imageUrl: string) => {
+    handleImageUpload(undefined, imageUrl);
   };
 
   const renderMenuContent = () => {
@@ -726,7 +863,11 @@ const DiaryCoverPage: React.FC = () => {
           </div>
         );
       case 'Photos':
-        return <div>사진</div>;
+        return (
+          <div>
+            <UnsplashImageSearch onSelectImage={handleSelectImage} />
+          </div>
+        );
       case 'Elements':
         return <div>요소</div>;
       case 'Upload':
@@ -754,10 +895,11 @@ const DiaryCoverPage: React.FC = () => {
             <input
               type="color"
               id="colorPicker"
-              value={coverBackgroundColor}
+              value={coverBackgroundColor.startsWith('url(') ? '#ffffff' : coverBackgroundColor}
               onChange={handleBackgroundColorChange}
               className="border border-gray-300 rounded w-16"
             />
+            <UnsplashBackgroundSearch onSelectBackground={handleBackgroundImageChange} />
           </div>
         );
       case 'Edit':
@@ -803,19 +945,36 @@ const DiaryCoverPage: React.FC = () => {
     }
   };
 
+  const handleBackgroundImageChange = (imageUrl: string) => {
+    const img = new window.Image();
+    img.src = imageUrl;
+    img.onload = () => {
+      setCoverBackgroundColor(imageUrl);
+      if (stageRef.current) {
+        stageRef.current.batchDraw();
+      }
+    };
+  };
+
+  useEffect(() => {
+    if (coverBackgroundColor && stageRef.current) {
+      stageRef.current.batchDraw();
+    }
+  }, [coverBackgroundColor]);
+
   return (
     <div className="flex h-full relative">
       <div ref={sidebarRef} className="relative z-5">
         <DiaryCoverSidebar onSelectMenu={handleSelectMenu} />
         {selectedMenu && (
-          <div className="absolute top-0 left-full w-80 h-full bg-gray-100 shadow-lg p-4 overflow-y-auto z-10">
+          <div className="absolute top-0 left-full w-[24rem] h-full bg-gray-100 shadow-lg p-6 overflow-y-auto z-10">
             <button
               onClick={() => setSelectedMenu(null)}
               className="absolute right-2 top-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full px-2 py-0.3 transition duration-300"
             >
               X
             </button>
-            {renderMenuContent()}
+            <div className="mt-10">{renderMenuContent()}</div>
           </div>
         )}
       </div>
@@ -832,14 +991,26 @@ const DiaryCoverPage: React.FC = () => {
                   onClick={handleStageClick}
                 >
                   <Layer>
+                    {/* 배경 색 또는 패턴 */}
                     <Rect
                       x={0}
                       y={0}
                       width={coverStageSize.width}
                       height={coverStageSize.height}
-                      fill={coverBackgroundColor}
+                      fillPatternImage={
+                        coverBackgroundColor.startsWith('http')
+                          ? (() => {
+                              const img = new window.Image();
+                              img.src = coverBackgroundColor;
+                              return img;
+                            })()
+                          : undefined
+                      }
+                      fill={coverBackgroundColor.startsWith('http') ? undefined : coverBackgroundColor}
                     />
-                    {loadedImage && (
+
+                    {/* 로컬 이미지 */}
+                    {coverImage && loadedImage && (
                       <KonvaImage
                         image={loadedImage}
                         x={coverImagePosition.x * coverScale}
@@ -847,16 +1018,36 @@ const DiaryCoverPage: React.FC = () => {
                         width={coverImageSize.width}
                         height={coverImageSize.height}
                         draggable
-                        ref={imageRef}
+                        ref={coverImageRef}
                         onDragEnd={handleImageChange}
                         onTransformEnd={handleImageTransform}
                         onClick={handleImageSelect}
-                        onTap={handleImageSelect}
                         scaleX={coverScale}
                         scaleY={coverScale}
                         rotation={coverImageRotation}
                       />
                     )}
+
+                    {/* 언스플레쉬 이미지 */}
+                    {unsplashImage && loadedUnsplashImage && (
+                      <KonvaImage
+                        image={loadedUnsplashImage}
+                        x={unsplashImagePosition.x * coverScale}
+                        y={unsplashImagePosition.y * coverScale}
+                        width={unsplashImageSize.width}
+                        height={unsplashImageSize.height}
+                        draggable
+                        ref={unsplashImageRef}
+                        onDragEnd={handleUnsplashImageChange}
+                        onTransformEnd={handleUnsplashImageTransform}
+                        onClick={handleUnsplashImageSelect}
+                        scaleX={unsplashScale}
+                        scaleY={unsplashScale}
+                        rotation={unsplashImageRotation}
+                      />
+                    )}
+
+                    {/* 타이틀 텍스트 */}
                     <Text
                       text={coverTitle ?? ''}
                       fontSize={coverTitleFontSize}
@@ -865,20 +1056,42 @@ const DiaryCoverPage: React.FC = () => {
                       width={coverTitleWidth}
                       fill="black"
                       draggable
-                      ref={textRef}
-                      onDragEnd={handleTextChange}
-                      onTransformEnd={handleTextTransform}
+                      ref={textRef} // 텍스트 참조 설정
+                      onDragEnd={() =>
+                        setCoverTitlePosition({ x: textRef.current?.x() ?? 0, y: textRef.current?.y() ?? 0 })
+                      }
+                      onTransformEnd={() => {
+                        if (textRef.current) {
+                          const node = textRef.current;
+                          const scaleX = node.scaleX();
+                          const scaleY = node.scaleY();
+
+                          const newWidth = Math.max(20, node.width() * scaleX);
+                          const newFontSize = Math.max(10, coverTitleFontSize * scaleY);
+
+                          node.scaleX(1);
+                          node.scaleY(1);
+
+                          setCoverTitleWidth(newWidth);
+                          setCoverTitleFontSize(newFontSize);
+                          setCoverTitleRotation(node.rotation());
+                          node.width(newWidth);
+                          node.fontSize(newFontSize);
+                        }
+                      }}
                       onClick={handleTextSelect}
-                      onTap={handleTextSelect}
-                      onDblClick={handleTextDblClick}
-                      onDblTap={handleTextDblClick}
-                      wrap="word"
+                      onDblClick={handleTextDblClick} // 추가
+                      onDblTap={handleTextDblClick} // 모바일 환경에서 더블 탭 처리
                       scaleX={coverScale}
                       scaleY={coverScale}
+                      rotation={coverTitleRotation}
                     />
+
+                    {/* 선택된 요소에 대한 트랜스포머 */}
                     {coverSelectedElement && (
                       <Transformer
                         ref={trRef}
+                        nodes={[coverSelectedElement]} // 현재 선택된 요소에만 트랜스포머 적용
                         boundBoxFunc={(oldBox, newBox) => ({
                           ...newBox,
                           width: Math.max(20, newBox.width),
