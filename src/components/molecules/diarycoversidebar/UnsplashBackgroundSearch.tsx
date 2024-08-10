@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { fetchImages, UnsplashImage } from '../../../lib/utils/unsplash';
 
 interface UnsplashBackgroundSearchProps {
-  onSelectBackground: (imageUrl: string) => void;
+  handleBackgroundImageChange: (imageUrl: string) => void;
 }
 
-const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({ onSelectBackground }) => {
+const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({ handleBackgroundImageChange }) => {
   const [images, setImages] = useState<UnsplashImage[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -45,7 +45,7 @@ const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({ onS
             key={`background-${image.id}-${index}`}
             src={image.urls.thumb}
             alt={image.alt_description}
-            onClick={() => onSelectBackground(image.urls.regular)}
+            onClick={() => handleBackgroundImageChange(image.urls.regular)}
             className="cursor-pointer my-2"
           />
         ))}

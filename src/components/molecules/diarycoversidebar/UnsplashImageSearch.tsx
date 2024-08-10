@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { fetchImages, UnsplashImage } from '../../../lib/utils/unsplash';
 
 interface UnsplashImageSearchProps {
-  onSelectImage: (imageUrl: string) => void;
+  handleSelectImage: (imageUrl: string) => void;
 }
 
-const UnsplashImageSearch: React.FC<UnsplashImageSearchProps> = ({ onSelectImage }) => {
+const UnsplashImageSearch: React.FC<UnsplashImageSearchProps> = ({ handleSelectImage }) => {
   const [query, setQuery] = useState('');
   const [images, setImages] = useState<UnsplashImage[]>([]);
   const [loading, setLoading] = useState(false);
@@ -81,7 +81,7 @@ const UnsplashImageSearch: React.FC<UnsplashImageSearchProps> = ({ onSelectImage
             key={`image-${image.id}`}
             src={image.urls.thumb}
             alt={image.alt_description}
-            onClick={() => onSelectImage(image.urls.regular)}
+            onClick={() => handleSelectImage(image.urls.regular)}
             className="cursor-pointer my-2"
           />
         ))}

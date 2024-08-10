@@ -60,6 +60,22 @@ const DiaryCoverPage: React.FC = () => {
     imageFile,
     setImageFile,
     setCoverData,
+    resetTextProperties,
+    coverTitleFontStyle, // 추가
+    setCoverTitleFontStyle, // 추가된 상태 설정
+    coverTitleFontFamily, // 추가
+    setCoverTitleFontFamily, // 추가된 상태 설정
+    coverTitleColor, // 추가
+    setCoverTitleColor, // 추가된 상태 설정
+    isUnderlined, // 추가
+    setIsUnderlined, // 추가된 상태 설정
+    isStrikethrough, // 추가
+    setIsStrikethrough, // 추가된 상태 설정
+    availableFontWeights, //추가
+    setAvailableFontWeights, //추가 상태
+    coverTitleFontWeight, //추가
+    setCoverTitleFontWeight, //추가상태
+
     // 언스플레쉬
     unsplashImage,
     setUnsplashImage,
@@ -92,8 +108,6 @@ const DiaryCoverPage: React.FC = () => {
     const fetchDiaryCover = async () => {
       try {
         const data = await getCover(diaryId);
-
-        // console.log('Fetched cover data:', data);
 
         if (data) {
           const parsedData = {
@@ -200,6 +214,22 @@ const DiaryCoverPage: React.FC = () => {
     }
   }, [coverTitle, coverTitleWidth, coverTitleFontSize, coverTitleRotation]);
 
+  useEffect(() => {
+    if (textRef.current) {
+      // fontStyle은 italic 또는 normal로만 관리
+      const fontStyle = coverTitleFontStyle === 'italic' ? 'italic' : 'normal';
+      const fontWeightStyle =
+        coverTitleFontWeight === 700 ? 'bold' : coverTitleFontWeight === 100 ? 'lighter' : 'normal';
+
+      textRef.current.fontStyle(`${fontWeightStyle} ${fontStyle}`);
+
+      textRef.current.fill(coverTitleColor); // 텍스트 색상 초기화 반영
+      textRef.current.fontFamily(coverTitleFontFamily); // 글꼴 초기화 반영
+      // 밑줄과 취소선도 필요 시 여기에 반영
+      textRef.current.getLayer()?.batchDraw();
+    }
+  }, [coverTitleColor, coverTitleFontStyle, coverTitleFontFamily, coverTitleFontWeight]); // 초기화된 속성들에 대한 의존성 추가
+
   // 이미지 렌더링 시점 조정
   useEffect(() => {
     if (coverImageRef.current && loadedImage) {
@@ -213,11 +243,8 @@ const DiaryCoverPage: React.FC = () => {
   }, [loadedImage, loadedUnsplashImage]);
 
   const resetCoverState = () => {
-    setCoverTitle('표지 제목 작성');
-    setCoverTitlePosition({ x: 140, y: 150 });
-    setCoverTitleFontSize(30);
-    setCoverTitleWidth(220);
-    setCoverTitleRotation(0);
+    resetTextProperties(); // 텍스트 관련 속성 초기화
+
     setCoverBackgroundColor('#ffffff');
     setCoverScale(1);
     setCoverStageSize({ width: 480, height: 720 });
@@ -481,6 +508,27 @@ const DiaryCoverPage: React.FC = () => {
     }
   };
 
+  const handleTextTransform = () => {
+    if (textRef.current) {
+      const node = textRef.current;
+      const scaleX = node.scaleX();
+      const scaleY = node.scaleY();
+      const newWidth = Math.max(20, node.width() * scaleX);
+      const newFontSize = Math.max(10, coverTitleFontSize * scaleY);
+
+      node.scaleX(1);
+      node.scaleY(1);
+
+      setCoverTitleWidth(newWidth);
+      setCoverTitleFontSize(newFontSize);
+      setCoverTitleRotation(node.rotation());
+
+      node.width(newWidth);
+      node.fontSize(newFontSize);
+      node.getLayer()?.batchDraw();
+    }
+  };
+
   const handleSaveCover = async () => {
     const result = await Swal.fire({
       title: '커버를 저장하시겠습니까?',
@@ -680,6 +728,7 @@ const DiaryCoverPage: React.FC = () => {
       }
 
       Swal.fire('Cover 수정 성공!', '', 'success');
+      router.push(`/member/hub`);
     } catch (error) {
       console.error('Cover 수정 실패:', error);
       alert('Cover 수정 실패');
@@ -734,7 +783,7 @@ const DiaryCoverPage: React.FC = () => {
     resetCoverState();
 
     const coverData = {
-      cover_title: '표지 제목 작성',
+      cover_title: 'Create Cover Title',
       cover_title_position: JSON.stringify({ x: 140, y: 150 }),
       cover_title_fontsize: 30,
       cover_title_width: 220,
@@ -756,7 +805,7 @@ const DiaryCoverPage: React.FC = () => {
     };
 
     const Result = await updateCover(diaryId, coverData);
-
+    router.push(`/member/hub`);
     if (Result.error) {
       console.error('초기화 실패:', Result.error);
       Swal.fire(`초기화 실패: ${Result.error}`, '', 'error');
@@ -821,10 +870,11 @@ const DiaryCoverPage: React.FC = () => {
   }, [coverSelectedElement]);
 
   const handleAddText = () => {
-    setCoverTitle('표지 제목 작성');
-    setCoverTitlePosition({ x: 140, y: 150 });
+    resetTextProperties(); // 텍스트 속성을 초기화
+    setCoverTitle('Create Cover Title');
+    setCoverTitlePosition({ x: 120, y: 150 });
     setCoverTitleFontSize(30);
-    setCoverTitleWidth(220);
+    setCoverTitleWidth(260);
     setCoverTitleRotation(0);
   };
   const handleDownload = () => {
@@ -860,8 +910,166 @@ const DiaryCoverPage: React.FC = () => {
               onClick={handleAddText}
               className="mb-2 px-2 py-1 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300 w-full"
             >
-              글씨 생성
+              글씨 생성 / 초기화
             </button>
+            {/* 글씨 크기 */}
+            <div className="mb-2">
+              <label htmlFor="fontSizeInput" className="font-semibold block mb-1">
+                글씨 크기 (픽셀):
+              </label>
+              <div className="flex items-center">
+                <input
+                  id="fontSizeInput"
+                  type="number"
+                  min="10"
+                  max="100"
+                  value={coverTitleFontSize}
+                  onChange={(e) => {
+                    const newSize = Number(e.target.value);
+                    setCoverTitleFontSize(newSize);
+                    if (textRef.current) {
+                      textRef.current.fontSize(newSize);
+                      textRef.current.getLayer()?.batchDraw();
+                    }
+                  }}
+                  className="w-16 border border-gray-300 rounded p-1 mr-2"
+                />
+                <input
+                  id="fontSizeSlider"
+                  type="range"
+                  min="10"
+                  max="100"
+                  value={coverTitleFontSize}
+                  onChange={(e) => {
+                    const newSize = Number(e.target.value);
+                    setCoverTitleFontSize(newSize);
+                    if (textRef.current) {
+                      textRef.current.fontSize(newSize);
+                      textRef.current.getLayer()?.batchDraw();
+                    }
+                  }}
+                  className="w-full border border-gray-300 rounded p-1"
+                />
+              </div>
+            </div>
+
+            {/* 색상 선택 */}
+            <div className="mb-2">
+              <label htmlFor="colorPicker" className="font-semibold block mb-1">
+                글씨 색상:
+              </label>
+              <input
+                id="colorPicker"
+                type="color"
+                value={coverTitleColor} // 상태에서 가져온 색상 값으로 설정
+                onChange={(e) => {
+                  const newColor = e.target.value;
+                  setCoverTitleColor(newColor); // 상태 업데이트
+                  if (textRef.current) {
+                    textRef.current.fill(newColor); // 텍스트 색상 설정
+                    textRef.current.getLayer()?.batchDraw(); // 텍스트 다시 그리기
+                  }
+                }}
+                className="w-full"
+              />
+            </div>
+
+            {/* 글꼴 선택 */}
+            <div className="mb-2">
+              <label htmlFor="fontSelect" className="font-semibold block mb-1">
+                글꼴:
+              </label>
+              <select
+                id="fontSelect"
+                value={coverTitleFontFamily} // 현재 선택된 글꼴을 상태에서 가져오기
+                onChange={(e) => {
+                  const newFontFamily = e.target.value;
+                  setCoverTitleFontFamily(newFontFamily);
+                  if (textRef.current) {
+                    textRef.current.fontFamily(newFontFamily);
+                    textRef.current.getLayer()?.batchDraw();
+                  }
+                }}
+                className="w-full border border-gray-300 rounded p-1"
+              >
+                <option value="Arial">Arial</option>
+                <option value="Verdana">Verdana</option>
+                <option value="Times New Roman">Times New Roman</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Courier New">Courier New</option>
+                <option value="Roboto">Roboto</option>
+                {/* 글꼴추가 */}
+              </select>
+            </div>
+
+            {/* 두께 선택 */}
+            <div className="mb-2">
+              <label htmlFor="fontWeightSelect" className="font-semibold block mb-1">
+                글씨 두께:
+              </label>
+              <select
+                id="fontWeightSelect"
+                value={coverTitleFontWeight} // 현재 선택된 두께 값
+                onChange={(e) => {
+                  const newWeight = Number(e.target.value);
+                  setCoverTitleFontWeight(newWeight); // 새로운 두께 값 설정
+                  if (textRef.current) {
+                    const fontWeightStyle = newWeight === 700 ? 'bold' : 'normal'; // 두께에 따른 스타일 결정
+                    textRef.current.fontStyle(`${fontWeightStyle} ${coverTitleFontStyle}`); // 텍스트 스타일 적용
+                    textRef.current.getLayer()?.batchDraw(); // 레이어 다시 그리기
+                  }
+                }}
+                className="w-full border border-gray-300 rounded p-1"
+              >
+                {fontWeightOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label} {/* 사용자가 볼 수 있는 라벨 */}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* 기울기 선택 */}
+            <div className="mb-2">
+              <label className="font-semibold block mb-1">글씨 기울기:</label>
+              <button
+                onClick={() => {
+                  const currentStyle = coverTitleFontStyle === 'italic' ? 'normal' : 'italic';
+                  setCoverTitleFontStyle(currentStyle); // 상태 업데이트
+                  if (textRef.current) {
+                    textRef.current.fontStyle(currentStyle); // 텍스트 스타일 설정
+                    textRef.current.fill(coverTitleColor); // 기존 색상 유지
+                    textRef.current.fontFamily(coverTitleFontFamily); // 기존 글꼴 유지
+                    textRef.current.getLayer()?.batchDraw(); // 텍스트 다시 그리기
+                  }
+                }}
+                className="px-2 py-1 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300 w-full"
+              >
+                기울기 / 취소
+              </button>
+            </div>
+
+            {/* 밑줄 선택 */}
+            <div className="mb-2">
+              <label className="font-semibold block mb-1">밑줄 추가:</label>
+              <button
+                onClick={() => handleToggleUnderline()}
+                className="px-2 py-1 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300 w-full"
+              >
+                밑줄 추가 / 제거
+              </button>
+            </div>
+
+            {/* 취소선 선택 */}
+            <div className="mb-2">
+              <label className="font-semibold block mb-1">취소선 추가:</label>
+              <button
+                onClick={() => handleToggleStrikethrough()}
+                className="px-2 py-1 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300 w-full"
+              >
+                취소선 추가 / 제거
+              </button>
+            </div>
           </div>
         );
       case 'Photos':
@@ -880,7 +1088,7 @@ const DiaryCoverPage: React.FC = () => {
                 ref={fileInputRef}
               />
             </div>
-            <UnsplashImageSearch onSelectImage={handleSelectImage} />
+            <UnsplashImageSearch handleSelectImage={handleSelectImage} />
           </div>
         );
       case 'Elements':
@@ -900,7 +1108,7 @@ const DiaryCoverPage: React.FC = () => {
               onChange={handleBackgroundColorChange}
               className="border border-gray-300 rounded w-16"
             />
-            <UnsplashBackgroundSearch onSelectBackground={handleBackgroundImageChange} />
+            <UnsplashBackgroundSearch handleBackgroundImageChange={handleBackgroundImageChange} />
           </div>
         );
       case 'Edit':
@@ -963,10 +1171,42 @@ const DiaryCoverPage: React.FC = () => {
     }
   }, [coverBackgroundColor]);
 
+  const handleToggleUnderline = () => {
+    // 밑줄을 추가/제거하는 로직을 구현
+  };
+
+  const handleToggleStrikethrough = () => {
+    // 취소선을 추가/제거하는 로직을 구현
+  };
+
+  const fontWeightOptions = [
+    { label: '얇음', value: 100 },
+    { label: '보통', value: 400 },
+    { label: '두꺼움', value: 700 }
+  ];
+
+  const fontWeightsMap: { [fontFamily: string]: number[] } = {
+    Arial: [100, 400, 700],
+    Verdana: [400, 700],
+    'Times New Roman': [400, 700],
+    Georgia: [400, 700],
+    'Courier New': [400, 700],
+    Roboto: [100, 400, 700]
+    // 글꼴 추가
+  };
+
+  useEffect(() => {
+    const newFontWeights = fontWeightsMap[coverTitleFontFamily] || [400];
+    setAvailableFontWeights(newFontWeights);
+    if (!newFontWeights.includes(coverTitleFontWeight)) {
+      setCoverTitleFontWeight(newFontWeights[0]);
+    }
+  }, [coverTitleFontFamily]);
+
   return (
     <div className="flex h-full relative">
       <div ref={sidebarRef} className="relative z-5">
-        <DiaryCoverSidebar onSelectMenu={handleSelectMenu} />
+        <DiaryCoverSidebar handleSelectMenu={handleSelectMenu} />
         {selectedMenu && (
           <div className="absolute top-0 left-full w-[24rem] h-full bg-gray-100 shadow-lg p-6 overflow-y-auto z-10">
             <button
@@ -1057,31 +1297,13 @@ const DiaryCoverPage: React.FC = () => {
                       width={coverTitleWidth}
                       fill="black"
                       draggable
-                      ref={textRef} // 텍스트 참조 설정
+                      ref={textRef}
                       onDragEnd={() =>
                         setCoverTitlePosition({ x: textRef.current?.x() ?? 0, y: textRef.current?.y() ?? 0 })
                       }
-                      onTransformEnd={() => {
-                        if (textRef.current) {
-                          const node = textRef.current;
-                          const scaleX = node.scaleX();
-                          const scaleY = node.scaleY();
-
-                          const newWidth = Math.max(20, node.width() * scaleX);
-                          const newFontSize = Math.max(10, coverTitleFontSize * scaleY);
-
-                          node.scaleX(1);
-                          node.scaleY(1);
-
-                          setCoverTitleWidth(newWidth);
-                          setCoverTitleFontSize(newFontSize);
-                          setCoverTitleRotation(node.rotation());
-                          node.width(newWidth);
-                          node.fontSize(newFontSize);
-                        }
-                      }}
+                      onTransformEnd={handleTextTransform}
                       onClick={handleTextSelect}
-                      onDblClick={handleTextDblClick} // 추가
+                      onDblClick={handleTextDblClick}
                       onDblTap={handleTextDblClick} // 모바일 환경에서 더블 탭 처리
                       scaleX={coverScale}
                       scaleY={coverScale}

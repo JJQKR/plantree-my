@@ -2,10 +2,10 @@ import React from 'react';
 import { FaThLarge, FaTextHeight, FaImage, FaShapes, FaUpload, FaPalette, FaLayerGroup, FaEdit } from 'react-icons/fa';
 
 type DiaryCoverSidebarProps = {
-  onSelectMenu: (menu: string) => void;
+  handleSelectMenu: (menu: string) => void;
 };
 
-const DiaryCoverSidebar: React.FC<DiaryCoverSidebarProps> = ({ onSelectMenu }) => {
+const DiaryCoverSidebar: React.FC<DiaryCoverSidebarProps> = ({ handleSelectMenu }) => {
   return (
     <div className="w-[6.3rem] h-full bg-gray-50 text-black border-r-[.1rem] flex flex-col">
       {/* <div
@@ -17,21 +17,21 @@ const DiaryCoverSidebar: React.FC<DiaryCoverSidebarProps> = ({ onSelectMenu }) =
       </div> */}
       <div
         className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
-        onClick={() => onSelectMenu('Text')}
+        onClick={() => handleSelectMenu('Text')}
       >
         <FaTextHeight className="mb-1" />
         <span>텍스트</span>
       </div>
       <div
         className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
-        onClick={() => onSelectMenu('Photos')}
+        onClick={() => handleSelectMenu('Photos')}
       >
         <FaImage className="mb-1" />
         <span>사진</span>
       </div>
       <div
         className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
-        onClick={() => onSelectMenu('Elements')}
+        onClick={() => handleSelectMenu('Elements')}
       >
         <FaShapes className="mb-1" />
         <span>요소</span>
@@ -45,21 +45,21 @@ const DiaryCoverSidebar: React.FC<DiaryCoverSidebarProps> = ({ onSelectMenu }) =
       </div> */}
       <div
         className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
-        onClick={() => onSelectMenu('Background')}
+        onClick={() => handleSelectMenu('Background')}
       >
         <FaPalette className="mb-1" />
         <span>배경</span>
       </div>
       <div
         className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
-        onClick={() => onSelectMenu('Layers')}
+        onClick={() => handleSelectMenu('Layers')}
       >
         <FaLayerGroup className="mb-1" />
         <span>레이어</span>
       </div>
       <div
         className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
-        onClick={() => onSelectMenu('Edit')}
+        onClick={() => handleSelectMenu('Edit')}
       >
         <FaEdit className="mb-1" />
         <span>수정</span>
