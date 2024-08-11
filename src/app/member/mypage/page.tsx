@@ -44,20 +44,27 @@ const MyPage: React.FC = () => {
   };
 
   const { email } = useUserStore((state) => state);
+  const toBack = () => {
+    window.history.back();
+  };
 
   return (
     <>
       <div className="w-[80rem] h-[117.5rem] grid grid-cols-1 justify-items-center ">
         <div className="w-[61.26rem] h-[101.19rem]">
-          <div className="mt-[2rem] w-[61.25rem] h-[40.13rem] shadow-sm mb-[2rem]">
+          <h2 className="w-[61.25rem] h-[3rem] text-[2rem] mt-[4rem] mb-0 text-black font-bold">
+            {' '}
+            <button onClick={toBack}>&lt;</button> 마이페이지
+          </h2>
+          <div className="w-[61.25rem] h-[40.13rem] shadow-sm mt-[2rem] mb-[2rem]">
             <GrowthSummary />
             <GardenCarousel />
           </div>
           <div className="w-[61.25rem] h-[29.56rem] bg-white rounded-[20px] shadow-md mt-0">
             <div className="flex flex-row justify-between">
-              <h2 className="font-semibold text-[1.63rem] ml-[2.5rem] h-[2.06rem] mt-[2rem] mb-[1.25rem]">
+              <h3 className="font-semibold text-[1.63rem] ml-[2.5rem] h-[2.06rem] mt-[2rem] mb-[1.25rem]">
                 도전과제 <ObtainedBadgesCount /> / {totalBadges.length}
-              </h2>
+              </h3>
               <button
                 className="font-semibold text-[#008A02] text-[1.63rem]  mt-[2rem] mb-[1.25rem] mr-[2.5rem]"
                 onClick={handleToggleBadgeModal}
