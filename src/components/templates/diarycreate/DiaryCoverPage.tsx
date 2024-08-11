@@ -1208,7 +1208,7 @@ const DiaryCoverPage: React.FC = () => {
       <div ref={sidebarRef} className="relative z-5">
         <DiaryCoverSidebar handleSelectMenu={handleSelectMenu} />
         {selectedMenu && (
-          <div className="absolute top-0 left-full w-[24rem] h-full bg-gray-100 shadow-lg p-6 overflow-y-auto z-10">
+          <div className="absolute top-0 left-full w-[16rem] h-full bg-gray-100 shadow-lg p-6 overflow-y-auto z-10">
             <button
               onClick={() => setSelectedMenu(null)}
               className="absolute right-2 top-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full px-2 py-0.3 transition duration-300"

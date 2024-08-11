@@ -11,16 +11,20 @@ const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({ han
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
-  const fetchRandomImages = async () => {
+  const fetchRandomImages = async (resetPage: boolean = false) => {
     setLoading(true);
     try {
-      const results = await fetchImages('gradient', page);
-      if (results.length === 0) {
-        setHasMore(false);
+      const currentPage = resetPage ? 1 : page;
+      const results = await fetchImages('gradient', currentPage);
+
+      if (resetPage) {
+        setImages(results);
+        setPage(1);
       } else {
         setImages((prevImages) => [...prevImages, ...results]);
-        setHasMore(true);
       }
+
+      setHasMore(results.length > 0);
     } catch (error) {
       console.error('Error fetching images:', error);
       setHasMore(false);
@@ -29,11 +33,17 @@ const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({ han
   };
 
   useEffect(() => {
-    fetchRandomImages(); // 컴포넌트가 마운트될 때 초기 이미지 로드
+    if (page === 1 && images.length === 0) {
+      fetchRandomImages(true); // 초기 로딩 시 첫 페이지 이미지 가져오기
+    } else if (page > 1) {
+      fetchRandomImages();
+    }
   }, [page]);
 
   const handleLoadMore = () => {
-    setPage((prevPage) => prevPage + 1);
+    if (hasMore) {
+      setPage((prevPage) => prevPage + 1);
+    }
   };
 
   return (
