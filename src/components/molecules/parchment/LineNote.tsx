@@ -3,6 +3,7 @@
 import { isNoteLineArray } from '@/lib/utils/noteLineConfirmArray';
 import { supabase } from '@/supabase/client';
 import { Json } from '@/types/supabase';
+import { useRouter } from 'next/navigation';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import Swal from 'sweetalert2';
 
@@ -24,9 +25,11 @@ const LineNote = ({ id }: LineNoteProps) => {
   const [lineThickness, setLineThickness] = useState(1);
   const [bgColor, setBgColor] = useState('#ffffff');
   const [globalTextColor, setGlobalTextColor] = useState('#000000');
-  // const [dataExists, setDataExists] = useState(false);
+  const [diaryId, setDiaryId] = useState('');
+
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  // const { userId } = useUserStore((state) => state);
+
+  const router = useRouter();
 
   const measureTextWidth = useCallback((text: string, fontSize: number) => {
     const canvas = document.createElement('canvas');
@@ -94,46 +97,7 @@ const LineNote = ({ id }: LineNoteProps) => {
     });
   }, [lines, measureTextWidth, handleTextChange]);
 
-  // const saveData = useCallback(async () => {
-  //   if (!userId) {
-  //     console.error('userId is undefined');
-  //     return;
-  //   }
-
-  //   console.log('Saving data with user_id:', userId);
-  //   const { data, error } = await supabase.from('line_note').insert([
-  //     {
-  //       user_id: userId,
-  //       line_color: lineColor,
-  //       line_thickness: lineThickness,
-  //       bg_color: bgColor,
-  //       global_text_color: globalTextColor,
-  //       lines: lines as unknown as Json
-  //     }
-  //   ]);
-
-  //   if (error) {
-  //     console.error('Error saving data:', error);
-  //     Swal.fire({
-  //       title: '저장 실패.',
-  //       text: '속지를 저장하지 못했어요. 다시 시도해주세요!',
-  //       icon: 'error',
-  //       confirmButtonText: 'OK'
-  //     });
-  //   } else {
-  //     console.log('Data saved:', data);
-  //     setDataExists(true);
-  //     Swal.fire({
-  //       title: '저장 성공!',
-  //       text: '속지를 성공적으로 저장했어요!',
-  //       icon: 'success',
-  //       confirmButtonText: 'OK'
-  //     });
-  //   }
-  // }, [userId, lineColor, lineThickness, bgColor, globalTextColor, lines]);
-
   const updateData = async () => {
-    console.log(id);
     if (!id) {
       console.error('작성중인 페이지가 없습니다. 다시 시도해주세요.');
       return;
@@ -240,7 +204,9 @@ const LineNote = ({ id }: LineNoteProps) => {
         setGlobalTextColor(data?.global_text_color || '#000000');
 
         if (isNoteLineArray(data?.lines)) {
-          setLines(data?.lines);
+          const a = data.lines;
+          console.log({ a });
+          setLines(data.lines);
           // setDataExists(true);
         } else {
           console.error('Invalid data format for lines');
@@ -258,6 +224,21 @@ const LineNote = ({ id }: LineNoteProps) => {
     };
     loadData();
   }, []);
+
+  const handleDelete = async () => {
+    if (confirm('내용을 삭제 하시겠습니까?')) {
+      const { error: lineNoteError } = await supabase.from('line_note').delete().eq('id', id);
+      const { error: pagesError } = await supabase.from('pages').delete().eq('content_id', id);
+      if (lineNoteError) {
+        alert('삭제 중 오류가 발생했습니다: ' + lineNoteError.message);
+      } else if (pagesError) {
+        alert('삭제 중 오류가 발생했습니다:' + pagesError.message);
+      } else {
+        alert('삭제되었습니다!');
+        router.push(`/member/diary/${diaryId}/parchment`);
+      }
+    }
+  };
 
   return (
     <div className="w-full  max-w-screen-md max-h-screen overflow-auto mt-20">
@@ -342,7 +323,7 @@ const LineNote = ({ id }: LineNoteProps) => {
       </div>
       <div className="flex justify-between mt-4">
         <button onClick={updateData} className="p-2 bg-green-500 text-white rounded">
-          수정하기
+          저장하기
         </button>
         {/* {!dataExists ? (
           <button className="p-2 bg-blue-500 text-white rounded">저장</button>
@@ -351,9 +332,9 @@ const LineNote = ({ id }: LineNoteProps) => {
             수정하기
           </button>
         )} */}
-        {/* <button onClick={deleteData} className="p-2 bg-red-500 text-white rounded">
+        <button onClick={handleDelete} className="p-2 bg-red-500 text-white rounded">
           삭제하기
-        </button> */}
+        </button>
       </div>
     </div>
   );

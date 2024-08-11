@@ -1,4 +1,5 @@
-import { Database } from '@/types/supabase';
+import { Database } from './../types/supabase';
+
 import { createClient, UserAttributes as SupabaseUserAttributes } from '@supabase/supabase-js';
 
 export type UserAttributes = SupabaseUserAttributes & { token?: string };

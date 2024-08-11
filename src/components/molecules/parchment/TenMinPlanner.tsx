@@ -1,19 +1,12 @@
 'use client';
 
-import ParchmentInput from '@/components/atoms/ParchmentInput';
 import React, { useEffect, useState } from 'react';
 import Todolist from './Todolist';
 import Timetable from './Timetable';
-import useTimetableStore from '@/stores/timetable.store';
-import useUserStore from '@/stores/user.store';
-import { useParams } from 'next/navigation';
-import { TodoType } from '@/api/tenMinPlanner.api';
 import { supabase } from '@/supabase/client';
-
-type ParamTypes = {
-  [key: string]: string;
-  diaryId: string;
-};
+import { TodoType } from '@/api/tenMinPlanner.api';
+import ParchmentInput from '@/components/atoms/ParchmentInput';
+import { useRouter } from 'next/navigation';
 
 /**
  * 1. 속지 내용 변경 -> localPlanner 변경
@@ -32,7 +25,6 @@ export type Todo = {
 };
 
 const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
-  // const { diaryId } = useParams<ParamTypes>();
   const [localPlanner, setLocalPlanner] = useState<{
     id: string;
     date: string | null;
@@ -50,9 +42,9 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
   });
   const [todoList, setTodoList] = useState<Todo[]>([]);
   const [timetable, setTimetable] = useState({});
+  const [diaryId, setDiaryId] = useState('');
   const [selectedColorTodo, setSelectedColorTodo] = useState<Todo | null>(null);
-  // const { userId } = useUserStore((state) => state);
-  // const { activeCells } = useTimetableStore((state) => state);
+  const router = useRouter();
 
   // db에서 현재 데이터 가져오기
   useEffect(() => {
@@ -73,12 +65,13 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
             [key: string]: { active: boolean; color: string; todoId: string };
           }
         );
+        setDiaryId(data.diary_id || '');
       }
     };
     getData();
   }, []);
 
-  const handleChange = (
+  const handleChangeInputs = (
     key: string,
     value: string | TodoType[] | { [key: string]: { active: boolean; color: string; todoId: string } } | null
   ) => {
@@ -97,12 +90,12 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
     } else if (ddayNumber > 0) {
       ddayDisplayText = `D-${ddayNumber}`;
     }
-    handleChange('d_day', ddayDisplayText);
+    handleChangeInputs('d_day', ddayDisplayText);
   };
 
   const handleDate = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputDate = e.target.value;
-    handleChange('date', inputDate || null);
+    handleChangeInputs('date', inputDate || null);
     if (localPlanner.d_day_date) {
       calculateAndSetDday(inputDate, localPlanner.d_day_date);
     }
@@ -110,21 +103,19 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
 
   const handleDdayDate = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputDate = e.target.value;
-    handleChange('d_day_date', inputDate);
+    handleChangeInputs('d_day_date', inputDate);
     if (localPlanner.date) {
       calculateAndSetDday(localPlanner.date, inputDate);
     }
   };
 
   const handleGoal = (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleChange('goal', e.target.value || null);
+    handleChangeInputs('goal', e.target.value || null);
   };
 
   const handleMemo = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    handleChange('memo', e.target.value || null);
+    handleChangeInputs('memo', e.target.value || null);
   };
-
-  console.log({ timetable });
 
   const onSubmit = async () => {
     await supabase
@@ -137,9 +128,26 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
       .eq('id', id);
   };
 
+  console.log(id);
+  const handleDelete = async () => {
+    if (confirm('내용을 삭제 하시겠습니까?')) {
+      const { error: tenMinPlannerError } = await supabase.from('ten_min_planner').delete().eq('id', id);
+      const { error: pagesError } = await supabase.from('pages').delete().eq('content_id', id);
+      if (tenMinPlannerError) {
+        alert('삭제 중 오류가 발생했습니다: ' + tenMinPlannerError.message);
+      } else if (pagesError) {
+        alert('삭제 중 오류가 발생했습니다:' + pagesError.message);
+      } else {
+        alert('삭제되었습니다!');
+        router.push(`/member/diary/${diaryId}/parchment`);
+      }
+    }
+  };
+
   return (
     <div className="w-full max-w-screen-md h-[60rem] overflow-auto mt-1">
       <button onClick={onSubmit}>저장하기</button>
+      <button onClick={handleDelete}>삭제하기</button>
       <div className="relative border-2 flex flex-col gap-4 m-auto p-4 h-[60rem]">
         <div className="flex gap-2">
           <div className="w-1/3">

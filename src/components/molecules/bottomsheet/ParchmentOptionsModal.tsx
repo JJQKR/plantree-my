@@ -19,7 +19,7 @@ type ParamTypes = {
 const ParchmentOptionsModal: React.FC = () => {
   const { diaryId } = useParams<ParamTypes>();
   const { isParchmentOptionModalOpen, toggleParchmentOptionModal } = useParchmentModalStore((state) => state);
-  // const { addPage, pages, setPageIndex } = usePageStore((state) => state);
+  // const { addPage, pages, setPageIndex } = us ePageStore((state) => state);
   const { addTenMinPlanner } = useTenMinPlannerStore();
   const { userId } = useUserStore((state) => state);
   const { mutate: createPage } = useCreatePage();
@@ -64,7 +64,8 @@ const ParchmentOptionsModal: React.FC = () => {
         line_thickness: 0,
         bg_color: '',
         global_text_color: '',
-        lines: []
+        lines: Array.from({ length: 16 }, () => ({ text: '', fontSize: 16, textColor: '#000000' })),
+        diary_id: diaryId
       };
       await supabase.from('line_note').insert(newLineNote);
     } else if (parchment.parchmentStyle === 'blankNote') {

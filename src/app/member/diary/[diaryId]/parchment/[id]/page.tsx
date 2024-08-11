@@ -1,4 +1,4 @@
-import EditParchment from '@/components/templates/EditParchment';
+import EditParchment from '../../../../../../components/templates/EditParchment';
 
 export default function ParchmentIdPage() {
   return (

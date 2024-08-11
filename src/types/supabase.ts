@@ -177,6 +177,7 @@ export type Database = {
         Row: {
           bg_color: string | null;
           created_at: string;
+          diary_id: string | null;
           global_text_color: string | null;
           id: string;
           line_color: string | null;
@@ -187,6 +188,7 @@ export type Database = {
         Insert: {
           bg_color?: string | null;
           created_at?: string;
+          diary_id?: string | null;
           global_text_color?: string | null;
           id?: string;
           line_color?: string | null;
@@ -197,6 +199,7 @@ export type Database = {
         Update: {
           bg_color?: string | null;
           created_at?: string;
+          diary_id?: string | null;
           global_text_color?: string | null;
           id?: string;
           line_color?: string | null;

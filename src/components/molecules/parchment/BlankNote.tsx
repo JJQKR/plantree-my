@@ -1,9 +1,8 @@
 'use client';
+
 import React, { useRef, useState, useEffect } from 'react';
 import { supabase } from '@/supabase/client';
-import useUserStore from '@/stores/user.store';
-import { useParams } from 'next/navigation';
-import usePageStore from '@/stores/pages.store';
+import { useRouter } from 'next/navigation';
 
 interface BlankNoteProps {
   id: string;
@@ -24,9 +23,8 @@ const BlankNote = ({ id }: BlankNoteProps) => {
     date: '',
     title: ''
   });
-  // const { userId } = useUserStore((state) => state);
-  // const { pageId } = usePageStore((state) => state);
-  // const { diaryId } = useParams();
+  const [diaryId, setDiaryId] = useState('');
+  const router = useRouter();
 
   const editableDivRef = useRef<HTMLDivElement>(null);
   const maxHeight = 1000;
@@ -69,6 +67,7 @@ const BlankNote = ({ id }: BlankNoteProps) => {
         title: data.title ?? ''
       });
       setIsEditMode(false);
+      setDiaryId(data.diary_id ?? '');
     } else {
       setBgColor('#ffffff');
       setGlobalTextColor('#000000');
@@ -114,55 +113,31 @@ const BlankNote = ({ id }: BlankNoteProps) => {
     }
 
     const newData = {
-      // user_id: userId,
       id: id,
       date: date,
       title: title,
       content: content,
       bgColor: bgColor,
       globalTextColor: globalTextColor
-      // diary_id: diaryId,
     };
 
     await supabase.from('blank_note').update(newData).eq('id', id);
-
-    // let result;
-    // if (originalContent.content) {
-    //   // 기존 데이터가 있으면 업데이트
-    //   result = await supabase.from('blank_note').update(newData).eq('id', id);
-    // } else {
-    //   // 새 데이터면 삽입
-    //   result = await supabase.from('blank_note').insert([newData]);
-    // }
-
-    // if (result.error) {
-    //   alert((originalContent.content ? '수정' : '저장') + ' 중 오류가 발생했습니다: ' + result.error.message);
-    // } else {
-    //   alert((originalContent.content ? '수정' : '저장') + '되었습니다!');
-    //   setOriginalContent({
-    //     bgColor: bgColor,
-    //     globalTextColor: globalTextColor,
-    //     content: content,
-    //     date: date,
-    //     title: title
-    //   });
-    //   setIsEditMode(false);
-    // }
   };
 
-  // const handleDelete = async () => {
-  //   if (confirm('내용을 삭제 하시겠습니까?')) {
-  //     if (!pageId) return;
-
-  //     const { error } = await supabase.from('blank_note').delete().eq('diary_id', diaryId).eq('page_id', pageId);
-
-  //     if (error) {
-  //       alert('삭제 중 오류가 발생했습니다: ' + error.message);
-  //     } else {
-  //       alert('삭제되었습니다!');
-  //     }
-  //   }
-  // };
+  const handleDelete = async () => {
+    if (confirm('내용을 삭제 하시겠습니까?')) {
+      const { error: blankNoteError } = await supabase.from('blank_note').delete().eq('id', id);
+      const { error: pagesError } = await supabase.from('pages').delete().eq('content_id', id);
+      if (blankNoteError) {
+        alert('삭제 중 오류가 발생했습니다: ' + blankNoteError.message);
+      } else if (pagesError) {
+        alert('삭제 중 오류가 발생했습니다:' + pagesError.message);
+      } else {
+        alert('삭제되었습니다!');
+        router.push(`/member/diary/${diaryId}/parchment`);
+      }
+    }
+  };
 
   const handleEditModeToggle = () => {
     if (isEditMode) {
@@ -255,13 +230,8 @@ const BlankNote = ({ id }: BlankNoteProps) => {
           <button onClick={handleSaveOrUpdate} className="p-2 bg-blue-500 text-white rounded mr-2 mt-3">
             저장
           </button>
-          {/* {pageId && originalContent.content && (
-            <button onClick={handleDelete} className="p-2 bg-red-500 text-white rounded mr-2">
-              삭제
-            </button>
-          )} */}
-          <button onClick={handleEditModeToggle} className="p-2 bg-gray-500 text-white rounded">
-            편집 취소
+          <button onClick={handleDelete} className="p-2 bg-red-500 text-white rounded mr-2">
+            삭제
           </button>
         </>
       ) : (

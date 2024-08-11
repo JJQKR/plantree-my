@@ -8,6 +8,7 @@ import { PageType } from '@/stores/pages.store';
 import useParchmentModalStore from '@/stores/parchment.modal.store';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+
 interface DiaryContentsProps {
   diaryId: string;
   pageIndex: number;

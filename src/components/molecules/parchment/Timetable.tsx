@@ -1,10 +1,8 @@
 'use client';
 
-import { getBackgroundColorClass } from '@/lib/utils/tenMinPlannerColor';
-import useTimetableStore from '@/stores/timetable.store';
-import useTodoListStore from '@/stores/todoList.store';
 import React, { useState } from 'react';
 import { Todo } from './TenMinPlanner';
+import { getBackgroundColorClass } from '../../../lib/utils/tenMinPlannerColor';
 
 type TimeTableObject = {
   [key: string]: { active: boolean; color: string; todoId: string };

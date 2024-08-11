@@ -1,6 +1,5 @@
 'use client';
 
-import { supabase } from '@/supabase/client';
 import { useSearchParams, useParams } from 'next/navigation';
 import React, { useEffect } from 'react';
 import TenMinPlanner from '../molecules/parchment/TenMinPlanner';

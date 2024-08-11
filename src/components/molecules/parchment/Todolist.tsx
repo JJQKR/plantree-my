@@ -5,11 +5,9 @@ import uuid from 'react-uuid';
 import { FaPlus } from 'react-icons/fa6';
 import { FaCircle } from 'react-icons/fa';
 import ColorModal from './ColorModal';
-import useTodoListStore from '@/stores/todoList.store';
-import { getBackgroundColorClass, getColorClass } from '@/lib/utils/tenMinPlannerColor';
-import useTenMinplannerStore from '@/stores/tenMinPlanner.store';
-import useParchmentModalStore from '@/stores/parchment.modal.store';
 import { Todo } from './TenMinPlanner';
+import useParchmentModalStore from '../../../stores/parchment.modal.store';
+import { getBackgroundColorClass, getColorClass } from '../../../lib/utils/tenMinPlannerColor';
 
 interface TodolistProps {
   tenMinPlannerId: string;
