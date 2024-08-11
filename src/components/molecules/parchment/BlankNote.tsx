@@ -29,7 +29,7 @@ const BlankNote = ({ id }: BlankNoteProps) => {
   // const { diaryId } = useParams();
 
   const editableDivRef = useRef<HTMLDivElement>(null);
-  const maxHeight = 400;
+  const maxHeight = 1000;
 
   useEffect(() => {
     fetchDiaryData();
@@ -184,72 +184,75 @@ const BlankNote = ({ id }: BlankNoteProps) => {
   };
 
   return (
-    <div className="bg-white w-full h-[600px] p-[2rem]" style={{ backgroundColor: bgColor }}>
-      <div>
-        <label htmlFor="date">날짜 : </label>
-        <input
-          id="date"
-          type="date"
-          className="border w-[7rem] text-[0.7rem]"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          disabled={!isEditMode}
-        />
-      </div>
-      <div className="flex flex-row w-full mb=2">
-        <label htmlFor="title" className="w-[3rem]">
-          제목:
-        </label>
-        <input
-          id="title"
-          type="text"
-          className="border w-full text-[0.7rem]"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          disabled={!isEditMode}
-        />
-      </div>
-      <div>
-        <label className="block m-2">
-          줄노트 배경 색상:
-          <input
-            type="color"
-            value={bgColor}
-            onChange={(e) => setBgColor(e.target.value)}
-            className="ml-2 p-1 border"
-            disabled={!isEditMode}
-          />
-        </label>
-        <label className="block m-2">
-          전체 텍스트 색상:
-          <input
-            type="color"
-            value={globalTextColor}
-            onChange={(e) => setGlobalTextColor(e.target.value)}
-            className="ml-2 p-1 border"
-            disabled={!isEditMode}
-          />
-        </label>
+    <div className="bg-white w-full h-[430px]">
+      <div className="flex justify-between mb-4 mt-[52px]">
+        <div>
+          <label htmlFor="title" className="block m-2">
+            제목:
+            <input
+              id="title"
+              type="text"
+              className="border w-[80%] text-[1.3rem] ml-2"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              disabled={!isEditMode}
+            />
+          </label>
+          <label className="block m-2">
+            노트 배경 색상:
+            <input
+              type="color"
+              value={bgColor}
+              onChange={(e) => setBgColor(e.target.value)}
+              className="ml-2 p-1 border"
+              disabled={!isEditMode}
+            />
+          </label>
+        </div>
+        <div>
+          <label htmlFor="date" className="block m-2">
+            날짜:
+            <input
+              id="date"
+              type="date"
+              className="border w-[60%] h-[2rem] text-[0.9rem] ml-2"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              disabled={!isEditMode}
+            />
+          </label>
+          <label className="block m-2">
+            텍스트 색상:
+            <input
+              type="color"
+              value={globalTextColor}
+              onChange={(e) => setGlobalTextColor(e.target.value)}
+              className="ml-2 p-1 border"
+              disabled={!isEditMode}
+            />
+          </label>
+        </div>
       </div>
       <div
         ref={editableDivRef}
         contentEditable={isEditMode}
-        className="border w-full overflow-hidden mb-2"
+        className="border p-4 w-[43rem] h-[53rem] overflow-hidden mb-1 mt-5 ml-4 mr-3"
         style={{
-          height: `${maxHeight}px`,
           color: globalTextColor,
           fontSize: '16px',
           backgroundColor: bgColor,
           overflowY: 'hidden',
           wordBreak: 'break-all',
-          whiteSpace: 'pre-wrap'
+          whiteSpace: 'pre-wrap',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 10)',
+          borderRadius: '8px'
         }}
         onInput={handleInput}
         onKeyDown={handleKeyDown}
       ></div>
       {isEditMode ? (
         <>
-          <button onClick={handleSaveOrUpdate} className="p-2 bg-blue-500 text-white rounded mr-2">
+          <button onClick={handleSaveOrUpdate} className="p-2 bg-blue-500 text-white rounded mr-2 mt-3">
             저장
           </button>
           {/* {pageId && originalContent.content && (

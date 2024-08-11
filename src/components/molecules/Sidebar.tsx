@@ -8,29 +8,16 @@ import AttendanceCheck from '@/lib/utils/AttendanceCheck';
 import FetchUserData from '@/lib/utils/FetchUserData';
 import ProfileStages from './ProfileStages';
 import { supabase } from '@/supabase/client';
-import { MainSidebarProps } from '@/types/main';
+import { DiaryCover } from '@/types/main'; // 수정된 타입 import
 
-interface DiaryCover {
-  id: string;
-  cover_bg_color: string | null;
-  cover_image: string | null;
-  cover_image_position: any | null; // JSON 타입으로 변경 가능
-  cover_image_rotation: number | null;
-  cover_image_size: any | null; // JSON 타입으로 변경 가능
-  cover_scale: number | null;
-  cover_title: string | null;
-}
-
-const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
-  const { nickname, levelName, attendance, userId } = useUserStore((state) => state); // 유저 상태 관리 스토어에서 닉네임 가져오기
+const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const { nickname, levelName, attendance, userId } = useUserStore((state) => state);
   const [diaryCovers, setDiaryCovers] = useState<DiaryCover[]>([]);
   const [levelId, setLevelId] = useState<string | null>(null);
 
-  // 컴포넌트 마운트 시 사용자 정보 및 다이어리 커버를 가져오는 useEffect
   useEffect(() => {
     const fetchData = async () => {
       if (userId) {
-        // 사용자 레벨 ID 가져오기
         const { data: user, error: userError } = await supabase
           .from('users')
           .select('id, level_id')
@@ -41,7 +28,6 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
         } else {
           setLevelId(user.level_id);
 
-          // diary_covers 테이블에서 다이어리 커버 정보 가져오기
           const { data: coversData, error: coversError } = await supabase
             .from('diary_covers')
             .select('*')
@@ -76,7 +62,7 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
               </Link>
               <div className="flex flex-col items-center mb-10">
                 {levelId ? (
-                  <ProfileStages levelId={levelId} size={120} /> // 레벨 ID가 존재할 때만 렌더링
+                  <ProfileStages levelId={levelId} size={120} />
                 ) : (
                   <div style={{ width: 120, height: 120 }} className="bg-gray-400 rounded-full mb-2"></div>
                 )}
@@ -97,8 +83,14 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
               diaryCovers.map((cover) => (
                 <li
                   key={cover.id}
-                  className="h-[50px] p-3 rounded-lg shadow-md text-black"
-                  style={{ backgroundColor: cover.cover_bg_color || 'bg-red-300' }} // 배경색 설정
+                  className="h-[50px] p-5 rounded-lg shadow-md text-black"
+                  style={{
+                    backgroundColor: cover.cover_bg_color || 'bg-white',
+                    backgroundImage: cover.cover_bg_color ? `url(${cover.cover_bg_color})` : 'none',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    color: cover.unsplash_image ? 'white' : 'black'
+                  }}
                 >
                   {cover.cover_title || '제목 없음'}
                 </li>

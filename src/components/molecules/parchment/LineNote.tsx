@@ -1,12 +1,10 @@
 'use client';
 
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { isNoteLineArray } from '@/lib/utils/noteLineConfirmArray';
 import { supabase } from '@/supabase/client';
 import { Json } from '@/types/supabase';
-// import { isNoteLineArray } from '@/lib/utils';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import useUserStore from '@/stores/user.store';
-import { isNoteLineArray } from '@/lib/utils/noteLineConfirmArray';
 
 interface LineNoteProps {
   id: string;
@@ -20,7 +18,7 @@ export interface NoteLine {
 
 const LineNote = ({ id }: LineNoteProps) => {
   const [lines, setLines] = useState<NoteLine[]>(
-    Array.from({ length: 15 }, () => ({ text: '', fontSize: 16, textColor: '#000000' }))
+    Array.from({ length: 16 }, () => ({ text: '', fontSize: 16, textColor: '#000000' }))
   );
   const [lineColor, setLineColor] = useState('#000000');
   const [lineThickness, setLineThickness] = useState(1);
@@ -262,7 +260,7 @@ const LineNote = ({ id }: LineNoteProps) => {
   }, []);
 
   return (
-    <div className="w-full max-w-screen-md max-h-screen overflow-auto mt-20">
+    <div className="w-full  max-w-screen-md max-h-screen overflow-auto mt-20">
       <div className="flex justify-between mb-4 bg-white">
         <div>
           <label className="block m-2">
@@ -309,15 +307,15 @@ const LineNote = ({ id }: LineNoteProps) => {
         </div>
       </div>
       <div
-        className="border p-4 w-[495px]"
+        className="border p-4 ml-3 mr-3"
         style={{
           backgroundColor: bgColor,
-          minHeight: '480px',
+          minHeight: '530px',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 1)',
           borderRadius: '8px'
         }}
       >
-        <div className="relative w-full overflow-hidden" style={{ height: '450px' }}>
+        <div className="relative w-full overflow-hidden" style={{ height: '510px' }}>
           {lines.map((line, index) => (
             <div
               key={index}
@@ -334,7 +332,8 @@ const LineNote = ({ id }: LineNoteProps) => {
                 className="absolute top-0 left-0 w-full border-none outline-none bg-transparent"
                 style={{
                   fontSize: `${line.fontSize}px`,
-                  color: globalTextColor
+                  color: globalTextColor,
+                  width: '100%'
                 }}
               />
             </div>

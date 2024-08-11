@@ -41,18 +41,21 @@ const BadgeCollection: React.FC = () => {
   }, [diaryCount, membershipDays]);
 
   return (
-    <div className="bg-white rounded-[10px] shadow-md w-[600px] h-[200px]">
-      <div className="flex flex-row justify-between">
-        {badgesState.slice(0, 4).map((badge, index) => (
-          <div key={index} className="m-5">
-            <Image
-              src={badge.content}
-              alt={badge.isObtained ? 'Obtained Badge' : 'Unobtained Badge'}
-              width={100}
-              height={150}
-            />
-          </div>
-        ))}
+    <div className="flex justify-center">
+      <div className="bg-white rounded-[10px] w-[57.25rem] h-[22.25rem]">
+        <div className="flex flex-row justify-between">
+          {badgesState.slice(0, 4).map((badge, index) => (
+            <div key={index} className="relative" style={{ width: '13.25rem', height: '22.25rem' }}>
+              <Image
+                src={badge.content}
+                alt={badge.isObtained ? 'Obtained Badge' : 'Unobtained Badge'}
+                layout="fill" // Make the image fill the parent div
+                objectFit="contain" // Ensure the image covers the parent div without distortion
+                className="rounded-[10px]" // Optional: apply additional styling
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

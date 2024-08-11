@@ -1,14 +1,13 @@
 'use client';
 
-import { AddPageType } from '@/api/pages.api';
 import BlankNote from '@/components/molecules/parchment/BlankNote';
 import LineNote from '@/components/molecules/parchment/LineNote';
 import TenMinPlanner from '@/components/molecules/parchment/TenMinPlanner';
 import { usePageToDiaryId } from '@/lib/hooks/usePages';
-import usePageStore, { PageType } from '@/stores/pages.store';
+import { PageType } from '@/stores/pages.store';
 import useParchmentModalStore from '@/stores/parchment.modal.store';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React from 'react';
 interface DiaryContentsProps {
   diaryId: string;
   pageIndex: number;
@@ -46,9 +45,9 @@ const DiaryContents = ({ diaryId, pageIndex }: DiaryContentsProps) => {
         {page.parchment_style === 'tenMinPlanner' ? (
           <TenMinPlanner id={page.content_id} />
         ) : page.parchment_style === 'lineNote' ? (
-          <LineNote />
+          <LineNote id={page.content_id} />
         ) : page.parchment_style === 'blankNote' ? (
-          <BlankNote />
+          <BlankNote id={page.content_id} />
         ) : (
           <img className="w-full h-full object-cover" />
         )}
@@ -83,7 +82,7 @@ const DiaryContents = ({ diaryId, pageIndex }: DiaryContentsProps) => {
           showContent(pages[pageIndex + 1])
         ) : pages?.[pageIndex] ? (
           <div
-            className="w-[45.8rem] h-[60rem] flex items-center justify-center border-2 border-dashed border-gray-600 cursor-pointer"
+            className="w-[45.8rem] h-[67.6rem] flex items-center justify-center border-2 border-dashed border-gray-600 cursor-pointer"
             onClick={toggleParchmentOptionModal}
           >
             <span className="text-gray-600 text-4xl">+ 속지 추가</span>

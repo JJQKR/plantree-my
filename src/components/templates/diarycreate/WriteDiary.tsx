@@ -182,9 +182,7 @@ const WriteDiary = () => {
           </div>
         </div>
         <div className="flex flex-row">
-          <div className="w-[91.6rem] h-[60rem] border-2 border-gray-500">
-            <DiaryContents />
-          </div>
+          <div className="w-[91.6rem] h-[68rem] border-2 border-gray-500 mt-2 mb-5">{/* <DiaryContents /> */}</div>
         </div>
       </div>
       <div onClick={handleNextPage}>

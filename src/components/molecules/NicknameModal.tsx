@@ -5,7 +5,8 @@ import useUserStore from '@/stores/user.store'; // 유저 상태 관리 스토�
 
 const NicknameModal: React.FC = () => {
   const { isNicknameModalOpen, toggleNicknameModal } = useMyModalStore((state) => state);
-  const { nickname, setNickname } = useUserStore((state) => state); // 유저 상태 관리 스토어에서 닉네임 가져오기
+  const { nickname, setNickname } = useUserStore((state) => state);
+  // 유저 상태 관리 스토어에서 닉네임 가져오기
   const nicknameRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -80,12 +81,12 @@ const NicknameModal: React.FC = () => {
       {isNicknameModalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-          onClick={handleBackGroundClick}
+          // onClick={handleBackGroundClick}
         >
-          <div className="bg-white p-9 rounded-[10px]" style={{ width: '20em' }}>
+          <div className="bg-white p-9 rounded-[10px] w-[31.25rem] h-[17.25rem]">
             <div onClick={(e) => e.stopPropagation()}>
               <div className="flex justify-between items-center mb-4">
-                <h1 className="text-xl font-bold text-left text-black">닉네임 변경</h1>
+                <h1 className="text-[1.63rem] font-bold text-left text-black">닉네임 변경</h1>
                 <button className="text-black" onClick={toggleNicknameModal} type="button">
                   &#10005;
                 </button>
@@ -94,7 +95,7 @@ const NicknameModal: React.FC = () => {
                 <input
                   type="text"
                   placeholder="새 닉네임 입력"
-                  className="mb-4 p-2 border rounded w-full text-black"
+                  className="mb-4 p-2 border rounded-[5px]  w-full text-black"
                   ref={nicknameRef}
                   defaultValue={nickname ?? ''}
                 />
@@ -102,7 +103,7 @@ const NicknameModal: React.FC = () => {
                 <div className="flex flex-col gap-2">
                   <button
                     type="submit"
-                    className="px-4 py-2 w-full text-white rounded"
+                    className="px-4 py-2 w-full text-white rounded-[5px]"
                     style={{ backgroundColor: '#9E9E9E' }}
                     onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#008A02')}
                     onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#9E9E9E')}
