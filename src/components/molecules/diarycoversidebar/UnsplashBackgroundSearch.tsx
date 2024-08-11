@@ -2,25 +2,29 @@ import React, { useState, useEffect } from 'react';
 import { fetchImages, UnsplashImage } from '../../../lib/utils/unsplash';
 
 interface UnsplashBackgroundSearchProps {
-  onSelectBackground: (imageUrl: string) => void;
+  handleBackgroundImageChange: (imageUrl: string) => void;
 }
 
-const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({ onSelectBackground }) => {
+const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({ handleBackgroundImageChange }) => {
   const [images, setImages] = useState<UnsplashImage[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
-  const fetchRandomImages = async () => {
+  const fetchRandomImages = async (resetPage: boolean = false) => {
     setLoading(true);
     try {
-      const results = await fetchImages('gradient', page);
-      if (results.length === 0) {
-        setHasMore(false);
+      const currentPage = resetPage ? 1 : page;
+      const results = await fetchImages('gradient', currentPage);
+
+      if (resetPage) {
+        setImages(results);
+        setPage(1);
       } else {
         setImages((prevImages) => [...prevImages, ...results]);
-        setHasMore(true);
       }
+
+      setHasMore(results.length > 0);
     } catch (error) {
       console.error('Error fetching images:', error);
       setHasMore(false);
@@ -29,11 +33,17 @@ const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({ onS
   };
 
   useEffect(() => {
-    fetchRandomImages(); // 컴포넌트가 마운트될 때 초기 이미지 로드
+    if (page === 1 && images.length === 0) {
+      fetchRandomImages(true); // 초기 로딩 시 첫 페이지 이미지 가져오기
+    } else if (page > 1) {
+      fetchRandomImages();
+    }
   }, [page]);
 
   const handleLoadMore = () => {
-    setPage((prevPage) => prevPage + 1);
+    if (hasMore) {
+      setPage((prevPage) => prevPage + 1);
+    }
   };
 
   return (
@@ -45,7 +55,7 @@ const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({ onS
             key={`background-${image.id}-${index}`}
             src={image.urls.thumb}
             alt={image.alt_description}
-            onClick={() => onSelectBackground(image.urls.regular)}
+            onClick={() => handleBackgroundImageChange(image.urls.regular)}
             className="cursor-pointer my-2"
           />
         ))}

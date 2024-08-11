@@ -11,11 +11,6 @@ type CoverSize = {
   height: number;
 };
 
-// type Page = {
-//   id: string;
-//   url: string;
-// };
-
 type DiaryCoverState = {
   coverTitle: string | null;
   setCoverTitle: (text: string | null) => void;
@@ -27,6 +22,16 @@ type DiaryCoverState = {
   setCoverTitleWidth: (width: number) => void;
   coverTitleRotation: number;
   setCoverTitleRotation: (rotation: number) => void;
+  coverTitleFontFamily: string; // 글꼴 상태 추가
+  setCoverTitleFontFamily: (fontFamily: string) => void; // 글꼴 설정 함수 추가
+  coverTitleFontStyle: string; // 폰트 스타일 상태 추가
+  setCoverTitleFontStyle: (style: string) => void; // 폰트 스타일 설정 함수 추가
+  coverTitleColor: string; // 텍스트 색상 상태 추가
+  setCoverTitleColor: (color: string) => void; // 텍스트 색상 설정 함수 추가
+  isUnderlined: boolean; // 밑줄 상태 추가
+  setIsUnderlined: (isUnderlined: boolean) => void; // 밑줄 설정 함수 추가
+  isStrikethrough: boolean; // 취소선 상태 추가
+  setIsStrikethrough: (isStrikethrough: boolean) => void; // 취소선 설정 함수 추가
   coverImage: HTMLImageElement | null;
   setCoverImage: (image: HTMLImageElement | null) => void;
   coverImagePosition: CoverPosition;
@@ -51,6 +56,11 @@ type DiaryCoverState = {
   setCoverData: (data: object | null) => void;
   activeSection: string | null;
   setActiveSection: (section: string | null) => void;
+  resetTextProperties: () => void; // 텍스트 속성을 초기화하는 함수 추가
+  availableFontWeights: number[];
+  setAvailableFontWeights: (weights: number[]) => void;
+  coverTitleFontWeight: number; // 추가: 현재 선택된 글씨 두께 상태
+  setCoverTitleFontWeight: (weight: number) => void; // 추가: 글씨 두께 설정 함수
 
   //언스플레쉬
   unsplashImage: HTMLImageElement | null;
@@ -66,16 +76,26 @@ type DiaryCoverState = {
 };
 
 export const useDiaryCoverStore = create<DiaryCoverState>((set, get) => ({
-  coverTitle: '표지 제목 작성',
+  coverTitle: null,
   setCoverTitle: (title) => set({ coverTitle: title }),
-  coverTitlePosition: { x: 140, y: 150 },
+  coverTitlePosition: { x: 120, y: 150 },
   setCoverTitlePosition: (position) => set({ coverTitlePosition: position }),
   coverTitleFontSize: 30,
   setCoverTitleFontSize: (size) => set({ coverTitleFontSize: size }),
-  coverTitleWidth: 220,
+  coverTitleWidth: 260,
   setCoverTitleWidth: (width) => set({ coverTitleWidth: width }),
   coverTitleRotation: 0,
   setCoverTitleRotation: (rotation) => set({ coverTitleRotation: rotation }),
+  coverTitleFontFamily: 'Arial',
+  setCoverTitleFontFamily: (fontFamily) => set({ coverTitleFontFamily: fontFamily }),
+  coverTitleFontStyle: 'normal',
+  setCoverTitleFontStyle: (style) => set({ coverTitleFontStyle: style }),
+  coverTitleColor: '#000000',
+  setCoverTitleColor: (color) => set({ coverTitleColor: color }),
+  isUnderlined: false,
+  setIsUnderlined: (isUnderlined) => set({ isUnderlined }),
+  isStrikethrough: false,
+  setIsStrikethrough: (isStrikethrough) => set({ isStrikethrough }),
   coverImage: null,
   setCoverImage: (image) => set({ coverImage: image }),
   coverImagePosition: { x: 50, y: 50 },
@@ -100,8 +120,28 @@ export const useDiaryCoverStore = create<DiaryCoverState>((set, get) => ({
   setCoverData: (data) => set({ coverData: data }),
   activeSection: null,
   setActiveSection: (section) => set({ activeSection: section }),
+  availableFontWeights: [400], // 초기 상태 설정
+  setAvailableFontWeights: (weights) => set({ availableFontWeights: weights }),
+  coverTitleFontWeight: 400, // 초기 두께 설정
+  setCoverTitleFontWeight: (weight) => set({ coverTitleFontWeight: weight }),
 
-  //언스플레쉬
+  // 리셋 텍스트
+  resetTextProperties: () =>
+    set({
+      coverTitle: 'Create Cover Title',
+      coverTitlePosition: { x: 120, y: 150 },
+      coverTitleFontSize: 30,
+      coverTitleWidth: 260,
+      coverTitleRotation: 0,
+      coverTitleFontFamily: 'Arial',
+      coverTitleFontStyle: 'normal',
+      coverTitleColor: '#000000',
+      coverTitleFontWeight: 400,
+      isUnderlined: false,
+      isStrikethrough: false
+    }),
+
+  // 언스플레쉬
   unsplashImage: null,
   setUnsplashImage: (image) => set({ unsplashImage: image }),
   unsplashImagePosition: { x: 50, y: 60 },
