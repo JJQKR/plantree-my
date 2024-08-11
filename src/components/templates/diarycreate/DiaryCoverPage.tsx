@@ -1050,7 +1050,7 @@ const DiaryCoverPage: React.FC = () => {
             </div>
 
             {/* 밑줄 선택 */}
-            <div className="mb-2">
+            {/* <div className="mb-2">
               <label className="font-semibold block mb-1">밑줄 추가:</label>
               <button
                 onClick={() => handleToggleUnderline()}
@@ -1058,10 +1058,10 @@ const DiaryCoverPage: React.FC = () => {
               >
                 밑줄 추가 / 제거
               </button>
-            </div>
+            </div> */}
 
             {/* 취소선 선택 */}
-            <div className="mb-2">
+            {/* <div className="mb-2">
               <label className="font-semibold block mb-1">취소선 추가:</label>
               <button
                 onClick={() => handleToggleStrikethrough()}
@@ -1069,7 +1069,7 @@ const DiaryCoverPage: React.FC = () => {
               >
                 취소선 추가 / 제거
               </button>
-            </div>
+            </div> */}
           </div>
         );
       case 'Photos':
@@ -1172,11 +1172,11 @@ const DiaryCoverPage: React.FC = () => {
   }, [coverBackgroundColor]);
 
   const handleToggleUnderline = () => {
-    // 밑줄을 추가/제거하는 로직을 구현
+    // 밑줄 추가/제거하는 로직
   };
 
   const handleToggleStrikethrough = () => {
-    // 취소선을 추가/제거하는 로직을 구현
+    // 취소선 추가/제거하는 로직
   };
 
   const fontWeightOptions = [
