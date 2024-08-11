@@ -33,7 +33,7 @@ const GrowthSummary = () => {
     } else {
       setLoading(false); // userId가 없을 때 로딩 중 상태 해제
     }
-  }, [userId]);
+  }, [userId, membershipDays]);
 
   console.log(
     'Rendering GrowthSummary with membershipDays:',
@@ -45,7 +45,8 @@ const GrowthSummary = () => {
   );
 
   // 로딩 중이거나 데이터가 없는 경우 로딩 메시지 표시
-  if (loading || !membershipDays || !nickname || !levelName) {
+  if (loading || !nickname || !levelName) {
+    // if (loading || !membershipDays || !nickname || !levelName)
     return <div>로딩 중...</div>;
   }
 
