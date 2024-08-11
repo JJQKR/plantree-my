@@ -36,6 +36,7 @@ export const useCreateTenMinPlanner = () => {
   return useMutation({
     mutationFn: async (newTenMinplanner: UpdateTenMinPlannerType) =>
       await tenMinplannerApi.insertTenMinPlanner(newTenMinplanner),
+
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['tenMinPlanner']

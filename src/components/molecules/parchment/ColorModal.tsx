@@ -3,8 +3,13 @@ import useTodoListStore from '@/stores/todoList.store';
 import React from 'react';
 import { FaCircle } from 'react-icons/fa';
 
-const ColorModal = () => {
-  const { todoId, changeTodoColor } = useTodoListStore();
+interface ColorModalProps {
+  todoId: string;
+  changeTodoColor: (todoId: string, newColor: string) => void;
+}
+
+const ColorModal = ({ todoId, changeTodoColor }: ColorModalProps) => {
+  // const { todoId, changeTodoColor } = useTodoListStore();
   const { toggleTenMinplannerColorModal } = useParchmentModalStore((state) => state);
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -14,6 +19,7 @@ const ColorModal = () => {
   };
 
   const selectColor = (newColor: string) => {
+    console.log({ todoId, newColor });
     changeTodoColor(todoId, newColor);
     toggleTenMinplannerColorModal();
   };

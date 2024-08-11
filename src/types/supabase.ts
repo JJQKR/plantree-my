@@ -24,6 +24,7 @@ export type Database = {
           content: string | null;
           created_at: string;
           date: string | null;
+          diary_id: string | null;
           globalTextColor: string | null;
           id: string;
           title: string | null;
@@ -34,6 +35,7 @@ export type Database = {
           content?: string | null;
           created_at?: string;
           date?: string | null;
+          diary_id?: string | null;
           globalTextColor?: string | null;
           id?: string;
           title?: string | null;
@@ -44,6 +46,7 @@ export type Database = {
           content?: string | null;
           created_at?: string;
           date?: string | null;
+          diary_id?: string | null;
           globalTextColor?: string | null;
           id?: string;
           title?: string | null;
@@ -62,40 +65,26 @@ export type Database = {
       diaries: {
         Row: {
           bookshelf_order: number;
-          content: string | null;
           created_at: string;
           id: string;
           name: string | null;
-          pages: Json | null;
           user_id: string | null;
         };
         Insert: {
           bookshelf_order?: number;
-          content?: string | null;
           created_at?: string;
           id?: string;
           name?: string | null;
-          pages?: Json | null;
           user_id?: string | null;
         };
         Update: {
           bookshelf_order?: number;
-          content?: string | null;
           created_at?: string;
           id?: string;
           name?: string | null;
-          pages?: Json | null;
           user_id?: string | null;
         };
-        Relationships: [
-          {
-            foreignKeyName: 'diaries_user_id_fkey';
-            columns: ['user_id'];
-            isOneToOne: false;
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
-          }
-        ];
+        Relationships: [];
       };
       diary_covers: {
         Row: {
@@ -113,6 +102,12 @@ export type Database = {
           cover_title_width: number | null;
           diary_id: string | null;
           id: string;
+          unsplash_image: string | null;
+          unsplash_image_position: Json | null;
+          unsplash_image_rotation: number | null;
+          unsplash_image_size: Json | null;
+          unsplash_scale: number | null;
+          user_id: string | null;
         };
         Insert: {
           cover_bg_color?: string | null;
@@ -129,6 +124,12 @@ export type Database = {
           cover_title_width?: number | null;
           diary_id?: string | null;
           id?: string;
+          unsplash_image?: string | null;
+          unsplash_image_position?: Json | null;
+          unsplash_image_rotation?: number | null;
+          unsplash_image_size?: Json | null;
+          unsplash_scale?: number | null;
+          user_id?: string | null;
         };
         Update: {
           cover_bg_color?: string | null;
@@ -145,16 +146,14 @@ export type Database = {
           cover_title_width?: number | null;
           diary_id?: string | null;
           id?: string;
+          unsplash_image?: string | null;
+          unsplash_image_position?: Json | null;
+          unsplash_image_rotation?: number | null;
+          unsplash_image_size?: Json | null;
+          unsplash_scale?: number | null;
+          user_id?: string | null;
         };
-        Relationships: [
-          {
-            foreignKeyName: 'diary_covers_diary_id_fkey';
-            columns: ['diary_id'];
-            isOneToOne: false;
-            referencedRelation: 'diaries';
-            referencedColumns: ['id'];
-          }
-        ];
+        Relationships: [];
       };
       level: {
         Row: {
@@ -258,7 +257,7 @@ export type Database = {
         Row: {
           d_day: string | null;
           d_day_date: string | null;
-          date: string;
+          date: string | null;
           diary_id: string | null;
           goal: string | null;
           id: string;
@@ -270,7 +269,7 @@ export type Database = {
         Insert: {
           d_day?: string | null;
           d_day_date?: string | null;
-          date: string;
+          date?: string | null;
           diary_id?: string | null;
           goal?: string | null;
           id: string;
@@ -282,7 +281,7 @@ export type Database = {
         Update: {
           d_day?: string | null;
           d_day_date?: string | null;
-          date?: string;
+          date?: string | null;
           diary_id?: string | null;
           goal?: string | null;
           id?: string;
@@ -304,28 +303,31 @@ export type Database = {
       users: {
         Row: {
           attendance: number;
-          created_at: string;
+          created_at: string | null;
           diary_count: number;
           email: string;
           id: string;
+          lastCheckInDate: string | null;
           level_id: string | null;
           nickname: string | null;
         };
         Insert: {
           attendance?: number;
-          created_at?: string;
+          created_at?: string | null;
           diary_count?: number;
           email: string;
           id: string;
+          lastCheckInDate?: string | null;
           level_id?: string | null;
           nickname?: string | null;
         };
         Update: {
           attendance?: number;
-          created_at?: string;
+          created_at?: string | null;
           diary_count?: number;
           email?: string;
           id?: string;
+          lastCheckInDate?: string | null;
           level_id?: string | null;
           nickname?: string | null;
         };
@@ -342,6 +344,29 @@ export type Database = {
             columns: ['level_id'];
             isOneToOne: false;
             referencedRelation: 'level';
+            referencedColumns: ['id'];
+          }
+        ];
+      };
+      users_badges: {
+        Row: {
+          badges: string;
+          id: string;
+        };
+        Insert: {
+          badges: string;
+          id: string;
+        };
+        Update: {
+          badges?: string;
+          id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'users_badges_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'users';
             referencedColumns: ['id'];
           }
         ];

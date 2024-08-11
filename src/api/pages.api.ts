@@ -38,11 +38,7 @@ class PagesAPI {
    * @returns pages 테이블 데이터 중 같은 다이어리 데이터 전부
    */
   async selectPagesOfDiaryId(diaryId: string) {
-    const { data, error } = await this.supabase
-      .from('pages')
-      .select()
-      .eq('diary_id', diaryId)
-      .returns<Tables<'pages'>[]>();
+    const { data, error } = await this.supabase.from('pages').select('*').eq('diary_id', diaryId);
     return data;
   }
 

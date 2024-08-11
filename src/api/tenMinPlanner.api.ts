@@ -11,7 +11,7 @@ export type TodoType = {
 
 export type UpdateTenMinPlannerType = {
   id: string;
-  date: string;
+  date: string | null;
   d_day_date: string;
   d_day: string;
   goal: string;
@@ -136,6 +136,7 @@ class TenMinPlannerAPI {
    */
   async updateTenMinPlanner(id: string, updateData: UpdateTenMinPlannerType) {
     const { date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list } = updateData;
+
     console.log({ date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list });
     const { data, error } = await this.supabase
       .from('ten_min_planner')

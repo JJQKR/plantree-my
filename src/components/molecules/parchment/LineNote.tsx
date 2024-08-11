@@ -3,9 +3,14 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { supabase } from '@/supabase/client';
 import { Json } from '@/types/supabase';
-import { isNoteLineArray } from '@/stores/noteline.store';
+// import { isNoteLineArray } from '@/lib/utils';
 import Swal from 'sweetalert2';
 import useUserStore from '@/stores/user.store';
+import { isNoteLineArray } from '@/lib/utils/noteLineConfirmArray';
+
+interface LineNoteProps {
+  id: string;
+}
 
 export interface NoteLine {
   text: string;
@@ -13,7 +18,7 @@ export interface NoteLine {
   textColor: string;
 }
 
-const LineNote = () => {
+const LineNote = ({ id }: LineNoteProps) => {
   const [lines, setLines] = useState<NoteLine[]>(
     Array.from({ length: 15 }, () => ({ text: '', fontSize: 16, textColor: '#000000' }))
   );
@@ -21,9 +26,9 @@ const LineNote = () => {
   const [lineThickness, setLineThickness] = useState(1);
   const [bgColor, setBgColor] = useState('#ffffff');
   const [globalTextColor, setGlobalTextColor] = useState('#000000');
-  const [dataExists, setDataExists] = useState(false);
+  // const [dataExists, setDataExists] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const { userId } = useUserStore((state) => state);
+  // const { userId } = useUserStore((state) => state);
 
   const measureTextWidth = useCallback((text: string, fontSize: number) => {
     const canvas = document.createElement('canvas');
@@ -91,51 +96,52 @@ const LineNote = () => {
     });
   }, [lines, measureTextWidth, handleTextChange]);
 
-  const saveData = useCallback(async () => {
-    if (!userId) {
-      console.error('userId is undefined');
+  // const saveData = useCallback(async () => {
+  //   if (!userId) {
+  //     console.error('userId is undefined');
+  //     return;
+  //   }
+
+  //   console.log('Saving data with user_id:', userId);
+  //   const { data, error } = await supabase.from('line_note').insert([
+  //     {
+  //       user_id: userId,
+  //       line_color: lineColor,
+  //       line_thickness: lineThickness,
+  //       bg_color: bgColor,
+  //       global_text_color: globalTextColor,
+  //       lines: lines as unknown as Json
+  //     }
+  //   ]);
+
+  //   if (error) {
+  //     console.error('Error saving data:', error);
+  //     Swal.fire({
+  //       title: '저장 실패.',
+  //       text: '속지를 저장하지 못했어요. 다시 시도해주세요!',
+  //       icon: 'error',
+  //       confirmButtonText: 'OK'
+  //     });
+  //   } else {
+  //     console.log('Data saved:', data);
+  //     setDataExists(true);
+  //     Swal.fire({
+  //       title: '저장 성공!',
+  //       text: '속지를 성공적으로 저장했어요!',
+  //       icon: 'success',
+  //       confirmButtonText: 'OK'
+  //     });
+  //   }
+  // }, [userId, lineColor, lineThickness, bgColor, globalTextColor, lines]);
+
+  const updateData = async () => {
+    console.log(id);
+    if (!id) {
+      console.error('작성중인 페이지가 없습니다. 다시 시도해주세요.');
       return;
     }
 
-    console.log('Saving data with user_id:', userId);
-    const { data, error } = await supabase.from('line_note').insert([
-      {
-        user_id: userId,
-        line_color: lineColor,
-        line_thickness: lineThickness,
-        bg_color: bgColor,
-        global_text_color: globalTextColor,
-        lines: lines as unknown as Json
-      }
-    ]);
-
-    if (error) {
-      console.error('Error saving data:', error);
-      Swal.fire({
-        title: '저장 실패.',
-        text: '속지를 저장하지 못했어요. 다시 시도해주세요!',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
-    } else {
-      console.log('Data saved:', data);
-      setDataExists(true);
-      Swal.fire({
-        title: '저장 성공!',
-        text: '속지를 성공적으로 저장했어요!',
-        icon: 'success',
-        confirmButtonText: 'OK'
-      });
-    }
-  }, [userId, lineColor, lineThickness, bgColor, globalTextColor, lines]);
-
-  const updateData = useCallback(async () => {
-    if (!userId) {
-      console.error('userId is undefined');
-      return;
-    }
-
-    console.log('Updating data with user_id:', userId);
+    console.log('Updating data with parchment Id:', id);
     const { data, error } = await supabase
       .from('line_note')
       .update({
@@ -145,7 +151,7 @@ const LineNote = () => {
         global_text_color: globalTextColor,
         lines: lines as unknown as Json
       })
-      .eq('user_id', userId);
+      .eq('id', id);
 
     if (error) {
       console.error('Error updating data:', error);
@@ -164,95 +170,96 @@ const LineNote = () => {
         confirmButtonText: 'OK'
       });
     }
-  }, [userId, lineColor, lineThickness, bgColor, globalTextColor, lines]);
+  };
 
-  const deleteData = useCallback(async () => {
-    if (!userId) {
-      console.error('userId is undefined');
-      return;
-    }
+  // const deleteData = useCallback(async () => {
+  //   if (!userId) {
+  //     console.error('userId is undefined');
+  //     return;
+  //   }
 
-    Swal.fire({
-      title: '정말 삭제하시겠어요?',
-      text: '삭제된 속지는 되돌릴 수 없습니다!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'OK',
-      cancelButtonText: 'NO'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        console.log('Deleting data with user_id:', userId);
-        const { data, error } = await supabase.from('line_note').delete().eq('user_id', userId);
+  //   Swal.fire({
+  //     title: '정말 삭제하시겠어요?',
+  //     text: '삭제된 속지는 되돌릴 수 없습니다!',
+  //     icon: 'warning',
+  //     showCancelButton: true,
+  //     confirmButtonText: 'OK',
+  //     cancelButtonText: 'NO'
+  //   }).then(async (result) => {
+  //     if (result.isConfirmed) {
+  //       console.log('Deleting data with user_id:', userId);
+  //       const { data, error } = await supabase.from('line_note').delete().eq('user_id', userId);
 
-        if (error) {
-          console.error('Error deleting data:', error);
-          Swal.fire({
-            title: '삭제 실패!',
-            text: '속지 삭제에 실패했어요! 다시 시도해주세요!',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
-        } else {
-          console.log('Data deleted:', data);
-          setLines(Array.from({ length: 15 }, () => ({ text: '', fontSize: 16, textColor: '#000000' })));
-          setLineColor('#000000');
-          setLineThickness(1);
-          setBgColor('#ffffff');
-          setGlobalTextColor('#000000');
-          setDataExists(false);
-          Swal.fire({
-            title: '삭제 성공!',
-            text: '속지를 성공적으로 삭제했어요!',
-            icon: 'success',
-            confirmButtonText: 'OK'
-          });
-        }
+  //       if (error) {
+  //         console.error('Error deleting data:', error);
+  //         Swal.fire({
+  //           title: '삭제 실패!',
+  //           text: '속지 삭제에 실패했어요! 다시 시도해주세요!',
+  //           icon: 'error',
+  //           confirmButtonText: 'OK'
+  //         });
+  //       } else {
+  //         console.log('Data deleted:', data);
+  //         setLines(Array.from({ length: 15 }, () => ({ text: '', fontSize: 16, textColor: '#000000' })));
+  //         setLineColor('#000000');
+  //         setLineThickness(1);
+  //         setBgColor('#ffffff');
+  //         setGlobalTextColor('#000000');
+  //         setDataExists(false);
+  //         Swal.fire({
+  //           title: '삭제 성공!',
+  //           text: '속지를 성공적으로 삭제했어요!',
+  //           icon: 'success',
+  //           confirmButtonText: 'OK'
+  //         });
+  //       }
+  //     }
+  //   });
+  // }, [userId]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (!id) {
+        console.error('작성하고싶은 페이지를 불러오지 못했습니다. 다시 시도해 주세요.');
+        return;
       }
-    });
-  }, [userId]);
 
-  const loadData = useCallback(async () => {
-    if (!userId) {
-      console.error('userId is undefined');
-      return;
-    }
+      const { data, error } = await supabase.from('line_note').select('*').eq('id', id).maybeSingle();
 
-    const { data, error } = await supabase.from('line_note').select('*').eq('user_id', userId).maybeSingle();
-
-    if (error) {
-      console.error('Error loading data:', error);
-      Swal.fire({
-        title: '이런!',
-        text: '데이터를 읽어오지 못했어요. 다시 시도해주세요!',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
-    } else if (data) {
-      setLineColor(data?.line_color || '#000000');
-      setLineThickness(data?.line_thickness || 1);
-      setBgColor(data?.bg_color || '#ffffff');
-      setGlobalTextColor(data?.global_text_color || '#000000');
-      if (isNoteLineArray(data?.lines)) {
-        setLines(data?.lines);
-        setDataExists(true);
-      } else {
-        console.error('Invalid data format for lines');
+      if (error) {
+        console.error('Error loading data:', error);
         Swal.fire({
           title: '이런!',
-          text: '유저 정보를 가져올 수 없어요.',
+          text: '데이터를 읽어오지 못했어요. 다시 시도해주세요!',
           icon: 'error',
           confirmButtonText: 'OK'
         });
-      }
-    } else {
-      console.log('No data found for this user.');
-      setDataExists(false);
-    }
-  }, [userId]);
+      } else if (data) {
+        console.log(data);
+        setLineColor(data?.line_color || '#000000');
+        setLineThickness(data?.line_thickness || 1);
+        setBgColor(data?.bg_color || '#ffffff');
+        setGlobalTextColor(data?.global_text_color || '#000000');
 
-  useEffect(() => {
+        if (isNoteLineArray(data?.lines)) {
+          setLines(data?.lines);
+          // setDataExists(true);
+        } else {
+          console.error('Invalid data format for lines');
+          Swal.fire({
+            title: '이런!',
+            text: '유저 정보를 가져올 수 없어요.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        }
+      } else {
+        console.log('No data found for this user.');
+        // setDataExists(false);
+      }
+    };
     loadData();
-  }, [userId, loadData]);
+  }, []);
 
   return (
     <div className="w-full max-w-screen-md max-h-screen overflow-auto mt-20">
@@ -335,18 +342,19 @@ const LineNote = () => {
         </div>
       </div>
       <div className="flex justify-between mt-4">
-        {!dataExists ? (
-          <button onClick={saveData} className="p-2 bg-blue-500 text-white rounded">
-            저장
-          </button>
+        <button onClick={updateData} className="p-2 bg-green-500 text-white rounded">
+          수정하기
+        </button>
+        {/* {!dataExists ? (
+          <button className="p-2 bg-blue-500 text-white rounded">저장</button>
         ) : (
           <button onClick={updateData} className="p-2 bg-green-500 text-white rounded">
             수정하기
           </button>
-        )}
-        <button onClick={deleteData} className="p-2 bg-red-500 text-white rounded">
+        )} */}
+        {/* <button onClick={deleteData} className="p-2 bg-red-500 text-white rounded">
           삭제하기
-        </button>
+        </button> */}
       </div>
     </div>
   );

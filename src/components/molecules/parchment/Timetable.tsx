@@ -4,12 +4,25 @@ import { getBackgroundColorClass } from '@/lib/utils/tenMinPlannerColor';
 import useTimetableStore from '@/stores/timetable.store';
 import useTodoListStore from '@/stores/todoList.store';
 import React, { useState } from 'react';
+import { Todo } from './TenMinPlanner';
 
-const Timetable = () => {
+type TimeTableObject = {
+  [key: string]: { active: boolean; color: string; todoId: string };
+};
+
+interface TimetableProps {
+  selectedColorTodo: Todo | null;
+  timetable: TimeTableObject;
+  setTimetable: React.Dispatch<React.SetStateAction<TimeTableObject>>;
+}
+
+const Timetable = ({ selectedColorTodo, timetable, setTimetable }: TimetableProps) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
-  const { activeCells, addActiveCell, removeActiveCell } = useTimetableStore((state) => state);
 
-  const { todo } = useTodoListStore((state) => state);
+  console.log(timetable);
+  // const { activeCells, addActiveCell, removeActiveCell } = useTimetableStore((state) => state);
+
+  // const { todo } = useTodoListStore((state) => state);
 
   const rows = 24;
   const columns = 6;
@@ -17,7 +30,7 @@ const Timetable = () => {
   const hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
 
   const handleMouseDown = (id: string) => {
-    if (!todo.id) {
+    if (!selectedColorTodo?.id) {
       alert('todolist에서 todo를 선택해주세요');
       return;
     }
@@ -36,14 +49,18 @@ const Timetable = () => {
   };
 
   const toggleCellColor = (id: string) => {
-    const newCell = { [id]: { active: true, color: todo.color, todoId: todo.id } };
-    console.log(activeCells[id]);
-    // null[420] => error
-    addActiveCell(newCell);
+    const currentCell = timetable[id];
+    const selectedColor = selectedColorTodo?.color;
+    const selectedTodoId = selectedColorTodo?.id;
 
-    if (activeCells[id]) {
-      removeActiveCell(id);
+    const updatedTimetable = { ...timetable };
+    if (currentCell && currentCell.todoId === selectedTodoId) {
+      delete updatedTimetable[id]; // 셀 삭제
+    } else {
+      updatedTimetable[id] = { active: true, color: selectedColor || '', todoId: selectedTodoId || '' }; // 새로운 셀 추가 혹은 업데이트
     }
+
+    setTimetable(updatedTimetable);
   };
 
   return (
@@ -72,8 +89,8 @@ const Timetable = () => {
                     className={`border border-gray-300 p-1.5 text-center`}
                     style={{
                       background:
-                        activeCells && activeCells[id]?.active
-                          ? getBackgroundColorClass(activeCells[id]?.color)
+                        timetable && timetable[id]?.active
+                          ? getBackgroundColorClass(timetable[id]?.color)
                           : 'transparent'
                     }}
                     onMouseDown={() => handleMouseDown(id)}

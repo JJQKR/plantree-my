@@ -16,7 +16,8 @@ import { AddDiaryType } from '@/api/diaries.api';
 import { AddPageType, UpdatePageType } from '@/api/pages.api';
 import { useDiaryCoverStore } from '@/stores/diarycover.store';
 import { getCover } from '@/services/diarycover.service';
-import { useDeleteTenMinPlanners } from '@/lib/hooks/useTenMinPlanner';
+import { useCreateTenMinPlanner, useDeleteTenMinPlanners } from '@/lib/hooks/useTenMinPlanner';
+import useTenMinPlannerStore from '@/stores/tenMinPlanner.store';
 
 type ParamTypes = {
   [key: string]: string;
@@ -27,18 +28,16 @@ const WriteDiary = () => {
   const router = useRouter();
   const { diaryId } = useParams<ParamTypes>();
 
-  // const [diaryName, setDiaryName] = useState('');
+  // stores
   const { userId } = useUserStore((state) => state);
   const { diary, setDiary } = useDiaryStore((state) => state);
   const { pageIndex, setPageIndex, pages, setPages } = usePageStore((state) => state);
   const { toggleParchmentOptionModal } = useParchmentModalStore((state) => state);
   const { coverTitle } = useDiaryCoverStore((state) => state);
+  const { tenMinPlanners } = useTenMinPlannerStore((state) => state);
 
   // db diaries 테이블과 상호작용
   const { data: dbDiary, isPending: isDbDiaryPending, isError: isDbDiaryError } = useDiary(diaryId);
-  const { data: dbDiaries } = useDiariesToUserId(userId);
-  const { mutate: createDbDiary } = useCreateDiary();
-  const { mutate: updateDbDiary } = useUpdateDiary();
   const { mutate: deleteDbDiary } = useDeleteDiary();
 
   // db pages 테이블과 상호작용
@@ -50,6 +49,7 @@ const WriteDiary = () => {
 
   // db ten_min_planner 테이블과 상호작용
   const { mutate: deleteDbTenMinPlanners } = useDeleteTenMinPlanners();
+  const { mutate: createDbTenMinPlanner } = useCreateTenMinPlanner();
 
   // 다이어리 가져오기 : db diary 가져오기, db page 가져오기
   useEffect(() => {
@@ -94,15 +94,13 @@ const WriteDiary = () => {
     }
   };
 
-  console.log(pages);
-
   // 다이어리 저장 : db diaries 생성, 업데이트 , db pages 생성, 업데이트
   const savePages = () => {
     const confirmSavePage = confirm('정말 다이어리를 저장하시겠습니까?');
     if (confirmSavePage) {
       const currentPageIds = pages.map((page) => page.id);
 
-      // 데이터베이스에 저장된 페이지를 업데이트하거나 삭제합니다.
+      // db pages에 저장된 페이지를 업데이트, 삭제
       dbPages.forEach((dbPage) => {
         if (!currentPageIds.includes(dbPage.id)) {
           deleteDbPage(dbPage.id); // 페이지 삭제
@@ -117,16 +115,24 @@ const WriteDiary = () => {
         }
       });
 
-      // 새 페이지를 데이터베이스에 추가합니다.
+      // db pages 데이터베이스 추가
       pages.forEach((page, index) => {
-        // const index = pages.indexOf(page);
-        console.log(page.id, index);
         const pageForStorage = { ...page, index };
 
         if (!dbPages.some((p) => p.id === page.id)) {
           createDbPage(pageForStorage);
         }
       });
+
+      // TenMinPlanners 배열에 있는 각 항목을 데이터베이스에 추가합니다.
+      try {
+        for (const planner of tenMinPlanners) {
+          // createDbTenMinPlanner(planner); // 각 TenMinPlanner 저장
+        }
+        console.log('모든 tenMinPlanner가 저장되었습니다.');
+      } catch (error) {
+        console.error('tenMinPlanner 저장 중 오류 발생', error);
+      }
 
       // // 상태 초기화 및 리디렉션
       setPages([]);
