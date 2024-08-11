@@ -67,7 +67,7 @@ const GrowthSummary = () => {
       <FetchUserData />
       <FetchMembershipDays />
 
-      <div className="flex flex-row w-[61.25rem] h-[9.5rem] pt-[1.5rem] pb-[2rem] bg-white rounded-tr-[20px] rounded-tl-[20px]">
+      <div className="flex flex-row w-[61.25rem] h-[9.5rem] pt-[1.5rem] mb-0 pb-[2rem] bg-white rounded-tr-[20px] rounded-tl-[20px]">
         <div className="ml-[2rem]">{levelId && <ProfileStages levelId={levelId} size={70} />}</div>
         <div className="items-center ml-[1rem]">
           <span className="font-semibold text-[1.63rem] text-[#008A02]">{levelName}</span>

@@ -181,6 +181,9 @@ const GardenCarousel: React.FC = () => {
           }}
           pagination={pagination}
           modules={[EffectCoverflow, Pagination]}
+          style={{ marginTop: 0, paddingTop: 0 }}
+          // 이거 왜 지맘대로 없어졌었을까
+          // style={{ marginTop: 0, paddingTop: 0 }}
         >
           {displayStages.map((stage) => (
             <SwiperSlide key={stage.id}>

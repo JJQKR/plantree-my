@@ -79,7 +79,7 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         {/* <button onClick={onClose} className="mb-4 text-[20px] text-black">
           Close
         </button> */}
-        <h1 className="ml-8 mb-2 text-[#727272] text-[1rem]">내 정보</h1>
+        <h1 className="my-[1rem] text-[#727272] text-[1.13rem] font-semibold">내 정보</h1>
         <nav>
           <ul className="flex flex-col items-center justify-center space-y-4">
             <li className="w-[15rem] h-[15.06rem] bg-white rounded-[20px] flex flex-col items-center justify-center relative">
@@ -104,24 +104,28 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     />
                   </div>
                 )}
-                <span className="text-black text-lg font-bold">{nickname}</span>
-                <div className="text-black text-sm">{levelName || 'Level not set'}</div>
-                <div className="text-black text-sm">출석 횟수: {attendance}</div>
-                <div className="text-black text-sm">열심히 나무를 키워보세요!</div>
+                <div className="mt-2">
+                  <span className="text-[#008A02] text-[1.25rem] font-semibold">{levelName || 'Level not set'}</span>
+                  <span className="text-black text-[1.25rem] font-semibold ml-1">{nickname}</span>
+                </div>
+                <div className="text-[#727272] text-[1rem] flex flex-col items-center">
+                  <div>출석 횟수: {attendance}</div>
+                  <div>열심히 나무를 키워보세요!</div>
+                </div>
               </div>
             </li>
           </ul>
         </nav>
         <div>
-          <h1 className="ml-8 mb-2 text-[#727272] text-[1rem]">내 다이어리</h1>
+          <h1 className="font-semibold mt-[3rem] mb-[1rem] text-[#727272] text-[1.13rem]">내 다이어리</h1>
         </div>
-        <div className="w-full bg-white p-4 rounded-[20px]">
-          <ul className="list-none space-y-2 text-center">
+        <div className="">
+          <ul className="list-none space-y-2 flex-col">
             {diaryCovers.length > 0 ? (
               diaryCovers.map((cover) => (
                 <li
                   key={cover.id}
-                  className="h-[50px] p-5 rounded-lg shadow-md text-black"
+                  className="pl-2 w-[15rem] h-[3.25rem] text-[1.13rem] font-semibold flex items-center rounded-[10px] text-black"
                   style={{
                     backgroundColor: cover.cover_bg_color || 'bg-white',
                     backgroundImage: cover.cover_bg_color ? `url(${cover.cover_bg_color})` : 'none',

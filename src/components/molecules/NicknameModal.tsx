@@ -50,8 +50,8 @@ const NicknameModal: React.FC = () => {
     e.preventDefault();
     if (nicknameRef.current) {
       const newNickname = nicknameRef.current.value.trim();
-      if (newNickname.length < 2 || newNickname.length > 10) {
-        setError('닉네임은 최소 2글자, 최대 10글자입니다.');
+      if (newNickname.length < 2 || newNickname.length > 9) {
+        setError('닉네임은 최소 2글자, 최대 9글자입니다.');
         return;
       }
 
