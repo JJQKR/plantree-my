@@ -115,7 +115,7 @@ const GardenCarousel: React.FC = () => {
           />
         </div>
       ),
-      name: '열매나무'
+      name: '열매'
     }
   ]);
 

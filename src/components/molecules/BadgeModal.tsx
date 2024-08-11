@@ -26,11 +26,11 @@ const BadgeModal: React.FC = () => {
         <div className="bg-white p-4 rounded-[10px] w-[61.25rem] h-[55.5rem]">
           <div onClick={(e) => e.stopPropagation()} className="h-full overflow-y-auto">
             <div className="flex justify-between items-center">
-              <h2 className="font-bold text-[1.63rem] ml-[2.5rem] h-[2.06rem] mt-[2rem] mb-[1.25rem]">
+              <h2 className="font-bold text-[1.63rem] ml-[2rem] h-[2.06rem] mt-[2rem] mb-[1.25rem]">
                 도전과제 <ObtainedBadgesCount /> / {totalBadges.length}
               </h2>
               <button
-                className="text-black text-[1.63rem] font-bold mr-[2.5rem]"
+                className="text-black text-[1.63rem] font-bold mr-[2rem]"
                 onClick={toggleBadgeModal}
                 type="button"
               >
