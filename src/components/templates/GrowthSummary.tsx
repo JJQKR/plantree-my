@@ -13,6 +13,7 @@ const GrowthSummary = () => {
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
   useEffect(() => {
+    console.log('GrowthSummary useEffect triggered'); // 이 로그가 출력되는지 확인
     const fetchUserLevelId = async () => {
       console.log('Fetching user level ID for userId:', userId);
       setLoading(true); // 데이터 로딩 시작
