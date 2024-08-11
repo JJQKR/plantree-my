@@ -78,20 +78,20 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
     <div className="fixed top-40 left-0 w-[20rem] bg-[#E6F3E6] text-white">
       <FetchUserData />
       <AttendanceCheck />
-      <div className="p-4">
+      <div className="p-[2.5rem]">
         {/* <button onClick={onClose} className="mb-4 text-[20px] text-black">
           Close
         </button> */}
         <h1 className="ml-8 mb-2 text-[#727272] text-[1rem]">내 정보</h1>
         <nav>
           <ul className="flex flex-col items-center justify-center space-y-4">
-            <li className="w-[15rem] h-[16.31rem] bg-white rounded-[20px] mb-4 flex flex-col items-center justify-center relative">
+            <li className="w-[15rem] h-[15.06rem] bg-white rounded-[20px] flex flex-col items-center justify-center relative">
               <Link href="/member/mypage">
                 <div className="bg-[#E6F3E6] rounded-full w-[2.25rem] h-[2.25rem] border-white border-2 flex items-center justify-center absolute top-3 right-3">
                   <DiAptana className="text-[#008A02] w-[1.25rem] h-[1.25rem]" />
                 </div>
               </Link>
-              <div className="flex flex-col items-center mb-10">
+              <div className="flex flex-col items-center">
                 {levelId ? (
                   <div className="w-[7.5rem] h-[7.5rem]">
                     <ProfileStages levelId={levelId} />
