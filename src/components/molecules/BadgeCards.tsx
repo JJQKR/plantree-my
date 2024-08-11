@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { totalBadges } from '../atoms/TotalBadges';
@@ -7,7 +9,7 @@ const BadgeCards: React.FC = () => {
   const { diaryCount, membershipDays } = useUserStore((state) => state);
   const [badgesState, setBadgesState] = useState(
     totalBadges.map((badgeGroup) => ({
-      ...badgeGroup[1], // 초기값으로 획득되지 않은 배지를 설정
+      ...badgeGroup[1],
       content: badgeGroup[1].content.replace('true', 'false')
     }))
   );
@@ -47,9 +49,9 @@ const BadgeCards: React.FC = () => {
           <Image
             src={badge.content}
             alt={badge.isObtained ? 'Obtained Badge' : 'Unobtained Badge'}
-            layout="fill" // Make the image fill the parent div
-            objectFit="contain" // Ensure the image covers the parent div without distortion
-            className="rounded-[10px]" // Optional: apply additional styling
+            fill // 이미지가 부모 요소를 가득 채우도록 함
+            style={{ objectFit: 'contain' }} // 왜곡 없이 이미지를 표시
+            className="rounded-[10px]"
           />
         </div>
       ))}

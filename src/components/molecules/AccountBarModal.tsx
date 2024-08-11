@@ -59,22 +59,22 @@ const AccountBarModal: React.FC = () => {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
           onClick={handleBackGroundClick}
         >
-          <div className="bg-white p-9 rounded-[10px]" style={{ width: '20em' }}>
+          <div className="bg-white p-[2.5rem] rounded-[10px] w-[31.25rem] h-[19.4rem]">
             <div onClick={(e) => e.stopPropagation()}>
-              <div className="flex justify-between items-center mb-4">
-                <h1 className="text-xl font-bold text-left text-black">계정 정보</h1>
+              <div className="flex justify-between items-center mb-[1.75rem]">
+                <h1 className="text-[1.63rem] font-bold text-left text-black">계정 정보</h1>
                 <button className="text-black" onClick={toggleAccountBarModal} type="button">
                   &#10005;
                 </button>
               </div>
-              <div className="flex flex-col gap-2">
-                <p className="text-black">계정 : {email}</p>
-                <p className="text-black">로그인 경로 : {provider}</p>
+              <div className="flex flex-col text-[1.25rem]">
+                <p className="text-black mb-[1.75rem]">계정 : {email}</p>
+                <p className="text-black mb-[1.75rem]">로그인 경로 : {provider}</p>
                 <div className="flex flex-col gap-2">
                   <form onSubmit={handleLogout}>
                     <button
                       type="submit"
-                      className="px-4 py-2 w-full text-white rounded"
+                      className="w-full h-[3.25rem] text-white text-[1.13rem] rounded-[5px]"
                       style={{ backgroundColor: '#9E9E9E' }}
                       onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#8A0000')}
                       onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#9E9E9E')}

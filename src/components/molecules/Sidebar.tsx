@@ -8,7 +8,33 @@ import AttendanceCheck from '@/lib/utils/AttendanceCheck';
 import FetchUserData from '@/lib/utils/FetchUserData';
 import ProfileStages from './ProfileStages';
 import { supabase } from '@/supabase/client';
-import { DiaryCover } from '@/types/main'; // 수정된 타입 import
+import { DiaryCover, MainSidebarProps } from '@/types/main';
+import Image from 'next/image';
+
+// Sidebar에서도 useEffect를 통해 사용자 정보를 가져오지만,
+// 이 과정에서 FetchUserData, AttendanceCheck와 같은 다른 컴포넌트도 함께 사용되고 있습니다.
+// useEffect가 userId에 의존하여 데이터를 가져오도록 되어 있지만,
+// 사용자의 상태가 갱신되는 시점에서 Sidebar의 상태가 즉시 업데이트되지 않을 수 있습니다.
+// 이로 인해 한 번 새로고침을 했을 때 상태가 완전히 반영되지 않고,
+// 두 번째 새로고침을 해야 최종적으로 변경된 프로필 이미지가 렌더링됩니다.
+
+// Sidebar는 사용자 정보를 가져오는 과정에서 비동기 호출이 여러 번 이루어지거나
+// 상태 업데이트가 비효율적으로 처리되어,
+// 첫 번째 새로고침 시점에 모든 데이터가 준비되지 않을 수 있습니다.
+// 이로 인해 두 번의 새로고침을 해야 모든 상태가 완전히 반영됩니다.
+
+// 해결 방법 제안
+// 이 문제를 해결하기 위해 Sidebar 컴포넌트에서 다음과 같은 방법을 고려할 수 있습니다:
+
+// loading 상태 도입: GrowthSummary처럼 Sidebar에서도 loading 상태를 추가하여
+// 데이터 로딩이 완료된 후에만 UI가 렌더링되도록 합니다.
+// 이를 통해 한 번의 새로고침으로 데이터가 완전히 반영되도록 할 수 있습니다.
+
+// 상태 관리 일관성: Sidebar에서 사용자의 정보를 가져오는 로직을 GrowthSummary와 더 일관되게 처리해,
+// 데이터 로딩과 상태 업데이트가 확실하게 이루어지도록 개선합니다.
+
+// 컴포넌트 분리: FetchUserData와 AttendanceCheck와 같은 컴포넌트를 Sidebar 내부에서 분리하여,
+// 상태 관리의 복잡성을 줄이고, 필요한 데이터만 정확하게 가져오도록 최적화합니다.
 
 const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { nickname, levelName, attendance, userId } = useUserStore((state) => state);
@@ -46,44 +72,60 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   }, [userId]);
 
   return (
-    <div className="fixed top-40 left-0 w-[320px] bg-green-200 text-white">
+    <div className="fixed top-40 left-0 w-[20rem] bg-[#E6F3E6] text-white">
       <FetchUserData />
       <AttendanceCheck />
-      <div className="p-4">
-        <button onClick={onClose} className="mb-4 text-[20px] text-black">
+      <div className="p-[2.5rem]">
+        {/* <button onClick={onClose} className="mb-4 text-[20px] text-black">
           Close
-        </button>
-        <h1 className="ml-8 mb-2 text-black text-[16px]">내 정보</h1>
+        </button> */}
+        <h1 className="my-[1rem] text-[#727272] text-[1.13rem] font-semibold">내 정보</h1>
         <nav>
           <ul className="flex flex-col items-center justify-center space-y-4">
-            <li className="w-[240px] h-[300px] bg-white rounded-[20px] mb-4 flex flex-col items-center justify-center relative">
+            <li className="w-[15rem] h-[15.06rem] bg-white rounded-[20px] flex flex-col items-center justify-center relative">
               <Link href="/member/mypage">
-                <DiAptana size={30} className="text-black absolute top-3 right-3" />
+                <div className="bg-[#E6F3E6] rounded-full w-[2.25rem] h-[2.25rem] border-white border-2 flex items-center justify-center absolute top-3 right-3">
+                  <DiAptana className="text-[#008A02] w-[1.25rem] h-[1.25rem]" />
+                </div>
               </Link>
-              <div className="flex flex-col items-center mb-10">
+              <div className="flex flex-col items-center">
                 {levelId ? (
-                  <ProfileStages levelId={levelId} size={120} />
+                  <div className="w-[7.5rem] h-[7.5rem]">
+                    <ProfileStages levelId={levelId} />
+                  </div> // 레벨 ID가 존재할 때만 렌더링
                 ) : (
-                  <div style={{ width: 120, height: 120 }} className="bg-gray-400 rounded-full mb-2"></div>
+                  <div style={{ width: '7.5rem', height: '7.5rem' }} className="relative">
+                    <Image
+                      src="/images/levelNotSet.png"
+                      alt="garden1"
+                      fill
+                      style={{ objectFit: 'contain' }}
+                      className="rounded-full w-[7.5rem] h-[7.5rem]"
+                    />
+                  </div>
                 )}
-                <span className="text-black text-lg font-bold">{nickname}</span>
-                <div className="text-black text-sm">{levelName || 'Level not set'}</div>
-                <div className="text-black text-sm">출석 횟수: {attendance}</div>
-                <div className="text-black text-sm">열심히 나무를 키워보세요!</div>
+                <div className="mt-2">
+                  <span className="text-[#008A02] text-[1.25rem] font-semibold">{levelName || 'Level not set'}</span>
+                  <span className="text-black text-[1.25rem] font-semibold ml-1">{nickname}</span>
+                </div>
+                <div className="text-[#727272] text-[1rem] flex flex-col items-center">
+                  <div>출석 횟수: {attendance}</div>
+                  <div>열심히 나무를 키워보세요!</div>
+                </div>
               </div>
             </li>
           </ul>
         </nav>
         <div>
-          <p className="text-[16px] text-black mb-2">내 다이어리</p>
+          <h1 className="font-semibold mt-[3rem] mb-[1rem] text-[#727272] text-[1.13rem]">내 다이어리</h1>
         </div>
-        <div className="w-full bg-white p-4 rounded-[20px]">
-          <ul className="list-none space-y-2 text-center">
+        <div className="">
+          <ul className="list-none space-y-2 flex-col">
             {diaryCovers.length > 0 ? (
               diaryCovers.map((cover) => (
                 <li
                   key={cover.id}
-                  className="h-[50px] p-5 rounded-lg shadow-md text-black"
+                  className="pl-2 w-[15rem] h-[3.25rem] text-[1.13rem] font-semibold flex items-center rounded-[10px] text-black"
                   style={{
                     backgroundColor: cover.cover_bg_color || 'bg-white',
                     backgroundImage: cover.cover_bg_color ? `url(${cover.cover_bg_color})` : 'none',

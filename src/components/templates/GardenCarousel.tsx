@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/supabase/client'; // 기존에 생성된 supabase 클라이언트 가져오기
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
@@ -9,15 +9,6 @@ import 'swiper/css/pagination';
 import { EffectCoverflow, Pagination } from 'swiper/modules';
 import useUserStore from '@/stores/user.store';
 import Image from 'next/image';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
-
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error('Missing Supabase URL or Key.');
-}
-
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 const levelMap: { [key: string]: number } = {
   lv1: 1,
@@ -43,8 +34,8 @@ const GardenCarousel: React.FC = () => {
           <Image
             src="/images/garden1.png"
             alt="garden1"
-            layout="fill"
-            objectFit="cover"
+            fill
+            style={{ objectFit: 'cover' }}
             className="rounded-bl-[20px] rounded-br-[20px]"
           />
         </div>
@@ -58,8 +49,8 @@ const GardenCarousel: React.FC = () => {
           <Image
             src="/images/garden2.png"
             alt="garden2"
-            layout="fill"
-            objectFit="cover"
+            fill
+            style={{ objectFit: 'cover' }}
             className="rounded-bl-[20px] rounded-br-[20px]"
           />
         </div>
@@ -73,8 +64,8 @@ const GardenCarousel: React.FC = () => {
           <Image
             src="/images/garden3.jpg"
             alt="garden3"
-            layout="fill"
-            objectFit="cover"
+            fill
+            style={{ objectFit: 'cover' }}
             className="rounded-bl-[20px] rounded-br-[20px]"
           />
         </div>
@@ -88,8 +79,8 @@ const GardenCarousel: React.FC = () => {
           <Image
             src="/images/garden4.png"
             alt="garden4"
-            layout="fill"
-            objectFit="cover"
+            fill
+            style={{ objectFit: 'cover' }}
             className="rounded-bl-[20px] rounded-br-[20px]"
           />
         </div>
@@ -103,8 +94,8 @@ const GardenCarousel: React.FC = () => {
           <Image
             src="/images/garden5.jpg"
             alt="garden5"
-            layout="fill"
-            objectFit="cover"
+            fill
+            style={{ objectFit: 'cover' }}
             className="rounded-bl-[20px] rounded-br-[20px]"
           />
         </div>
@@ -118,8 +109,8 @@ const GardenCarousel: React.FC = () => {
           <Image
             src="/images/garden6.png"
             alt="garden6"
-            layout="fill"
-            objectFit="cover"
+            fill
+            style={{ objectFit: 'cover' }}
             className="rounded-bl-[20px] rounded-br-[20px]"
           />
         </div>
@@ -142,7 +133,13 @@ const GardenCarousel: React.FC = () => {
         return;
       }
 
-      const { email } = sessionData.session.user;
+      const email = sessionData.session?.user?.email;
+
+      if (!email) {
+        console.error('Email is undefined');
+        return;
+      }
+
       const { data, error } = await supabase.from('users').select('level_id').eq('email', email).single();
 
       if (error) {
@@ -184,6 +181,9 @@ const GardenCarousel: React.FC = () => {
           }}
           pagination={pagination}
           modules={[EffectCoverflow, Pagination]}
+          style={{ marginTop: 0, paddingTop: 0 }}
+          // 이거 왜 지맘대로 없어졌었을까
+          // style={{ marginTop: 0, paddingTop: 0 }}
         >
           {displayStages.map((stage) => (
             <SwiperSlide key={stage.id}>
