@@ -35,7 +35,6 @@ export type AddDiaryType = {
   user_id: string;
   name: string;
   bookshelf_order: number;
-  cover_image: string | null;
 };
 
 export type DiaryCover = {
@@ -47,4 +46,5 @@ export type DiaryCover = {
   cover_image_size: any | null; // JSON 타입으로 변경 가능
   cover_scale: number | null;
   cover_title: string | null;
+  unsplash_image?: string;
 };

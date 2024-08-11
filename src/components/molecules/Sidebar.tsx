@@ -36,16 +36,14 @@ import Image from 'next/image';
 // 컴포넌트 분리: FetchUserData와 AttendanceCheck와 같은 컴포넌트를 Sidebar 내부에서 분리하여,
 // 상태 관리의 복잡성을 줄이고, 필요한 데이터만 정확하게 가져오도록 최적화합니다.
 
-const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
-  const { nickname, levelName, attendance, userId } = useUserStore((state) => state); // 유저 상태 관리 스토어에서 닉네임 가져오기
+const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const { nickname, levelName, attendance, userId } = useUserStore((state) => state);
   const [diaryCovers, setDiaryCovers] = useState<DiaryCover[]>([]);
   const [levelId, setLevelId] = useState<string | null>(null);
 
-  // 컴포넌트 마운트 시 사용자 정보 및 다이어리 커버를 가져오는 useEffect
   useEffect(() => {
     const fetchData = async () => {
       if (userId) {
-        // 사용자 레벨 ID 가져오기
         const { data: user, error: userError } = await supabase
           .from('users')
           .select('id, level_id')
@@ -56,7 +54,6 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
         } else {
           setLevelId(user.level_id);
 
-          // diary_covers 테이블에서 다이어리 커버 정보 가져오기
           const { data: coversData, error: coversError } = await supabase
             .from('diary_covers')
             .select('*')
@@ -125,7 +122,13 @@ const Sidebar: React.FC<MainSidebarProps> = ({ onClose }) => {
                 <li
                   key={cover.id}
                   className="h-[50px] p-5 rounded-lg shadow-md text-black"
-                  style={{ backgroundColor: cover.cover_bg_color || 'bg-red-300' }} // 배경색 설정
+                  style={{
+                    backgroundColor: cover.cover_bg_color || 'bg-white',
+                    backgroundImage: cover.cover_bg_color ? `url(${cover.cover_bg_color})` : 'none',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    color: cover.unsplash_image ? 'white' : 'black'
+                  }}
                 >
                   {cover.cover_title || '제목 없음'}
                 </li>

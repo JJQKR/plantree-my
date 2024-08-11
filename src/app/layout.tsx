@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <ReactQueryClientProvider>
       <html lang="en">
-        <body className={inter.className}>{children}</body>
+        <body className={`${inter.className} font-sans`}>{children}</body>
       </html>
     </ReactQueryClientProvider>
   );

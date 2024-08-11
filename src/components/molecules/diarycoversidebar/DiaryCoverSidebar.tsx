@@ -7,7 +7,7 @@ type DiaryCoverSidebarProps = {
 
 const DiaryCoverSidebar: React.FC<DiaryCoverSidebarProps> = ({ onSelectMenu }) => {
   return (
-    <div className="w-32 h-full bg-gray-50 text-black border-r-[.1rem] flex flex-col">
+    <div className="w-[6.3rem] h-full bg-gray-50 text-black border-r-[.1rem] flex flex-col">
       <div
         className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
         onClick={() => onSelectMenu('Templates')}
