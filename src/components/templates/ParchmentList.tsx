@@ -96,7 +96,6 @@ export default function ParchmentList() {
 
   // 뒷페이지로 이동합니다.
   const handleNextPage = () => {
-    console.log({ currentPageIndex });
     if (currentPageIndex + 2 < dbPages!.length) {
       setCurrentPageIndex(currentPageIndex + 2);
     } else if (dbPages![currentPageIndex]) {

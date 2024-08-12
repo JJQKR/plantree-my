@@ -73,7 +73,7 @@ const Timetable = ({ selectedColorTodo, timetable, setTimetable }: TimetableProp
                 if (rowIndex === 0 && colIndex !== 0) {
                   // 첫 번째 행에 분(minutes) 표시
                   return (
-                    <td key={colIndex} className="border border-gray-300 p-1.5 text-center">
+                    <td key={colIndex} className="border border-gray-300 p-1.5 text-center h-[1rem]">
                       {minutes[colIndex - 1]}
                     </td>
                   );
@@ -92,7 +92,7 @@ const Timetable = ({ selectedColorTodo, timetable, setTimetable }: TimetableProp
                     <td
                       key={colIndex}
                       id={id}
-                      className={`border border-gray-300 p-1.5 text-center`}
+                      className={`border border-gray-300 text-center`}
                       style={{
                         background:
                           timetable && timetable[id]?.active
