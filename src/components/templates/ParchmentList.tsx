@@ -1,7 +1,5 @@
 'use client';
 
-import { IoIosArrowBack } from 'react-icons/io';
-import { IoIosArrowForward } from 'react-icons/io';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 import DiaryContents from './diarycreate/DiaryContents';
 import { useEffect, useState } from 'react';
@@ -13,10 +11,9 @@ import { useDeletePages, usePageToDiaryId } from '@/lib/hooks/usePages';
 import { useDeleteDiary } from '@/lib/hooks/useDiaries';
 import usePageStore from '@/stores/pages.store';
 import useEditModeStore from '@/stores/editMode.store';
-
-// const isParchmentStyle = (value: 'tenMinPlanner' | 'lineNote' | 'blankNote') => {
-//   return ['tenMinPlanner', 'lineNote', 'blankNote'].includes(value);
-// };
+import { FaChevronLeft } from 'react-icons/fa6';
+import { FaChevronRight } from 'react-icons/fa6';
+import { FaBook } from 'react-icons/fa';
 
 type ParchmentType = 'tenMinPlanner' | 'lineNote' | 'blankNote';
 
@@ -115,31 +112,36 @@ export default function ParchmentList() {
   if (isError) return;
 
   return (
-    <div className="flex flex-row items-center bg-green-400">
-      <div onClick={handlePrevPage}>
-        <IoIosArrowBack />
+    <div className="flex flex-row items-center justify-center w-[128rem] ">
+      <div onClick={handlePrevPage} className="text-[4.8rem] text-[#008A02]">
+        <FaChevronLeft />
       </div>
       <div>
-        <div className="flex flex-row justify-between ">
-          <div className="flex flex-row" onClick={goHub}>
-            <IoIosArrowBack />
-            <h2>{coverTitle}</h2>
+        <div className="flex flex-row justify-between px-[3.6rem] ">
+          <div className="flex flex-row">
+            <span className="flex flex-row text-[3.5rem] w-[4.8rem] items-center justify-center " onClick={goHub}>
+              <FaChevronLeft />
+            </span>
+            <span className=" text-[3.2rem] w-[82rem] px-[1rem] font-[600]">{coverTitle}</span>
           </div>
+
           <div className="flex flex-row gap-3">
-            <div onClick={goDiaryCoverPage}>표지 수정하러 가기</div>
-            <div onClick={deleteDiary}>
+            <div onClick={goDiaryCoverPage} className=" text-[3.2rem]">
+              <FaBook />
+            </div>
+            <div onClick={deleteDiary} className=" text-[3.2rem]">
               <RiDeleteBin5Line />
             </div>
           </div>
         </div>
         <div className="flex flex-row">
-          <div className="w-[91.6rem] h-[60rem] border-2 border-gray-500">
+          <div className="w-[97.6rem] h-[72rem] mx-[3.6rem] my-[4.3rem]">
             <DiaryContents diaryId={diaryId} pageIndex={currentPageIndex} />
           </div>
         </div>
       </div>
-      <div onClick={handleNextPage}>
-        <IoIosArrowForward />
+      <div onClick={handleNextPage} className="text-[4.8rem] text-[#008A02]">
+        <FaChevronRight />
       </div>
     </div>
   );

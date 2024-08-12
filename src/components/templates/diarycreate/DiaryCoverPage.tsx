@@ -102,6 +102,7 @@ const DiaryCoverPage: React.FC = () => {
   const [loadedUnsplashImage, setLoadedUnsplashImage] = useState<HTMLImageElement | null>(null);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [selectedMenu, setSelectedMenu] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false); // 로딩 상태 추가
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -535,6 +536,7 @@ const DiaryCoverPage: React.FC = () => {
   };
 
   const handleSaveCover = async () => {
+    setLoading(true); // 로딩 상태 설정
     const result = await Swal.fire({
       title: '표지를 저장하시겠습니까?',
       icon: 'warning',
@@ -544,6 +546,7 @@ const DiaryCoverPage: React.FC = () => {
     });
 
     if (!result.isConfirmed) {
+      setLoading(false); // 로딩 상태 해제
       return;
     }
 
@@ -567,6 +570,7 @@ const DiaryCoverPage: React.FC = () => {
 
       if (uploadError) {
         console.error('이미지 업로드 실패:', uploadError);
+        setLoading(false); // 로딩 상태 해제
         return;
       }
 
@@ -574,6 +578,7 @@ const DiaryCoverPage: React.FC = () => {
 
       if (!publicUrlData || !publicUrlData.publicUrl) {
         console.error('공개 URL 가져오기 실패');
+        setLoading(false); // 로딩 상태 해제
         return;
       }
 
@@ -616,6 +621,7 @@ const DiaryCoverPage: React.FC = () => {
       if (diaryError) {
         console.error('다이어리 이름 업데이트 실패:', diaryError);
         alert('다이어리 이름 업데이트 실패');
+        setLoading(false); // 로딩 상태 해제
         return;
       }
 
@@ -662,14 +668,17 @@ const DiaryCoverPage: React.FC = () => {
       }
 
       Swal.fire('Cover 저장 성공!', '', 'success');
+      setLoading(false); // 로딩 상태 해제
       router.push(`/member/hub`);
     } catch (error) {
       console.error('Cover 저장 실패:', error);
       alert('Cover 저장 실패');
+      setLoading(false); // 로딩 상태 해제
     }
   };
 
   const handleUpdateDiary = async () => {
+    setLoading(true); // 로딩 상태 설정
     const result = await Swal.fire({
       title: '표지를 수정 하시겠습니까?',
       icon: 'warning',
@@ -679,6 +688,7 @@ const DiaryCoverPage: React.FC = () => {
     });
 
     if (!result.isConfirmed) {
+      setLoading(false); // 로딩 상태 해제
       return;
     }
 
@@ -693,6 +703,7 @@ const DiaryCoverPage: React.FC = () => {
       if (error || !data) {
         console.error('데이터 가져오기 실패:', error);
         alert('데이터 가져오기 실패');
+        setLoading(false); // 로딩 상태 해제
         return;
       }
 
@@ -705,6 +716,7 @@ const DiaryCoverPage: React.FC = () => {
           if (deleteError) {
             console.error('기존 이미지 삭제 실패:', deleteError);
             alert(`기존 이미지 삭제 실패: ${deleteError.message}`);
+            setLoading(false); // 로딩 상태 해제
             return;
           }
         }
@@ -717,6 +729,7 @@ const DiaryCoverPage: React.FC = () => {
         if (uploadError) {
           console.error('이미지 업로드 실패:', uploadError);
           alert(`이미지 업로드 실패: ${uploadError.message}`);
+          setLoading(false); // 로딩 상태 해제
           return;
         }
 
@@ -725,6 +738,7 @@ const DiaryCoverPage: React.FC = () => {
         if (!publicUrlData || !publicUrlData.publicUrl) {
           console.error('공개 URL 가져오기 실패');
           alert('공개 URL 가져오기 실패');
+          setLoading(false); // 로딩 상태 해제
           return;
         }
 
@@ -764,14 +778,17 @@ const DiaryCoverPage: React.FC = () => {
       if (result.error) {
         console.error('수정 실패:', result.error);
         alert(`수정 실패: ${result.error}`);
+        setLoading(false); // 로딩 상태 해제
         return;
       }
 
       Swal.fire('Cover 수정 성공!', '', 'success');
+      setLoading(false); // 로딩 상태 해제
       router.push(`/member/hub`);
     } catch (error) {
       console.error('Cover 수정 실패:', error);
       alert('Cover 수정 실패');
+      setLoading(false); // 로딩 상태 해제
     }
   };
 
@@ -788,6 +805,8 @@ const DiaryCoverPage: React.FC = () => {
       return;
     }
 
+    setLoading(true); // 로딩 상태 설정
+
     try {
       const { data, error } = await supabase
         .from('diary_covers')
@@ -798,6 +817,7 @@ const DiaryCoverPage: React.FC = () => {
       if (error || !data) {
         console.error('데이터 가져오기 실패:', error);
         Swal.fire('데이터 가져오기 실패', '', 'error');
+        setLoading(false); // 로딩 상태 해제
         return;
       }
 
@@ -809,6 +829,7 @@ const DiaryCoverPage: React.FC = () => {
         if (deleteError) {
           console.error('이미지 파일 삭제 실패:', deleteError);
           Swal.fire(`이미지 파일 삭제 실패: ${deleteError.message}`, '', 'error');
+          setLoading(false); // 로딩 상태 해제
         } else {
           Swal.fire('초기화 성공', '', 'success');
         }
@@ -818,6 +839,7 @@ const DiaryCoverPage: React.FC = () => {
     } catch (error) {
       console.error('초기화 실패:', error);
       Swal.fire(`초기화 실패`, '', 'error');
+      setLoading(false); // 로딩 상태 해제
     }
 
     resetCoverState();
@@ -853,8 +875,11 @@ const DiaryCoverPage: React.FC = () => {
     if (Result.error) {
       console.error('초기화 실패:', Result.error);
       Swal.fire(`초기화 실패: ${Result.error}`, '', 'error');
+      setLoading(false); // 로딩 상태 해제
       return;
     }
+
+    setLoading(false); // 로딩 상태 해제
   };
 
   const handleResize = () => {
@@ -1384,6 +1409,11 @@ const DiaryCoverPage: React.FC = () => {
           </div>
         </div>
       </div>
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
+          <img src="/images/loading.gif" alt="Loading" width={200} height={200} />
+        </div>
+      )}
     </div>
   );
 };

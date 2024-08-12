@@ -94,8 +94,7 @@ const Todolist = ({ tenMinPlannerId, todoList, setTodoList, setSelectedColorTodo
   };
 
   return (
-    <div className="border-2 border-gray-500 h-[40rem]">
-      <h2>todolist</h2>
+    <div className="border-2  h-[38rem]">
       <div className="w-ful">
         <ul className="relative">
           {todoList.map((todo) => {

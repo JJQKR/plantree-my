@@ -31,6 +31,7 @@ const DiaryCase: React.FC = () => {
   const [loadedImages, setLoadedImages] = useState<HTMLImageElement[]>([]);
   const [loadedBackgroundImages, setLoadedBackgroundImages] = useState<HTMLImageElement[]>([]);
   const [unsplashImages, setUnsplashImages] = useState<HTMLImageElement[]>([]);
+  const [loading, setLoading] = useState(false);
 
   // Supabase에서 세션 정보를 가져오는 함수
   const fetchSession = async () => {
@@ -338,6 +339,11 @@ const DiaryCase: React.FC = () => {
       <div className="fixed bottom-16 right-16">
         <CreateDiaryButton onClick={handleCreateDiary} /> {/* 다이어리 생성 버튼 */}
       </div>
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center">
+          <img src="/images/loading.gif" alt="Loading" width={200} height={200} />
+        </div>
+      )}
     </div>
   );
 };

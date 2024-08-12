@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { DiAptana } from 'react-icons/di';
@@ -24,7 +26,7 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           .single();
 
         if (!userError && user) {
-          setLevelId(user.level_id); //zustand로 전역 상태 관리하도록 변경
+          setLevelId(user.level_id); // zustand로 전역 상태 관리하도록 변경
 
           const { data: coversData, error: coversError } = await supabase
             .from('diary_covers')
@@ -34,6 +36,10 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           if (coversError) {
             console.error('다이어리 커버 정보 가져오기 실패:', coversError);
           } else {
+            // 생성일 기준으로 커버 데이터 정렬 (가장 최근 것이 가장 앞에 위치)
+            coversData.sort(
+              (a, b) => new Date((a as any).created_at).getTime() - new Date((b as any).created_at).getTime()
+            );
             setDiaryCovers(coversData);
           }
         }
