@@ -6,16 +6,17 @@ interface UnsplashBackgroundSearchProps {
 }
 
 const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({ handleBackgroundImageChange }) => {
+  const [query, setQuery] = useState('gradient'); // 초기 검색어를 'gradient'로 설정
   const [images, setImages] = useState<UnsplashImage[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
-  const fetchRandomImages = async (resetPage: boolean = false) => {
+  const fetchImagesFromUnsplash = async (resetPage: boolean = false) => {
     setLoading(true);
     try {
       const currentPage = resetPage ? 1 : page;
-      const results = await fetchImages('gradient', currentPage);
+      const results = await fetchImages(query, currentPage);
 
       if (resetPage) {
         setImages(results);
@@ -34,9 +35,9 @@ const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({ han
 
   useEffect(() => {
     if (page === 1 && images.length === 0) {
-      fetchRandomImages(true); // 초기 로딩 시 첫 페이지 이미지 가져오기
+      fetchImagesFromUnsplash(true); // 초기 로딩 시 첫 페이지 이미지 가져오기
     } else if (page > 1) {
-      fetchRandomImages();
+      fetchImagesFromUnsplash();
     }
   }, [page]);
 
@@ -46,9 +47,31 @@ const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({ han
     }
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    setPage(1);
+    setHasMore(true);
+    fetchImagesFromUnsplash(true); // 새로운 검색어로 첫 페이지 이미지 가져오기
+  };
+
   return (
     <div>
       <p className="text-center text-sm font-bold">Photos by UnSplash</p>
+      <form onSubmit={handleSearch} className="text-center my-4">
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search for images"
+          className="my-2 px-2 py-1 border rounded w-full"
+        />
+        <button
+          type="submit"
+          className="my-3 px-2 py-1 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300"
+        >
+          검색하기
+        </button>
+      </form>
       <div>
         {images.map((image, index) => (
           <img
