@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 import TenMinPlanner from '../molecules/parchment/TenMinPlanner';
 import LineNote from '../molecules/parchment/LineNote';
 import BlankNote from '../molecules/parchment/BlankNote';
+import useEditModeStore from '@/stores/editMode.store';
 
 const styleDbNames = {
   tenMinPlanner: 'ten_min_planner',
@@ -19,6 +20,11 @@ const EditParchment = () => {
   const searchParams = useSearchParams();
   const style = searchParams.get('style');
   const { id } = useParams<{ id: string }>();
+  const { onEditMode } = useEditModeStore((state) => state);
+
+  useEffect(() => {
+    onEditMode();
+  }, []);
 
   return (
     <div>

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Todo } from './TenMinPlanner';
 import { getBackgroundColorClass } from '../../../lib/utils/tenMinPlannerColor';
+import useEditModeStore from '@/stores/editMode.store';
 
 type TimeTableObject = {
   [key: string]: { active: boolean; color: string; todoId: string };
@@ -17,12 +18,16 @@ interface TimetableProps {
 const Timetable = ({ selectedColorTodo, timetable, setTimetable }: TimetableProps) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
 
+  const { isEditMode } = useEditModeStore((state) => state);
+
   const rows = 24;
   const columns = 6;
   const minutes = [10, 20, 30, 40, 50, 60];
   const hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
 
   const handleMouseDown = (id: string) => {
+    if (!isEditMode) return;
+
     if (!selectedColorTodo?.id) {
       alert('todolist에서 todo를 선택해주세요');
       return;
@@ -32,12 +37,14 @@ const Timetable = ({ selectedColorTodo, timetable, setTimetable }: TimetableProp
   };
 
   const handleMouseOver = (id: string) => {
+    if (!isEditMode) return;
     if (isMouseDown) {
       toggleCellColor(id);
     }
   };
 
   const handleMouseUp = () => {
+    if (!isEditMode) return;
     setIsMouseDown(false);
   };
 

@@ -12,6 +12,7 @@ import useParchmentModalStore from '@/stores/parchment.modal.store';
 import { useDeletePages, usePageToDiaryId } from '@/lib/hooks/usePages';
 import { useDeleteDiary } from '@/lib/hooks/useDiaries';
 import usePageStore from '@/stores/pages.store';
+import useEditModeStore from '@/stores/editMode.store';
 
 // const isParchmentStyle = (value: 'tenMinPlanner' | 'lineNote' | 'blankNote') => {
 //   return ['tenMinPlanner', 'lineNote', 'blankNote'].includes(value);
@@ -37,6 +38,7 @@ export default function ParchmentList() {
   const { data: dbPages, isPending, isError } = usePageToDiaryId(diaryId);
   const { mutate: deleteDbPages } = useDeletePages();
   const { mutate: deleteDbDiary } = useDeleteDiary();
+  const { offEditMode } = useEditModeStore((state) => state);
 
   // 커버 타이틀 가져오는 코드
   useEffect(() => {
@@ -47,6 +49,7 @@ export default function ParchmentList() {
       };
       getCoverTitle();
     }
+    offEditMode();
   }, [diaryId]);
 
   // 현재 페이지 index
@@ -69,18 +72,6 @@ export default function ParchmentList() {
       });
 
       await Promise.all(deletionPromises);
-
-      // pages?.map((page) => {
-      //   if (page.parchment_style === 'ten_min_planner') {
-      //     supabase.from('ten_min_planner').delete().eq('diary_id', diaryId);
-      //   } else if (page.parchment_style === 'line_note') {
-      //     supabase.from('line_note').delete().eq('diary_id', diaryId);
-      //   } else if (page.parchment_style === 'blank_note') {
-      //     supabase.from('blank_note').delete().eq('diary_id', diaryId);
-      //   } else {
-      //     return;
-      //   }
-      // });
 
       alert('다이어리가 삭제 되었습니다.');
       router.replace('/member/hub');
