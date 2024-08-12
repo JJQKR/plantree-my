@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { supabase } from '../../supabase/client';
 import Swal from 'sweetalert2';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 interface SignupModalProps {
   onClose: () => void;
@@ -14,6 +15,8 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
   const [nickname, setNickname] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -81,13 +84,21 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setConfirmPasswordVisible(!confirmPasswordVisible);
+  };
+
   return (
     <div
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[999]"
       onClick={handleBackgroundClick}
     >
-      <div className="rounded-lg bg-white p-4 w-[400px] h-[470px] flex flex-col justify-center items-center">
-        <h1 className="text-4xl font-black mb-10 text-center text-emerald-400">Welcome to PlanTree! </h1>
+      <div className="rounded-lg bg-white p-4 w-[400px] h-[520px] flex flex-col justify-center items-center">
+        <h1 className="text-4xl font-black mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
         <h2 className="text-2xl font-bold mb-4 text-center text-black">회원가입</h2>
         <input
           type="text"
@@ -103,20 +114,36 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <input
-          type="password"
-          placeholder="비밀번호"
-          className="mb-4 p-2 border rounded w-[350px] text-black"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="비밀번호 재입력"
-          className="mb-4 p-2 border rounded w-[350px] text-black"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
+        <div className="relative w-[350px] mb-4">
+          <input
+            type={passwordVisible ? 'text' : 'password'}
+            placeholder="비밀번호"
+            className="p-2 border rounded w-full text-black"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <span
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+            onClick={togglePasswordVisibility}
+          >
+            {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+          </span>
+        </div>
+        <div className="relative w-[350px] mb-4">
+          <input
+            type={confirmPasswordVisible ? 'text' : 'password'}
+            placeholder="비밀번호 재입력"
+            className="p-2 border rounded w-full text-black"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+          <span
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+            onClick={toggleConfirmPasswordVisibility}
+          >
+            {confirmPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+          </span>
+        </div>
         {passwordError && <p className="mb-4 text-red-500">{passwordError}</p>}
         <div className="flex flex-col gap-2 mt-4">
           <button
