@@ -10,8 +10,10 @@ interface SignupModalProps {
 const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [nickname, setNickname] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -20,6 +22,13 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
   };
 
   const signUp = async () => {
+    if (password !== confirmPassword) {
+      setPasswordError('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    setPasswordError(null);
+
     try {
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
@@ -30,7 +39,17 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
           }
         }
       });
-      if (authError) throw authError;
+      if (authError) {
+        if (authError.message.includes('User already registered')) {
+          Swal.fire({
+            title: '이미 사용중인 이메일 입니다.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        } else {
+          throw authError;
+        }
+      }
 
       if (authData.user) {
         const { data: profileData, error: profileError } = await supabase
@@ -67,36 +86,49 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[999]"
       onClick={handleBackgroundClick}
     >
-      <div className="bg-white p-4 rounded w-96">
-        <h1 className="text-xl font-bold mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
-        <h2 className="text-xl font-bold mb-4 text-center text-black">회원가입</h2>
-        {error && <p className="text-red-500 text-center">{error}</p>}
+      <div className="rounded-lg bg-white p-4 w-[400px] h-[470px] flex flex-col justify-center items-center">
+        <h1 className="text-4xl font-black mb-10 text-center text-emerald-400">Welcome to PlanTree! </h1>
+        <h2 className="text-2xl font-bold mb-4 text-center text-black">회원가입</h2>
         <input
           type="text"
           placeholder="닉네임"
-          className="mb-4 p-2 border rounded w-full text-black"
+          className="mb-4 p-2 border rounded w-[350px] text-black"
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
         />
         <input
           type="email"
           placeholder="이메일"
-          className="mb-4 p-2 border rounded w-full text-black"
+          className="mb-4 p-2 border rounded w-[350px] text-black"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
           type="password"
           placeholder="비밀번호"
-          className="mb-4 p-2 border rounded w-full text-black"
+          className="mb-4 p-2 border rounded w-[350px] text-black"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        <input
+          type="password"
+          placeholder="비밀번호 재입력"
+          className="mb-4 p-2 border rounded w-[350px] text-black"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
+        {passwordError && <p className="mb-4 text-red-500">{passwordError}</p>}
         <div className="flex flex-col gap-2 mt-4">
-          <button className="w-full px-4 py-3 font-bold bg-blue-500 text-black rounded" onClick={signUp}>
+          <button
+            className="w-[350px] h-[50px] px-4 py-3 font-bold bg-blue-500 hover:bg-blue-700 hover:text-white text-black rounded"
+            onClick={signUp}
+          >
             회원가입
           </button>
-          <button className="w-full px-4 py-3 bg-gray-500 text-black rounded" onClick={onClose}>
+          <button
+            className="w-[350px] h-[50px] px-4 py-3 font-bold bg-gray-500 hover:bg-gray-700 hover:text-white text-black rounded"
+            onClick={onClose}
+          >
             취소
           </button>
         </div>

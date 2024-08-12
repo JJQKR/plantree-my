@@ -128,9 +128,8 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
           className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[999]"
           onClick={handleBackgroundClick}
         >
-          <div className="bg-white p-4 rounded">
-            <h1 className="text-xl font-bold mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
-            <h2 className="text-xl font-bold mb-4 text-center text-black">로그인</h2>
+          <div className="bg-white p-4 rounded w-[400px] h-[370px] flex flex-col justify-center items-center">
+            <h1 className="text-4xl font-bold mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
             <form onSubmit={handleFormSubmit}>
               <input
                 type="text"
@@ -176,12 +175,15 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
                 비밀번호를 잊어버리셨나요?
               </h2>
               <div className="flex flex-col gap-2 mt-4">
-                <button type="submit" className="w-full px-4 py-3 font-bold bg-gray-500 text-black rounded">
+                <button
+                  type="submit"
+                  className="w-full px-4 py-3 font-bold bg-gray-500 hover:bg-gray-700 hover:text-white text-black rounded"
+                >
                   로그인
                 </button>
                 <button
                   type="button"
-                  className="w-full px-4 py-3 font-bold bg-blue-500 text-black rounded"
+                  className="w-full px-4 py-3 font-bold bg-blue-500 hover:bg-blue-700 hover:text-white text-black rounded"
                   onClick={onSignupClick}
                 >
                   회원가입
@@ -243,24 +245,31 @@ const ForgotPasswordModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[999]"
       onClick={handleBackgroundClick}
     >
-      <div className="bg-white p-4 rounded w-96">
-        <h1 className="text-xl font-bold mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
-        <h2 className="text-xl font-bold mb-4 text-center text-black">비밀번호 찾기</h2>
+      <div className="bg-white p-4 rounded w-[400px] h-[370px]  flex flex-col justify-center items-center">
+        <h1 className="text-4xl font-bold mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
+        <h2 className="text-2xl font-bold mb-4 text-center text-black">비밀번호 찾기</h2>
         <form onSubmit={handleResetPassword}>
           <input
             type="email"
             placeholder="이메일을 입력하세요."
-            className="mb-4 p-2 border rounded w-full text-black"
+            className="mb-4 p-2 border rounded w-[300px] text-black"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           {error && <p className="text-red-500">{error}</p>}
-          <h1 className="text-center text-xs text-black">인증 메일을 메일로 전송해드립니다.</h1>
+          <h1 className="text-center text-xl text-black">인증 메일을 메일로 전송해드립니다.</h1>
           <div className="flex flex-col gap-2 mt-4">
-            <button type="button" className="w-full px-4 py-3 bg-gray-500 text-white rounded" onClick={onClose}>
+            <button
+              type="button"
+              className="w-full font-bold px-4 py-3 bg-gray-500 hover:bg-gray-700 hover:text-white text-black rounded"
+              onClick={onClose}
+            >
               취소
             </button>
-            <button type="submit" className="w-full px-4 py-3 bg-blue-500 text-white rounded">
+            <button
+              type="submit"
+              className="w-full font-bold px-4 py-3 bg-blue-500 hover:bg-blue-700 hover:text-white text-black rounded"
+            >
               인증메일 받기
             </button>
           </div>

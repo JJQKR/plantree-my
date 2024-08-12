@@ -13,9 +13,11 @@ const LandingMain = () => {
   const [showPlantreeLoginModal, setShowPlantreeLoginModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleLinkClick = async (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
+    setLoading(true);
 
     const {
       data: { user }
@@ -23,6 +25,7 @@ const LandingMain = () => {
     if (user) {
       window.location.href = href;
     } else {
+      setLoading(false);
       Swal.fire({
         title: '로그인이 필요합니다',
         text: '이 기능을 사용하려면 로그인이 필요합니다.',
@@ -91,17 +94,16 @@ const LandingMain = () => {
             />
           </div>
           <div className="flex flex-col m-3 font-black">
-            <div className="mt-9">
-              <p className="text-4xl text-green-600 mb-4 mt-2">플랜트리는</p>
-              <p className="text-2xl">유저분들의 다양한 일상을 기록할 수 있는</p>
-              <p className="text-2xl">온라인 다이어리 서비스 입니다.</p>
+            <div className="mt-11">
+              <p className="text-4xl text-green-600 mb-4 mt-11">플랜트리는</p>
+              <p className="text-3xl">유저분들의 다양한 일상을 기록할 수 있는</p>
+              <p className="text-3xl">온라인 다이어리 서비스 입니다.</p>
             </div>
             <div className="mt-6">
-              <p className="text-2xl">라이프 스타일에 맞는 템플릿을 선택하고,</p>
-              <p className="text-2xl">직접 꾸미면서 오프라인에서 느꼈던 다꾸 감성을</p>
-              <p className="text-2xl">온라인으로도 느껴보실 수 있어요.</p>
+              <p className="text-3xl">라이프 스타일에 맞는 템플릿을 선택하고,</p>
+              <p className="text-3xl">직접 꾸미면서 오프라인에서 느꼈던 다꾸 감성을 온라인으로도 느껴보실 수 있어요.</p>
             </div>
-            <div className="w-[45rem] h-[15rem] mt-10 border-2 border-green-700 rounded-lg p-5 bg-transparent flex">
+            <div className="w-[45rem] h-[15rem] mt-6 border-2 border-green-700 rounded-lg p-5 bg-transparent flex">
               <div className="flex flex-col items-center">
                 <Image
                   src="/images/mainavatar4.jpg"
@@ -150,14 +152,15 @@ const LandingMain = () => {
           <div className="flex flex-col m-3 font-black text-right">
             <div className="mt-9">
               <p className="text-4xl text-green-600 mt-1 mb-4">'기억나무'와 함께 일상을 기록해요</p>
-              <p className="text-2xl">Plantree 서비스에는 이름을 본딴 '기억나무' 가 있어요!</p>
-              <p className="text-2xl">처음엔 씨앗의 모습이지만, 저희와 함께 다이어리를 만들고,</p>
-              <p className="text-2xl">일상을 기록하다 보면 무럭 무럭 자랄거에요.</p>
+              <p className="text-3xl">
+                Plantree 서비스에는 이름을 본딴 '기억나무' 가 있어요! 처음엔 씨앗의 모습이지만 저희와 함께 다이어리를
+                만들고 일상을 기록하다 보면 열심히 자랄거에요
+              </p>
             </div>
             <div className="mt-6">
-              <p className="text-2xl">다이어리는 써보고 싶었지만 의지력이 약했던 P도!</p>
-              <p className="text-2xl">추억을 기록하고 회상하며 일상을 루틴하게 사는 J도!</p>
-              <p className="text-2xl">모두 재밌게 일상을 기록해볼 수 있어요.</p>
+              <p className="text-3xl">다이어리는 써보고 싶었지만 의지력이 약했던 P도!</p>
+              <p className="text-3xl">추억을 기록하고 회상하며 일상을 루틴하게 사는 J도!</p>
+              <p className="text-3xl">모두 재밌게 일상을 기록해볼 수 있어요.</p>
             </div>
             <div className="w-[45rem] h-[15rem] mt-10 border-2 border-green-700 rounded-lg p-5 bg-transparent flex">
               <div className="flex flex-col items-center">
@@ -204,16 +207,18 @@ const LandingMain = () => {
             />
           </div>
           <div className="flex flex-col m-3 ml-6 font-black">
-            <div className="mt-9">
-              <p className="text-4xl text-green-600 mb-4">언제 어디서든 원하는 기기로 이용하세요!</p>
-              <p className="text-2xl">어쩌다 괜찮은 서비스를 발견해도, 태블릿으로 영상을 보다가도,</p>
-              <p className="text-2xl">PC로 게임을 하다가도 기기지원이 어려워 핸드폰을 찾아 헤멘기억,</p>
-              <p className="text-2xl">다들 한 번씩 있지 않으신가요?</p>
-            </div>
             <div className="mt-6">
-              <p className="text-2xl">우리의 일상이 빠르게 추억이 될 수 있도록,</p>
-              <p className="text-2xl">기록이 귀찮은 일이 되지 않도록,</p>
-              <p className="text-2xl">Plantree는 PC, 태블릿, 모바일 환경에서도 사용할 수 있어요.</p>
+              <p className="text-4xl text-green-600 mb-4 mt-7">언제 어디서든 원하는 기기로 이용하세요!</p>
+              <p className="text-3xl">
+                태블릿으로 영상을 보다가도, PC로 게임을 하다가도 기기 지원이 어려워 핸드폰을 찾아 헤멘 기억, 다들 한
+                번씩 있지 않으신가요?
+              </p>
+            </div>
+            <div className="mt-3">
+              <p className="text-3xl">
+                우리의 일상이 빠르게 추억이 될 수 있도록, 기록이 귀찮은 일이 되지 않도록 Plantree는 PC, 태블릿, 모바일
+                환경에서도 사용할 수 있어요.
+              </p>
             </div>
             <div className="w-[45rem] h-[15rem] mt-10 border-2 border-green-700 rounded-lg p-5 bg-transparent flex">
               <div className="flex flex-col items-center">
@@ -246,8 +251,14 @@ const LandingMain = () => {
               Plantree 를 사용해볼까요?
             </a>
           </div>
+          <div></div>
         </div>
       </section>
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-white">
+          <Image src="/images/loading.gif" alt="Loading" width={200} height={200} />
+        </div>
+      )}
       {showPlantreeLoginModal && (
         <PlantreeLoginModal
           onClose={() => setShowPlantreeLoginModal(false)}

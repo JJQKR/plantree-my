@@ -57,6 +57,7 @@ const DiaryCase: React.FC = () => {
   const [loadedImages, setLoadedImages] = useState<HTMLImageElement[]>([]);
   const [loadedBackgroundImages, setLoadedBackgroundImages] = useState<HTMLImageElement[]>([]);
   const [unsplashImages, setUnsplashImages] = useState<HTMLImageElement[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const fetchSession = async () => {
     const {
@@ -144,6 +145,7 @@ const DiaryCase: React.FC = () => {
       });
       return;
     }
+    setLoading(true);
     const diaryId = uuid();
     router.push(`/member/diary/${diaryId}/cover`);
   };
@@ -347,6 +349,11 @@ const DiaryCase: React.FC = () => {
       <div className="fixed bottom-16 right-16">
         <CreateDiaryButton onClick={handleCreateDiary} />
       </div>
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center">
+          <img src="/images/loading.gif" alt="Loading" width={200} height={200} />
+        </div>
+      )}
     </div>
   );
 };
