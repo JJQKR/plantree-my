@@ -3,9 +3,13 @@ import { fetchImages, UnsplashImage } from '../../../lib/utils/unsplash';
 
 interface UnsplashBackgroundSearchProps {
   handleBackgroundImageChange: (imageUrl: string) => void;
+  handleDeselectElement: () => void;
 }
 
-const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({ handleBackgroundImageChange }) => {
+const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({
+  handleBackgroundImageChange,
+  handleDeselectElement
+}) => {
   const [query, setQuery] = useState(() => sessionStorage.getItem('backgroundQuery') || 'gradient');
   const [images, setImages] = useState<UnsplashImage[]>(() => {
     const savedImages = sessionStorage.getItem('backgroundImages');
@@ -78,6 +82,7 @@ const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({ han
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          onFocus={handleDeselectElement}
           placeholder="Search for images"
           className="my-2 px-2 py-1 border rounded w-full"
         />

@@ -1105,7 +1105,7 @@ const DiaryCoverPage: React.FC = () => {
                 ref={fileInputRef}
               />
             </div>
-            <UnsplashImageSearch handleSelectImage={handleSelectImage} />
+            <UnsplashImageSearch handleSelectImage={handleSelectImage} handleDeselectElement={handleDeselectElement} />
           </div>
         );
       case 'Elements':
@@ -1125,7 +1125,10 @@ const DiaryCoverPage: React.FC = () => {
               onChange={handleBackgroundColorChange}
               className="border border-gray-300 rounded w-16"
             />
-            <UnsplashBackgroundSearch handleBackgroundImageChange={handleBackgroundImageChange} />
+            <UnsplashBackgroundSearch
+              handleBackgroundImageChange={handleBackgroundImageChange}
+              handleDeselectElement={handleDeselectElement}
+            />
           </div>
         );
       case 'Edit':
@@ -1196,12 +1199,6 @@ const DiaryCoverPage: React.FC = () => {
     // 취소선 추가/제거하는 로직
   };
 
-  const fontWeightOptions = [
-    { label: '얇음', value: 100 },
-    { label: '보통', value: 400 },
-    { label: '두꺼움', value: 700 }
-  ];
-
   const fontWeightsMap: { [fontFamily: string]: number[] } = {
     Arial: [100, 400, 700],
     Verdana: [400, 700],
@@ -1219,6 +1216,14 @@ const DiaryCoverPage: React.FC = () => {
       setCoverTitleFontWeight(newFontWeights[0]);
     }
   }, [coverTitleFontFamily]);
+
+  const handleDeselectElement = () => {
+    setCoverSelectedElement(null);
+    if (trRef.current) {
+      trRef.current.nodes([]); // 트랜스포머에서 선택된 요소 해제
+      trRef.current.getLayer()?.batchDraw(); // 레이어 다시 그리기
+    }
+  };
 
   return (
     <div className="flex h-full relative">

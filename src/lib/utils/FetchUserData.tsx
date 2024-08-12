@@ -17,7 +17,7 @@ const FetchUserData = () => {
 
       const user = authData?.user;
       if (user) {
-        console.log('Fetched user ID:', user.id); // 디버깅 코드 추가
+        // console.log('Fetched user ID:', user.id); // 디버깅 코드 추가
         setUserId(user.id);
         setEmail(user.email ?? null);
 
