@@ -11,7 +11,7 @@ export type TodoType = {
 
 export type UpdateTenMinPlannerType = {
   id: string;
-  date: string;
+  date: string | null;
   d_day_date: string;
   d_day: string;
   goal: string;
@@ -101,11 +101,21 @@ class TenMinPlannerAPI {
 
   /**
    *
-   * @param id {string} 스케쥴 게시물 아이디
+   * @param id {string} ten_min_planner 아이디
    * @returns 삭제된 data
    */
   async deleteTenMinPlanner(id: string) {
     const { data } = await this.supabase.from('ten_min_planner').delete().eq('id', id).select();
+    return data;
+  }
+
+  /**
+   *
+   * @param id {string} diary 아이디
+   * @returns 삭제된 data
+   */
+  async deleteTenMinPlannerOfDiaryId(id: string) {
+    const { data } = await this.supabase.from('ten_min_planner').delete().eq('diary_id', id).select();
     return data;
   }
 
@@ -126,8 +136,6 @@ class TenMinPlannerAPI {
    */
   async updateTenMinPlanner(id: string, updateData: UpdateTenMinPlannerType) {
     const { date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list } = updateData;
-    console.log({ id });
-    console.log({ date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list });
     const { data, error } = await this.supabase
       .from('ten_min_planner')
       .update({
@@ -142,8 +150,6 @@ class TenMinPlannerAPI {
         todo_list
       })
       .eq('id', id);
-    // .select('*');
-    console.log({ data, error });
 
     return data;
   }

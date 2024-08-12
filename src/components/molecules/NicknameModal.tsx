@@ -1,3 +1,5 @@
+'use client';
+
 import useMyModalStore from '@/stores/my.modal.store';
 import React, { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/supabase/client';
@@ -48,8 +50,8 @@ const NicknameModal: React.FC = () => {
     e.preventDefault();
     if (nicknameRef.current) {
       const newNickname = nicknameRef.current.value.trim();
-      if (newNickname.length < 2 || newNickname.length > 10) {
-        setError('닉네임은 최소 2글자, 최대 10글자입니다.');
+      if (newNickname.length < 2 || newNickname.length > 9) {
+        setError('닉네임은 최소 2글자, 최대 9글자입니다.');
         return;
       }
 
@@ -83,27 +85,27 @@ const NicknameModal: React.FC = () => {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
           // onClick={handleBackGroundClick}
         >
-          <div className="bg-white p-9 rounded-[10px] w-[31.25rem] h-[17.25rem]">
+          <div className="bg-white p-[2.5rem] rounded-[10px] w-[31.25rem] h-[17.25rem]">
             <div onClick={(e) => e.stopPropagation()}>
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex justify-between items-center mb-[1.75rem]">
                 <h1 className="text-[1.63rem] font-bold text-left text-black">닉네임 변경</h1>
                 <button className="text-black" onClick={toggleNicknameModal} type="button">
                   &#10005;
                 </button>
               </div>
-              <form className="flex flex-col gap-2" onSubmit={handleNicknameSubmit}>
+              <form className="flex flex-col" onSubmit={handleNicknameSubmit}>
                 <input
                   type="text"
                   placeholder="새 닉네임 입력"
-                  className="mb-4 p-2 border rounded-[5px]  w-full text-black"
+                  className="mb-[1.75rem] p-3 border rounded-[5px] w-full text-black text-[1.13rem]"
                   ref={nicknameRef}
                   defaultValue={nickname ?? ''}
                 />
                 {error && <p className="text-red-500">{error}</p>}
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col mb-[2.5rem]">
                   <button
                     type="submit"
-                    className="px-4 py-2 w-full text-white rounded-[5px]"
+                    className="w-full h-[3.25rem] text-white text-[1.13rem] rounded-[5px] mb-[2.5rem]"
                     style={{ backgroundColor: '#9E9E9E' }}
                     onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#008A02')}
                     onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#9E9E9E')}

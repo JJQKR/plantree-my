@@ -34,7 +34,7 @@ const useUserStore = create<UserState>((set) => ({
   setUserId: (userId) => set({ userId }),
   email: null,
   setEmail: (email) => set({ email }),
-  createdAt: new Date().toISOString(), // 초기값 설정
+  createdAt: '', // 초기값 설정
   setCreatedAt: (createdAt) => set({ createdAt }), // 설정 함수 정의
   diaryCount: 0,
   setDiaryCount: (diaryCount) => set({ diaryCount }),
