@@ -69,7 +69,11 @@ const DiaryCase: React.FC = () => {
       unsplash_image_size: JSON.parse(cover.unsplash_image_size) as Size,
       unsplash_image_rotation: cover.unsplash_image_rotation ?? 0,
       diary_id: cover.diary_id,
-      cover_id: cover.id
+      cover_id: cover.id,
+      cover_title_fontstyle: cover.cover_title_fontstyle ?? 'normal',
+      cover_title_fontfamily: cover.cover_title_fontfamily ?? 'Arial',
+      cover_title_color: cover.cover_title_color ?? '#000000',
+      cover_title_fontweight: cover.cover_title_fontweight ?? 'normal'
     }));
 
     setDiaryCovers(covers); // 커버 상태 업데이트
@@ -187,6 +191,9 @@ const DiaryCase: React.FC = () => {
                             y={cover.cover_title_position.y}
                             width={cover.cover_title_width}
                             rotation={cover.cover_title_rotation}
+                            fontFamily={cover.cover_title_fontfamily}
+                            fill={cover.cover_title_color}
+                            fontStyle={`${cover.cover_title_fontweight} ${cover.cover_title_fontstyle}`}
                           />
                           {loadedImages[index].src && (
                             <KonvaImage
@@ -281,6 +288,9 @@ const DiaryCase: React.FC = () => {
                           y={cover.cover_title_position.y}
                           width={cover.cover_title_width}
                           rotation={cover.cover_title_rotation}
+                          fontFamily={cover.cover_title_fontfamily}
+                          fill={cover.cover_title_color}
+                          fontStyle={`${cover.cover_title_fontweight} ${cover.cover_title_fontstyle}`}
                         />
                         {loadedImages[index].src && (
                           <KonvaImage

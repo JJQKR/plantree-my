@@ -597,7 +597,7 @@ const DiaryCoverPage: React.FC = () => {
       cover_stage_size: coverStageSize ?? { width: 480, height: 720 },
       diary_id: diaryId,
       user_id: userId,
-      unsplash_image: unsplashImage ? unsplashImage.src : null, // URL로 저장
+      unsplash_image: unsplashImage ? unsplashImage.src : null,
       unsplash_image_position: unsplashImage ? unsplashImagePosition : null,
       unsplash_image_size: unsplashImage ? unsplashImageSize : null,
       unsplash_scale: unsplashScale,
@@ -611,22 +611,7 @@ const DiaryCoverPage: React.FC = () => {
     try {
       await addCover(coverData);
 
-      // 다이어리 이름을 cover_title로 설정
       const { error: diaryError } = await supabase.from('diaries').update({ name: coverTitle }).eq('id', diaryId);
-
-      // 새로운 다이어리 객체 생성
-      const newDiary: AddDiaryType = {
-        id: diaryId,
-        user_id: userId,
-        name: coverTitle,
-        bookshelf_order: 0
-      };
-
-      await createDiary(newDiary, {
-        onSuccess: () => {
-          setDiaryId(diaryId); // 생성된 다이어리 ID 설정
-        }
-      });
 
       if (diaryError) {
         console.error('다이어리 이름 업데이트 실패:', diaryError);
@@ -634,20 +619,47 @@ const DiaryCoverPage: React.FC = () => {
         return;
       }
 
-      // 다이어리 목록을 created_at 기준으로 정렬
+      // 다이어리의 bookshelf_order 설정
+      const { data: maxOrderData, error: maxOrderError } = await supabase
+        .from('diaries')
+        .select('bookshelf_order')
+        .order('bookshelf_order', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (maxOrderError) {
+        console.error('bookshelf_order 가져오기 실패:', maxOrderError);
+        alert('bookshelf_order 가져오기 실패');
+        return;
+      }
+
+      const newBookshelfOrder = (maxOrderData?.bookshelf_order ?? 0) + 1;
+
+      // 새로운 다이어리 객체 생성 및 bookshelf_order 설정
+      const newDiary: AddDiaryType = {
+        id: diaryId,
+        user_id: userId,
+        name: coverTitle,
+        bookshelf_order: newBookshelfOrder
+      };
+
+      await createDiary(newDiary, {
+        onSuccess: () => {
+          setDiaryId(diaryId);
+        }
+      });
+
+      // 다이어리 목록을 bookshelf_order 기준으로 정렬
       const { data: diaries, error: fetchError } = await supabase
         .from('diaries')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('bookshelf_order', { ascending: true });
 
       if (fetchError) {
         console.error('다이어리 목록 가져오기 실패:', fetchError);
         alert('다이어리 목록 가져오기 실패');
         return;
       }
-
-      // 정렬된 다이어리 목록을 사용하여 원하는 로직 수행
-      console.log('정렬된 다이어리 목록:', diaries);
 
       Swal.fire('Cover 저장 성공!', '', 'success');
       router.push(`/member/hub`);

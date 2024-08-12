@@ -113,7 +113,9 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     backgroundImage: cover.cover_bg_color ? `url(${cover.cover_bg_color})` : 'none',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
-                    color: cover.unsplash_image ? 'white' : 'black'
+                    color: cover.cover_title_color || 'black', // 텍스트 색깔 적용
+                    fontFamily: cover.cover_title_fontfamily || 'inherit', // 폰트 패밀리 적용
+                    fontWeight: cover.cover_title_fontweight || 'normal' // 폰트 굵기 적용
                   }}
                 >
                   {cover.cover_title || '제목 없음'}
