@@ -11,13 +11,30 @@ import { supabase } from '@/supabase/client';
 import useParchmentModalStore from '@/stores/parchment.modal.store';
 import { useDeletePages, usePageToDiaryId } from '@/lib/hooks/usePages';
 import { useDeleteDiary } from '@/lib/hooks/useDiaries';
+import usePageStore from '@/stores/pages.store';
+
+// const isParchmentStyle = (value: 'tenMinPlanner' | 'lineNote' | 'blankNote') => {
+//   return ['tenMinPlanner', 'lineNote', 'blankNote'].includes(value);
+// };
+
+type DbTableType = 'ten_Min_planner' | 'line_note' | 'blank_note';
+
+const changeDbName = (parchmentStyle: 'tenMinPlanner' | 'lineNote' | 'blankNote') => {
+  const dbTableName = {
+    tenMinPlanner: 'ten_min_planner',
+    lineNote: 'line_note',
+    blankNote: 'blank_note'
+  };
+  return dbTableName[parchmentStyle];
+};
 
 export default function ParchmentList() {
   const router = useRouter();
   const { diaryId } = useParams<{ diaryId: string }>();
   const [coverTitle, setCoverTitle] = useState('');
   const { toggleParchmentOptionModal } = useParchmentModalStore((state) => state);
-  const { data: pages, isPending, isError } = usePageToDiaryId(diaryId);
+  const { pages, setPages } = usePageStore((state) => state);
+  const { data: dbPages, isPending, isError } = usePageToDiaryId(diaryId);
   const { mutate: deleteDbPages } = useDeletePages();
   const { mutate: deleteDbDiary } = useDeleteDiary();
 
@@ -29,6 +46,9 @@ export default function ParchmentList() {
         setCoverTitle(diaryCover.cover_title);
       };
       getCoverTitle();
+      if (dbPages) {
+        setPages(dbPages);
+      }
     }
   }, [diaryId]);
 
@@ -36,26 +56,50 @@ export default function ParchmentList() {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
   // 다이어리를 삭제 :  db diary 삭제 , db pages 삭제 , db cover 삭제, db Parchments 삭제
-  const deleteDiary = () => {
+  const deleteDiary = async () => {
     const confirmDeleteDiary = confirm('정말 다이어리를 삭제하시겠습니까? 되돌릴 수 없습니다.');
     if (confirmDeleteDiary) {
       deleteDbDiary(diaryId);
       deleteDbPages(diaryId);
-      pages?.map((page) => {
-        if (page.parchment_style === 'ten_min_planner') {
-          supabase.from('ten_min_planner').delete().eq('diary_id', diaryId);
-        } else if (page.parchment_style === 'line_note') {
-          supabase.from('line_note').delete().eq('diary_id', diaryId);
-        } else if (page.parchment_style === 'blank_note') {
-          supabase.from('blank_note').delete().eq('diary_id', diaryId);
-        } else {
-          return;
-        }
+      await supabase.from('diary_covers').delete().eq('diary_id', diaryId);
+
+      const deletionPromises = pages.map((page) => {
+        // if (isParchmentStyle(page.parchment_style)) {
+        const tableName = changeDbName(page.parchment_style as 'tenMinPlanner' | 'lineNote' | 'blankNote') as
+          | 'ten_min_planner'
+          | 'line_note'
+          | 'blank_note';
+        return supabase.from(tableName).delete().eq('diary_id', diaryId);
+        // }
       });
-      supabase.from('diary_covers').delete().eq('diary_id', diaryId);
+
+      await Promise.all(deletionPromises);
+
+      // pages?.map((page) => {
+      //   if (page.parchment_style === 'ten_min_planner') {
+      //     supabase.from('ten_min_planner').delete().eq('diary_id', diaryId);
+      //   } else if (page.parchment_style === 'line_note') {
+      //     supabase.from('line_note').delete().eq('diary_id', diaryId);
+      //   } else if (page.parchment_style === 'blank_note') {
+      //     supabase.from('blank_note').delete().eq('diary_id', diaryId);
+      //   } else {
+      //     return;
+      //   }
+      // });
+
       alert('다이어리가 삭제 되었습니다.');
       router.replace('/member/hub');
     }
+  };
+
+  // 허브로 이동합니다.
+  const goHub = () => {
+    router.push('/member/hub');
+  };
+
+  // 다이어리 표지 수정페이지로 이동합니다.
+  const goDiaryCoverPage = () => {
+    router.push(`/member/diary/${diaryId}/cover`);
   };
 
   // 앞페이지로 이동합니다.
@@ -91,23 +135,24 @@ export default function ParchmentList() {
   // 편집 모드 버튼 클릭 시 상세페이지 이동 V
   // 상세페이지에서 컴포넌트 수정 V
   // 속지리스트 -> 수정이 안되게
-  // page의 contentId와 parchme         ntStyle에 따라 또 DB에서 가져와야 함 => 속지 내부 데이터를 가져온다. => 나중에
+  // page의 contentId와 parchmentStyle에 따라 또 DB에서 가져와야 함 => 속지 내부 데이터를 가져온다. => 나중에 V
   return (
     // 1. 속지 여러 개를 담는 큰 박스 만든다
     // 2. 속지 하나하나의 div
     // 3. 추가 버튼 시 modal 띄우고
     // 4. 모달에서 선택하면 해당하는 데이터가 비어있는 컴포넌트를 뒤에 추가한다.
-    <div className="flex flex-row items-center">
+    <div className="flex flex-row items-center bg-green-400">
       <div onClick={handlePrevPage}>
         <IoIosArrowBack />
       </div>
       <div>
         <div className="flex flex-row justify-between ">
-          <div className="flex flex-row">
+          <div className="flex flex-row" onClick={goHub}>
             <IoIosArrowBack />
             <h2>{coverTitle}</h2>
           </div>
           <div className="flex flex-row gap-3">
+            <div onClick={goDiaryCoverPage}>표지 수정하러 가기</div>
             <div onClick={deleteDiary}>
               <RiDeleteBin5Line />
             </div>

@@ -104,7 +104,6 @@ const Todolist = ({ tenMinPlannerId, todoList, setTodoList, setSelectedColorTodo
               >
                 <span
                   onClick={() => {
-                    console.log(todo.id);
                     openModal(todo.id);
                   }}
                   style={{ color: getColorClass(todo.color) }}

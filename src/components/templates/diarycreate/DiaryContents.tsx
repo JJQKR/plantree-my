@@ -29,12 +29,12 @@ const DiaryContents = ({ diaryId, pageIndex }: DiaryContentsProps) => {
   const showContent = (page: PageType) => {
     return (
       <div key={page.id} className="relative w-[45.8rem] h-[60rem] bg-white shadow-lg p-2">
-        <button
+        {/* <button
           onClick={() => {}}
           className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-[2rem] flex items-center justify-center z-10"
         >
           &times;
-        </button>
+        </button> */}
         <button
           className="bg-blue-300"
           onClick={() => {

@@ -1,12 +1,11 @@
 'use client';
-import DiaryParchmentPage from '@/components/templates/diarycreate/DiaryParchmentPage';
+
 import React from 'react';
-// import BottomSheet from '@/components/molecules/bottomsheet/BottomSheet';
-// import { DndProvider } from 'react-dnd';
-// import { HTML5Backend } from 'react-dnd-html5-backend';
-// import useBottomSheetStore from '@/stores/bottomsheet.store';
+import BottomSheet from '@/components/molecules/bottomsheet/BottomSheet';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import useBottomSheetStore from '@/stores/bottomsheet.store';
 import ParchmentOptionsModal from '@/components/molecules/bottomsheet/ParchmentOptionsModal';
-// import WriteDiary from '@/components/templates/diarycreate/WriteDiary';
 import ParchmentList from '@/components/templates/ParchmentList';
 
 /**
@@ -22,21 +21,19 @@ import ParchmentList from '@/components/templates/ParchmentList';
  */
 
 const DiaryParchment = () => {
-  // const { bottomSheetList, isSheetOpen, toggleSheet, moveCard } = useBottomSheetStore();
+  const { bottomSheetList, isSheetOpen, toggleSheet, moveCard } = useBottomSheetStore();
 
   return (
     <div className="relative">
       <ParchmentList />
-      {/* <WriteDiary /> */}
-      {/* <DiaryParchmentPage /> */}
-      {/* <DndProvider backend={HTML5Backend}>
+      <DndProvider backend={HTML5Backend}>
         <BottomSheet
           isOpen={isSheetOpen}
           onToggle={toggleSheet}
           bottomSheetList={bottomSheetList}
           moveCard={moveCard}
         />
-      </DndProvider> */}
+      </DndProvider>
       <ParchmentOptionsModal />
     </div>
   );

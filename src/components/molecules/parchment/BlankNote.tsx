@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { supabase } from '@/supabase/client';
 import { useRouter } from 'next/navigation';
+import { useDeletePage } from '@/lib/hooks/usePages';
 
 interface BlankNoteProps {
   id: string;
@@ -24,6 +25,7 @@ const BlankNote = ({ id }: BlankNoteProps) => {
     title: ''
   });
   const [diaryId, setDiaryId] = useState('');
+  const { mutate: deletePage, isPending, isError } = useDeletePage();
   const router = useRouter();
 
   const editableDivRef = useRef<HTMLDivElement>(null);
@@ -127,11 +129,11 @@ const BlankNote = ({ id }: BlankNoteProps) => {
   const handleDelete = async () => {
     if (confirm('내용을 삭제 하시겠습니까?')) {
       const { error: blankNoteError } = await supabase.from('blank_note').delete().eq('id', id);
-      const { error: pagesError } = await supabase.from('pages').delete().eq('content_id', id);
+      deletePage(id);
       if (blankNoteError) {
         alert('삭제 중 오류가 발생했습니다: ' + blankNoteError.message);
-      } else if (pagesError) {
-        alert('삭제 중 오류가 발생했습니다:' + pagesError.message);
+      } else if (isError) {
+        alert('삭제 중 오류가 발생했습니다');
       } else {
         alert('삭제되었습니다!');
         router.push(`/member/diary/${diaryId}/parchment`);

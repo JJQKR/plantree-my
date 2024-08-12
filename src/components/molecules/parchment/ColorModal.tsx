@@ -17,7 +17,6 @@ const ColorModal = ({ todoId, changeTodoColor }: ColorModalProps) => {
   };
 
   const selectColor = (newColor: string) => {
-    console.log({ todoId, newColor });
     changeTodoColor(todoId, newColor);
     toggleTenMinplannerColorModal();
   };

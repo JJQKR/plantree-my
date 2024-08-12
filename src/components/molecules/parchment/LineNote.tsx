@@ -1,5 +1,6 @@
 'use client';
 
+import { useDeletePage } from '@/lib/hooks/usePages';
 import { isNoteLineArray } from '@/lib/utils/noteLineConfirmArray';
 import { supabase } from '@/supabase/client';
 import { Json } from '@/types/supabase';
@@ -26,6 +27,7 @@ const LineNote = ({ id }: LineNoteProps) => {
   const [bgColor, setBgColor] = useState('#ffffff');
   const [globalTextColor, setGlobalTextColor] = useState('#000000');
   const [diaryId, setDiaryId] = useState('');
+  const { mutate: deletePage, isPending, isError } = useDeletePage();
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -197,17 +199,14 @@ const LineNote = ({ id }: LineNoteProps) => {
           confirmButtonText: 'OK'
         });
       } else if (data) {
-        console.log(data);
         setLineColor(data?.line_color || '#000000');
         setLineThickness(data?.line_thickness || 1);
         setBgColor(data?.bg_color || '#ffffff');
         setGlobalTextColor(data?.global_text_color || '#000000');
+        setDiaryId(data?.diary_id || '');
 
         if (isNoteLineArray(data?.lines)) {
-          const a = data.lines;
-          console.log({ a });
           setLines(data.lines);
-          // setDataExists(true);
         } else {
           console.error('Invalid data format for lines');
           Swal.fire({
@@ -219,7 +218,6 @@ const LineNote = ({ id }: LineNoteProps) => {
         }
       } else {
         console.log('No data found for this user.');
-        // setDataExists(false);
       }
     };
     loadData();
@@ -228,13 +226,14 @@ const LineNote = ({ id }: LineNoteProps) => {
   const handleDelete = async () => {
     if (confirm('내용을 삭제 하시겠습니까?')) {
       const { error: lineNoteError } = await supabase.from('line_note').delete().eq('id', id);
-      const { error: pagesError } = await supabase.from('pages').delete().eq('content_id', id);
+      deletePage(id);
       if (lineNoteError) {
         alert('삭제 중 오류가 발생했습니다: ' + lineNoteError.message);
-      } else if (pagesError) {
-        alert('삭제 중 오류가 발생했습니다:' + pagesError.message);
+      } else if (isError) {
+        alert('삭제 중 오류가 발생했습니다');
       } else {
         alert('삭제되었습니다!');
+        console.log(diaryId);
         router.push(`/member/diary/${diaryId}/parchment`);
       }
     }

@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import uuid from 'react-uuid';
 import { useParams } from 'next/navigation';
-import usePageStore from '@/stores/pages.store';
+import usePageStore, { PageType } from '@/stores/pages.store';
 import useParchmentModalStore from '@/stores/parchment.modal.store';
 import { ParchmentType, parchments } from '@/lib/utils/parchment';
 import useTenMinPlannerStore from '@/stores/tenMinPlanner.store';
@@ -19,7 +19,7 @@ type ParamTypes = {
 const ParchmentOptionsModal: React.FC = () => {
   const { diaryId } = useParams<ParamTypes>();
   const { isParchmentOptionModalOpen, toggleParchmentOptionModal } = useParchmentModalStore((state) => state);
-  // const { addPage, pages, setPageIndex } = us ePageStore((state) => state);
+  // const { addPage, pages, setPageIndex } = usePageStore((state) => state);
   const { addTenMinPlanner } = useTenMinPlannerStore();
   const { userId } = useUserStore((state) => state);
   const { mutate: createPage } = useCreatePage();
@@ -33,15 +33,23 @@ const ParchmentOptionsModal: React.FC = () => {
   const handleAddPage = async (parchment: ParchmentType) => {
     const pageId = uuid();
     const contentId = uuid();
+    // const { data: pages, error } = await supabase.from('pages').select('*').eq('diary_id', diaryId);
+    function getNextIndex(pages: PageType[]) {
+      const maxIndex = pages.reduce((max: number, page: PageType) => {
+        return page.index > max ? page.index : max;
+      }, 0);
+
+      return maxIndex + 1;
+    }
     const newPage = {
       id: pageId,
       content_id: contentId,
       parchment_style: parchment.parchmentStyle,
       diary_id: diaryId,
-      index: pages?.length || 0
+      index: pages ? getNextIndex(pages) : 0
     };
-
-    await createPage(newPage);
+    // await supabase.from('pages').insert(newPage);
+    createPage(newPage);
     if (parchment.parchmentStyle === 'tenMinPlanner') {
       const newTenMinPlanner = {
         id: contentId,
@@ -55,7 +63,8 @@ const ParchmentOptionsModal: React.FC = () => {
         user_id: userId,
         todo_list: []
       };
-      await createTenMinPlanner(newTenMinPlanner);
+      // await supabase.from('ten_min_planner').insert(newTenMinPlanner);
+      createTenMinPlanner(newTenMinPlanner);
     } else if (parchment.parchmentStyle === 'lineNote') {
       const newLineNote = {
         id: contentId,

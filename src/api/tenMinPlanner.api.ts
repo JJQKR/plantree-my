@@ -136,8 +136,6 @@ class TenMinPlannerAPI {
    */
   async updateTenMinPlanner(id: string, updateData: UpdateTenMinPlannerType) {
     const { date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list } = updateData;
-
-    console.log({ date, d_day_date, d_day, goal, memo, timetable, diary_id, user_id, todo_list });
     const { data, error } = await this.supabase
       .from('ten_min_planner')
       .update({
@@ -152,8 +150,6 @@ class TenMinPlannerAPI {
         todo_list
       })
       .eq('id', id);
-    // .select('*');
-    console.log({ data, error });
 
     return data;
   }

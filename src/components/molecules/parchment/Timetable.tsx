@@ -17,11 +17,6 @@ interface TimetableProps {
 const Timetable = ({ selectedColorTodo, timetable, setTimetable }: TimetableProps) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
 
-  console.log(timetable);
-  // const { activeCells, addActiveCell, removeActiveCell } = useTimetableStore((state) => state);
-
-  // const { todo } = useTodoListStore((state) => state);
-
   const rows = 24;
   const columns = 6;
   const minutes = [10, 20, 30, 40, 50, 60];

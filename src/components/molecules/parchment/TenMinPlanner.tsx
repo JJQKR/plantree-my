@@ -7,6 +7,7 @@ import { supabase } from '@/supabase/client';
 import { TodoType } from '@/api/tenMinPlanner.api';
 import ParchmentInput from '@/components/atoms/ParchmentInput';
 import { useRouter } from 'next/navigation';
+import { useDeletePage } from '@/lib/hooks/usePages';
 
 /**
  * 1. 속지 내용 변경 -> localPlanner 변경
@@ -44,6 +45,8 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
   const [timetable, setTimetable] = useState({});
   const [diaryId, setDiaryId] = useState('');
   const [selectedColorTodo, setSelectedColorTodo] = useState<Todo | null>(null);
+
+  const { mutate: deletePage, isPending, isError } = useDeletePage();
   const router = useRouter();
 
   // db에서 현재 데이터 가져오기
@@ -128,15 +131,14 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
       .eq('id', id);
   };
 
-  console.log(id);
   const handleDelete = async () => {
     if (confirm('내용을 삭제 하시겠습니까?')) {
       const { error: tenMinPlannerError } = await supabase.from('ten_min_planner').delete().eq('id', id);
-      const { error: pagesError } = await supabase.from('pages').delete().eq('content_id', id);
+      deletePage(id);
       if (tenMinPlannerError) {
         alert('삭제 중 오류가 발생했습니다: ' + tenMinPlannerError.message);
-      } else if (pagesError) {
-        alert('삭제 중 오류가 발생했습니다:' + pagesError.message);
+      } else if (isError) {
+        alert('삭제 중 오류가 발생했습니다');
       } else {
         alert('삭제되었습니다!');
         router.push(`/member/diary/${diaryId}/parchment`);
