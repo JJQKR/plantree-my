@@ -47,7 +47,7 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     };
 
     fetchData();
-  }, [userId]);
+  }, [userId, levelId]);
 
   if (loading) {
     return <div>로딩 중...</div>;
