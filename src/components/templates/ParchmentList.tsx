@@ -17,9 +17,9 @@ import usePageStore from '@/stores/pages.store';
 //   return ['tenMinPlanner', 'lineNote', 'blankNote'].includes(value);
 // };
 
-type DbTableType = 'ten_Min_planner' | 'line_note' | 'blank_note';
+type ParchmentType = 'tenMinPlanner' | 'lineNote' | 'blankNote';
 
-const changeDbName = (parchmentStyle: 'tenMinPlanner' | 'lineNote' | 'blankNote') => {
+const changeDbName = (parchmentStyle: ParchmentType) => {
   const dbTableName = {
     tenMinPlanner: 'ten_min_planner',
     lineNote: 'line_note',
@@ -46,9 +46,6 @@ export default function ParchmentList() {
         setCoverTitle(diaryCover.cover_title);
       };
       getCoverTitle();
-      if (dbPages) {
-        setPages(dbPages);
-      }
     }
   }, [diaryId]);
 
@@ -64,13 +61,11 @@ export default function ParchmentList() {
       await supabase.from('diary_covers').delete().eq('diary_id', diaryId);
 
       const deletionPromises = pages.map((page) => {
-        // if (isParchmentStyle(page.parchment_style)) {
-        const tableName = changeDbName(page.parchment_style as 'tenMinPlanner' | 'lineNote' | 'blankNote') as
+        const tableName = changeDbName(page.parchment_style as ParchmentType) as
           | 'ten_min_planner'
           | 'line_note'
           | 'blank_note';
         return supabase.from(tableName).delete().eq('diary_id', diaryId);
-        // }
       });
 
       await Promise.all(deletionPromises);
@@ -113,11 +108,12 @@ export default function ParchmentList() {
 
   // 뒷페이지로 이동합니다.
   const handleNextPage = () => {
-    if (currentPageIndex + 2 < pages!.length) {
+    console.log({ currentPageIndex });
+    if (currentPageIndex + 2 < dbPages!.length) {
       setCurrentPageIndex(currentPageIndex + 2);
-    } else if (pages![currentPageIndex]) {
+    } else if (dbPages![currentPageIndex]) {
       if (confirm('더이상 페이지가 없습니다. 추가하시겠습니까?')) {
-        toggleParchmentOptionModal(); // 함수 호출을 활성화
+        toggleParchmentOptionModal();
       }
     }
   };
@@ -127,20 +123,7 @@ export default function ParchmentList() {
   }
   if (isError) return;
 
-  // 0. 속지 추가 UI를 먼저 만든다. V
-  // 0-1. url의 diaryId를 이용해서 cover 뒤져서 cover 타이틀 가져온다. V
-  // 페이지 추가 시 DB에 page 데이터 & 속지테이블(tenMinPlanner V , 무지 V, 줄글 V)
-
-  // 이미 존재하는 page들을 가져와야 함 V
-  // 편집 모드 버튼 클릭 시 상세페이지 이동 V
-  // 상세페이지에서 컴포넌트 수정 V
-  // 속지리스트 -> 수정이 안되게
-  // page의 contentId와 parchmentStyle에 따라 또 DB에서 가져와야 함 => 속지 내부 데이터를 가져온다. => 나중에 V
   return (
-    // 1. 속지 여러 개를 담는 큰 박스 만든다
-    // 2. 속지 하나하나의 div
-    // 3. 추가 버튼 시 modal 띄우고
-    // 4. 모달에서 선택하면 해당하는 데이터가 비어있는 컴포넌트를 뒤에 추가한다.
     <div className="flex flex-row items-center bg-green-400">
       <div onClick={handlePrevPage}>
         <IoIosArrowBack />
