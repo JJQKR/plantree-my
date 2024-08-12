@@ -5,6 +5,7 @@ import { supabase } from '../../supabase/client';
 import ResetPasswordModal from './ResetPasswordModal';
 import useUserStore from '@/stores/user.store';
 import Swal from 'sweetalert2';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> = ({ onClose, onSignupClick }) => {
   const [email, setEmail] = useState('');
@@ -15,6 +16,7 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
   const [resetToken, setResetToken] = useState<string | null>(null);
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const setUserId = useUserStore((state) => state.setUserId);
 
@@ -121,6 +123,10 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
     await handleSignIn(email, password);
   };
 
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
   return (
     <>
       {!showForgotPasswordModal && !showResetPasswordModal && (
@@ -138,13 +144,21 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <input
-                type="password"
-                placeholder="비밀번호"
-                className="mb-2 p-2 border rounded w-full text-black"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="relative w-full">
+                <input
+                  type={passwordVisible ? 'text' : 'password'}
+                  placeholder="비밀번호"
+                  className="mb-2 p-2 border rounded w-full text-black"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <span
+                  className="absolute right-3 top-3 cursor-pointer text-gray-500"
+                  onClick={togglePasswordVisibility}
+                >
+                  {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center ml-1">
                   <input
@@ -154,8 +168,8 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
                   />
-                  <label htmlFor="rememberMe" className="text-black">
-                    아이디, 패스워드 기억하기
+                  <label htmlFor="rememberMe" className="text-black mr-5">
+                    계정정보 기억하기
                   </label>
                 </div>
                 <div className="flex items-center mr-2">
@@ -167,7 +181,7 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
                     onChange={(e) => setAutoLogin(e.target.checked)}
                   />
                   <label htmlFor="autoLogin" className="text-black">
-                    자동 로그인
+                    자동로그인
                   </label>
                 </div>
               </div>
