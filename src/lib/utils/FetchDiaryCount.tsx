@@ -1,3 +1,5 @@
+'use client';
+
 import { supabase } from '@/supabase/client';
 import React, { useEffect } from 'react';
 import useUserStore from '@/stores/user.store';

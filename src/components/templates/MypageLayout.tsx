@@ -30,7 +30,7 @@ const MyPageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         <main
           className={`${
             sidebarOpen ? 'w-[1920px]' : 'w-full'
-          } h-auto flex items-center justify-center transition-all duration-300`}
+          } h-auto flex items-center justify-center transition-all duration-300 mt-0`}
         >
           {children}
         </main>

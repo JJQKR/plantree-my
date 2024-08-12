@@ -30,7 +30,7 @@ const profileStages = [
   {
     id: 'lv6',
     src: '/images/Abstract5.png',
-    name: '열매나무'
+    name: '열매'
   }
 ];
 
