@@ -33,10 +33,15 @@ const UnsplashImageSearch: React.FC<UnsplashImageSearchProps> = ({ handleSelectI
         const searchQuery = random ? 'random' : query;
         const results = await fetchImages(searchQuery, currentPage);
 
-        setImages((prevImages) => (resetPage ? results : [...prevImages, ...results]));
+        if (resetPage) {
+          setImages(results);
+          setPage(2); // 다음 페이지를 위해 페이지를 2로 설정
+        } else {
+          setImages((prevImages) => [...prevImages, ...results]);
+        }
+
         setHasMore(results.length > 0);
         setIsRandom(random);
-        setPage(resetPage ? 1 : currentPage);
       } catch (error) {
         console.error('Error fetching images:', error);
         setHasMore(false);
@@ -54,8 +59,9 @@ const UnsplashImageSearch: React.FC<UnsplashImageSearchProps> = ({ handleSelectI
 
   const handleLoadMore = () => {
     if (hasMore && !loading) {
-      setPage((prevPage) => prevPage + 1);
-      handleSearch(false, isRandom);
+      const nextPage = page;
+      setPage(nextPage + 1);
+      handleSearch(false, isRandom); // 현재 페이지에서 이미지를 추가로 불러옴
     }
   };
 
@@ -68,6 +74,10 @@ const UnsplashImageSearch: React.FC<UnsplashImageSearchProps> = ({ handleSelectI
   useEffect(() => {
     saveToSessionStorage();
   }, [saveToSessionStorage]);
+
+  useEffect(() => {
+    sessionStorage.setItem('unsplashPage', page.toString());
+  }, [page]);
 
   return (
     <div>
