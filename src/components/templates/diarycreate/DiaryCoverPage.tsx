@@ -127,7 +127,11 @@ const DiaryCoverPage: React.FC = () => {
             unsplash_image_position: JSON.parse(data.unsplash_image_position),
             unsplash_image_size: JSON.parse(data.unsplash_image_size),
             unsplash_image_rotation: data.unsplash_image_rotation,
-            unsplash_scale: data.unsplash_scale
+            unsplash_scale: data.unsplash_scale,
+            cover_title_fontstyle: data.cover_title_fontstyle,
+            cover_title_fontfamily: data.cover_title_fontfamily,
+            cover_title_color: data.cover_title_color,
+            cover_title_fontweight: data.cover_title_fontweight
           };
 
           setIsEditMode(true);
@@ -139,6 +143,10 @@ const DiaryCoverPage: React.FC = () => {
           setCoverBackgroundColor(parsedData.cover_bg_color);
           setCoverScale(parsedData.cover_scale);
           setCoverStageSize(parsedData.cover_stage_size);
+          setCoverTitleFontStyle(parsedData.cover_title_fontstyle);
+          setCoverTitleFontFamily(parsedData.cover_title_fontfamily);
+          setCoverTitleColor(parsedData.cover_title_color);
+          setCoverTitleFontWeight(parsedData.cover_title_fontweight);
 
           if (parsedData.cover_image) {
             const img = new window.Image();
@@ -191,7 +199,11 @@ const DiaryCoverPage: React.FC = () => {
     setUnsplashImagePosition,
     setUnsplashImageSize,
     setUnsplashImageRotation,
-    setUnsplashScale
+    setUnsplashScale,
+    setCoverTitleFontStyle,
+    setCoverTitleFontFamily,
+    setCoverTitleColor,
+    setCoverTitleFontWeight
   ]);
 
   useEffect(() => {
@@ -222,13 +234,12 @@ const DiaryCoverPage: React.FC = () => {
         coverTitleFontWeight === 700 ? 'bold' : coverTitleFontWeight === 100 ? 'lighter' : 'normal';
 
       textRef.current.fontStyle(`${fontWeightStyle} ${fontStyle}`);
-
       textRef.current.fill(coverTitleColor); // 텍스트 색상 초기화 반영
       textRef.current.fontFamily(coverTitleFontFamily); // 글꼴 초기화 반영
       // 밑줄과 취소선도 필요 시 여기에 반영
       textRef.current.getLayer()?.batchDraw();
     }
-  }, [coverTitleColor, coverTitleFontStyle, coverTitleFontFamily, coverTitleFontWeight]); // 초기화된 속성들에 대한 의존성 추가
+  }, [coverTitleColor, coverTitleFontStyle, coverTitleFontFamily, coverTitleFontWeight]);
 
   // 이미지 렌더링 시점 조정
   useEffect(() => {
@@ -244,23 +255,19 @@ const DiaryCoverPage: React.FC = () => {
 
   const resetCoverState = () => {
     resetTextProperties(); // 텍스트 관련 속성 초기화
-
     setCoverBackgroundColor('#ffffff');
     setCoverScale(1);
     setCoverStageSize({ width: 480, height: 720 });
     setCoverSelectedElement(null);
-
     setLoadedImage(null);
     setCoverImage(null);
     setCoverImagePosition({ x: 50, y: 50 });
     setCoverImageSize({ width: 0, height: 0 });
     setCoverImageRotation(0);
-
     setUnsplashImage(null);
     setUnsplashImagePosition({ x: 50, y: 50 });
     setUnsplashImageSize({ width: 0, height: 0 });
     setUnsplashImageRotation(0);
-
     setIsEditMode(false);
   };
 
@@ -268,11 +275,11 @@ const DiaryCoverPage: React.FC = () => {
     let file: File | undefined;
 
     if (eventOrFile && (eventOrFile as React.ChangeEvent<HTMLInputElement>).target) {
-      // 이벤트 객체가 전달된 경우 (로컬 이미지 업로드)
+      // 이벤트 객체가 전달된 경우
       const event = eventOrFile as React.ChangeEvent<HTMLInputElement>;
       file = event.target.files?.[0];
     } else if (eventOrFile instanceof File) {
-      // 파일 객체가 직접 전달된 경우 (로컬 이미지 업로드)
+      // 파일 객체가 직접 전달된 경우
       file = eventOrFile;
     }
 
@@ -280,9 +287,7 @@ const DiaryCoverPage: React.FC = () => {
       // 로컬 이미지 처리
       const fileExtension = file.name.split('.').pop();
       const newFileName = `${Date.now()}_${Math.random().toString(36).substring(2, 15)}.${fileExtension}`;
-
       const newFile = new File([file], newFileName, { type: file.type });
-
       setImageFile(newFile);
 
       const reader = new FileReader();
@@ -531,7 +536,7 @@ const DiaryCoverPage: React.FC = () => {
 
   const handleSaveCover = async () => {
     const result = await Swal.fire({
-      title: '커버를 저장하시겠습니까?',
+      title: '표지를 저장하시겠습니까?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: '네',
@@ -596,7 +601,11 @@ const DiaryCoverPage: React.FC = () => {
       unsplash_image_position: unsplashImage ? unsplashImagePosition : null,
       unsplash_image_size: unsplashImage ? unsplashImageSize : null,
       unsplash_scale: unsplashScale,
-      unsplash_image_rotation: unsplashImageRotation
+      unsplash_image_rotation: unsplashImageRotation,
+      cover_title_fontstyle: coverTitleFontStyle,
+      cover_title_fontfamily: coverTitleFontFamily,
+      cover_title_color: coverTitleColor,
+      cover_title_fontweight: coverTitleFontWeight
     };
 
     try {
@@ -716,7 +725,11 @@ const DiaryCoverPage: React.FC = () => {
         unsplash_image_position: JSON.stringify(unsplashImagePosition),
         unsplash_image_size: JSON.stringify(unsplashImageSize),
         unsplash_image_rotation: unsplashImageRotation,
-        unsplash_scale: unsplashScale
+        unsplash_scale: unsplashScale,
+        cover_title_fontstyle: coverTitleFontStyle,
+        cover_title_fontfamily: coverTitleFontFamily,
+        cover_title_color: coverTitleColor,
+        cover_title_fontweight: coverTitleFontWeight
       };
 
       const result = await updateCover(diaryId, coverData);
@@ -737,7 +750,7 @@ const DiaryCoverPage: React.FC = () => {
 
   const handleResetDiary = async () => {
     const confirmResult = await Swal.fire({
-      title: '다이어리를 초기화 하시겠습니까?',
+      title: '초기화 하시겠습니까? <br>모든 표지내용이 지워집니다',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: '네',
@@ -801,7 +814,11 @@ const DiaryCoverPage: React.FC = () => {
       unsplash_image_position: JSON.stringify({ x: 50, y: 60 }),
       unsplash_image_size: JSON.stringify({ width: 0, height: 0 }),
       unsplash_image_rotation: 0,
-      unsplash_scale: 1
+      unsplash_scale: 1,
+      cover_title_fontstyle: 'normal',
+      cover_title_fontfamily: 'Arial',
+      cover_title_color: '#000000',
+      cover_title_fontweight: 400
     };
 
     const Result = await updateCover(diaryId, coverData);
@@ -1021,9 +1038,9 @@ const DiaryCoverPage: React.FC = () => {
                 }}
                 className="w-full border border-gray-300 rounded p-1"
               >
-                {fontWeightOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label} {/* 사용자가 볼 수 있는 라벨 */}
+                {availableFontWeights.map((weight) => (
+                  <option key={weight} value={weight}>
+                    {weight === 100 ? '얇음' : weight === 400 ? '보통' : '두꺼움'}
                   </option>
                 ))}
               </select>
@@ -1208,7 +1225,7 @@ const DiaryCoverPage: React.FC = () => {
       <div ref={sidebarRef} className="relative z-5">
         <DiaryCoverSidebar handleSelectMenu={handleSelectMenu} />
         {selectedMenu && (
-          <div className="absolute top-0 left-full w-[16rem] h-full bg-gray-100 shadow-lg p-6 overflow-y-auto z-10">
+          <div className="absolute top-0 left-full w-[18rem] h-full bg-gray-100 shadow-lg p-6 overflow-y-auto z-10">
             <button
               onClick={() => setSelectedMenu(null)}
               className="absolute right-2 top-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full px-2 py-0.3 transition duration-300"
