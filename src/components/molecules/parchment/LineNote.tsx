@@ -2,6 +2,7 @@
 
 import { useDeletePage } from '@/lib/hooks/usePages';
 import { isNoteLineArray } from '@/lib/utils/noteLineConfirmArray';
+import useEditModeStore from '@/stores/editMode.store';
 import { supabase } from '@/supabase/client';
 import { Json } from '@/types/supabase';
 import { useRouter } from 'next/navigation';
@@ -28,6 +29,7 @@ const LineNote = ({ id }: LineNoteProps) => {
   const [globalTextColor, setGlobalTextColor] = useState('#000000');
   const [diaryId, setDiaryId] = useState('');
   const { mutate: deletePage, isPending, isError } = useDeletePage();
+  const { isEditMode } = useEditModeStore((state) => state);
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -134,6 +136,7 @@ const LineNote = ({ id }: LineNoteProps) => {
         confirmButtonText: 'OK'
       });
     }
+    router.replace(`/member/diary/${diaryId}/parchment`);
   };
 
   // const deleteData = useCallback(async () => {
@@ -241,51 +244,53 @@ const LineNote = ({ id }: LineNoteProps) => {
 
   return (
     <div className="w-full  max-w-screen-md max-h-screen overflow-auto mt-20">
-      <div className="flex justify-between mb-4 bg-white">
-        <div>
-          <label className="block m-2">
-            줄 색상:
-            <input
-              type="color"
-              value={lineColor}
-              onChange={(e) => setLineColor(e.target.value)}
-              className="ml-2 p-1 border"
-            />
-          </label>
-          <label className="block m-2">
-            줄 굵기:
-            <select
-              value={lineThickness}
-              onChange={(e) => setLineThickness(parseInt(e.target.value))}
-              className="ml-2 p-1 border"
-            >
-              <option value="1">Thin</option>
-              <option value="2">Medium</option>
-              <option value="3">Thick</option>
-            </select>
-          </label>
+      {isEditMode ? (
+        <div className="flex justify-between mb-4 bg-white">
+          <div>
+            <label className="block m-2">
+              줄 색상:
+              <input
+                type="color"
+                value={lineColor}
+                onChange={(e) => setLineColor(e.target.value)}
+                className="ml-2 p-1 border"
+              />
+            </label>
+            <label className="block m-2">
+              줄 굵기:
+              <select
+                value={lineThickness}
+                onChange={(e) => setLineThickness(parseInt(e.target.value))}
+                className="ml-2 p-1 border"
+              >
+                <option value="1">Thin</option>
+                <option value="2">Medium</option>
+                <option value="3">Thick</option>
+              </select>
+            </label>
+          </div>
+          <div>
+            <label className="block m-2">
+              줄노트 배경 색상:
+              <input
+                type="color"
+                value={bgColor}
+                onChange={(e) => setBgColor(e.target.value)}
+                className="ml-2 p-1 border"
+              />
+            </label>
+            <label className="block m-2">
+              전체 텍스트 색상:
+              <input
+                type="color"
+                value={globalTextColor}
+                onChange={(e) => setGlobalTextColor(e.target.value)}
+                className="ml-2 p-1 border"
+              />
+            </label>
+          </div>
         </div>
-        <div>
-          <label className="block m-2">
-            줄노트 배경 색상:
-            <input
-              type="color"
-              value={bgColor}
-              onChange={(e) => setBgColor(e.target.value)}
-              className="ml-2 p-1 border"
-            />
-          </label>
-          <label className="block m-2">
-            전체 텍스트 색상:
-            <input
-              type="color"
-              value={globalTextColor}
-              onChange={(e) => setGlobalTextColor(e.target.value)}
-              className="ml-2 p-1 border"
-            />
-          </label>
-        </div>
-      </div>
+      ) : null}
       <div
         className="border p-4 ml-3 mr-3"
         style={{
@@ -315,15 +320,18 @@ const LineNote = ({ id }: LineNoteProps) => {
                   color: globalTextColor,
                   width: '100%'
                 }}
+                disabled={!isEditMode}
               />
             </div>
           ))}
         </div>
       </div>
       <div className="flex justify-between mt-4">
-        <button onClick={updateData} className="p-2 bg-green-500 text-white rounded">
-          저장하기
-        </button>
+        {isEditMode ? (
+          <button onClick={updateData} className="p-2 bg-green-500 text-white rounded">
+            저장하기
+          </button>
+        ) : null}
         {/* {!dataExists ? (
           <button className="p-2 bg-blue-500 text-white rounded">저장</button>
         ) : (
@@ -331,9 +339,11 @@ const LineNote = ({ id }: LineNoteProps) => {
             수정하기
           </button>
         )} */}
-        <button onClick={handleDelete} className="p-2 bg-red-500 text-white rounded">
-          삭제하기
-        </button>
+        {isEditMode ? (
+          <button onClick={handleDelete} className="p-2 bg-red-500 text-white rounded">
+            삭제하기
+          </button>
+        ) : null}
       </div>
     </div>
   );
