@@ -16,51 +16,28 @@ import { supabase } from '@/supabase/client';
 // 이로 인해 사용자의 프로필 이미지가 변경되면,
 // 해당 상태가 즉시 반영되고, 한 번의 새로고침으로 변경된 상태가 바로 적용됩니다.
 
-// GrowthSummary에서는 loading 상태를 통해 데이터 로딩이 완료될 때까지 컴포넌트가 리렌더링되지 않도록 처리하고있어,
+// GrowthSummary에서는 loading 상태를 통해
+// 데이터 로딩이 완료될 때까지 컴포넌트가 리렌더링되지 않도록 처리하고있어,
 // 데이터가 준비된 후에는 한 번의 새로고침으로 모든 상태가 갱신됩니다.
 
 const GrowthSummary = () => {
-  const { nickname, levelName, membershipDays, userId } = useUserStore((state) => state);
-  const [levelId, setLevelId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true); // 로딩 상태 추가
+  const { nickname, levelName, membershipDays, userId, levelId, setLevelId } = useUserStore((state) => state);
+  // const [levelId, setLevelId] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log('GrowthSummary useEffect triggered'); // 이 로그가 출력되는지 확인
     const fetchUserLevelId = async () => {
-      console.log('Fetching user level ID for userId:', userId);
-      setLoading(true); // 데이터 로딩 시작
-      const { data: user, error } = await supabase.from('users').select('level_id').eq('id', userId).single();
+      if (userId) {
+        const { data: user, error } = await supabase.from('users').select('level_id').eq('id', userId).single();
 
-      if (error) {
-        console.error('사용자 레벨 ID 가져오기 실패:', error);
-      } else {
-        console.log('Fetched level ID:', user.level_id);
-        setLevelId(user.level_id);
+        if (!error && user) {
+          setLevelId(user.level_id); //Global 상태 업데이트
+        } else {
+          console.error('사용자 레벨ID 가져오기 실패: ', error);
+        }
       }
-      setLoading(false); // 데이터 로딩 완료
     };
-
-    if (userId) {
-      fetchUserLevelId();
-    } else {
-      setLoading(false); // userId가 없을 때 로딩 중 상태 해제
-    }
-  }, [userId, membershipDays]);
-
-  console.log(
-    'Rendering GrowthSummary with membershipDays:',
-    membershipDays,
-    'nickname:',
-    nickname,
-    'levelName:',
-    levelName
-  );
-
-  // 로딩 중이거나 데이터가 없는 경우 로딩 메시지 표시
-  if (loading || !nickname || !levelName) {
-    // if (loading || !membershipDays || !nickname || !levelName)
-    return <div>로딩 중...</div>;
-  }
+    fetchUserLevelId();
+  }, [userId, setLevelId]);
 
   return (
     <>
