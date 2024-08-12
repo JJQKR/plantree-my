@@ -48,6 +48,10 @@ html {
   z-index: 0 !important;
 }
 
+html {
+  font-size: 10px;
+}
+
 .custom-height {
   height: 80vh;
 }
