@@ -24,7 +24,36 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
     }
   };
 
+  // 이메일 형식 검사 함수
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const signUp = async () => {
+    // 이메일 형식 확인
+    if (!isValidEmail(email)) {
+      Swal.fire({
+        title: '회원가입 실패.',
+        text: '이메일 형식을 지켜주세요!',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+
+    // 비밀번호 길이 확인
+    if (password.length < 6) {
+      Swal.fire({
+        title: '회원가입 실패.',
+        text: '비밀번호는 6자 이상으로 설정해주세요!',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+
+    // 비밀번호 확인
     if (password !== confirmPassword) {
       setPasswordError('비밀번호가 일치하지 않습니다.');
       return;
@@ -97,7 +126,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[999]"
       onClick={handleBackgroundClick}
     >
-      <div className="rounded-lg bg-white p-4 w-[400px] h-[520px] flex flex-col justify-center items-center">
+      <div className="rounded-lg bg-white p-4 w-[400px] h-[400px] flex flex-col justify-center items-center">
         <h1 className="text-4xl font-black mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
         <h2 className="text-2xl font-bold mb-4 text-center text-black">회원가입</h2>
         <input

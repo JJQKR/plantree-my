@@ -66,24 +66,77 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
       email,
       password
     });
-    if (error) throw error;
-    return data;
+    return { data, error };
   };
 
+  // 이메일 형식 검사 함수
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // 로그인 처리 함수
   const handleSignIn = async (email: string, password: string, fromAutoLogin = false) => {
     try {
-      const { user } = await signIn(email, password);
-      if (!user) {
+      // 이메일과 비밀번호가 비어 있는지 확인
+      if (!email || !password) {
         Swal.fire({
-          title: '로그인 실패.',
-          text: '등록되지 않은 사용자입니다!',
+          title: '로그인 실패',
+          text: '아이디와 비밀번호를 입력해주세요!',
           icon: 'error',
           confirmButtonText: 'OK'
         });
         return;
       }
-      setUserId(user.id);
-      console.log('로그인 성공:', user);
+
+      // 이메일 형식 검사
+      if (!isValidEmail(email)) {
+        Swal.fire({
+          title: '로그인 실패',
+          text: '아이디는 이메일 형식이어야 합니다!',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+        return;
+      }
+
+      const { data, error } = await signIn(email, password);
+
+      // 오류가 있는 경우
+      if (error) {
+        if (error.message === 'Invalid login credentials') {
+          // 아이디가 존재하지 않는 경우
+          Swal.fire({
+            title: '로그인 실패',
+            text: '아이디, 비밀번호를 다시 한 번 확인 해주세요!',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        } else {
+          // 기타 로그인 오류
+          Swal.fire({
+            title: '로그인 실패',
+            text: error.message,
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        }
+        return;
+      }
+
+      // 비밀번호가 일치하지 않는 경우
+      if (!data.user) {
+        Swal.fire({
+          title: '로그인 실패',
+          text: '비밀번호가 일치하지 않습니다!',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+        return;
+      }
+
+      setUserId(data.user.id);
+      console.log('로그인 성공:', data.user);
       if (rememberMe) {
         localStorage.setItem('email', email);
         localStorage.setItem('password', password);
@@ -110,7 +163,7 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
       console.error('로그인 실패:', error);
       setError(error instanceof Error ? error.message : 'An error occurred.');
       Swal.fire({
-        title: '로그인 실패!',
+        title: '로그인 실패',
         text: '다시 시도해주세요!',
         icon: 'error',
         confirmButtonText: 'OK'
@@ -191,13 +244,13 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
               <div className="flex flex-col gap-2 mt-4">
                 <button
                   type="submit"
-                  className="w-full px-4 py-3 font-bold bg-gray-500 hover:bg-gray-700 hover:text-white text-black rounded"
+                  className="w-[350px] h-[50px] px-4 py-3 font-bold bg-gray-500 hover:bg-gray-700 hover:text-white text-black rounded"
                 >
                   로그인
                 </button>
                 <button
                   type="button"
-                  className="w-full px-4 py-3 font-bold bg-blue-500 hover:bg-blue-700 hover:text-white text-black rounded"
+                  className="w-[350px] h-[50px] py-3 font-bold bg-blue-500 hover:bg-blue-700 hover:text-white text-black rounded"
                   onClick={onSignupClick}
                 >
                   회원가입
