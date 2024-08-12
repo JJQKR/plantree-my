@@ -157,9 +157,9 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
       <div className="relative border-2 flex flex-col gap-4 m-auto p-4 h-[60rem]">
         <div className="flex gap-2">
           <div className="w-1/3">
+            <label>date</label>
             <ParchmentInput
               identity="tenMinPlannerRegular"
-              label="date"
               id="date"
               type="date"
               onChange={handleDate}
@@ -168,9 +168,9 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
             />
           </div>
           <div className="w-1/3 relative">
+            <label>d-day</label>
             <ParchmentInput
               identity="tenMinPlannerRegular"
-              label="d-day"
               id="d-day"
               type="date"
               onChange={handleDdayDate}
@@ -180,9 +180,9 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
             <span className="absolute right-3 top-0 font-bold">{localPlanner.d_day}</span>
           </div>
           <div className="w-1/3">
+            <label>goal</label>
             <ParchmentInput
               identity="tenMinPlannerRegular"
-              label="goal"
               id="goal"
               onChange={handleGoal}
               value={localPlanner.goal || ''}
@@ -191,7 +191,8 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
           </div>
         </div>
         <div className="flex flex-row gap-4 ">
-          <div className="w-1/2">
+          <div className="w-1/2 h-[40rem]">
+            <div>todolist</div>
             <Todolist
               tenMinPlannerId={id}
               todoList={todoList}
@@ -200,6 +201,7 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
             />
           </div>
           <div className="w-1/2 h-[40rem]">
+            <div>timetable</div>
             <Timetable selectedColorTodo={selectedColorTodo} timetable={timetable} setTimetable={setTimetable} />
           </div>
         </div>
@@ -207,7 +209,7 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
           <label htmlFor="memo">memo</label>
           <textarea
             id="memo"
-            className="h-[3rem] w-full"
+            className="h-[8.5rem] w-full"
             onChange={handleMemo}
             value={localPlanner.memo || ''}
             disabled={!isEditMode}
