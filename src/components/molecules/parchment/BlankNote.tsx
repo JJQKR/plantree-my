@@ -4,6 +4,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { supabase } from '@/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useDeletePage } from '@/lib/hooks/usePages';
+import useEditModeStore from '@/stores/editMode.store';
 
 interface BlankNoteProps {
   id: string;
@@ -16,7 +17,7 @@ const BlankNote = ({ id }: BlankNoteProps) => {
   const [date, setDate] = useState('');
   const [title, setTitle] = useState('');
   const [currentHeight, setCurrentHeight] = useState(0);
-  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  // const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [originalContent, setOriginalContent] = useState({
     bgColor: '#ffffff',
     globalTextColor: '#000000',
@@ -26,6 +27,8 @@ const BlankNote = ({ id }: BlankNoteProps) => {
   });
   const [diaryId, setDiaryId] = useState('');
   const { mutate: deletePage, isPending, isError } = useDeletePage();
+  const { isEditMode } = useEditModeStore((state) => state);
+
   const router = useRouter();
 
   const editableDivRef = useRef<HTMLDivElement>(null);
@@ -68,7 +71,7 @@ const BlankNote = ({ id }: BlankNoteProps) => {
         date: data.date ?? '',
         title: data.title ?? ''
       });
-      setIsEditMode(false);
+      // setIsEditMode(false);
       setDiaryId(data.diary_id ?? '');
     } else {
       setBgColor('#ffffff');
@@ -76,7 +79,7 @@ const BlankNote = ({ id }: BlankNoteProps) => {
       setContent('');
       setDate('');
       setTitle('');
-      setIsEditMode(true);
+      // setIsEditMode(true);
     }
   };
 
@@ -124,6 +127,9 @@ const BlankNote = ({ id }: BlankNoteProps) => {
     };
 
     await supabase.from('blank_note').update(newData).eq('id', id);
+
+    alert('내용이 저장되었습니다.');
+    router.replace(`/member/diary/${diaryId}/parchment`);
   };
 
   const handleDelete = async () => {
@@ -157,7 +163,7 @@ const BlankNote = ({ id }: BlankNoteProps) => {
         title: title
       });
     }
-    setIsEditMode(!isEditMode);
+    // setIsEditMode(!isEditMode);
   };
 
   return (
@@ -175,16 +181,18 @@ const BlankNote = ({ id }: BlankNoteProps) => {
               disabled={!isEditMode}
             />
           </label>
-          <label className="block m-2">
-            노트 배경 색상:
-            <input
-              type="color"
-              value={bgColor}
-              onChange={(e) => setBgColor(e.target.value)}
-              className="ml-2 p-1 border"
-              disabled={!isEditMode}
-            />
-          </label>
+          {isEditMode ? (
+            <label className="block m-2">
+              노트 배경 색상:
+              <input
+                type="color"
+                value={bgColor}
+                onChange={(e) => setBgColor(e.target.value)}
+                className="ml-2 p-1 border"
+                disabled={!isEditMode}
+              />
+            </label>
+          ) : null}
         </div>
         <div>
           <label htmlFor="date" className="block m-2">
@@ -198,16 +206,18 @@ const BlankNote = ({ id }: BlankNoteProps) => {
               disabled={!isEditMode}
             />
           </label>
-          <label className="block m-2">
-            텍스트 색상:
-            <input
-              type="color"
-              value={globalTextColor}
-              onChange={(e) => setGlobalTextColor(e.target.value)}
-              className="ml-2 p-1 border"
-              disabled={!isEditMode}
-            />
-          </label>
+          {isEditMode ? (
+            <label className="block m-2">
+              텍스트 색상:
+              <input
+                type="color"
+                value={globalTextColor}
+                onChange={(e) => setGlobalTextColor(e.target.value)}
+                className="ml-2 p-1 border"
+                disabled={!isEditMode}
+              />
+            </label>
+          ) : null}
         </div>
       </div>
       <div
@@ -228,19 +238,15 @@ const BlankNote = ({ id }: BlankNoteProps) => {
         onKeyDown={handleKeyDown}
       ></div>
       {isEditMode ? (
-        <>
+        <div>
           <button onClick={handleSaveOrUpdate} className="p-2 bg-blue-500 text-white rounded mr-2 mt-3">
-            저장
+            저장하기
           </button>
           <button onClick={handleDelete} className="p-2 bg-red-500 text-white rounded mr-2">
-            삭제
+            삭제하기
           </button>
-        </>
-      ) : (
-        <button onClick={handleEditModeToggle} className="p-2 bg-green-500 text-white rounded">
-          편집 모드
-        </button>
-      )}
+        </div>
+      ) : null}
     </div>
   );
 };
