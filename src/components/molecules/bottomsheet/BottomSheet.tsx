@@ -148,7 +148,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
             className="bg-gray-100 rounded-lg shadow-md p-4 w-32 h-40 flex-none cursor-pointer z-30"
           >
             {pages.map((page) => {
-              return <BottomSheetCard page={page} moveCard={moveCard} onClick={onToggle} />;
+              return <BottomSheetCard key={page.id} page={page} moveCard={moveCard} onClick={onToggle} />;
             })}
           </div>
           <div

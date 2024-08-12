@@ -151,9 +151,9 @@ const LandingMain = () => {
           </div>
           <div className="flex flex-col m-3 font-black text-right">
             <div className="mt-9">
-              <p className="text-4xl text-green-600 mt-1 mb-4">'기억나무'와 함께 일상을 기록해요</p>
+              <p className="text-4xl text-green-600 mt-1 mb-4">기억나무와 함께 일상을 기록해요</p>
               <p className="text-3xl">
-                Plantree 서비스에는 이름을 본딴 '기억나무' 가 있어요! 처음엔 씨앗의 모습이지만 저희와 함께 다이어리를
+                Plantree 서비스에는 이름을 본딴 기억나무가 있어요! 처음엔 씨앗의 모습이지만 저희와 함께 다이어리를
                 만들고 일상을 기록하다 보면 열심히 자랄거에요
               </p>
             </div>
@@ -178,7 +178,7 @@ const LandingMain = () => {
               </div>
               <div className="ml-6 flex flex-col items-center text-gray-600 text-center mt-3">
                 <p className="text-md">솔직히 저는 다이어리를 주로 사용하진 않는 편이에요</p>
-                <p>그래서 이번 프로젝트에 임할 때 '낯선 사람들도 익숙하게' 느끼게 해보자 라는 마인드를 가지고</p>
+                <p>그래서 이번 프로젝트에 임할 때 낯선 사람들도 익숙하게 느끼게 해보자 라는 마인드를 가지고</p>
                 <p>내가 생각하기에도 한 번 써보고 싶다 라고 </p>
                 <p>느낄만한 서비스를 만들고자 했습니다.</p>
               </div>
