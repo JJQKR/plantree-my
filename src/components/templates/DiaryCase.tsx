@@ -161,7 +161,7 @@ const DiaryCase: React.FC = () => {
         }`}
       >
         {gridView ? (
-          <div className="grid grid-cols-3 gap-10 max-w-full">
+          <div className="grid grid-cols-3 gap-10 max-w-full mt-[100px]">
             {diaryCovers.length > 0 ? (
               diaryCovers.map((cover, index) =>
                 cover.cover_id ? (
@@ -170,70 +170,64 @@ const DiaryCase: React.FC = () => {
                     className="flex flex-col items-center justify-center cursor-pointer"
                     onClick={() => handleDiaryClick(cover.diary_id as string)}
                     style={{
-                      transform: `scale(${cover.cover_scale})`,
-                      width: cover.cover_stage_size.width,
-                      height: cover.cover_stage_size.height
+                      width: '250px',
+                      height: '400px'
                     }}
                   >
-                    <div className="relative flex flex-col items-center justify-center w-[250px] h-[400px] rounded shadow-md text-2xl font-bold text-white overflow-hidden">
-                      <div
-                        className="relative flex flex-col items-center justify-center w-full h-full rounded"
-                        style={{ backgroundColor: cover.cover_bg_color }}
+                    <div className="relative flex flex-col items-center justify-center w-full h-full rounded shadow-md overflow-hidden">
+                      <Stage
+                        width={250} // 고정된 너비
+                        height={400} // 고정된 높이
+                        scaleX={250 / cover.cover_stage_size.width} // 비율에 맞춰 크기 조정
+                        scaleY={400 / cover.cover_stage_size.height} // 비율에 맞춰 크기 조정
                       >
-                        <Stage
-                          width={cover.cover_stage_size.width}
-                          height={cover.cover_stage_size.height}
-                          scaleX={cover.cover_scale}
-                          scaleY={cover.cover_scale}
-                        >
-                          <Layer>
-                            <Rect
-                              x={0}
-                              y={0}
-                              width={cover.cover_stage_size.width}
-                              height={cover.cover_stage_size.height}
-                              fillPatternImage={
-                                cover.cover_bg_color.startsWith('http')
-                                  ? (() => {
-                                      const img = new window.Image();
-                                      img.src = cover.cover_bg_color;
-                                      return img;
-                                    })()
-                                  : undefined
-                              }
-                              fill={cover.cover_bg_color.startsWith('http') ? undefined : cover.cover_bg_color}
+                        <Layer>
+                          <Rect
+                            x={0}
+                            y={0}
+                            width={cover.cover_stage_size.width}
+                            height={cover.cover_stage_size.height}
+                            fillPatternImage={
+                              cover.cover_bg_color.startsWith('http')
+                                ? (() => {
+                                    const img = new window.Image();
+                                    img.src = cover.cover_bg_color;
+                                    return img;
+                                  })()
+                                : undefined
+                            }
+                            fill={cover.cover_bg_color.startsWith('http') ? undefined : cover.cover_bg_color}
+                          />
+                          <Text
+                            text={cover.cover_title}
+                            fontSize={cover.cover_title_fontsize}
+                            x={cover.cover_title_position.x}
+                            y={cover.cover_title_position.y}
+                            width={cover.cover_title_width}
+                            rotation={cover.cover_title_rotation}
+                          />
+                          {loadedImages[index].src && (
+                            <KonvaImage
+                              image={loadedImages[index]}
+                              x={cover.cover_image_position.x}
+                              y={cover.cover_image_position.y}
+                              width={cover.cover_image_size.width}
+                              height={cover.cover_image_size.height}
+                              rotation={cover.cover_image_rotation}
                             />
-                            <Text
-                              text={cover.cover_title}
-                              fontSize={cover.cover_title_fontsize}
-                              x={cover.cover_title_position.x}
-                              y={cover.cover_title_position.y}
-                              width={cover.cover_title_width}
-                              rotation={cover.cover_title_rotation}
+                          )}
+                          {unsplashImages[index].src && (
+                            <KonvaImage
+                              image={unsplashImages[index]}
+                              x={cover.unsplash_image_position.x}
+                              y={cover.unsplash_image_position.y}
+                              width={cover.unsplash_image_size.width}
+                              height={cover.unsplash_image_size.height}
+                              rotation={cover.unsplash_image_rotation}
                             />
-                            {loadedImages[index].src && (
-                              <KonvaImage
-                                image={loadedImages[index]}
-                                x={cover.cover_image_position.x}
-                                y={cover.cover_image_position.y}
-                                width={cover.cover_image_size.width}
-                                height={cover.cover_image_size.height}
-                                rotation={cover.cover_image_rotation}
-                              />
-                            )}
-                            {unsplashImages[index].src && (
-                              <KonvaImage
-                                image={unsplashImages[index]}
-                                x={cover.unsplash_image_position.x}
-                                y={cover.unsplash_image_position.y}
-                                width={cover.unsplash_image_size.width}
-                                height={cover.unsplash_image_size.height}
-                                rotation={cover.unsplash_image_rotation}
-                              />
-                            )}
-                          </Layer>
-                        </Stage>
-                      </div>
+                          )}
+                        </Layer>
+                      </Stage>
                     </div>
                   </div>
                 ) : null
