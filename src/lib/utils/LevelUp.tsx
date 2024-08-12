@@ -11,7 +11,7 @@ interface Level {
 }
 
 const LevelUp = () => {
-  const { userId, attendance, setLevelName } = useUserStore((state) => state);
+  const { userId, attendance, setLevelName, setUpdatedLevelId } = useUserStore((state) => state);
 
   useEffect(() => {
     const updateUserLevel = async (userId: string, attendance: number) => {
@@ -44,6 +44,7 @@ const LevelUp = () => {
           console.error('사용자 레벨 업데이트 실패:', updateError);
         } else {
           setLevelName(newLevelName);
+          setUpdatedLevelId(newLevelId);
         }
       }
     };
@@ -51,7 +52,7 @@ const LevelUp = () => {
     if (userId) {
       updateUserLevel(userId, attendance);
     }
-  }, [userId, attendance, setLevelName]);
+  }, [userId, attendance, setLevelName, setUpdatedLevelId]);
 
   return null;
 };

@@ -10,9 +10,8 @@ import { DiaryCover } from '@/types/main';
 import Image from 'next/image';
 
 const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { nickname, levelName, attendance, userId, levelId, setLevelId } = useUserStore((state) => state);
+  const { nickname, levelName, attendance, userId, setLevelId, updatedLevelId } = useUserStore((state) => state);
   const [diaryCovers, setDiaryCovers] = useState<DiaryCover[]>([]);
-  // const [levelId, setLevelId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,7 +23,7 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           .single();
 
         if (!userError && user) {
-          setLevelId(user.level_id); //zustand로 전역 상태 관리하도록 변경
+          setLevelId(user.level_id); // zustand로 전역 상태 관리하도록 변경
 
           const { data: coversData, error: coversError } = await supabase
             .from('diary_covers')
@@ -58,9 +57,9 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 </div>
               </Link>
               <div className="flex flex-col items-center">
-                {levelId ? (
+                {updatedLevelId ? (
                   <div className="w-[7.5rem] h-[7.5rem]">
-                    <ProfileStages levelId={levelId} />
+                    <ProfileStages size={120} /> {/* updatedLevelId 상태를 사용 */}
                   </div>
                 ) : (
                   <div style={{ width: '7.5rem', height: '7.5rem' }} className="relative">
