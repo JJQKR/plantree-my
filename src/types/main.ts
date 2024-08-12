@@ -46,5 +46,46 @@ export type DiaryCover = {
   cover_image_size: any | null; // JSON 타입으로 변경 가능
   cover_scale: number | null;
   cover_title: string | null;
-  unsplash_image?: string;
+  unsplash_image: string | null;
+  cover_title_fontstyle?: string | null;
+  cover_title_fontfamily?: string | null;
+  cover_title_color?: string | null;
+  cover_title_fontweight?: string | null;
+};
+
+export type Position = {
+  x: number;
+  y: number;
+};
+
+export type Size = {
+  width: number;
+  height: number;
+};
+
+export type CoverData = {
+  cover_title: string;
+  cover_title_position: Position;
+  cover_title_fontsize: number;
+  cover_title_width: number;
+  cover_title_rotation: number;
+  cover_image: string;
+  cover_image_position: Position;
+  cover_image_size: Size;
+  cover_image_rotation: number;
+  cover_bg_color: string;
+  cover_scale: number;
+  cover_stage_size: Size;
+  unsplash_image: string;
+  unsplash_image_position: Position;
+  unsplash_image_size: Size;
+  unsplash_image_rotation: number;
+  diary_id?: string;
+  cover_id: string;
+  cover_title_fontstyle?: string;
+  cover_title_fontfamily?: string;
+  cover_title_color?: string;
+  cover_title_fontweight?: string;
+  created_at: string;
+  // bookshelf_order: number;
 };

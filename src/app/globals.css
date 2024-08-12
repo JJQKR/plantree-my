@@ -10,11 +10,15 @@ body,
   padding: 0;
 }
 
+html {
+  font-size: 10px;
+}
+
 body {
   width: 100%;
   height: 100%;
   margin: 0 auto; /* 화면 중앙에 배치 */
-  background: #eee;
+  background: #fafafa;
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
   font-size: 14px;
   /* overflow: hidden; */
@@ -46,6 +50,10 @@ html {
   justify-content: center;
   padding: 0; /* 슬라이드 사이의 간격 조정 */
   z-index: 0 !important;
+}
+
+html {
+  font-size: 10px;
 }
 
 .custom-height {

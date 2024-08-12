@@ -8,6 +8,7 @@ import ColorModal from './ColorModal';
 import { Todo } from './TenMinPlanner';
 import useParchmentModalStore from '../../../stores/parchment.modal.store';
 import { getBackgroundColorClass, getColorClass } from '../../../lib/utils/tenMinPlannerColor';
+import useEditModeStore from '@/stores/editMode.store';
 
 interface TodolistProps {
   tenMinPlannerId: string;
@@ -20,6 +21,8 @@ const Todolist = ({ tenMinPlannerId, todoList, setTodoList, setSelectedColorTodo
   const [todoInput, setTodoInput] = useState<string>('');
   const [editingId, setEditingId] = useState('');
   const [selectedTodoId, setSelectedTodoId] = useState('');
+
+  const { isEditMode } = useEditModeStore((state) => state);
 
   const { isTenMinplannerColorModalOpen, toggleTenMinplannerColorModal } = useParchmentModalStore((state) => state);
   // const { mutate: createTenMinTodo } = useCreateTenMinTodo();
@@ -91,8 +94,7 @@ const Todolist = ({ tenMinPlannerId, todoList, setTodoList, setSelectedColorTodo
   };
 
   return (
-    <div className="border-2 border-gray-500 h-[40rem]">
-      <h2>todolist</h2>
+    <div className="border-2  h-[38rem]">
       <div className="w-ful">
         <ul className="relative">
           {todoList.map((todo) => {
@@ -110,31 +112,45 @@ const Todolist = ({ tenMinPlannerId, todoList, setTodoList, setSelectedColorTodo
                 >
                   <FaCircle />
                 </span>
-                <input type="checkbox" checked={todo.isDone} onChange={() => handleToggle(todo.id)} />
+                <input
+                  type="checkbox"
+                  checked={todo.isDone}
+                  onChange={() => handleToggle(todo.id)}
+                  disabled={!isEditMode}
+                />
                 {editingId === todo.id ? (
                   <input
                     type="text"
                     value={todo.text}
                     onChange={(e) => handleEditingChange(e, todo.id)}
                     onKeyUp={(e) => submitEdit(todo.id, e)}
+                    disabled={!isEditMode}
                   />
                 ) : (
                   <span onClick={() => startEditing(todo.id)}>{todo.text}</span>
                 )}
                 <div className="absolute right-1">
-                  <button onClick={() => handleSelectTodo(todo)}>선택</button>
-                  <button onClick={() => removeTodo(todo.id)}>✕</button>
+                  {isEditMode ? <button onClick={() => handleSelectTodo(todo)}>선택</button> : null}
+                  {isEditMode ? <button onClick={() => removeTodo(todo.id)}>✕</button> : null}
                 </div>
               </li>
             );
           })}
         </ul>
-        <div className="w-full">
-          <input type="text" value={todoInput} onChange={updateTodoInput} onKeyUp={submitOnEnter} className="w-11/12" />
-          <button onClick={handleAddTodo}>
-            <FaPlus />
-          </button>
-        </div>
+        {isEditMode ? (
+          <div className="w-full">
+            <input
+              type="text"
+              value={todoInput}
+              onChange={updateTodoInput}
+              onKeyUp={submitOnEnter}
+              className="w-11/12"
+            />
+            <button onClick={handleAddTodo}>
+              <FaPlus />
+            </button>
+          </div>
+        ) : null}
       </div>
       {isTenMinplannerColorModalOpen && <ColorModal todoId={selectedTodoId} changeTodoColor={changeTodoColor} />}
     </div>

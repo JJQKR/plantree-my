@@ -12,24 +12,21 @@ import { DiaryCover } from '@/types/main';
 import Image from 'next/image';
 
 const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { nickname, levelName, attendance, userId } = useUserStore((state) => state);
+  const { nickname, levelName, attendance, userId, levelId, setLevelId } = useUserStore((state) => state);
   const [diaryCovers, setDiaryCovers] = useState<DiaryCover[]>([]);
-  const [levelId, setLevelId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  // const [levelId, setLevelId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
       if (userId) {
         const { data: user, error: userError } = await supabase
           .from('users')
           .select('id, level_id')
           .eq('id', userId)
           .single();
-        if (userError) {
-          console.error('레벨 ID 가져오기 실패:', userError);
-        } else {
-          setLevelId(user.level_id);
+
+        if (!userError && user) {
+          setLevelId(user.level_id); // zustand로 전역 상태 관리하도록 변경
 
           const { data: coversData, error: coversError } = await supabase
             .from('diary_covers')
@@ -39,28 +36,24 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           if (coversError) {
             console.error('다이어리 커버 정보 가져오기 실패:', coversError);
           } else {
+            // 생성일 기준으로 커버 데이터 정렬 (가장 최근 것이 가장 앞에 위치)
+            coversData.sort(
+              (a, b) => new Date((a as any).created_at).getTime() - new Date((b as any).created_at).getTime()
+            );
             setDiaryCovers(coversData);
           }
         }
       }
-      setLoading(false);
     };
 
     fetchData();
-  }, [userId]);
-
-  if (loading) {
-    return <div>로딩 중...</div>;
-  }
+  }, [userId, setLevelId]);
 
   return (
     <div className="fixed top-40 left-0 w-[20rem] bg-[#E6F3E6] text-white">
       <FetchUserData />
       <AttendanceCheck />
       <div className="p-[2.5rem]">
-        {/* <button onClick={onClose} className="mb-4 text-[20px] text-black">
-          Close
-        </button> */}
         <h1 className="my-[1rem] text-[#727272] text-[1.13rem] font-semibold">내 정보</h1>
         <nav>
           <ul className="flex flex-col items-center justify-center space-y-4">
@@ -74,7 +67,7 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 {levelId ? (
                   <div className="w-[7.5rem] h-[7.5rem]">
                     <ProfileStages levelId={levelId} />
-                  </div> // 레벨 ID가 존재할 때만 렌더링
+                  </div>
                 ) : (
                   <div style={{ width: '7.5rem', height: '7.5rem' }} className="relative">
                     <Image
@@ -113,7 +106,9 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     backgroundImage: cover.cover_bg_color ? `url(${cover.cover_bg_color})` : 'none',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
-                    color: cover.unsplash_image ? 'white' : 'black'
+                    color: cover.cover_title_color || 'black', // 텍스트 색깔 적용
+                    fontFamily: cover.cover_title_fontfamily || 'inherit', // 폰트 패밀리 적용
+                    fontWeight: cover.cover_title_fontweight || 'normal' // 폰트 굵기 적용
                   }}
                 >
                   {cover.cover_title || '제목 없음'}

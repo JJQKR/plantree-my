@@ -8,6 +8,7 @@ import { TodoType } from '@/api/tenMinPlanner.api';
 import ParchmentInput from '@/components/atoms/ParchmentInput';
 import { useRouter } from 'next/navigation';
 import { useDeletePage } from '@/lib/hooks/usePages';
+import useEditModeStore from '@/stores/editMode.store';
 
 /**
  * 1. 속지 내용 변경 -> localPlanner 변경
@@ -45,6 +46,7 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
   const [timetable, setTimetable] = useState({});
   const [diaryId, setDiaryId] = useState('');
   const [selectedColorTodo, setSelectedColorTodo] = useState<Todo | null>(null);
+  const { isEditMode } = useEditModeStore((state) => state);
 
   const { mutate: deletePage, isPending, isError } = useDeletePage();
   const router = useRouter();
@@ -129,6 +131,8 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
         timetable: timetable
       })
       .eq('id', id);
+
+    router.replace(`/member/diary/${diaryId}/parchment`);
   };
 
   const handleDelete = async () => {
@@ -141,50 +145,54 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
         alert('삭제 중 오류가 발생했습니다');
       } else {
         alert('삭제되었습니다!');
-        router.push(`/member/diary/${diaryId}/parchment`);
+        router.replace(`/member/diary/${diaryId}/parchment`);
       }
     }
   };
 
   return (
     <div className="w-full max-w-screen-md h-[60rem] overflow-auto mt-1">
-      <button onClick={onSubmit}>저장하기</button>
-      <button onClick={handleDelete}>삭제하기</button>
+      {isEditMode ? <button onClick={onSubmit}>저장하기</button> : null}
+      {isEditMode ? <button onClick={handleDelete}>삭제하기</button> : null}
       <div className="relative border-2 flex flex-col gap-4 m-auto p-4 h-[60rem]">
         <div className="flex gap-2">
           <div className="w-1/3">
+            <label>date</label>
             <ParchmentInput
               identity="tenMinPlannerRegular"
-              label="date"
               id="date"
               type="date"
               onChange={handleDate}
               value={localPlanner.date || ''}
+              disabled={!isEditMode}
             />
           </div>
           <div className="w-1/3 relative">
+            <label>d-day</label>
             <ParchmentInput
               identity="tenMinPlannerRegular"
-              label="d-day"
               id="d-day"
               type="date"
               onChange={handleDdayDate}
               value={localPlanner.d_day_date || ''}
+              disabled={!isEditMode}
             />
             <span className="absolute right-3 top-0 font-bold">{localPlanner.d_day}</span>
           </div>
           <div className="w-1/3">
+            <label>goal</label>
             <ParchmentInput
               identity="tenMinPlannerRegular"
-              label="goal"
               id="goal"
               onChange={handleGoal}
               value={localPlanner.goal || ''}
+              disabled={!isEditMode}
             />
           </div>
         </div>
         <div className="flex flex-row gap-4 ">
-          <div className="w-1/2">
+          <div className="w-1/2 h-[40rem]">
+            <div>todolist</div>
             <Todolist
               tenMinPlannerId={id}
               todoList={todoList}
@@ -193,12 +201,19 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
             />
           </div>
           <div className="w-1/2 h-[40rem]">
+            <div>timetable</div>
             <Timetable selectedColorTodo={selectedColorTodo} timetable={timetable} setTimetable={setTimetable} />
           </div>
         </div>
         <div>
           <label htmlFor="memo">memo</label>
-          <textarea id="memo" className="h-[3rem] w-full" onChange={handleMemo} value={localPlanner.memo || ''} />
+          <textarea
+            id="memo"
+            className="h-[8.5rem] w-full"
+            onChange={handleMemo}
+            value={localPlanner.memo || ''}
+            disabled={!isEditMode}
+          />
         </div>
       </div>
     </div>

@@ -1,7 +1,5 @@
 'use client';
 
-import { IoIosArrowBack } from 'react-icons/io';
-import { IoIosArrowForward } from 'react-icons/io';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 import DiaryContents from './diarycreate/DiaryContents';
 import { useEffect, useState } from 'react';
@@ -12,14 +10,14 @@ import useParchmentModalStore from '@/stores/parchment.modal.store';
 import { useDeletePages, usePageToDiaryId } from '@/lib/hooks/usePages';
 import { useDeleteDiary } from '@/lib/hooks/useDiaries';
 import usePageStore from '@/stores/pages.store';
+import useEditModeStore from '@/stores/editMode.store';
+import { FaChevronLeft } from 'react-icons/fa6';
+import { FaChevronRight } from 'react-icons/fa6';
+import { FaBook } from 'react-icons/fa';
 
-// const isParchmentStyle = (value: 'tenMinPlanner' | 'lineNote' | 'blankNote') => {
-//   return ['tenMinPlanner', 'lineNote', 'blankNote'].includes(value);
-// };
+type ParchmentType = 'tenMinPlanner' | 'lineNote' | 'blankNote';
 
-type DbTableType = 'ten_Min_planner' | 'line_note' | 'blank_note';
-
-const changeDbName = (parchmentStyle: 'tenMinPlanner' | 'lineNote' | 'blankNote') => {
+const changeDbName = (parchmentStyle: ParchmentType) => {
   const dbTableName = {
     tenMinPlanner: 'ten_min_planner',
     lineNote: 'line_note',
@@ -33,10 +31,11 @@ export default function ParchmentList() {
   const { diaryId } = useParams<{ diaryId: string }>();
   const [coverTitle, setCoverTitle] = useState('');
   const { toggleParchmentOptionModal } = useParchmentModalStore((state) => state);
-  const { pages, setPages } = usePageStore((state) => state);
-  const { data: dbPages, isPending, isError } = usePageToDiaryId(diaryId);
+  const { data: pages, isPending, isError } = usePageToDiaryId(diaryId);
   const { mutate: deleteDbPages } = useDeletePages();
   const { mutate: deleteDbDiary } = useDeleteDiary();
+  const { offEditMode } = useEditModeStore((state) => state);
+  const { currentPageIndex, setCurrentPageIndex } = usePageStore((state) => state);
 
   // 커버 타이틀 가져오는 코드
   useEffect(() => {
@@ -46,14 +45,12 @@ export default function ParchmentList() {
         setCoverTitle(diaryCover.cover_title);
       };
       getCoverTitle();
-      if (dbPages) {
-        setPages(dbPages);
-      }
     }
+    offEditMode();
   }, [diaryId]);
 
   // 현재 페이지 index
-  const [currentPageIndex, setCurrentPageIndex] = useState(0);
+  // const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
   // 다이어리를 삭제 :  db diary 삭제 , db pages 삭제 , db cover 삭제, db Parchments 삭제
   const deleteDiary = async () => {
@@ -63,29 +60,15 @@ export default function ParchmentList() {
       deleteDbPages(diaryId);
       await supabase.from('diary_covers').delete().eq('diary_id', diaryId);
 
-      const deletionPromises = pages.map((page) => {
-        // if (isParchmentStyle(page.parchment_style)) {
-        const tableName = changeDbName(page.parchment_style as 'tenMinPlanner' | 'lineNote' | 'blankNote') as
+      const deletionPromises = pages!.map((page) => {
+        const tableName = changeDbName(page.parchment_style as ParchmentType) as
           | 'ten_min_planner'
           | 'line_note'
           | 'blank_note';
         return supabase.from(tableName).delete().eq('diary_id', diaryId);
-        // }
       });
 
       await Promise.all(deletionPromises);
-
-      // pages?.map((page) => {
-      //   if (page.parchment_style === 'ten_min_planner') {
-      //     supabase.from('ten_min_planner').delete().eq('diary_id', diaryId);
-      //   } else if (page.parchment_style === 'line_note') {
-      //     supabase.from('line_note').delete().eq('diary_id', diaryId);
-      //   } else if (page.parchment_style === 'blank_note') {
-      //     supabase.from('blank_note').delete().eq('diary_id', diaryId);
-      //   } else {
-      //     return;
-      //   }
-      // });
 
       alert('다이어리가 삭제 되었습니다.');
       router.replace('/member/hub');
@@ -117,7 +100,7 @@ export default function ParchmentList() {
       setCurrentPageIndex(currentPageIndex + 2);
     } else if (pages![currentPageIndex]) {
       if (confirm('더이상 페이지가 없습니다. 추가하시겠습니까?')) {
-        toggleParchmentOptionModal(); // 함수 호출을 활성화
+        toggleParchmentOptionModal();
       }
     }
   };
@@ -127,45 +110,37 @@ export default function ParchmentList() {
   }
   if (isError) return;
 
-  // 0. 속지 추가 UI를 먼저 만든다. V
-  // 0-1. url의 diaryId를 이용해서 cover 뒤져서 cover 타이틀 가져온다. V
-  // 페이지 추가 시 DB에 page 데이터 & 속지테이블(tenMinPlanner V , 무지 V, 줄글 V)
-
-  // 이미 존재하는 page들을 가져와야 함 V
-  // 편집 모드 버튼 클릭 시 상세페이지 이동 V
-  // 상세페이지에서 컴포넌트 수정 V
-  // 속지리스트 -> 수정이 안되게
-  // page의 contentId와 parchmentStyle에 따라 또 DB에서 가져와야 함 => 속지 내부 데이터를 가져온다. => 나중에 V
   return (
-    // 1. 속지 여러 개를 담는 큰 박스 만든다
-    // 2. 속지 하나하나의 div
-    // 3. 추가 버튼 시 modal 띄우고
-    // 4. 모달에서 선택하면 해당하는 데이터가 비어있는 컴포넌트를 뒤에 추가한다.
-    <div className="flex flex-row items-center bg-green-400">
-      <div onClick={handlePrevPage}>
-        <IoIosArrowBack />
+    <div className="flex flex-row items-center justify-center w-[128rem] ">
+      <div onClick={handlePrevPage} className="text-[4.8rem] text-[#008A02]">
+        <FaChevronLeft />
       </div>
       <div>
-        <div className="flex flex-row justify-between ">
-          <div className="flex flex-row" onClick={goHub}>
-            <IoIosArrowBack />
-            <h2>{coverTitle}</h2>
+        <div className="flex flex-row justify-between px-[3.6rem] ">
+          <div className="flex flex-row">
+            <span className="flex flex-row text-[3.5rem] w-[4.8rem] items-center justify-center " onClick={goHub}>
+              <FaChevronLeft />
+            </span>
+            <span className=" text-[3.2rem] w-[82rem] px-[1rem] font-[600]">{coverTitle}</span>
           </div>
+
           <div className="flex flex-row gap-3">
-            <div onClick={goDiaryCoverPage}>표지 수정하러 가기</div>
-            <div onClick={deleteDiary}>
+            <div onClick={goDiaryCoverPage} className=" text-[3.2rem]">
+              <FaBook />
+            </div>
+            <div onClick={deleteDiary} className=" text-[3.2rem]">
               <RiDeleteBin5Line />
             </div>
           </div>
         </div>
         <div className="flex flex-row">
-          <div className="w-[91.6rem] h-[60rem] border-2 border-gray-500">
+          <div className="w-[97.6rem] h-[72rem] mx-[3.6rem] my-[4.3rem]">
             <DiaryContents diaryId={diaryId} pageIndex={currentPageIndex} />
           </div>
         </div>
       </div>
-      <div onClick={handleNextPage}>
-        <IoIosArrowForward />
+      <div onClick={handleNextPage} className="text-[4.8rem] text-[#008A02]">
+        <FaChevronRight />
       </div>
     </div>
   );
