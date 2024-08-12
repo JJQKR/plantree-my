@@ -132,7 +132,7 @@ const DiaryParchmentPage = () => {
         <TenMinPlanner />
       ) : page.parchment_style === 'lineNote' ? (
         <LineNote userId={userId} className="w-full max-w-screen-md max-h-screen overflow-auto mt-20" />
-      ) : page.parchment_style === 'BlankNote' ? (
+      ) : page.parchment_style === 'blankNote' ? (
         <BlankNote diaryId={diaryId} userId={userId} pageId={page.id} />
       ) : (
         <img className="w-full h-full object-cover" />

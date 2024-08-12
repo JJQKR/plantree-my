@@ -38,11 +38,7 @@ class PagesAPI {
    * @returns pages 테이블 데이터 중 같은 다이어리 데이터 전부
    */
   async selectPagesOfDiaryId(diaryId: string) {
-    const { data, error } = await this.supabase
-      .from('pages')
-      .select()
-      .eq('diary_id', diaryId)
-      .returns<Tables<'pages'>[]>();
+    const { data, error } = await this.supabase.from('pages').select('*').eq('diary_id', diaryId);
     return data;
   }
 
@@ -87,14 +83,14 @@ class PagesAPI {
    * @param id {string} page 아이디
    * @returns 삭제된 data
    */
-  async deletePageOfPageId(id: string) {
-    const { data } = await this.supabase.from('pages').delete().eq('id', id).select();
+  async deletePageOfContentId(id: string) {
+    const { data } = await this.supabase.from('pages').delete().eq('content_id', id).select();
     return data;
   }
 
   /**
    *
-   * @param id {string} page 아이디
+   * @param id {string} diary 아이디
    * @returns 삭제된 data
    */
   async deletePageOfDiaryId(id: string) {

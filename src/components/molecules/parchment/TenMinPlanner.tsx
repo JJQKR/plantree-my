@@ -1,141 +1,156 @@
 'use client';
 
-import ParchmentInput from '@/components/atoms/ParchmentInput';
 import React, { useEffect, useState } from 'react';
 import Todolist from './Todolist';
 import Timetable from './Timetable';
-import { useCreateTenMinPlanner, useTenMinPlanner, useUpdateTenMinPlanner } from '@/lib/hooks/useTenMinPlanner';
-import useTimetableStore, { ActiveCellsObject } from '@/stores/timetable.store';
-import useUserStore from '@/stores/user.store';
-import useTenMinPlannerStore from '@/stores/tenMinPlanner.store';
-import useTodoListStore, { TodoObjectType } from '@/stores/todoList.store';
-import uuid from 'react-uuid';
-import { useParams } from 'next/navigation';
+import { supabase } from '@/supabase/client';
+import { TodoType } from '@/api/tenMinPlanner.api';
+import ParchmentInput from '@/components/atoms/ParchmentInput';
+import { useRouter } from 'next/navigation';
+import { useDeletePage } from '@/lib/hooks/usePages';
 
-type ParamTypes = {
-  [key: string]: string;
-  diaryId: string;
+/**
+ * 1. 속지 내용 변경 -> localPlanner 변경
+ * 2. 속지 리스트 관리 -> localPlanner 변경 시 setTenMinPlanners
+ */
+interface TenMinPlannerProps {
+  id: string;
+}
+
+export type Todo = {
+  id: string;
+  text: string;
+  isDone: boolean;
+  color: string;
+  planner_id: string;
 };
 
-const TenMinPlanner = () => {
-  const [date, setDate] = useState('');
-  const [ddayDate, setDdayDate] = useState('');
-  const [dday, setDday] = useState('');
-  const [goal, setGoal] = useState('');
-  const [memo, setMemo] = useState('');
-  const { diaryId } = useParams<ParamTypes>();
+const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
+  const [localPlanner, setLocalPlanner] = useState<{
+    id: string;
+    date: string | null;
+    d_day_date: string | null;
+    d_day: string | null;
+    goal: string | null;
+    memo: string | null;
+  }>({
+    id,
+    date: null,
+    d_day_date: null,
+    d_day: null,
+    goal: null,
+    memo: null
+  });
+  const [todoList, setTodoList] = useState<Todo[]>([]);
+  const [timetable, setTimetable] = useState({});
+  const [diaryId, setDiaryId] = useState('');
+  const [selectedColorTodo, setSelectedColorTodo] = useState<Todo | null>(null);
 
-  const { activeCells, setActiveCells } = useTimetableStore((state) => state);
-  const { userId } = useUserStore((state) => state);
-  const { tenMinPlannerId, setTenMinPlannerId } = useTenMinPlannerStore((state) => state);
-  const { todoList, setTodoList } = useTodoListStore((state) => state);
+  const { mutate: deletePage, isPending, isError } = useDeletePage();
+  const router = useRouter();
 
-  const { mutate: createTenMinPlanner } = useCreateTenMinPlanner();
-  const { data: tenMinPlanner } = useTenMinPlanner(tenMinPlannerId);
-  const { mutate: updateTenMinPlanner } = useUpdateTenMinPlanner();
+  // db에서 현재 데이터 가져오기
+  useEffect(() => {
+    const getData = async () => {
+      const { data, error } = await supabase.from('ten_min_planner').select('*').eq('id', id).maybeSingle();
+      if (data) {
+        setLocalPlanner({
+          id: data.id,
+          date: data.date || null,
+          d_day_date: data.d_day_date || null,
+          d_day: data.d_day || null,
+          goal: data.goal || null,
+          memo: data.memo || null
+        });
+        setTodoList(data.todo_list as Todo[]);
+        setTimetable(
+          data.timetable as {
+            [key: string]: { active: boolean; color: string; todoId: string };
+          }
+        );
+        setDiaryId(data.diary_id || '');
+      }
+    };
+    getData();
+  }, []);
+
+  const handleChangeInputs = (
+    key: string,
+    value: string | TodoType[] | { [key: string]: { active: boolean; color: string; todoId: string } } | null
+  ) => {
+    setLocalPlanner((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const calculateAndSetDday = (currentDate: string, targetDate: string) => {
+    const current = new Date(currentDate);
+    const target = new Date(targetDate);
+    const dayGap = target.getTime() - current.getTime();
+    const ddayNumber = Math.ceil(dayGap / (1000 * 3600 * 24));
+
+    let ddayDisplayText = `D-Day!`;
+    if (ddayNumber < 0) {
+      ddayDisplayText = `D+${Math.abs(ddayNumber)}`;
+    } else if (ddayNumber > 0) {
+      ddayDisplayText = `D-${ddayNumber}`;
+    }
+    handleChangeInputs('d_day', ddayDisplayText);
+  };
 
   const handleDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputData = e.target.value;
-    setDate(inputData);
-
-    if (ddayDate) {
-      const targetDate = new Date(ddayDate);
-      const currentDate = new Date(inputData);
-      const dayGap = targetDate.getTime() - currentDate.getTime();
-      const ddayNumber = Math.ceil(dayGap / (1000 * 3600 * 24));
-
-      let ddayDisplayText = `D-Day!`;
-      if (ddayNumber < 0) {
-        ddayDisplayText = `D+${Math.abs(ddayNumber)}`;
-      } else if (ddayNumber > 0) {
-        ddayDisplayText = `D-${ddayNumber}`;
-      }
-      setDday(ddayDisplayText);
+    const inputDate = e.target.value;
+    handleChangeInputs('date', inputDate || null);
+    if (localPlanner.d_day_date) {
+      calculateAndSetDday(inputDate, localPlanner.d_day_date);
     }
   };
 
   const handleDdayDate = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputDate = e.target.value;
-    setDdayDate(inputDate);
-
-    if (date) {
-      const targetDate = new Date(inputDate);
-      const currentDate = new Date(date);
-      const dayGap = targetDate.getTime() - currentDate.getTime();
-      const ddayNumber = Math.ceil(dayGap / (1000 * 3600 * 24));
-
-      let ddayDisplayText = `D-Day!`;
-      if (ddayNumber < 0) {
-        ddayDisplayText = `D+${Math.abs(ddayNumber)}`;
-      } else if (ddayNumber > 0) {
-        ddayDisplayText = `D-${ddayNumber}`;
-      }
-      setDday(ddayDisplayText);
+    handleChangeInputs('d_day_date', inputDate);
+    if (localPlanner.date) {
+      calculateAndSetDday(localPlanner.date, inputDate);
     }
   };
 
   const handleGoal = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setGoal(e.target.value);
+    handleChangeInputs('goal', e.target.value || null);
   };
 
   const handleMemo = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMemo(e.target.value);
+    handleChangeInputs('memo', e.target.value || null);
   };
 
-  useEffect(() => {
-    if (tenMinPlanner && tenMinPlannerId) {
-      setDate(tenMinPlanner?.date || '');
-      setDdayDate(tenMinPlanner?.d_day_date || '');
-      setDday(tenMinPlanner?.d_day || '');
-      setGoal(tenMinPlanner?.goal || '');
-      setMemo(tenMinPlanner?.memo || '');
-      setActiveCells((tenMinPlanner?.timetable as ActiveCellsObject) || {});
-      setTodoList((tenMinPlanner?.todo_list as unknown as TodoObjectType[]) || []);
-    }
-  }, [tenMinPlanner, tenMinPlannerId, setActiveCells]);
+  const onSubmit = async () => {
+    await supabase
+      .from('ten_min_planner')
+      .update({
+        ...localPlanner,
+        todo_list: todoList,
+        timetable: timetable
+      })
+      .eq('id', id);
+  };
 
-  const updatePlanner = () => {
-    if (!date) {
-      alert('작성 날짜를 입력해 주세요.');
-      return;
-    }
-
-    // TODO: 사실 DB에서 가져온 ID를 써야한다.
-    const newId = uuid();
-
-    const newTenMinPlanner = {
-      id: newId,
-      date: date,
-      d_day_date: ddayDate,
-      d_day: dday,
-      goal: goal,
-      memo: memo,
-      user_id: userId,
-      diary_id: diaryId,
-      timetable: activeCells,
-      todo_list: todoList
-    };
-
-    if (tenMinPlannerId) {
-      console.log({ tenMinPlannerId });
-      if (confirm('이대로 수정하시겠습니까?')) {
-        updateTenMinPlanner({ id: tenMinPlannerId, updateTenMinPlanner: newTenMinPlanner });
-        alert('수정되었습니다.');
-        console.log(newTenMinPlanner);
+  const handleDelete = async () => {
+    if (confirm('내용을 삭제 하시겠습니까?')) {
+      const { error: tenMinPlannerError } = await supabase.from('ten_min_planner').delete().eq('id', id);
+      deletePage(id);
+      if (tenMinPlannerError) {
+        alert('삭제 중 오류가 발생했습니다: ' + tenMinPlannerError.message);
+      } else if (isError) {
+        alert('삭제 중 오류가 발생했습니다');
+      } else {
+        alert('삭제되었습니다!');
+        router.push(`/member/diary/${diaryId}/parchment`);
       }
-    } else {
-      setTenMinPlannerId(newId);
-      createTenMinPlanner(newTenMinPlanner);
-      alert('새로운 내용을 저장했습니다.');
     }
   };
 
   return (
     <div className="w-full max-w-screen-md h-[60rem] overflow-auto mt-1">
+      <button onClick={onSubmit}>저장하기</button>
+      <button onClick={handleDelete}>삭제하기</button>
       <div className="relative border-2 flex flex-col gap-4 m-auto p-4 h-[60rem]">
-        <button className="absolute top-0 right-0 bg-red-400" onClick={updatePlanner}>
-          저장하기
-        </button>
         <div className="flex gap-2">
           <div className="w-1/3">
             <ParchmentInput
@@ -144,7 +159,7 @@ const TenMinPlanner = () => {
               id="date"
               type="date"
               onChange={handleDate}
-              value={date}
+              value={localPlanner.date || ''}
             />
           </div>
           <div className="w-1/3 relative">
@@ -154,25 +169,36 @@ const TenMinPlanner = () => {
               id="d-day"
               type="date"
               onChange={handleDdayDate}
-              value={ddayDate}
+              value={localPlanner.d_day_date || ''}
             />
-            <span className="absolute right-3 top-0 font-bold">{dday}</span>
+            <span className="absolute right-3 top-0 font-bold">{localPlanner.d_day}</span>
           </div>
           <div className="w-1/3">
-            <ParchmentInput identity="tenMinPlannerRegular" label="goal" id="goal" onChange={handleGoal} value={goal} />
+            <ParchmentInput
+              identity="tenMinPlannerRegular"
+              label="goal"
+              id="goal"
+              onChange={handleGoal}
+              value={localPlanner.goal || ''}
+            />
           </div>
         </div>
         <div className="flex flex-row gap-4 ">
           <div className="w-1/2">
-            <Todolist />
+            <Todolist
+              tenMinPlannerId={id}
+              todoList={todoList}
+              setTodoList={setTodoList}
+              setSelectedColorTodo={setSelectedColorTodo}
+            />
           </div>
           <div className="w-1/2 h-[40rem]">
-            <Timetable />
+            <Timetable selectedColorTodo={selectedColorTodo} timetable={timetable} setTimetable={setTimetable} />
           </div>
         </div>
         <div>
           <label htmlFor="memo">memo</label>
-          <textarea id="memo" className="h-[3rem] w-full" onChange={handleMemo} value={memo} />
+          <textarea id="memo" className="h-[3rem] w-full" onChange={handleMemo} value={localPlanner.memo || ''} />
         </div>
       </div>
     </div>

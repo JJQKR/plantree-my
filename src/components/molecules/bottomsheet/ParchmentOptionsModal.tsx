@@ -2,9 +2,14 @@
 import React, { useState } from 'react';
 import uuid from 'react-uuid';
 import { useParams } from 'next/navigation';
-import usePageStore from '@/stores/pages.store';
+import usePageStore, { PageType } from '@/stores/pages.store';
 import useParchmentModalStore from '@/stores/parchment.modal.store';
 import { ParchmentType, parchments } from '@/lib/utils/parchment';
+import useTenMinPlannerStore from '@/stores/tenMinPlanner.store';
+import useUserStore from '@/stores/user.store';
+import { useCreatePage, usePageToDiaryId } from '@/lib/hooks/usePages';
+import { useCreateTenMinPlanner } from '@/lib/hooks/useTenMinPlanner';
+import { supabase } from '@/supabase/client';
 
 type ParamTypes = {
   [key: string]: string;
@@ -14,21 +19,93 @@ type ParamTypes = {
 const ParchmentOptionsModal: React.FC = () => {
   const { diaryId } = useParams<ParamTypes>();
   const { isParchmentOptionModalOpen, toggleParchmentOptionModal } = useParchmentModalStore((state) => state);
-  const { addPage, pages, setPageIndex } = usePageStore((state) => state);
+  // const { addPage, pages, setPageIndex } = usePageStore((state) => state);
+  const { addTenMinPlanner } = useTenMinPlannerStore();
+  const { userId } = useUserStore((state) => state);
+  const { mutate: createPage } = useCreatePage();
+  const { data: pages } = usePageToDiaryId(diaryId);
+  const { mutate: createTenMinPlanner } = useCreateTenMinPlanner();
 
   // * 4개 이상의 파치먼트 옵션이 생기면 생성
   // const [currentOptionPage, setCurrentOptionPage] = useState(0);
 
   // parchment 옵션을 클릭하면 생성되는 페이지
-  const handleAddPage = (parchment: ParchmentType) => {
-    const newPage = {
-      id: uuid(),
-      content_id: uuid(),
-      parchment_style: parchment.parchmentStyle,
-      diary_id: diaryId
-    };
+  const handleAddPage = async (parchment: ParchmentType) => {
+    const pageId = uuid();
+    const contentId = uuid();
+    // const { data: pages, error } = await supabase.from('pages').select('*').eq('diary_id', diaryId);
+    function getNextIndex(pages: PageType[]) {
+      const maxIndex = pages.reduce((max: number, page: PageType) => {
+        return page.index > max ? page.index : max;
+      }, 0);
 
-    addPage(newPage);
+      return maxIndex + 1;
+    }
+    const newPage = {
+      id: pageId,
+      content_id: contentId,
+      parchment_style: parchment.parchmentStyle,
+      diary_id: diaryId,
+      index: pages ? getNextIndex(pages) : 0
+    };
+    // await supabase.from('pages').insert(newPage);
+    createPage(newPage);
+    if (parchment.parchmentStyle === 'tenMinPlanner') {
+      const newTenMinPlanner = {
+        id: contentId,
+        date: null,
+        d_day_date: '',
+        d_day: '',
+        goal: '',
+        memo: '',
+        timetable: {},
+        diary_id: diaryId,
+        user_id: userId,
+        todo_list: []
+      };
+      // await supabase.from('ten_min_planner').insert(newTenMinPlanner);
+      createTenMinPlanner(newTenMinPlanner);
+    } else if (parchment.parchmentStyle === 'lineNote') {
+      const newLineNote = {
+        id: contentId,
+        user_id: userId,
+        line_color: '',
+        line_thickness: 0,
+        bg_color: '',
+        global_text_color: '',
+        lines: Array.from({ length: 16 }, () => ({ text: '', fontSize: 16, textColor: '#000000' })),
+        diary_id: diaryId
+      };
+      await supabase.from('line_note').insert(newLineNote);
+    } else if (parchment.parchmentStyle === 'blankNote') {
+      const newBlankNote = {
+        id: contentId,
+        user_id: userId,
+        content: '',
+        bgColor: '',
+        globalTextColor: '',
+        date: null,
+        title: '',
+        diary_id: diaryId
+      };
+      await supabase.from('blank_note').insert(newBlankNote);
+    }
+
+    // DB에 속지 추가
+    // contentId
+    // 그냥 추가
+    addTenMinPlanner({
+      id: contentId,
+      date: '',
+      d_day_date: '',
+      d_day: '',
+      goal: '',
+      memo: '',
+      timetable: {},
+      diary_id: diaryId,
+      user_id: userId,
+      todo_list: []
+    });
     toggleParchmentOptionModal();
   };
 

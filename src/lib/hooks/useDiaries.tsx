@@ -61,7 +61,7 @@ export const useUpdateDiary = () => {
         queryKey: ['diaries']
       });
       queryClient.invalidateQueries({
-        queryKey: ['pages', variables.id]
+        queryKey: ['diaries', variables.id]
       });
     }
   });
