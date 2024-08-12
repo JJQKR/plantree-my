@@ -622,7 +622,7 @@ const DiaryCoverPage: React.FC = () => {
         bookshelf_order: 0
       };
 
-      createDiary(newDiary, {
+      await createDiary(newDiary, {
         onSuccess: () => {
           setDiaryId(diaryId); // 생성된 다이어리 ID 설정
         }
@@ -633,6 +633,21 @@ const DiaryCoverPage: React.FC = () => {
         alert('다이어리 이름 업데이트 실패');
         return;
       }
+
+      // 다이어리 목록을 created_at 기준으로 정렬
+      const { data: diaries, error: fetchError } = await supabase
+        .from('diaries')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (fetchError) {
+        console.error('다이어리 목록 가져오기 실패:', fetchError);
+        alert('다이어리 목록 가져오기 실패');
+        return;
+      }
+
+      // 정렬된 다이어리 목록을 사용하여 원하는 로직 수행
+      console.log('정렬된 다이어리 목록:', diaries);
 
       Swal.fire('Cover 저장 성공!', '', 'success');
       router.push(`/member/hub`);
