@@ -328,14 +328,14 @@ const ForgotPasswordModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
           <div className="flex flex-col gap-2 mt-4">
             <button
               type="button"
-              className="w-full font-bold px-4 py-3 bg-gray-500 hover:bg-gray-700 hover:text-white text-black rounded"
+              className="w-[350px] h-[50px] font-bold px-4 py-3 bg-gray-500 hover:bg-gray-700 hover:text-white text-black rounded"
               onClick={onClose}
             >
               취소
             </button>
             <button
               type="submit"
-              className="w-full font-bold px-4 py-3 bg-blue-500 hover:bg-blue-700 hover:text-white text-black rounded"
+              className="w-[350px] h-[50px] font-bold px-4 py-3 bg-blue-500 hover:bg-blue-700 hover:text-white text-black rounded"
             >
               인증메일 받기
             </button>
