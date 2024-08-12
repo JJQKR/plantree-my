@@ -64,8 +64,8 @@ const Timetable = ({ selectedColorTodo, timetable, setTimetable }: TimetableProp
   };
 
   return (
-    <div className="bg-slate-200 w-full h-[38rem]" onMouseUp={handleMouseUp}>
-      <table className="border-collapse w-full h-[38rem]">
+    <div className=" w-full h-[38rem]" onMouseUp={handleMouseUp}>
+      <table className="border-collapse w-full text-[0.8rem]">
         <tbody>
           {Array.from({ length: rows }, (_, rowIndex) => (
             <tr key={rowIndex}>
@@ -73,14 +73,14 @@ const Timetable = ({ selectedColorTodo, timetable, setTimetable }: TimetableProp
                 if (rowIndex === 0 && colIndex !== 0) {
                   // 첫 번째 행에 분(minutes) 표시
                   return (
-                    <td key={colIndex} className="border border-gray-300 p-1.5 text-center h-[1rem]">
+                    <td key={colIndex} className="border border-gray-300 text-center h-[1rem]">
                       {minutes[colIndex - 1]}
                     </td>
                   );
                 } else if (colIndex === 0 && rowIndex !== 0) {
                   // 첫 번째 열에 시간(hours) 표시
                   return (
-                    <td key={colIndex} className="border border-gray-300 p-1.5 text-center">
+                    <td key={colIndex} className="border border-gray-300 text-center">
                       {hours[rowIndex - 1]}
                     </td>
                   );
@@ -92,7 +92,7 @@ const Timetable = ({ selectedColorTodo, timetable, setTimetable }: TimetableProp
                     <td
                       key={colIndex}
                       id={id}
-                      className={`border border-gray-300 text-center`}
+                      className={`border border-gray-300 text-center h-[1rem]`}
                       style={{
                         background:
                           timetable && timetable[id]?.active
@@ -104,7 +104,7 @@ const Timetable = ({ selectedColorTodo, timetable, setTimetable }: TimetableProp
                     ></td>
                   );
                 }
-                return <td key={colIndex} className="border border-gray-300 p-1.5 text-center"></td>;
+                return <td key={colIndex} className="border border-gray-300 h-[1rem] text-center"></td>;
               })}
             </tr>
           ))}

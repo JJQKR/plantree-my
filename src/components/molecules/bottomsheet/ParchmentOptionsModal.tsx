@@ -25,6 +25,7 @@ const ParchmentOptionsModal: React.FC = () => {
   const { mutate: createPage } = useCreatePage();
   const { data: pages } = usePageToDiaryId(diaryId);
   const { mutate: createTenMinPlanner } = useCreateTenMinPlanner();
+  const { currentPageIndex, setCurrentPageIndex } = usePageStore((state) => state);
 
   // * 4개 이상의 파치먼트 옵션이 생기면 생성
   // const [currentOptionPage, setCurrentOptionPage] = useState(0);
@@ -33,7 +34,7 @@ const ParchmentOptionsModal: React.FC = () => {
   const handleAddPage = async (parchment: ParchmentType) => {
     const pageId = uuid();
     const contentId = uuid();
-    // const { data: pages, error } = await supabase.from('pages').select('*').eq('diary_id', diaryId);
+
     function getNextIndex(pages: PageType[]) {
       const maxIndex = pages.reduce((max: number, page: PageType) => {
         return page.index > max ? page.index : max;
@@ -41,6 +42,7 @@ const ParchmentOptionsModal: React.FC = () => {
 
       return maxIndex + 1;
     }
+
     const newPage = {
       id: pageId,
       content_id: contentId,
@@ -48,8 +50,21 @@ const ParchmentOptionsModal: React.FC = () => {
       diary_id: diaryId,
       index: pages ? getNextIndex(pages) : 0
     };
-    // await supabase.from('pages').insert(newPage);
+
     createPage(newPage);
+
+    const currentIndex = (index: number) => {
+      if (index === 1) {
+        return index - 1;
+      } else if (index % 2 === 0) {
+        return index - 2;
+      } else {
+        return index - 1;
+      }
+    };
+
+    setCurrentPageIndex(currentIndex(newPage.index));
+
     if (parchment.parchmentStyle === 'tenMinPlanner') {
       const newTenMinPlanner = {
         id: contentId,
