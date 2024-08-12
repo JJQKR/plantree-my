@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { fetchImages, UnsplashImage } from '../../../lib/utils/unsplash';
 
 interface UnsplashBackgroundSearchProps {
@@ -6,49 +6,88 @@ interface UnsplashBackgroundSearchProps {
 }
 
 const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({ handleBackgroundImageChange }) => {
-  const [images, setImages] = useState<UnsplashImage[]>([]);
+  const [query, setQuery] = useState(() => sessionStorage.getItem('backgroundQuery') || 'gradient');
+  const [images, setImages] = useState<UnsplashImage[]>(() => {
+    const savedImages = sessionStorage.getItem('backgroundImages');
+    return savedImages ? JSON.parse(savedImages) : [];
+  });
   const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(() => Number(sessionStorage.getItem('backgroundPage')) || 1);
+  const [hasMore, setHasMore] = useState(() => sessionStorage.getItem('backgroundHasMore') !== 'false');
 
-  const fetchRandomImages = async (resetPage: boolean = false) => {
-    setLoading(true);
-    try {
-      const currentPage = resetPage ? 1 : page;
-      const results = await fetchImages('gradient', currentPage);
+  const saveToSessionStorage = useCallback(() => {
+    sessionStorage.setItem('backgroundImages', JSON.stringify(images));
+    sessionStorage.setItem('backgroundQuery', query);
+    sessionStorage.setItem('backgroundPage', page.toString());
+    sessionStorage.setItem('backgroundHasMore', hasMore.toString());
+  }, [images, query, page, hasMore]);
 
-      if (resetPage) {
-        setImages(results);
-        setPage(1);
-      } else {
-        setImages((prevImages) => [...prevImages, ...results]);
+  const fetchImagesFromUnsplash = useCallback(
+    async (resetPage: boolean = false) => {
+      setLoading(true);
+      try {
+        const currentPage = resetPage ? 1 : page;
+        const results = await fetchImages(query, currentPage);
+
+        if (resetPage) {
+          setImages(results);
+          setPage(2); // 다음 페이지를 위해 페이지를 2로 설정
+        } else {
+          setImages((prevImages) => [...prevImages, ...results]);
+          setPage(currentPage + 1); // 다음 페이지로 이동
+        }
+
+        setHasMore(results.length > 0);
+      } catch (error) {
+        console.error('Error fetching images:', error);
+        setHasMore(false);
       }
-
-      setHasMore(results.length > 0);
-    } catch (error) {
-      console.error('Error fetching images:', error);
-      setHasMore(false);
-    }
-    setLoading(false);
-  };
+      setLoading(false);
+    },
+    [query, page]
+  );
 
   useEffect(() => {
-    if (page === 1 && images.length === 0) {
-      fetchRandomImages(true); // 초기 로딩 시 첫 페이지 이미지 가져오기
-    } else if (page > 1) {
-      fetchRandomImages();
+    if (images.length === 0 && page === 1) {
+      fetchImagesFromUnsplash(true); // 초기 로딩 시 첫 페이지 이미지 가져오기
     }
-  }, [page]);
+  }, [fetchImagesFromUnsplash, images.length, page]);
+
+  useEffect(() => {
+    saveToSessionStorage(); // 상태가 변경될 때마다 세션 스토리지에 저장
+  }, [saveToSessionStorage]);
 
   const handleLoadMore = () => {
-    if (hasMore) {
-      setPage((prevPage) => prevPage + 1);
+    if (hasMore && !loading) {
+      fetchImagesFromUnsplash(); // 현재 페이지에서 이미지를 추가로 불러옴
     }
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    setPage(1);
+    setHasMore(true);
+    fetchImagesFromUnsplash(true); // 새로운 검색어로 첫 페이지 이미지 가져오기
   };
 
   return (
     <div>
       <p className="text-center text-sm font-bold">Photos by UnSplash</p>
+      <form onSubmit={handleSearch} className="text-center my-4">
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search for images"
+          className="my-2 px-2 py-1 border rounded w-full"
+        />
+        <button
+          type="submit"
+          className="my-3 px-2 py-1 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300"
+        >
+          검색하기
+        </button>
+      </form>
       <div>
         {images.map((image, index) => (
           <img
