@@ -128,7 +128,7 @@ export const useDiaryCoverStore = create<DiaryCoverState>((set, get) => ({
   // 리셋 텍스트
   resetTextProperties: () =>
     set({
-      coverTitle: 'Create Cover Title',
+      coverTitle: null,
       coverTitlePosition: { x: 120, y: 150 },
       coverTitleFontSize: 30,
       coverTitleWidth: 260,

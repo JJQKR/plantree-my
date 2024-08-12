@@ -48,3 +48,34 @@ export type DiaryCover = {
   cover_title: string | null;
   unsplash_image: string | null;
 };
+
+export type Position = {
+  x: number;
+  y: number;
+};
+
+export type Size = {
+  width: number;
+  height: number;
+};
+
+export type CoverData = {
+  cover_title: string;
+  cover_title_position: Position;
+  cover_title_fontsize: number;
+  cover_title_width: number;
+  cover_title_rotation: number;
+  cover_image: string;
+  cover_image_position: Position;
+  cover_image_size: Size;
+  cover_image_rotation: number;
+  cover_bg_color: string;
+  cover_scale: number;
+  cover_stage_size: Size;
+  unsplash_image: string;
+  unsplash_image_position: Position;
+  unsplash_image_size: Size;
+  unsplash_image_rotation: number;
+  diary_id?: string;
+  cover_id: string;
+};

@@ -21,6 +21,10 @@ body {
   color: #000;
 }
 
+html {
+  font-size: 10px;
+}
+
 #app {
   height: 100%;
 }
