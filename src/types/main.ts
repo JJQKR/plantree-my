@@ -86,5 +86,6 @@ export type CoverData = {
   cover_title_fontfamily?: string;
   cover_title_color?: string;
   cover_title_fontweight?: string;
+  created_at: string;
   // bookshelf_order: number;
 };

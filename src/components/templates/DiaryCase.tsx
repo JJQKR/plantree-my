@@ -73,8 +73,12 @@ const DiaryCase: React.FC = () => {
       cover_title_fontstyle: cover.cover_title_fontstyle ?? 'normal',
       cover_title_fontfamily: cover.cover_title_fontfamily ?? 'Arial',
       cover_title_color: cover.cover_title_color ?? '#000000',
-      cover_title_fontweight: cover.cover_title_fontweight ?? 'normal'
+      cover_title_fontweight: cover.cover_title_fontweight ?? 'normal',
+      created_at: cover.created_at
     }));
+
+    // 생성일 기준으로 커버 데이터 정렬 (가장 최근 것이 가장 앞에 위치)
+    covers.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
 
     setDiaryCovers(covers); // 커버 상태 업데이트
     preloadImages(covers); // 이미지 미리 로드
