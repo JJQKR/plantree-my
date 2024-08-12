@@ -36,7 +36,7 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           if (coversError) {
             console.error('다이어리 커버 정보 가져오기 실패:', coversError);
           } else {
-            // 생성일 기준으로 커버 데이터 정렬 (가장 최근 것이 가장 앞에 위치)
+            // 생성일 기준으로 커버 데이터 정렬 (제일 먼저 만든 것이 앞에 오게)
             coversData.sort(
               (a, b) => new Date((a as any).created_at).getTime() - new Date((b as any).created_at).getTime()
             );

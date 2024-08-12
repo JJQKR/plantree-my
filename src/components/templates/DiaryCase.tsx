@@ -78,7 +78,7 @@ const DiaryCase: React.FC = () => {
       created_at: cover.created_at
     }));
 
-    // 생성일 기준으로 커버 데이터 정렬 (가장 최근 것이 가장 앞에 위치)
+    // 생성일 기준으로 커버 데이터 정렬 (제일 먼저 만든 것이 앞에 오게)
     covers.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
 
     setDiaryCovers(covers); // 커버 상태 업데이트
