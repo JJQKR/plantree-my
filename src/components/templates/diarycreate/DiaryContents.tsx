@@ -7,7 +7,7 @@ import { usePageToDiaryId } from '@/lib/hooks/usePages';
 import { PageType } from '@/stores/pages.store';
 import useParchmentModalStore from '@/stores/parchment.modal.store';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface DiaryContentsProps {
   diaryId: string;
@@ -18,6 +18,8 @@ const DiaryContents = ({ diaryId, pageIndex }: DiaryContentsProps) => {
   const { data: pages, isPending } = usePageToDiaryId(diaryId);
   const router = useRouter();
   const { toggleParchmentOptionModal } = useParchmentModalStore((state) => state);
+
+  useEffect(() => {}, []);
 
   const handleEditMode = ({ id, style }: { id: string; style: string }) => {
     const url = `/member/diary/${diaryId}/parchment/${id}?style=${encodeURIComponent(style)}`;

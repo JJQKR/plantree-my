@@ -8,6 +8,7 @@ import { UpdatePageType } from '@/api/pages.api';
 import usePageStore from '@/stores/pages.store';
 import useParchmentModalStore from '@/stores/parchment.modal.store';
 import ParchmentOptionsModal from './ParchmentOptionsModal';
+import { usePageToDiaryId } from '@/lib/hooks/usePages';
 
 type BottomSheetProps = {
   isOpen: boolean;
@@ -16,11 +17,19 @@ type BottomSheetProps = {
   moveCard: (dragIndex: number, hoverIndex: number) => void;
 };
 
+type ParamTypes = {
+  [key: string]: string;
+  diaryId: string;
+};
+
 const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheetList, moveCard }) => {
   const router = useRouter();
+  const { diaryId } = useParams<ParamTypes>();
   const pathname = usePathname();
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { pages } = usePageStore((state) => state);
+
+  const { data: pages, isPending } = usePageToDiaryId(diaryId);
+
   const { toggleParchmentOptionModal, isParchmentOptionModalOpen } = useParchmentModalStore((state) => state);
   // const togglePageOptions = useDiaryCoverStore((state) => state.togglePageOptions);
   // // const { setCurrentPage, currentPage } = useDiaryCoverStore((state) => state);
@@ -39,7 +48,8 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
   //   imageFile,
   //   setCoverData
   // } = useDiaryCoverStore();
-  const { diaryId } = useParams();
+
+  console.log({ pages });
 
   const handleCoverPageClick = () => {
     router.push(`/member/diary/${diaryId}/cover`);
@@ -143,14 +153,12 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
           >
             <h2 className="text-xl font-bold">커버 페이지</h2>
           </div>
-          <div
-            // onClick={goDiaryParchmentPage}
-            className="bg-gray-100 rounded-lg shadow-md p-4 w-32 h-40 flex-none cursor-pointer z-30"
-          >
-            {pages.map((page) => {
-              return <BottomSheetCard key={page.id} page={page} moveCard={moveCard} onClick={onToggle} />;
+          <div className="flex flex-row gap-[1rem]">
+            {pages?.map((page) => {
+              return <BottomSheetCard key={page.id} page={page} moveCard={moveCard} onToggle={onToggle} />;
             })}
           </div>
+
           <div
             onClick={handleAddPageModal}
             className="bg-gray-100 rounded-lg shadow-md p-4 w-32 h-40 flex-none cursor-pointer z-30" // z-index 설정
