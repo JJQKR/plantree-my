@@ -22,7 +22,11 @@ export async function POST(request: NextRequest) {
       unsplash_image_position,
       unsplash_image_size,
       unsplash_scale,
-      unsplash_image_rotation
+      unsplash_image_rotation,
+      cover_title_fontstyle,
+      cover_title_fontfamily,
+      cover_title_color,
+      cover_title_fontweight
     } = await request.json();
 
     const { data, error } = await supabase
@@ -46,7 +50,11 @@ export async function POST(request: NextRequest) {
         unsplash_image_position: JSON.stringify(unsplash_image_position),
         unsplash_image_size: JSON.stringify(unsplash_image_size),
         unsplash_scale,
-        unsplash_image_rotation
+        unsplash_image_rotation,
+        cover_title_fontstyle,
+        cover_title_fontfamily,
+        cover_title_color,
+        cover_title_fontweight
       })
       .select();
 

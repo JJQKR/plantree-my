@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { fetchImages, UnsplashImage } from '../../../lib/utils/unsplash';
 
 interface UnsplashImageSearchProps {
@@ -6,61 +6,83 @@ interface UnsplashImageSearchProps {
 }
 
 const UnsplashImageSearch: React.FC<UnsplashImageSearchProps> = ({ handleSelectImage }) => {
-  const [query, setQuery] = useState('');
-  const [images, setImages] = useState<UnsplashImage[]>([]);
+  const [query, setQuery] = useState(() => sessionStorage.getItem('unsplashQuery') || '');
+  const [images, setImages] = useState<UnsplashImage[]>(() => {
+    const savedImages = sessionStorage.getItem('unsplashImages');
+    return savedImages ? JSON.parse(savedImages) : [];
+  });
   const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [isRandom, setIsRandom] = useState(true);
+  const [page, setPage] = useState(() => Number(sessionStorage.getItem('unsplashPage')) || 1);
+  const [hasMore, setHasMore] = useState(() => sessionStorage.getItem('unsplashHasMore') !== 'false');
+  const [isRandom, setIsRandom] = useState(() => sessionStorage.getItem('unsplashIsRandom') !== 'false');
 
-  const handleSearch = async (resetPage: boolean = false, random: boolean = false) => {
-    setLoading(true);
-    try {
-      const currentPage = resetPage ? 1 : page;
-      const searchQuery = random ? 'random' : query;
-      const results = await fetchImages(searchQuery, currentPage);
+  const saveToSessionStorage = useCallback(() => {
+    sessionStorage.setItem('unsplashImages', JSON.stringify(images));
+    sessionStorage.setItem('unsplashQuery', query);
+    sessionStorage.setItem('unsplashPage', page.toString());
+    sessionStorage.setItem('unsplashHasMore', hasMore.toString());
+    sessionStorage.setItem('unsplashIsRandom', isRandom.toString());
+  }, [images, query, page, hasMore, isRandom]);
 
-      if (resetPage) {
-        setImages(results);
-        setPage(1);
-      } else {
-        setImages((prevImages) => [...prevImages, ...results]);
+  const handleSearch = useCallback(
+    async (resetPage: boolean = false, random: boolean = false) => {
+      if (loading) return;
+      setLoading(true);
+      try {
+        const currentPage = resetPage ? 1 : page;
+        const searchQuery = random ? 'random' : query;
+        const results = await fetchImages(searchQuery, currentPage);
+
+        if (resetPage) {
+          setImages(results);
+          setPage(2); // 다음 페이지를 위해 페이지를 2로 설정
+        } else {
+          setImages((prevImages) => [...prevImages, ...results]);
+        }
+
+        setHasMore(results.length > 0);
+        setIsRandom(random);
+      } catch (error) {
+        console.error('Error fetching images:', error);
+        setHasMore(false);
       }
-
-      setHasMore(results.length > 0);
-    } catch (error) {
-      console.error('Error fetching images:', error);
-      setHasMore(false);
-    }
-    setLoading(false);
-  };
+      setLoading(false);
+    },
+    [query, page, loading]
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setPage(1);
-    setHasMore(true);
     setIsRandom(false);
-    handleSearch(true);
+    handleSearch(true, false);
   };
 
   const handleLoadMore = () => {
-    if (hasMore) {
-      setPage((prevPage) => prevPage + 1);
+    if (hasMore && !loading) {
+      const nextPage = page;
+      setPage(nextPage + 1);
+      handleSearch(false, isRandom); // 현재 페이지에서 이미지를 추가로 불러옴
     }
   };
 
   useEffect(() => {
-    handleSearch(page === 1, isRandom);
-  }, [page]);
+    if (images.length === 0) {
+      handleSearch(true, true);
+    }
+  }, []); // 컴포넌트 마운트 시에만 실행
 
   useEffect(() => {
-    handleSearch(true, true); // 초기 랜덤 이미지를 불러옴
-  }, []);
+    saveToSessionStorage();
+  }, [saveToSessionStorage]);
+
+  useEffect(() => {
+    sessionStorage.setItem('unsplashPage', page.toString());
+  }, [page]);
 
   return (
     <div>
       <p className="text-center text-sm font-bold">Photos by UnSplash</p>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="text-center my-4">
         <input
           type="text"
           value={query}
@@ -76,9 +98,9 @@ const UnsplashImageSearch: React.FC<UnsplashImageSearchProps> = ({ handleSelectI
         </button>
       </form>
       <div>
-        {images.map((image) => (
+        {images.map((image, index) => (
           <img
-            key={`image-${image.id}`}
+            key={`image-${image.id}-${index}`}
             src={image.urls.thumb}
             alt={image.alt_description}
             onClick={() => handleSelectImage(image.urls.regular)}

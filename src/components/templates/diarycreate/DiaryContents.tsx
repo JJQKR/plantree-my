@@ -4,10 +4,11 @@ import BlankNote from '@/components/molecules/parchment/BlankNote';
 import LineNote from '@/components/molecules/parchment/LineNote';
 import TenMinPlanner from '@/components/molecules/parchment/TenMinPlanner';
 import { usePageToDiaryId } from '@/lib/hooks/usePages';
+import useEditModeStore from '@/stores/editMode.store';
 import { PageType } from '@/stores/pages.store';
 import useParchmentModalStore from '@/stores/parchment.modal.store';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface DiaryContentsProps {
   diaryId: string;
@@ -17,8 +18,8 @@ interface DiaryContentsProps {
 const DiaryContents = ({ diaryId, pageIndex }: DiaryContentsProps) => {
   const { data: pages, isPending } = usePageToDiaryId(diaryId);
   const router = useRouter();
-
   const { toggleParchmentOptionModal } = useParchmentModalStore((state) => state);
+  // const { onEditMode, offEditMode } = useEditModeStore((state) => state);
 
   const handleEditMode = ({ id, style }: { id: string; style: string }) => {
     // URL을 문자열로 직접 조합

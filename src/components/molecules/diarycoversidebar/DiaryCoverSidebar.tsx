@@ -1,20 +1,26 @@
-import React from 'react';
-import { FaThLarge, FaTextHeight, FaImage, FaShapes, FaUpload, FaPalette, FaLayerGroup, FaEdit } from 'react-icons/fa';
+import React, { useEffect } from 'react';
+import { FaTextHeight, FaImage, FaShapes, FaPalette, FaLayerGroup, FaEdit } from 'react-icons/fa';
 
 type DiaryCoverSidebarProps = {
   handleSelectMenu: (menu: string) => void;
 };
 
 const DiaryCoverSidebar: React.FC<DiaryCoverSidebarProps> = ({ handleSelectMenu }) => {
+  useEffect(() => {
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        handleSelectMenu(''); // ESC
+      }
+    };
+
+    document.addEventListener('keydown', handleEscKey);
+    return () => {
+      document.removeEventListener('keydown', handleEscKey);
+    };
+  }, [handleSelectMenu]);
+
   return (
     <div className="w-[6.3rem] h-full bg-gray-50 text-black border-r-[.1rem] flex flex-col">
-      {/* <div
-        className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
-        onClick={() => onSelectMenu('Templates')}
-      >
-        <FaThLarge className="mb-1" />
-        <span>템플릿</span>
-      </div> */}
       <div
         className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
         onClick={() => handleSelectMenu('Text')}
@@ -36,13 +42,6 @@ const DiaryCoverSidebar: React.FC<DiaryCoverSidebarProps> = ({ handleSelectMenu 
         <FaShapes className="mb-1" />
         <span>요소</span>
       </div>
-      {/* <div
-        className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
-        onClick={() => onSelectMenu('Upload')}
-      >
-        <FaUpload className="mb-1" />
-        <span>업로드</span>
-      </div> */}
       <div
         className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
         onClick={() => handleSelectMenu('Background')}
@@ -62,7 +61,7 @@ const DiaryCoverSidebar: React.FC<DiaryCoverSidebarProps> = ({ handleSelectMenu 
         onClick={() => handleSelectMenu('Edit')}
       >
         <FaEdit className="mb-1" />
-        <span>수정</span>
+        <span>저장</span>
       </div>
     </div>
   );
