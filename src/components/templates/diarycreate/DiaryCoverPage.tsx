@@ -1398,8 +1398,8 @@ const DiaryCoverPage: React.FC = () => {
         </div>
       </div>
       {loading && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <img src="/images/loading.gif" alt="Loading" width={150} height={150} />
+        <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
+          <img src="/images/loading.gif" alt="Loading" width={200} height={200} />
         </div>
       )}
     </div>
