@@ -6,6 +6,7 @@ export type PageType = {
   content_id: string;
   parchment_style: string;
   diary_id: string | null;
+  index: number;
 };
 
 interface PageStore {

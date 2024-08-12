@@ -36,6 +36,7 @@ export const useCreateTenMinPlanner = () => {
   return useMutation({
     mutationFn: async (newTenMinplanner: UpdateTenMinPlannerType) =>
       await tenMinplannerApi.insertTenMinPlanner(newTenMinplanner),
+
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['tenMinPlanner']
@@ -49,6 +50,19 @@ export const useDeleteTenMinPlanner = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => tenMinplannerApi.deleteTenMinPlanner(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['tenMinPlanner']
+      });
+    }
+  });
+};
+
+// diaryId가 같은 tenMinPlanners 삭제하기
+export const useDeleteTenMinPlanners = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => tenMinplannerApi.deleteTenMinPlannerOfDiaryId(id),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['tenMinPlanner']
