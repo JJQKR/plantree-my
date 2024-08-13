@@ -16,12 +16,18 @@ import { useCreateDiary } from '@/lib/hooks/useDiaries';
 import UnsplashImageSearch from '@/components/molecules/diarycoversidebar/UnsplashImageSearch';
 import UnsplashBackgroundSearch from '@/components/molecules/diarycoversidebar/UnsplashBackgroundSearch';
 import Swal from 'sweetalert2';
+import { FaTrash } from 'react-icons/fa';
 
 type ParamTypes = {
   [key: string]: string;
   diaryId: string;
 };
-
+// 타입 정의
+interface DeleteButtonPosition {
+  x: number;
+  y: number;
+  rotation: number;
+}
 const DiaryCoverPage: React.FC = () => {
   const router = useRouter();
   const userId = useUserStore((state) => state.userId);
@@ -104,6 +110,7 @@ const DiaryCoverPage: React.FC = () => {
   const [selectedMenu, setSelectedMenu] = useState<string | null>(null);
   const [loading, setLoading] = useState(false); // 로딩 상태 추가
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const [deleteButtonPosition, setDeleteButtonPosition] = useState<DeleteButtonPosition | null>(null);
 
   useEffect(() => {
     const fetchDiaryCover = async () => {
@@ -237,7 +244,7 @@ const DiaryCoverPage: React.FC = () => {
       textRef.current.fontStyle(`${fontWeightStyle} ${fontStyle}`);
       textRef.current.fill(coverTitleColor); // 텍스트 색상 초기화 반영
       textRef.current.fontFamily(coverTitleFontFamily); // 글꼴 초기화 반영
-      // 밑줄과 취소선도 필요 시 여기에 반영
+      // 밑줄과 취소선도 필요 시 여기에 반영 //안될듯 포기
       textRef.current.getLayer()?.batchDraw();
     }
   }, [coverTitleColor, coverTitleFontStyle, coverTitleFontFamily, coverTitleFontWeight]);
@@ -507,6 +514,7 @@ const DiaryCoverPage: React.FC = () => {
 
     if (clickedOnEmpty) {
       setCoverSelectedElement(null);
+      setDeleteButtonPosition(null);
       if (trRef.current) {
         trRef.current.nodes([]);
         trRef.current.getLayer()?.batchDraw();
@@ -846,7 +854,7 @@ const DiaryCoverPage: React.FC = () => {
 
     const coverData = {
       cover_title: 'Create Cover Title',
-      cover_title_position: JSON.stringify({ x: 140, y: 150 }),
+      cover_title_position: JSON.stringify({ x: 120, y: 150 }),
       cover_title_fontsize: 30,
       cover_title_width: 220,
       cover_title_rotation: 0,
@@ -1161,7 +1169,7 @@ const DiaryCoverPage: React.FC = () => {
           </div>
         );
       case 'Elements':
-        return <div>요소</div>;
+        return <div>요소 준비중입니다</div>;
       case 'Upload':
         return <div></div>;
       case 'Background':
@@ -1218,7 +1226,7 @@ const DiaryCoverPage: React.FC = () => {
           </div>
         );
       case 'Layers':
-        return <div>레이어</div>;
+        return <div>레이어 준비중입니다</div>;
       case 'Resize':
         return <div>크기 조정</div>;
       default:
@@ -1271,6 +1279,7 @@ const DiaryCoverPage: React.FC = () => {
 
   const handleDeselectElement = () => {
     setCoverSelectedElement(null);
+    setDeleteButtonPosition(null);
     if (trRef.current) {
       trRef.current.nodes([]); // 트랜스포머에서 선택된 요소 해제
       trRef.current.getLayer()?.batchDraw(); // 레이어 다시 그리기
@@ -1414,6 +1423,18 @@ const DiaryCoverPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* 삭제 버튼 렌더링 */}
+      {coverSelectedElement && (
+        <button
+          className="absolute top-4 right-8 bg-red-500 text-white rounded-full p-2 z-10 flex items-center space-x-2"
+          onClick={handleDeleteElement}
+        >
+          <FaTrash className="text-white" />
+          <span className="text-[1rem] font-medium">선택 요소 삭제</span>
+        </button>
+      )}
+
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
           <img src="/images/loading.gif" alt="Loading" width={200} height={200} />

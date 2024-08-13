@@ -30,10 +30,17 @@ const DiaryCoverSidebar: React.FC<DiaryCoverSidebarProps> = ({ handleSelectMenu 
       </div>
       <div
         className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
+        onClick={() => handleSelectMenu('Background')}
+      >
+        <FaPalette className="mb-1" />
+        <span>배경</span>
+      </div>
+      <div
+        className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
         onClick={() => handleSelectMenu('Photos')}
       >
         <FaImage className="mb-1" />
-        <span>사진</span>
+        <span>이미지</span>
       </div>
       <div
         className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
@@ -42,13 +49,7 @@ const DiaryCoverSidebar: React.FC<DiaryCoverSidebarProps> = ({ handleSelectMenu 
         <FaShapes className="mb-1" />
         <span>요소</span>
       </div>
-      <div
-        className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
-        onClick={() => handleSelectMenu('Background')}
-      >
-        <FaPalette className="mb-1" />
-        <span>배경</span>
-      </div>
+
       <div
         className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
         onClick={() => handleSelectMenu('Layers')}
