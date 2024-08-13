@@ -135,6 +135,12 @@ const DiaryCase: React.FC = () => {
     }
     const diaryId = uuid(); // 새로운 다이어리 ID 생성
     router.push(`/member/diary/${diaryId}/cover`); // 새로운 다이어리 생성 페이지로 이동
+    Swal.fire({
+      title: '다이어리 생성 성공!',
+      text: '다이어리 커스텀 완료 후 저장 버튼을 눌러 다이어리를 저장하세요!',
+      icon: 'success',
+      confirmButtonText: 'OK'
+    });
   };
 
   // 다이어리 클릭 핸들러
@@ -152,7 +158,7 @@ const DiaryCase: React.FC = () => {
       >
         {gridView ? (
           // 그리드 뷰에서 다이어리 커버 표시
-          <div className="grid grid-cols-3 gap-20 max-w-full mt-[100px]">
+          <div className="grid grid-cols-3 gap-20 max-w-full mt-[10rem]">
             {diaryCovers.length > 0 ? (
               diaryCovers.map((cover, index) =>
                 cover.cover_id ? (
@@ -161,8 +167,8 @@ const DiaryCase: React.FC = () => {
                     className="flex flex-col items-center justify-center cursor-pointer"
                     onClick={() => handleDiaryClick(cover.diary_id as string)}
                     style={{
-                      width: '250px',
-                      height: '400px'
+                      width: '25rem',
+                      height: '40rem'
                     }}
                   >
                     <div className="relative flex flex-col items-center justify-center w-full h-full rounded shadow-md overflow-hidden">
@@ -227,7 +233,7 @@ const DiaryCase: React.FC = () => {
                 ) : null
               )
             ) : (
-              <div className="flex items-center justify-center w-[250px] h-[400px] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
+              <div className="flex items-center justify-center w-[25rem] h-[40rem] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
                 다이어리가 없습니다
               </div>
             )}
@@ -256,7 +262,7 @@ const DiaryCase: React.FC = () => {
                   <SwiperSlide
                     key={cover.cover_id}
                     onClick={() => handleDiaryClick(cover.diary_id as string)}
-                    className="relative cursor-pointer flex flex-col w-[480px] h-[720px] items-center justify-center rounded shadow-md text-2xl font-bold text-black"
+                    className="relative cursor-pointer flex flex-col w-[48rem] h-[72rem] items-center justify-center rounded shadow-md text-2xl font-bold text-black"
                     style={{
                       backgroundColor: cover.cover_bg_color,
                       width: cover.cover_stage_size.width * cover.cover_scale,
@@ -323,7 +329,7 @@ const DiaryCase: React.FC = () => {
                 ) : null
               )
             ) : (
-              <SwiperSlide className="flex items-center justify-center w-[480px] h-[720px] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
+              <SwiperSlide className="flex items-center justify-center w-[48rem] h-[72rem] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
                 <button
                   onClick={handleCreateDiary}
                   className="flex flex-col items-center justify-center text-center"
