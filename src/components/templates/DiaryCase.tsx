@@ -135,12 +135,6 @@ const DiaryCase: React.FC = () => {
     }
     const diaryId = uuid(); // 새로운 다이어리 ID 생성
     router.push(`/member/diary/${diaryId}/cover`); // 새로운 다이어리 생성 페이지로 이동
-    Swal.fire({
-      title: '다이어리 생성 성공!',
-      text: '다이어리 커스텀 완료 후 저장 버튼을 눌러 다이어리를 저장하세요!',
-      icon: 'success',
-      confirmButtonText: 'OK'
-    });
   };
 
   // 다이어리 클릭 핸들러
@@ -148,7 +142,6 @@ const DiaryCase: React.FC = () => {
     setDiaryId(id); // 클릭된 다이어리 ID 설정
     router.push(`/member/diary/${id}/parchment`); // 다이어리 페이지로 이동
   };
-
   return (
     <div>
       <div
@@ -158,7 +151,6 @@ const DiaryCase: React.FC = () => {
       >
         {gridView ? (
           // 그리드 뷰에서 다이어리 커버 표시
-          <div className="grid grid-cols-3 gap-20 max-w-full mt-[10rem]">
           <div className="grid grid-cols-3 gap-20 max-w-full mt-[10rem]">
             {diaryCovers.length > 0 ? (
               diaryCovers.map((cover, index) =>
