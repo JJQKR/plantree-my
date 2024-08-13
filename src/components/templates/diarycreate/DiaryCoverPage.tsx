@@ -1429,7 +1429,7 @@ const DiaryCoverPage: React.FC = () => {
       {/* 삭제 버튼 렌더링 */}
       {coverSelectedElement && (
         <button
-          className="absolute top-4 right-8 bg-red-500 text-white rounded-full p-2 z-10 flex items-center space-x-2"
+          className="absolute top-4 right-8 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 z-10 flex items-center space-x-2"
           onClick={handleDeleteElement}
         >
           <FaTrash className="text-white" />
