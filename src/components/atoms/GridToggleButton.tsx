@@ -9,9 +9,9 @@ const GridToggleButton: React.FC<GridToggleButtonProps> = ({ onClick, gridView }
       className="p-2 mr-4 bg-transparent border-none outline-none hover:bg-gray-600 rounded transition duration-300"
     >
       {gridView ? (
-        <AiFillBook className="text-[40px] text-green-400" /> // gridView가 true일 때 AiFillBook 아이콘 렌더링
+        <AiFillBook className="text-[4rem] text-green-400" /> // gridView가 true일 때 AiFillBook 아이콘 렌더링
       ) : (
-        <AiFillAppstore className="text-[40px] text-green-400" /> // gridView가 false일 때 AiFillAppstore 아이콘 렌더링
+        <AiFillAppstore className="text-[4rem] text-green-400" /> // gridView가 false일 때 AiFillAppstore 아이콘 렌더링
       )}
     </button>
   );
