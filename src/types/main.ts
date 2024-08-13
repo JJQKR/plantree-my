@@ -47,6 +47,10 @@ export type DiaryCover = {
   cover_scale: number | null;
   cover_title: string | null;
   unsplash_image: string | null;
+  cover_title_fontstyle?: string | null;
+  cover_title_fontfamily?: string | null;
+  cover_title_color?: string | null;
+  cover_title_fontweight?: string | null;
 };
 
 export type Position = {
@@ -78,4 +82,10 @@ export type CoverData = {
   unsplash_image_rotation: number;
   diary_id?: string;
   cover_id: string;
+  cover_title_fontstyle?: string;
+  cover_title_fontfamily?: string;
+  cover_title_color?: string;
+  cover_title_fontweight?: string;
+  created_at: string;
+  // bookshelf_order: number;
 };

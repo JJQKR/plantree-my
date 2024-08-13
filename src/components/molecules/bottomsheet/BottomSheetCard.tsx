@@ -1,4 +1,5 @@
 import { UpdatePageType } from '@/api/pages.api';
+import usePageStore from '@/stores/pages.store';
 import React from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
@@ -9,7 +10,7 @@ const ItemType = {
 type BottomSheetCardProps = {
   page: UpdatePageType;
   moveCard: (dragIndex: number, hoverIndex: number) => void;
-  onClick: () => void;
+  onToggle: () => void;
 };
 
 type DragItemType = {
@@ -18,8 +19,10 @@ type DragItemType = {
   type: typeof ItemType.CARD;
 };
 
-const BottomSheetCard: React.FC<BottomSheetCardProps> = ({ page, moveCard, onClick }) => {
+const BottomSheetCard: React.FC<BottomSheetCardProps> = ({ page, moveCard, onToggle }) => {
   const ref = React.useRef(null);
+  const { currentPageIndex, setCurrentPageIndex } = usePageStore((state) => state);
+
   const [, drop] = useDrop({
     accept: ItemType.CARD,
     hover(item: DragItemType) {
@@ -45,17 +48,27 @@ const BottomSheetCard: React.FC<BottomSheetCardProps> = ({ page, moveCard, onCli
 
   drag(drop(ref));
 
+  const showPages = (index: number) => {
+    console.log({ index });
+    if (index === 1) {
+      setCurrentPageIndex(index - 1);
+    } else if (index % 2 === 0) {
+      console.log('akwdk');
+      setCurrentPageIndex(index - 2);
+    } else {
+      setCurrentPageIndex(index - 1);
+    }
+  };
+
   return (
     <div
       ref={ref}
-      className={`relative bg-gray-100 rounded-lg shadow-md p-4 w-32 h-40 flex-none cursor-pointer ${
+      className={`flex items-end justify-center bg-gray-100 rounded-lg shadow-md p-4 w-32 h-40 flex-none cursor-pointer ${
         isDragging ? 'opacity-50' : ''
       }`}
-      onClick={() => {
-        onClick();
-      }}
+      onClick={() => showPages(page.index)}
     >
-      <h2 className="text-xl font-bold">{page.index}</h2>
+      <div className="bg-green-500 w-[2rem] h-[2rem] rounded text-xl font-bold  ">{page.index}</div>
     </div>
   );
 };

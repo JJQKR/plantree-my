@@ -4,7 +4,6 @@ import BlankNote from '@/components/molecules/parchment/BlankNote';
 import LineNote from '@/components/molecules/parchment/LineNote';
 import TenMinPlanner from '@/components/molecules/parchment/TenMinPlanner';
 import { usePageToDiaryId } from '@/lib/hooks/usePages';
-import useEditModeStore from '@/stores/editMode.store';
 import { PageType } from '@/stores/pages.store';
 import useParchmentModalStore from '@/stores/parchment.modal.store';
 import { useRouter } from 'next/navigation';
@@ -19,17 +18,17 @@ const DiaryContents = ({ diaryId, pageIndex }: DiaryContentsProps) => {
   const { data: pages, isPending } = usePageToDiaryId(diaryId);
   const router = useRouter();
   const { toggleParchmentOptionModal } = useParchmentModalStore((state) => state);
-  // const { onEditMode, offEditMode } = useEditModeStore((state) => state);
+
+  useEffect(() => {}, []);
 
   const handleEditMode = ({ id, style }: { id: string; style: string }) => {
-    // URL을 문자열로 직접 조합
     const url = `/member/diary/${diaryId}/parchment/${id}?style=${encodeURIComponent(style)}`;
     router.push(url);
   };
 
   const showContent = (page: PageType) => {
     return (
-      <div key={page.id} className="relative w-[45.8rem] h-[60rem] bg-white shadow-lg p-2">
+      <div key={page.id} className="mx-auto mt-[2rem] w-[46rem] h-[70rem] bg-transparent ">
         {/* <button
           onClick={() => {}}
           className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-[2rem] flex items-center justify-center z-10"
@@ -50,12 +49,7 @@ const DiaryContents = ({ diaryId, pageIndex }: DiaryContentsProps) => {
           <LineNote id={page.content_id} />
         ) : page.parchment_style === 'blankNote' ? (
           <BlankNote id={page.content_id} />
-        ) : (
-          <img className="w-full h-full object-cover" />
-        )}
-        <div className="absolute top-2 left-2 text-gray-800 text-3xl px-2 py-1 rounded">
-          {/* Page {pages.indexOf(page) + 1} */}
-        </div>
+        ) : null}
       </div>
     );
   };
@@ -66,28 +60,38 @@ const DiaryContents = ({ diaryId, pageIndex }: DiaryContentsProps) => {
   }
 
   return (
-    <div className="grid grid-cols-2">
-      <div className="border-r border-gray-300 h-[60rem] flex items-center justify-center">
+    <div className="flex">
+      <div className="  flex items-center justify-center">
         {pages?.[pageIndex] ? (
-          showContent(pages[pageIndex])
+          <div className='relative w-[48.8rem] h-[72rem] bg-white shadow-lg p-2"'>
+            {showContent(pages[pageIndex])}
+            <div className="absolute bottom-[2rem] left-[2rem] text-gray-800 text-3xl px-2 py-1 rounded">
+              {pages.indexOf(pages[pageIndex]) + 1}
+            </div>
+          </div>
         ) : (
           <div
-            className="w-[45.8rem] h-[60rem] flex items-center justify-center border-2 border-dashed border-gray-600 cursor-pointer"
+            className="w-[45.8rem] h-[72rem] flex items-center justify-center cursor-pointer"
             onClick={toggleParchmentOptionModal}
           >
-            <span className="text-gray-600 text-4xl">+ 속지 추가</span>
+            <span className="text-[#9E9E9E] text-[3rem]">+ 속지 추가</span>
           </div>
         )}
       </div>
       <div className="flex items-center justify-center">
         {pages?.[pageIndex + 1] ? (
-          showContent(pages[pageIndex + 1])
+          <div className='relative w-[48.8rem] h-[72rem] bg-white shadow-lg p-2"'>
+            {showContent(pages[pageIndex + 1])}
+            <div className="absolute bottom-[2rem] right-[2rem] text-gray-800 text-3xl px-2 py-1 rounded">
+              {pages.indexOf(pages[pageIndex + 1]) + 1}
+            </div>
+          </div>
         ) : pages?.[pageIndex] ? (
           <div
-            className="w-[45.8rem] h-[67.6rem] flex items-center justify-center border-2 border-dashed border-gray-600 cursor-pointer"
+            className="w-[45.8rem] h-[72rem] flex items-center justify-center cursor-pointer"
             onClick={toggleParchmentOptionModal}
           >
-            <span className="text-gray-600 text-4xl">+ 속지 추가</span>
+            <span className="text-[#9E9E9E] text-4xl">+ 속지 추가</span>
           </div>
         ) : null}
       </div>
