@@ -10,7 +10,7 @@ const page = () => {
       <div className="flex flex-col items-center flex-grow">
         <LandingHeader />
         <LandingMain />
-        <LandingAboutUS />
+        {/* <LandingAboutUS /> */}
         <LandingFooter />
       </div>
     </div>
