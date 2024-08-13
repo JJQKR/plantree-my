@@ -94,10 +94,14 @@ const MyPage: React.FC = () => {
             </button>
           </NicknameButton>
           <WithdrawalButton>
-            <div className="flex items-center justify-start  font-semibold text-[2.6rem] my-[3.2rem] pl-[4rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[9.9rem]">
-              <button onClick={handleToggleWithdrawalModal}>회원 탈퇴</button>
+            <button
+              onClick={handleToggleBadgeModal}
+              className="flex items-center justify-between font-semibold text-[2.6rem] my-[3.2rem] pl-[4rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[9.9rem]"
+            >
+              <div>회원 탈퇴</div>
+              <div className="text-[#008A02] text-[2.8rem] pr-[4rem]">&#10095;</div>
               {isWithdrawalModalOpen && <WithdrawalModal />}
-            </div>
+            </button>
           </WithdrawalButton>
         </div>
       </div>
