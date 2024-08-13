@@ -46,42 +46,90 @@ const LandingFooter = () => {
             <h2 className="text-xs font-bold">FE</h2>
             <p>이보영</p>
             <Link href="https://github.com/osoon9295" target="_blank" rel="noopener noreferrer">
-              <Image src="/images/githublogo.png" alt="GitHub Logo" width={40} height={40} />
+              <div className="relative w-10 h-10">
+                <Image
+                  src="/images/githublogo.png"
+                  alt="GitHub Logo"
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 1280px) 10vw, 40px"
+                />
+              </div>
             </Link>
           </div>
           <div className="flex flex-row items-center gap-[1.1rem]">
             <h2 className="text-lg font-bold">FE</h2>
             <p>강연주</p>
             <Link href="https://github.com/JJQKR" target="_blank" rel="noopener noreferrer">
-              <Image src="/images/githublogo.png" alt="GitHub Logo" width={40} height={40} />
+              <div className="relative w-10 h-10">
+                <Image
+                  src="/images/githublogo.png"
+                  alt="GitHub Logo"
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 1280px) 10vw, 40px"
+                />
+              </div>
             </Link>
           </div>
           <div className="flex flex-row items-center gap-[1.1rem]">
             <h2 className="text-lg font-bold">FE</h2>
             <p>김재훈</p>
             <Link href="https://github.com/hoondolla" target="_blank" rel="noopener noreferrer">
-              <Image src="/images/githublogo.png" alt="GitHub Logo" width={40} height={40} />
+              <div className="relative w-10 h-10">
+                <Image
+                  src="/images/githublogo.png"
+                  alt="GitHub Logo"
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 1280px) 10vw, 40px"
+                />
+              </div>
             </Link>
           </div>
           <div className="flex flex-row items-center gap-[1.1rem]">
             <h2 className="text-lg font-bold">FE</h2>
             <p>박영수</p>
             <Link href="https://github.com/youngsupark1" target="_blank" rel="noopener noreferrer">
-              <Image src="/images/githublogo.png" alt="GitHub Logo" width={40} height={40} />
+              <div className="relative w-10 h-10">
+                <Image
+                  src="/images/githublogo.png"
+                  alt="GitHub Logo"
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 1280px) 10vw, 40px"
+                />
+              </div>
             </Link>
           </div>
           <div className="flex flex-row items-center gap-[1.1rem]">
             <h2 className="text-lg font-bold">FE</h2>
             <p>유인수</p>
             <Link href="https://github.com/YISYISYISYIS" target="_blank" rel="noopener noreferrer">
-              <Image src="/images/githublogo.png" alt="GitHub Logo" width={40} height={40} />
+              <div className="relative w-10 h-10">
+                <Image
+                  src="/images/githublogo.png"
+                  alt="GitHub Logo"
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 1280px) 10vw, 40px"
+                />
+              </div>
             </Link>
           </div>
           <div className="flex flex-row items-center gap-[1.1rem]">
             <h2 className="text-lg font-bold">DE</h2>
             <p>황민균</p>
             <Link href="https://notion.so" target="_blank" rel="noopener noreferrer">
-              <Image src="/images/githublogo.png" alt="GitHub Logo" width={40} height={40} />
+              <div className="relative w-10 h-10">
+                <Image
+                  src="/images/githublogo.png"
+                  alt="GitHub Logo"
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 1280px) 10vw, 40px"
+                />
+              </div>
             </Link>
           </div>
         </div>
