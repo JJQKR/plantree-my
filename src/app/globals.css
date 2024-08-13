@@ -93,3 +93,9 @@ html {
   font-weight: 400;
   font-style: normal;
 }
+
+.image-size {
+  width: 350px;
+  height: 500px;
+  object-fit: cover;
+}
