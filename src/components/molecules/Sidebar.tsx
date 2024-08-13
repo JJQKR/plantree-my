@@ -98,20 +98,22 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <ul className="list-none space-y-2 flex-col">
             {diaryCovers.length > 0 ? (
               diaryCovers.map((cover) => (
-                <li
-                  key={cover.id}
-                  className="pl-2 w-[15rem] h-[3.25rem] text-[1.13rem] font-semibold flex items-center rounded-[10px] text-black"
-                  style={{
-                    backgroundColor: cover.cover_bg_color || 'bg-white',
-                    backgroundImage: cover.cover_bg_color ? `url(${cover.cover_bg_color})` : 'none',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    color: cover.cover_title_color || 'black', // 텍스트 색깔 적용
-                    fontFamily: cover.cover_title_fontfamily || 'inherit', // 폰트 패밀리 적용
-                    fontWeight: cover.cover_title_fontweight || 'normal' // 폰트 굵기 적용
-                  }}
-                >
-                  {cover.cover_title || '제목 없음'}
+                <li key={cover.id}>
+                  <Link
+                    href={`/member/diary/${cover.diary_id}/parchment`}
+                    className="block pl-2 w-[15rem] h-[3.25rem] text-[1.13rem] font-semibold flex items-center rounded-[10px] text-black"
+                    style={{
+                      backgroundColor: cover.cover_bg_color || 'bg-white',
+                      backgroundImage: cover.cover_bg_color ? `url(${cover.cover_bg_color})` : 'none',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      color: cover.cover_title_color || 'black',
+                      fontFamily: cover.cover_title_fontfamily || 'inherit',
+                      fontWeight: cover.cover_title_fontweight || 'normal'
+                    }}
+                  >
+                    {cover.cover_title || '제목 없음'}
+                  </Link>
                 </li>
               ))
             ) : (
