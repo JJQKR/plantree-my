@@ -78,7 +78,7 @@ const DiaryCase: React.FC = () => {
       created_at: cover.created_at
     }));
 
-    // 생성일 기준으로 커버 데이터 정렬 (가장 최근 것이 가장 앞에 위치)
+    // 생성일 기준으로 커버 데이터 정렬 (제일 먼저 만든 것이 앞에 오게)
     covers.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
 
     setDiaryCovers(covers); // 커버 상태 업데이트
@@ -159,6 +159,7 @@ const DiaryCase: React.FC = () => {
         {gridView ? (
           // 그리드 뷰에서 다이어리 커버 표시
           <div className="grid grid-cols-3 gap-20 max-w-full mt-[10rem]">
+          <div className="grid grid-cols-3 gap-20 max-w-full mt-[10rem]">
             {diaryCovers.length > 0 ? (
               diaryCovers.map((cover, index) =>
                 cover.cover_id ? (
@@ -167,8 +168,8 @@ const DiaryCase: React.FC = () => {
                     className="flex flex-col items-center justify-center cursor-pointer"
                     onClick={() => handleDiaryClick(cover.diary_id as string)}
                     style={{
-                      width: '25rem',
-                      height: '40rem'
+                      width: '25rem', // 250px -> 25rem
+                      height: '40rem' // 400px -> 40rem
                     }}
                   >
                     <div className="relative flex flex-col items-center justify-center w-full h-full rounded shadow-md overflow-hidden">
@@ -342,7 +343,7 @@ const DiaryCase: React.FC = () => {
           </Swiper>
         )}
       </div>
-      <div className="fixed bottom-16 right-16">
+      <div className="fixed bottom-[3rem] right-[4rem]">
         <CreateDiaryButton onClick={handleCreateDiary} /> {/* 다이어리 생성 버튼 */}
       </div>
       {loading && (

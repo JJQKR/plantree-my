@@ -14,6 +14,7 @@ import useEditModeStore from '@/stores/editMode.store';
 import { FaChevronLeft } from 'react-icons/fa6';
 import { FaChevronRight } from 'react-icons/fa6';
 import { FaBook } from 'react-icons/fa';
+import useBottomSheetStore from '@/stores/bottomsheet.store';
 
 type ParchmentType = 'tenMinPlanner' | 'lineNote' | 'blankNote';
 
@@ -36,7 +37,7 @@ export default function ParchmentList() {
   const { mutate: deleteDbDiary } = useDeleteDiary();
   const { offEditMode } = useEditModeStore((state) => state);
   const { currentPageIndex, setCurrentPageIndex } = usePageStore((state) => state);
-
+  const { activeCardIndices, setActiveCardIndices } = useBottomSheetStore((state) => state);
   // 커버 타이틀 가져오는 코드
   useEffect(() => {
     if (diaryId) {
@@ -47,6 +48,8 @@ export default function ParchmentList() {
       getCoverTitle();
     }
     offEditMode();
+    setActiveCardIndices([0, 1]);
+    setCurrentPageIndex(0);
   }, [diaryId]);
 
   // 현재 페이지 index
@@ -85,24 +88,48 @@ export default function ParchmentList() {
     router.push(`/member/diary/${diaryId}/cover`);
   };
 
+  // const index = (page) => {
+  //   pages?.indexOf(page);
+  // };
+
   // 앞페이지로 이동합니다.
   const handlePrevPage = () => {
-    if (currentPageIndex > 1) {
+    if (currentPageIndex < 1) return;
+    if (currentPageIndex % 2 !== 0) {
+      console.log({ currentPageIndex });
+      setCurrentPageIndex(currentPageIndex - 3);
+      setActiveCardIndices([currentPageIndex - 3, currentPageIndex - 2]);
+    } else if (currentPageIndex % 2 === 0) {
       setCurrentPageIndex(currentPageIndex - 2);
-    } else if (currentPageIndex === 1) {
-      setCurrentPageIndex(0); // 첫 페이지로 이동하려는 경우
+      setActiveCardIndices([currentPageIndex - 2, currentPageIndex - 1]);
     }
   };
 
   // 뒷페이지로 이동합니다.
   const handleNextPage = () => {
     if (currentPageIndex + 2 < pages!.length) {
-      setCurrentPageIndex(currentPageIndex + 2);
+      if (currentPageIndex % 2 !== 0) {
+        setCurrentPageIndex(currentPageIndex + 3);
+        setActiveCardIndices([currentPageIndex + 3, currentPageIndex + 4]);
+      } else if (currentPageIndex % 2 === 0) {
+        setCurrentPageIndex(currentPageIndex + 2);
+        setActiveCardIndices([currentPageIndex + 2, currentPageIndex + 3]);
+      }
     } else if (pages![currentPageIndex]) {
       if (confirm('더이상 페이지가 없습니다. 추가하시겠습니까?')) {
         toggleParchmentOptionModal();
       }
     }
+
+    // if (currentPageIndex + 2 < pages!.length) {
+    //   console.log({ currentPageIndex });
+    //   setCurrentPageIndex(currentPageIndex + 2);
+    //   setActiveCardIndices([currentPageIndex, currentPageIndex - 1]);
+    // } else if (pages![currentPageIndex]) {
+    //   if (confirm('더이상 페이지가 없습니다. 추가하시겠습니까?')) {
+    //     toggleParchmentOptionModal();
+    //   }
+    // }
   };
 
   if (isPending) {
@@ -135,7 +162,7 @@ export default function ParchmentList() {
         </div>
         <div className="flex flex-row">
           <div className="w-[97.6rem] h-[72rem] mx-[3.6rem] my-[4.3rem]">
-            <DiaryContents diaryId={diaryId} pageIndex={currentPageIndex} />
+            <DiaryContents diaryId={diaryId} currentPageIndex={currentPageIndex} />
           </div>
         </div>
       </div>
