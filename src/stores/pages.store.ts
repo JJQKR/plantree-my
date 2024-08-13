@@ -15,8 +15,8 @@ interface PageStore {
   setPageId: (newPageId: string) => void;
 
   // page index 임시저장
-  pageIndex: number;
-  setPageIndex: (newPageIndex: number) => void;
+  currentPageIndex: number;
+  setCurrentPageIndex: (newPageIndex: number) => void;
 
   // page 1개 임시저장
   page: PageType | null;
@@ -34,9 +34,9 @@ const usePageStore = create<PageStore>((set) => ({
   pageId: '',
   setPageId: (newPageId) => set(() => ({ pageId: newPageId })),
 
-  // page index 임시저장
-  pageIndex: 0,
-  setPageIndex: (newPageIndex) => set(() => ({ pageIndex: newPageIndex })),
+  // 현재 page index 임시저장
+  currentPageIndex: 0,
+  setCurrentPageIndex: (newPageIndex) => set(() => ({ currentPageIndex: newPageIndex })),
 
   // page 1개 임시저장
   page: null,

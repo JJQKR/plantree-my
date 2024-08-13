@@ -31,11 +31,11 @@ export default function ParchmentList() {
   const { diaryId } = useParams<{ diaryId: string }>();
   const [coverTitle, setCoverTitle] = useState('');
   const { toggleParchmentOptionModal } = useParchmentModalStore((state) => state);
-  const { pages, setPages } = usePageStore((state) => state);
-  const { data: dbPages, isPending, isError } = usePageToDiaryId(diaryId);
+  const { data: pages, isPending, isError } = usePageToDiaryId(diaryId);
   const { mutate: deleteDbPages } = useDeletePages();
   const { mutate: deleteDbDiary } = useDeleteDiary();
   const { offEditMode } = useEditModeStore((state) => state);
+  const { currentPageIndex, setCurrentPageIndex } = usePageStore((state) => state);
 
   // 커버 타이틀 가져오는 코드
   useEffect(() => {
@@ -50,7 +50,7 @@ export default function ParchmentList() {
   }, [diaryId]);
 
   // 현재 페이지 index
-  const [currentPageIndex, setCurrentPageIndex] = useState(0);
+  // const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
   // 다이어리를 삭제 :  db diary 삭제 , db pages 삭제 , db cover 삭제, db Parchments 삭제
   const deleteDiary = async () => {
@@ -60,7 +60,7 @@ export default function ParchmentList() {
       deleteDbPages(diaryId);
       await supabase.from('diary_covers').delete().eq('diary_id', diaryId);
 
-      const deletionPromises = pages.map((page) => {
+      const deletionPromises = pages!.map((page) => {
         const tableName = changeDbName(page.parchment_style as ParchmentType) as
           | 'ten_min_planner'
           | 'line_note'
@@ -96,10 +96,9 @@ export default function ParchmentList() {
 
   // 뒷페이지로 이동합니다.
   const handleNextPage = () => {
-    console.log({ currentPageIndex });
-    if (currentPageIndex + 2 < dbPages!.length) {
+    if (currentPageIndex + 2 < pages!.length) {
       setCurrentPageIndex(currentPageIndex + 2);
-    } else if (dbPages![currentPageIndex]) {
+    } else if (pages![currentPageIndex]) {
       if (confirm('더이상 페이지가 없습니다. 추가하시겠습니까?')) {
         toggleParchmentOptionModal();
       }
