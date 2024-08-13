@@ -11,10 +11,10 @@ import React, { useEffect } from 'react';
 
 interface DiaryContentsProps {
   diaryId: string;
-  pageIndex: number;
+  currentPageIndex: number;
 }
 
-const DiaryContents = ({ diaryId, pageIndex }: DiaryContentsProps) => {
+const DiaryContents = ({ diaryId, currentPageIndex }: DiaryContentsProps) => {
   const { data: pages, isPending } = usePageToDiaryId(diaryId);
   const router = useRouter();
   const { toggleParchmentOptionModal } = useParchmentModalStore((state) => state);
@@ -27,14 +27,9 @@ const DiaryContents = ({ diaryId, pageIndex }: DiaryContentsProps) => {
   };
 
   const showContent = (page: PageType) => {
+    console.log(currentPageIndex);
     return (
       <div key={page.id} className="mx-auto mt-[2rem] w-[46rem] h-[70rem] bg-transparent ">
-        {/* <button
-          onClick={() => {}}
-          className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-[2rem] flex items-center justify-center z-10"
-        >
-          &times;
-        </button> */}
         <button
           className="bg-blue-300"
           onClick={() => {
@@ -62,11 +57,11 @@ const DiaryContents = ({ diaryId, pageIndex }: DiaryContentsProps) => {
   return (
     <div className="flex">
       <div className="  flex items-center justify-center">
-        {pages?.[pageIndex] ? (
+        {pages?.[currentPageIndex] ? (
           <div className='relative w-[48.8rem] h-[72rem] bg-white shadow-lg p-2"'>
-            {showContent(pages[pageIndex])}
+            {showContent(pages[currentPageIndex])}
             <div className="absolute bottom-[2rem] left-[2rem] text-gray-800 text-3xl px-2 py-1 rounded">
-              {pages.indexOf(pages[pageIndex]) + 1}
+              {pages.indexOf(pages[currentPageIndex]) + 1}
             </div>
           </div>
         ) : (
@@ -79,14 +74,14 @@ const DiaryContents = ({ diaryId, pageIndex }: DiaryContentsProps) => {
         )}
       </div>
       <div className="flex items-center justify-center">
-        {pages?.[pageIndex + 1] ? (
+        {pages?.[currentPageIndex + 1] ? (
           <div className='relative w-[48.8rem] h-[72rem] bg-white shadow-lg p-2"'>
-            {showContent(pages[pageIndex + 1])}
+            {showContent(pages[currentPageIndex + 1])}
             <div className="absolute bottom-[2rem] right-[2rem] text-gray-800 text-3xl px-2 py-1 rounded">
-              {pages.indexOf(pages[pageIndex + 1]) + 1}
+              {pages.indexOf(pages[currentPageIndex + 1]) + 1}
             </div>
           </div>
-        ) : pages?.[pageIndex] ? (
+        ) : pages?.[currentPageIndex] ? (
           <div
             className="w-[45.8rem] h-[72rem] flex items-center justify-center cursor-pointer"
             onClick={toggleParchmentOptionModal}
