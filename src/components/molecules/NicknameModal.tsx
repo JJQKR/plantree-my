@@ -85,19 +85,20 @@ const NicknameModal: React.FC = () => {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
           // onClick={handleBackGroundClick}
         >
-          <div className="bg-white p-[2.5rem] rounded-[10px] w-[31.25rem] h-[17.25rem]">
+          <div className="bg-white rounded-[2rem] w-[46rem] h-[29.9rem] p-[4rem]">
             <div onClick={(e) => e.stopPropagation()}>
-              <div className="flex justify-between items-center mb-[1.75rem]">
-                <h1 className="text-[1.63rem] font-bold text-left text-black">닉네임 변경</h1>
-                <button className="text-black" onClick={toggleNicknameModal} type="button">
+              <div className="flex justify-between items-center">
+                <h2 className="font-bold text-[2.8rem] h-[4rem]">닉네임 변경</h2>
+                <button className="text-[#008A02] font-bold text-[2.8rem]" onClick={toggleNicknameModal} type="button">
                   &#10005;
                 </button>
               </div>
+              <p className="text-[1.6rem] my-[2rem]">원하시는 닉네임을 입력 후 확인 버튼을 눌러주세요.</p>
               <form className="flex flex-col" onSubmit={handleNicknameSubmit}>
                 <input
                   type="text"
                   placeholder="새 닉네임 입력"
-                  className="mb-[1.75rem] p-3 border rounded-[5px] w-full text-black text-[1.13rem]"
+                  className="mb-[1rem] p-[1rem] border rounded-[1.2rem] h-[5.2rem] w-full text-black text-[1.8rem]"
                   ref={nicknameRef}
                   defaultValue={nickname ?? ''}
                 />
@@ -105,10 +106,10 @@ const NicknameModal: React.FC = () => {
                 <div className="flex flex-col mb-[2.5rem]">
                   <button
                     type="submit"
-                    className="w-full h-[3.25rem] text-white text-[1.13rem] rounded-[5px] mb-[2.5rem]"
+                    className="w-full h-[5.2rem] text-white text-[1.8rem] rounded-[1.2rem] mb-[2.5rem]"
                     style={{ backgroundColor: '#9E9E9E' }}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#8AC98B')}
                     onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#008A02')}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#9E9E9E')}
                   >
                     변경하기
                   </button>

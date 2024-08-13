@@ -28,13 +28,13 @@ const GrowthSummary = () => {
       <FetchUserData />
       <FetchMembershipDays />
 
-      <div className="flex flex-row w-[61.25rem] h-[9.5rem] pt-[1.5rem] mb-0 pb-[2rem] bg-white rounded-tr-[20px] rounded-tl-[20px]">
-        <div className="ml-[2rem]">{updatedLevelId && <ProfileStages size={70} />}</div> {/* updatedLevelId 사용 */}
-        <div className="items-center ml-[1rem]">
-          <span className="font-semibold text-[1.63rem] text-[#008A02]">{levelName}</span>
-          <span className="font-semibold text-[1.63rem] ml-[1rem]">{nickname} 님의 정원</span>
+      <div className="flex flex-row w-[98rem] h-[15.2rem] pt-[3.2rem] pb-[3.2rem] bg-white rounded-tr-[2rem] rounded-tl-[2rem]">
+        <div className="ml-[4rem]">{updatedLevelId && <ProfileStages size={100} />}</div> {/* updatedLevelId 사용 */}
+        <div className="items-center ml-[1.6rem]">
+          <span className="font-semibold text-[2.6rem] text-[#008A02]">{levelName}</span>
+          <span className="font-semibold text-[2.6rem] ml-[2rem]">{nickname} 님의 정원</span>
 
-          <div className="font-semibold text-[1.38rem] text-[#727272]">
+          <div className="font-semibold text-[2rem] text-[#727272]">
             <p>플랜트리와 함께 {membershipDays}일째,</p>
             <div className="flex justify-between">열심히 나무를 키우고 계시네요!</div>
           </div>

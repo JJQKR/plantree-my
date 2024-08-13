@@ -30,13 +30,13 @@ const GardenCarousel: React.FC = () => {
     {
       id: 1,
       content: (
-        <div style={{ width: '61.25rem', height: '30.63rem' }} className="relative">
+        <div style={{ width: '98rem', height: '49rem' }} className="relative">
           <Image
             src="/images/garden1.png"
             alt="garden1"
             fill
             style={{ objectFit: 'cover' }}
-            className="rounded-bl-[20px] rounded-br-[20px]"
+            className="rounded-bl-[2rem] rounded-br-[2rem]"
           />
         </div>
       ),
@@ -45,13 +45,13 @@ const GardenCarousel: React.FC = () => {
     {
       id: 2,
       content: (
-        <div style={{ width: '61.25rem', height: '30.63rem' }} className="relative">
+        <div style={{ width: '98rem', height: '49rem' }} className="relative">
           <Image
             src="/images/garden2.png"
             alt="garden2"
             fill
             style={{ objectFit: 'cover' }}
-            className="rounded-bl-[20px] rounded-br-[20px]"
+            className="rounded-bl-[2rem] rounded-br-[2rem]"
           />
         </div>
       ),
@@ -60,13 +60,13 @@ const GardenCarousel: React.FC = () => {
     {
       id: 3,
       content: (
-        <div style={{ width: '61.25rem', height: '30.63rem' }} className="relative">
+        <div style={{ width: '98rem', height: '49rem' }} className="relative">
           <Image
             src="/images/garden3.jpg"
             alt="garden3"
             fill
             style={{ objectFit: 'cover' }}
-            className="rounded-bl-[20px] rounded-br-[20px]"
+            className="rounded-bl-[2rem] rounded-br-[2rem]"
           />
         </div>
       ),
@@ -75,13 +75,13 @@ const GardenCarousel: React.FC = () => {
     {
       id: 4,
       content: (
-        <div style={{ width: '61.25rem', height: '30.63rem' }} className="relative">
+        <div style={{ width: '98rem', height: '49rem' }} className="relative">
           <Image
             src="/images/garden4.png"
             alt="garden4"
             fill
             style={{ objectFit: 'cover' }}
-            className="rounded-bl-[20px] rounded-br-[20px]"
+            className="rounded-bl-[2rem] rounded-br-[2rem]"
           />
         </div>
       ),
@@ -90,13 +90,13 @@ const GardenCarousel: React.FC = () => {
     {
       id: 5,
       content: (
-        <div style={{ width: '61.25rem', height: '30.63rem' }} className="relative">
+        <div style={{ width: '98rem', height: '49rem' }} className="relative">
           <Image
             src="/images/garden5.jpg"
             alt="garden5"
             fill
             style={{ objectFit: 'cover' }}
-            className="rounded-bl-[20px] rounded-br-[20px]"
+            className="rounded-bl-[2rem] rounded-br-[2rem]"
           />
         </div>
       ),
@@ -105,13 +105,13 @@ const GardenCarousel: React.FC = () => {
     {
       id: 6,
       content: (
-        <div style={{ width: '61.25rem', height: '30.63rem' }} className="relative">
+        <div style={{ width: '98rem', height: '49rem' }} className="relative">
           <Image
             src="/images/garden6.png"
             alt="garden6"
             fill
             style={{ objectFit: 'cover' }}
-            className="rounded-bl-[20px] rounded-br-[20px]"
+            className="rounded-bl-[2rem] rounded-br-[2rem]"
           />
         </div>
       ),
@@ -166,7 +166,7 @@ const GardenCarousel: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="w-[61.25rem] h-[30.63rem]">
+      <div className="w-[98rem] h-[49rem]">
         <Swiper
           effect="coverflow"
           grabCursor={true}
@@ -187,7 +187,7 @@ const GardenCarousel: React.FC = () => {
         >
           {displayStages.map((stage) => (
             <SwiperSlide key={stage.id}>
-              <div className="w-[61.25rem] h-[30.63rem] rounded-bl-[20px] rounded-br-[20px] overflow-hidden">
+              <div className="w-[98rem] h-[49rem] rounded-bl-[2rem] rounded-br-[2rem] overflow-hidden">
                 {stage.content}
               </div>
             </SwiperSlide>
@@ -202,22 +202,24 @@ const GardenCarousel: React.FC = () => {
           height: 100%; /* Ensure each slide fits within the container */
         }
         .custom-bullet {
-          width: 50px;
-          height: 30px;
+          width: 61px;
+          height: 41px;
           background-color: rgba(0, 0, 0, 0.5) !important;
           border-radius: 0.5rem !important;
           text-align: center;
-          line-height: 30px;
+          line-height: 40px;
           color: white !important;
           font-weight: 600;
+          font-size: 26px;
         }
         .swiper-pagination-bullet-active.custom-bullet {
-          width: 50px;
-          height: 30px;
+          width: 61px;
+          height: 41px;
           background-color: white !important;
           color: green !important;
           font-weight: 600;
-          line-height: 30px;
+          font-size: 26px;
+          line-height: 40px;
         }
       `}</style>
     </div>

@@ -50,26 +50,26 @@ const MyPage: React.FC = () => {
 
   return (
     <>
-      <div className="w-[80rem] h-[117.5rem] grid grid-cols-1 justify-items-center ">
-        <div className="w-[61.26rem] h-[101.19rem]">
-          <h2 className="w-[61.25rem] h-[3rem] text-[2rem] mt-[4rem] mb-0 text-black font-bold">
+      <div className="w-[128rem] h-[188rem] grid grid-cols-1 justify-items-center ">
+        <div className="w-[98rem] h-[161.9rem]">
+          <h2 className="w-[98rem] h-[4.8rem] text-[3.2rem] mt-[6.4rem] mb-0 text-black font-bold">
             {' '}
             <button onClick={toBack}>&lt;</button> 마이페이지
           </h2>
-          <div className="w-[61.25rem] h-[40.13rem] shadow-sm mt-[2rem] mb-[2rem]">
+          <div className="w-[98rem] h-[64.2rem] mt-[3.2rem] mb-[3.2rem]">
             <GrowthSummary />
             <GardenCarousel />
           </div>
-          <div className="w-[61.25rem] h-[29.56rem] bg-white rounded-[20px] shadow-md mt-0">
-            <div className="flex flex-row justify-between">
-              <h3 className="font-semibold text-[1.63rem] ml-[2.5rem] h-[2.06rem] mt-[2rem] mb-[1.25rem]">
+          <div className="w-[98rem] h-[47.3rem] bg-white rounded-[2rem] shadow-md mt-0 p-[4rem]">
+            <div className="flex flex-row justify-between mb-[2rem]">
+              <h3 className="font-semibold text-[2.6rem] ml-[1rem] h-[3.3rem] mb-[1rem]">
                 도전과제 <ObtainedBadgesCount /> / {totalBadges.length}
               </h3>
               <button
-                className="font-semibold text-[#008A02] text-[1.63rem]  mt-[2rem] mb-[1.25rem] mr-[2.5rem]"
+                className="font-semibold text-[#008A02] text-[1.8rem] mr-[1rem] hover:underline"
                 onClick={handleToggleBadgeModal}
               >
-                전체 보기
+                모든 배지 확인하기
               </button>
               {isBadgeModalOpen && <BadgeModal />}
             </div>
@@ -77,20 +77,20 @@ const MyPage: React.FC = () => {
           </div>
 
           <NicknameButton>
-            <div className="flex items-center justify-start font-semibold text-[1.63rem] my-[2rem] pl-[1.25rem] bg-white rounded-[1.25rem] shadow-md w-[61.25rem] h-[7rem]">
+            <div className="flex items-center justify-start font-semibold text-[2.6rem] my-[3.2rem] pl-[3.2rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[9.9rem]">
               <button onClick={handleToggleNicknameModal}>닉네임 변경</button>
               {isNicknameModalOpen && <NicknameModal />}
             </div>
           </NicknameButton>
           <AccountBarButton>
-            <div className="flex items-center justify-between  font-semibold text-[1.63rem] my-[2rem] pl-[1.25rem] bg-white rounded-[1.25rem] shadow-md w-[61.25rem] h-[7rem]">
+            <div className="flex items-center justify-between  font-semibold text-[2.6rem] my-[3.2rem] pl-[3.2rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[9.9rem]">
               <button onClick={handleAccountBarModal}>계정 설정</button>
-              <p className="mr-5">{email}</p>
+              <p className="mr-[3.2rem]">{email}</p>
               {isAccountBarModalOpen && <AccountBarModal />}
             </div>
           </AccountBarButton>
           <WithdrawalButton>
-            <div className="flex items-center justify-start  font-semibold text-[1.63rem] my-[2rem] pl-[1.25rem] bg-white rounded-[1.25rem] shadow-md w-[61.25rem] h-[7rem]">
+            <div className="flex items-center justify-start  font-semibold text-[2.6rem] my-[3.2rem] pl-[3.2rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[9.9rem]">
               <button onClick={handleToggleWithdrawalModal}>회원 탈퇴</button>
               {isWithdrawalModalOpen && <WithdrawalModal />}
             </div>
