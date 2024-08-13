@@ -84,3 +84,9 @@ body {
   font-weight: 400;
   font-style: normal;
 }
+
+.image-size {
+  width: 35rem;
+  height: 50rem;
+  object-fit: cover;
+}
