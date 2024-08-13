@@ -12,9 +12,9 @@ import GrowthSummary from '@/components/templates/GrowthSummary';
 import GardenCarousel from '@/components/templates/GardenCarousel';
 import { totalBadges } from '@/components/atoms/TotalBadges';
 import ObtainedBadgesCount from '@/components/atoms/ObtainedBadges';
-import AccountBarButton from '@/components/atoms/AccountBarButton';
+// import AccountBarButton from '@/components/atoms/AccountBarButton';
 import useUserStore from '@/stores/user.store';
-import AccountBarModal from '@/components/molecules/AccountBarModal';
+// import AccountBarModal from '@/components/molecules/AccountBarModal';
 
 const MyPage: React.FC = () => {
   const {
@@ -23,9 +23,9 @@ const MyPage: React.FC = () => {
     isNicknameModalOpen,
     toggleNicknameModal,
     isWithdrawalModalOpen,
-    toggleWithdrawalModal,
-    isAccountBarModalOpen,
-    toggleAccountBarModal
+    toggleWithdrawalModal
+    // isAccountBarModalOpen,
+    // toggleAccountBarModal
   } = useMyModalStore((state) => state);
 
   const handleToggleBadgeModal = () => {
@@ -39,9 +39,9 @@ const MyPage: React.FC = () => {
     toggleWithdrawalModal();
   };
 
-  const handleAccountBarModal = () => {
-    toggleAccountBarModal();
-  };
+  // const handleAccountBarModal = () => {
+  //   toggleAccountBarModal();
+  // };
 
   const { email } = useUserStore((state) => state);
   const toBack = () => {
@@ -51,7 +51,7 @@ const MyPage: React.FC = () => {
   return (
     <>
       <div className="w-[128rem] h-[188rem] grid grid-cols-1 justify-items-center ">
-        <div className="w-[98rem] h-[161.9rem]">
+        <div className="w-[98rem] h-[163.8rem]">
           <h2 className="w-[98rem] h-[4.8rem] text-[3.2rem] mt-[6.4rem] mb-0 text-black font-bold">
             {' '}
             <button onClick={toBack}>&lt;</button> 마이페이지
@@ -76,19 +76,18 @@ const MyPage: React.FC = () => {
             <BadgeCollection />
           </div>
 
+          <div className="flex items-center justify-between  font-semibold text-[2.6rem] my-[3.2rem] pl-[3.2rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[9.9rem]">
+            <p>계정 설정</p>
+            <p className="mr-[3.2rem]">{email}</p>
+            {/* {isAccountBarModalOpen && <AccountBarModal />} */}
+          </div>
+
           <NicknameButton>
             <div className="flex items-center justify-start font-semibold text-[2.6rem] my-[3.2rem] pl-[3.2rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[9.9rem]">
               <button onClick={handleToggleNicknameModal}>닉네임 변경</button>
               {isNicknameModalOpen && <NicknameModal />}
             </div>
           </NicknameButton>
-          <AccountBarButton>
-            <div className="flex items-center justify-between  font-semibold text-[2.6rem] my-[3.2rem] pl-[3.2rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[9.9rem]">
-              <button onClick={handleAccountBarModal}>계정 설정</button>
-              <p className="mr-[3.2rem]">{email}</p>
-              {isAccountBarModalOpen && <AccountBarModal />}
-            </div>
-          </AccountBarButton>
           <WithdrawalButton>
             <div className="flex items-center justify-start  font-semibold text-[2.6rem] my-[3.2rem] pl-[3.2rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[9.9rem]">
               <button onClick={handleToggleWithdrawalModal}>회원 탈퇴</button>
