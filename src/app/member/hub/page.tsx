@@ -24,7 +24,7 @@ const HomePage = () => {
   return (
     <div
       className={`${
-        sidebarOpen ? 'w-[1280px]' : 'w-full'
+        sidebarOpen ? 'w-[128rem]' : 'w-full'
       } flex items-center justify-center transition-all duration-300`} // 사이드바 상태에 따라 너비 조정
     >
       <DiaryCase />

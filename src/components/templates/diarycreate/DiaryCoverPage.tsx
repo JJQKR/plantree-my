@@ -675,7 +675,9 @@ const DiaryCoverPage: React.FC = () => {
         return;
       }
 
-      Swal.fire('Cover 저장 성공!', '', 'success');
+      Swal.fire('Cover 저장 성공!', '', 'success').then(() => {
+        Swal.fire('커버를 클릭해 속지를 추가해보세요!', '', 'info');
+      });
       setLoading(false); // 로딩 상태 해제
       router.push(`/member/hub`);
     } catch (error) {

@@ -187,7 +187,7 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
           className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[999]"
           onClick={handleBackgroundClick}
         >
-          <div className="bg-white p-4 rounded w-[400px] h-[370px] flex flex-col justify-center items-center">
+          <div className="bg-white p-4 rounded w-[40rem] h-[37rem] flex flex-col justify-center items-center">
             <h1 className="text-4xl font-bold mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
             <form onSubmit={handleFormSubmit}>
               <input
@@ -244,13 +244,13 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
               <div className="flex flex-col gap-2 mt-4">
                 <button
                   type="submit"
-                  className="w-[350px] h-[50px] px-4 py-3 font-bold bg-gray-500 hover:bg-gray-700 hover:text-white text-black rounded"
+                  className="w-[35rem] h-[5rem] px-[0.4rem] py-[0.3rem] font-bold bg-gray-500 hover:bg-gray-700 hover:text-white text-black rounded"
                 >
                   로그인
                 </button>
                 <button
                   type="button"
-                  className="w-[350px] h-[50px] py-3 font-bold bg-blue-500 hover:bg-blue-700 hover:text-white text-black rounded"
+                  className="w-[35rem] h-[5rem] py-[0.3rem] font-bold bg-blue-500 hover:bg-blue-700 hover:text-white text-black rounded"
                   onClick={onSignupClick}
                 >
                   회원가입
@@ -312,14 +312,14 @@ const ForgotPasswordModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[999]"
       onClick={handleBackgroundClick}
     >
-      <div className="bg-white p-4 rounded w-[400px] h-[370px]  flex flex-col justify-center items-center">
+      <div className="bg-white p-4 rounded w-[40rem] h-[37rem] flex flex-col justify-center items-center">
         <h1 className="text-4xl font-bold mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
         <h2 className="text-2xl font-bold mb-4 text-center text-black">비밀번호 찾기</h2>
         <form onSubmit={handleResetPassword}>
           <input
             type="email"
             placeholder="이메일을 입력하세요."
-            className="mb-4 p-2 border rounded w-[300px] text-black"
+            className="mb-4 p-2 border rounded w-[35rem] text-black"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -328,14 +328,14 @@ const ForgotPasswordModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
           <div className="flex flex-col gap-2 mt-4">
             <button
               type="button"
-              className="w-full font-bold px-4 py-3 bg-gray-500 hover:bg-gray-700 hover:text-white text-black rounded"
+              className="w-[35rem] h-[5rem] font-bold px-[0.4rem] py-[0.3rem] bg-gray-500 hover:bg-gray-700 hover:text-white text-black rounded"
               onClick={onClose}
             >
               취소
             </button>
             <button
               type="submit"
-              className="w-full font-bold px-4 py-3 bg-blue-500 hover:bg-blue-700 hover:text-white text-black rounded"
+              className="w-[35rem] h-[5rem] font-bold px-[0.4rem] py-[0.3rem] bg-blue-500 hover:bg-blue-700 hover:text-white text-black rounded"
             >
               인증메일 받기
             </button>
