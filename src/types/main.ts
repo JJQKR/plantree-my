@@ -51,6 +51,7 @@ export type DiaryCover = {
   cover_title_fontfamily?: string | null;
   cover_title_color?: string | null;
   cover_title_fontweight?: string | null;
+  diary_id?: string | null;
 };
 
 export type Position = {
