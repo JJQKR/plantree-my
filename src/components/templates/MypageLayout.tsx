@@ -12,10 +12,10 @@ const MyPageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="flex justify-between items-center h-[80px] p-4 bg-white">
+      <header className="flex justify-between items-center h-[8rem] p-4 bg-white">
         <SideButton onClick={toggleSidebar}>Menu</SideButton>
         <div className="flex-grow flex justify-center">
-          <Link href="/">
+          <Link href="/member/hub">
             <Image
               src="/images/Plantree.png"
               alt="Logo"
@@ -29,7 +29,7 @@ const MyPageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         {sidebarOpen && <Sidebar onClose={toggleSidebar} />}
         <main
           className={`${
-            sidebarOpen ? 'w-[1920px]' : 'w-full'
+            sidebarOpen ? 'w-[192rem]' : 'w-full'
           } h-auto flex items-center justify-center transition-all duration-300 mt-0`}
         >
           {children}
