@@ -135,6 +135,11 @@ const DiaryCase: React.FC = () => {
     }
     const diaryId = uuid(); // 새로운 다이어리 ID 생성
     router.push(`/member/diary/${diaryId}/cover`); // 새로운 다이어리 생성 페이지로 이동
+    Swal.fire({
+      title: '커스텀 완료 후 저장 버튼을 눌러 다이어리를 저장하세요!',
+      icon: 'success',
+      confirmButtonText: 'OK'
+    });
   };
 
   // 다이어리 클릭 핸들러
