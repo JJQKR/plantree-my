@@ -57,8 +57,8 @@ const LandingMain = () => {
   };
 
   return (
-    <main className="max-w-[80rem] w-full bg-white text-black flex flex-col flex-grow items-center justify-center mx-auto">
-      <div className="w-full relative mb-12 image-container">
+    <main className=" w-[1280px] bg-white text-black flex flex-col flex-grow items-center justify-center mx-auto">
+      <div className="w-[1000px] relative mb-12 image-container">
         <Image
           src="/images/main11.jpg"
           alt="Main Image"
@@ -82,7 +82,7 @@ const LandingMain = () => {
         </p>
       </div>
 
-      <section className="w-full max-w-[80rem] mx-auto mb-11">
+      <section className="w-full max-w-[800px] mx-auto mb-11">
         <div className="flex items-start mt-4 w-full justify-center">
           <div className="flex-shrink-0">
             <Image
@@ -100,11 +100,13 @@ const LandingMain = () => {
               <p className="text-3xl">온라인 다이어리 서비스 입니다.</p>
             </div>
             <div className="mt-6">
-              <p className="text-3xl">라이프 스타일에 맞는 템플릿을 선택하고,</p>
-              <p className="text-3xl">직접 꾸미면서 오프라인에서 느꼈던 다꾸 감성을 온라인으로도 느껴보실 수 있어요.</p>
+              <p className="text-3xl">
+                라이프 스타일에 맞는 템플릿을 선택하고, 직접 꾸미면서 오프라인에서 느꼈던 다꾸 감성을 온라인으로도
+                느껴보실 수 있어요.
+              </p>
             </div>
-            <div className="w-[45rem] h-[15rem] mt-6 border-2 border-green-700 rounded-lg p-5 bg-transparent flex">
-              <div className="flex flex-col items-center">
+            <div className="w-[480px] h-[150px] mt-6 border-2 border-green-700 rounded-lg p-5 bg-transparent flex">
+              <div className="flex flex-col items-center ml-5">
                 <Image
                   src="/images/mainavatar4.jpg"
                   alt="Profile Image"
@@ -117,7 +119,7 @@ const LandingMain = () => {
                   <p className="text-sm text-gray-600">FE</p>
                 </div>
               </div>
-              <div className="ml-6 flex flex-col items-center text-gray-600">
+              <div className="w-[480px] ml-6 flex flex-col items-center text-gray-600">
                 <p className="text-md">평소 다이어리를 쓰면서 하루를 정리하는 편인데,</p>
                 <p>손글씨가 안 이뻐서 다꾸 하는 맛이 없었어요..</p>
                 <p>이번 프로젝트를 기획하면서</p>
@@ -137,7 +139,7 @@ const LandingMain = () => {
         </div>
       </section>
 
-      <section className="w-full max-w-[80rem] mx-auto mt-11 mb-11">
+      <section className="w-full max-w-[800px] mx-auto mt-11 mb-11">
         <div className="flex flex-row-reverse items-start mt-4 w-full justify-center">
           <div className="flex-shrink-0">
             <Image
@@ -162,8 +164,8 @@ const LandingMain = () => {
               <p className="text-3xl">추억을 기록하고 회상하며 일상을 루틴하게 사는 J도!</p>
               <p className="text-3xl">모두 재밌게 일상을 기록해볼 수 있어요.</p>
             </div>
-            <div className="w-[45rem] h-[15rem] mt-10 border-2 border-green-700 rounded-lg p-5 bg-transparent flex">
-              <div className="flex flex-col items-center">
+            <div className="w-[480px] h-[150px] mt-10 border-2 border-green-700 rounded-lg p-5 bg-transparent flex">
+              <div className="flex flex-col items-center ml-4">
                 <Image
                   src="/images/mainavatar2.jpg"
                   alt="Profile Image"
@@ -176,7 +178,7 @@ const LandingMain = () => {
                   <p className="text-sm text-gray-600">FE</p>
                 </div>
               </div>
-              <div className="ml-6 flex flex-col items-center text-gray-600 text-center mt-3">
+              <div className="w-[480px] ml-6 flex flex-col items-center text-gray-600 text-center mt-3">
                 <p className="text-md">솔직히 저는 다이어리를 주로 사용하진 않는 편이에요</p>
                 <p>그래서 이번 프로젝트에 임할 때 '낯선 사람들도 익숙하게' 느끼게 해보자 라는 마인드를 가지고</p>
                 <p>내가 생각하기에도 한 번 써보고 싶다 라고 </p>
@@ -194,7 +196,7 @@ const LandingMain = () => {
         </div>
       </section>
 
-      <section className="w-full max-w-[80rem] mx-auto mb-11 mt-11">
+      <section className="w-full max-w-[800px] mx-auto mb-11 mt-11">
         <div className="flex items-start mt-4 w-full justify-center">
           <div className="flex-shrink-0">
             <Image
@@ -220,8 +222,8 @@ const LandingMain = () => {
                 환경에서도 사용할 수 있어요.
               </p>
             </div>
-            <div className="w-[45rem] h-[15rem] mt-10 border-2 border-green-700 rounded-lg p-5 bg-transparent flex">
-              <div className="flex flex-col items-center">
+            <div className="w-[480px] h-[150px] mt-10 border-2 border-green-700 rounded-lg p-5 bg-transparent flex">
+              <div className="flex flex-col items-center ml-5">
                 <Image
                   src="/images/mainavatar1.jpg"
                   alt="Profile Image"
@@ -234,7 +236,7 @@ const LandingMain = () => {
                   <p className="text-sm text-gray-600">FE</p>
                 </div>
               </div>
-              <div className="ml-6 flex flex-col items-center text-gray-600">
+              <div className="w-[480px] ml-6 flex flex-col items-center text-gray-600">
                 <p className="text-md">평소 다이어리를 쓰면서 하루를 정리하는 편인데,</p>
                 <p>손글씨가 안 이뻐서 다꾸 하는 맛이 없었어요..</p>
                 <p>이번 프로젝트를 기획하면서</p>
@@ -251,7 +253,6 @@ const LandingMain = () => {
               Plantree 를 사용해볼까요?
             </a>
           </div>
-          <div></div>
         </div>
       </section>
       {loading && (
