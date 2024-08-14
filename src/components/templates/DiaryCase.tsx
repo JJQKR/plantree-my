@@ -31,7 +31,11 @@ const DiaryCase: React.FC = () => {
   const [loadedImages, setLoadedImages] = useState<HTMLImageElement[]>([]);
   const [loadedBackgroundImages, setLoadedBackgroundImages] = useState<HTMLImageElement[]>([]);
   const [unsplashImages, setUnsplashImages] = useState<HTMLImageElement[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // 로딩 상태 초기화
+
+  // 상태 초기화
+  const [diaryCardWidth, setDiaryCardWidth] = useState(400);
+  const [diaryCardHeight, setDiaryCardHeight] = useState(600);
 
   // Supabase에서 세션 정보를 가져오는 함수
   const fetchSession = async () => {
@@ -43,9 +47,11 @@ const DiaryCase: React.FC = () => {
 
   // 사용자 ID를 가져오고 커버 데이터를 가져오는 함수
   const getUserIdAndFetchCovers = async () => {
+    setLoading(true); // 로딩 시작
     const id = await fetchSession(); // 사용자 ID 가져오기
     if (!id) {
       setIsLoggedIn(false); // 로그인 상태가 아니면 로그인 필요 표시
+      setLoading(false); // 로딩 종료
       return;
     }
     setUserId(id); // 사용자 ID 설정
@@ -83,6 +89,7 @@ const DiaryCase: React.FC = () => {
 
     setDiaryCovers(covers); // 커버 상태 업데이트
     preloadImages(covers); // 이미지 미리 로드
+    setLoading(false); // 로딩 종료
   };
 
   // 이미지 미리 로드 함수
@@ -121,6 +128,29 @@ const DiaryCase: React.FC = () => {
     getUserIdAndFetchCovers();
   }, []);
 
+  // 화면 크기에 따라 카드 크기 조정
+  useEffect(() => {
+    const updateCardSize = () => {
+      if (window.innerWidth <= 768) {
+        setDiaryCardWidth(200); // 모바일 화면에서는 카드 너비를 줄임
+        setDiaryCardHeight(300); // 모바일 화면에서는 카드 높이를 줄임
+      } else {
+        setDiaryCardWidth(250); // 데스크톱 화면에서는 카드 너비를 늘림
+        setDiaryCardHeight(400); // 데스크톱 화면에서는 카드 높이를 늘림
+      }
+    };
+
+    // 초기 크기 설정
+    updateCardSize();
+
+    // 창 크기 변경 시 크기 업데이트
+    window.addEventListener('resize', updateCardSize);
+
+    return () => {
+      window.removeEventListener('resize', updateCardSize);
+    };
+  }, []);
+
   // 다이어리 생성 버튼 클릭 핸들러
   const handleCreateDiary = async () => {
     if (!isLoggedIn) {
@@ -147,6 +177,7 @@ const DiaryCase: React.FC = () => {
     setDiaryId(id); // 클릭된 다이어리 ID 설정
     router.push(`/member/diary/${id}/parchment`); // 다이어리 페이지로 이동
   };
+
   return (
     <div>
       <div
@@ -155,8 +186,15 @@ const DiaryCase: React.FC = () => {
         }`}
       >
         {gridView ? (
-          // 그리드 뷰에서 다이어리 커버 표시
-          <div className="grid grid-cols-3 gap-20 max-w-full mt-[10rem]">
+          <div
+            className={`grid ${
+              window.innerWidth <= 768
+                ? 'grid-cols-2 gap-10'
+                : window.innerWidth <= 1200
+                ? 'grid-cols-3 gap-15'
+                : 'grid-cols-3 gap-20'
+            } max-w-full mt-[10rem]`}
+          >
             {diaryCovers.length > 0 ? (
               diaryCovers.map((cover, index) =>
                 cover.cover_id ? (
@@ -165,16 +203,16 @@ const DiaryCase: React.FC = () => {
                     className="flex flex-col items-center justify-center cursor-pointer"
                     onClick={() => handleDiaryClick(cover.diary_id as string)}
                     style={{
-                      width: '25rem', // 250px -> 25rem
-                      height: '40rem' // 400px -> 40rem
+                      width: `${diaryCardWidth / 10}rem`,
+                      height: `${diaryCardHeight / 10}rem`
                     }}
                   >
                     <div className="relative flex flex-col items-center justify-center w-full h-full rounded shadow-md overflow-hidden">
                       <Stage
-                        width={250} // 고정된 너비
-                        height={400} // 고정된 높이
-                        scaleX={250 / cover.cover_stage_size.width} // 비율에 맞춰 크기 조정
-                        scaleY={400 / cover.cover_stage_size.height} // 비율에 맞춰 크기 조정
+                        width={diaryCardWidth}
+                        height={diaryCardHeight}
+                        scaleX={diaryCardWidth / cover.cover_stage_size.width}
+                        scaleY={diaryCardHeight / cover.cover_stage_size.height}
                       >
                         <Layer>
                           <Rect
@@ -341,9 +379,9 @@ const DiaryCase: React.FC = () => {
         )}
       </div>
       <div className="fixed bottom-[3rem] right-[4rem]">
-        <CreateDiaryButton onClick={handleCreateDiary} /> {/* 다이어리 생성 버튼 */}
+        {!gridView && <CreateDiaryButton onClick={handleCreateDiary} />}
       </div>
-      {loading && (
+      {loading && ( // 로딩 애니메이션 표시
         <div className="fixed inset-0 flex items-center justify-center">
           <img src="/images/loading.gif" alt="Loading" width={200} height={200} />
         </div>
