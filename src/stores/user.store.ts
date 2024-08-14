@@ -7,6 +7,9 @@ interface UserState {
   setLevelName: (levelName: string | null) => void;
   levelId: string | null; // levelId 상태 추가
   setLevelId: (levelId: string | null) => void; // levelId 설정 함수 추가
+  updatedLevelId: string | null;
+  setUpdatedLevelId: (updatedLevelid: string | null) => void;
+
   membershipDays: number | null;
   setMembershipDays: (membershipDays: number | null) => void;
   attendance: number;
@@ -30,6 +33,8 @@ const useUserStore = create<UserState>((set) => ({
   setLevelName: (levelName) => set({ levelName }),
   levelId: null, // 초기값 설정
   setLevelId: (levelId) => set({ levelId }), // 설정 함수 정의
+  updatedLevelId: null, // 새로운 상태 추가
+  setUpdatedLevelId: (updatedLevelId) => set({ updatedLevelId }),
   membershipDays: null,
   setMembershipDays: (membershipDays) => set({ membershipDays }),
   attendance: 0,

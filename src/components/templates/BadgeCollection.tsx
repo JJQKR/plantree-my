@@ -44,16 +44,16 @@ const BadgeCollection: React.FC = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="bg-white rounded-[10px] w-[57.25rem] h-[22.25rem]">
-        <div className="flex flex-row justify-between">
+      <div className="bg-white rounded-[2rem] w-[90rem] h-[32.4rem]">
+        <div className="flex flex-row justify-between w-[90rem] h-[32.4rem]">
           {badgesState.slice(0, 4).map((badge, index) => (
-            <div key={index} className="relative" style={{ width: '13.25rem', height: '22.25rem' }}>
+            <div key={index} className="relative" style={{ width: '208px', height: '324px' }}>
               <Image
                 src={badge.content}
                 alt={badge.isObtained ? 'Obtained Badge' : 'Unobtained Badge'}
                 fill
                 style={{ objectFit: 'contain' }}
-                className="rounded-[10px]"
+                className="rounded-[1.6rem]"
               />
             </div>
           ))}

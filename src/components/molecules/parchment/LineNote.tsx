@@ -5,9 +5,11 @@ import { isNoteLineArray } from '@/lib/utils/noteLineConfirmArray';
 import useEditModeStore from '@/stores/editMode.store';
 import { supabase } from '@/supabase/client';
 import { Json } from '@/types/supabase';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import { FaSave } from 'react-icons/fa';
+import { FaTrashAlt } from 'react-icons/fa';
 
 interface LineNoteProps {
   id: string;
@@ -30,6 +32,10 @@ const LineNote = ({ id }: LineNoteProps) => {
   const [diaryId, setDiaryId] = useState('');
   const { mutate: deletePage, isPending, isError } = useDeletePage();
   const { isEditMode } = useEditModeStore((state) => state);
+
+  const searchParams = useSearchParams();
+  const index = searchParams.get('index');
+  const style = searchParams.get('style');
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -242,8 +248,35 @@ const LineNote = ({ id }: LineNoteProps) => {
     }
   };
 
+  const changeStyleName = () => {
+    if (style === 'tenMinPlanner') {
+      return '10분 플래너';
+    } else if (style === 'lineNote') {
+      return '줄글노트';
+    } else if (style === 'stringNote') {
+      return '무지노트';
+    }
+  };
+
   return (
-    <div className="w-full  max-w-screen-md max-h-screen overflow-auto mt-20">
+    <div className={` w-[50rem] ${isEditMode ? 'h-[75rem]' : 'h-[70.2rem]'} bg-red-200`}>
+      <div className="mx-auto w-full">
+        {isEditMode ? (
+          <div className="bg-[#EDF1E6] w-full h-[4.8rem] py-[1.2rem] px-[1.5rem] flex flex-row justify-between">
+            <div className="text-[1.8rem] text-[#496E00] font-[600]">
+              {index} Page_{changeStyleName()}
+            </div>
+            <div>
+              <button className="text-[2.4rem] text-[#496E00]" onClick={updateData}>
+                <FaSave />
+              </button>
+              <button className="text-[2.4rem] text-[#496E00]" onClick={handleDelete}>
+                <FaTrashAlt />
+              </button>
+            </div>
+          </div>
+        ) : null}
+      </div>
       {isEditMode ? (
         <div className="flex justify-between mb-4 bg-white">
           <div>
@@ -325,25 +358,6 @@ const LineNote = ({ id }: LineNoteProps) => {
             </div>
           ))}
         </div>
-      </div>
-      <div className="flex justify-between mt-4">
-        {isEditMode ? (
-          <button onClick={updateData} className="p-2 bg-green-500 text-white rounded">
-            저장하기
-          </button>
-        ) : null}
-        {/* {!dataExists ? (
-          <button className="p-2 bg-blue-500 text-white rounded">저장</button>
-        ) : (
-          <button onClick={updateData} className="p-2 bg-green-500 text-white rounded">
-            수정하기
-          </button>
-        )} */}
-        {isEditMode ? (
-          <button onClick={handleDelete} className="p-2 bg-red-500 text-white rounded">
-            삭제하기
-          </button>
-        ) : null}
       </div>
     </div>
   );
