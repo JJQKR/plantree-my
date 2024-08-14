@@ -34,15 +34,6 @@ body {
   padding-bottom: 5rem; /* 50px = 5rem */
 }
 
-.mySwiper {
-  width: 48rem; /* 1080px = 108rem */
-  height: 72rem; /* 720px = 72rem */
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-}
-
 .swiper-slide {
   display: flex;
   align-items: center; /* 카드 내부의 내용 중앙 정렬 */
