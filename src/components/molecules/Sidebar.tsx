@@ -49,7 +49,7 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   }, [userId, setLevelId]);
 
   return (
-    <div className="fixed top-40 left-0 w-[32rem] h-[99.2rem] bg-[#E6F3E6] text-white">
+    <div className="fixed top-[8rem] left-0 w-[32rem] h-[99.2rem] bg-[#E6F3E6] text-white">
       <FetchUserData />
       <AttendanceCheck />
       <div className="pl-[6rem] pr-[2rem]">
