@@ -94,7 +94,7 @@ const Todolist = ({ tenMinPlannerId, todoList, setTodoList, setSelectedColorTodo
   };
 
   return (
-    <div className="border-2  h-[38rem]">
+    <div className="">
       <div className="w-ful">
         <ul className="relative">
           {todoList.map((todo) => {
@@ -149,6 +149,9 @@ const Todolist = ({ tenMinPlannerId, todoList, setTodoList, setSelectedColorTodo
             <button onClick={handleAddTodo}>
               <FaPlus />
             </button>
+            <div>
+              <FaPlus />
+            </div>
           </div>
         ) : null}
       </div>
