@@ -54,12 +54,12 @@ const MyPage: React.FC = () => {
     <>
       <div className="w-[128rem] h-[188rem] grid grid-cols-1 justify-items-center ">
         <div className="w-[98rem] h-[158.2rem]">
-          <h2 className="flex flex-row w-[98rem] h-[4.8rem] text-[3.2rem] mt-[6.4rem] mb-0 text-black font-bold">
+          <div className="flex flex-row w-[98rem] h-[4.8rem] text-[3.2rem] mt-[6.4rem] mb-0 text-black font-bold">
             <button onClick={toBack} className="items-center">
               <FaChevronLeft className="text-[4rem] mr-[1.2rem]" />
             </button>
-            <h3>마이페이지</h3>
-          </h2>
+            <h2>마이페이지</h2>
+          </div>
           <div className="w-[98rem] h-[64.2rem] mt-[3.2rem] mb-[3.2rem]">
             <GrowthSummary />
             <GardenCarousel />
