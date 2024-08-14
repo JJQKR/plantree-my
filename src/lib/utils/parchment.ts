@@ -5,7 +5,7 @@ export type ParchmentType = {
 };
 
 export const parchments = [
-  { id: 1, parchmentStyle: 'tenMinPlanner', url: '/images/tenMinPlanner.png' },
-  { id: 2, parchmentStyle: 'lineNote', url: '/images/lineNote.png' },
-  { id: 3, parchmentStyle: 'blankNote', url: '/images/blankNote.png' }
+  { id: 1, parchmentStyle: 'tenMinPlanner', url: '/images/tenMinPlannerImage.png' },
+  { id: 2, parchmentStyle: 'lineNote', url: '/images/lineNoteImage.png' },
+  { id: 3, parchmentStyle: 'blankNote', url: '/images/blankNoteImage.png' }
 ];
