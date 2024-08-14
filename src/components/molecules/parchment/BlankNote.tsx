@@ -41,7 +41,6 @@ const BlankNote = ({ id }: BlankNoteProps) => {
 
   const editableDivRef = useRef<HTMLDivElement>(null);
   const maxHeight = 1000;
-  const [selectedDate, setSelectedDate] = useState(new Date());
 
   useEffect(() => {
     fetchDiaryData();
@@ -185,8 +184,14 @@ const BlankNote = ({ id }: BlankNoteProps) => {
   };
 
   return (
-    <div className={` w-[50rem] ${isEditMode ? 'h-[75rem]' : 'h-[70.2rem]'}`}>
-      <div className="mx-auto w-[50rem] ">
+    <div
+      className={`w-[50rem] ${isEditMode ? 'h-[75rem]' : 'h-[70.2rem]'}`}
+      style={{
+        border: '1px solid #C7D2B0',
+        boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.1)'
+      }}
+    >
+      <div className="mx-auto w-[49.8rem] ">
         {isEditMode ? (
           <div className="bg-[#EDF1E6] w-full h-full py-[1.2rem] px-[2rem] flex flex-row justify-between">
             <div className="text-[1.8rem] text-[#496E00] font-[600]">
@@ -203,7 +208,7 @@ const BlankNote = ({ id }: BlankNoteProps) => {
           </div>
         ) : null}
       </div>
-      <div className="flex flex-wrap justify-center h-[70.2rem] p-[2rem]">
+      <div className="flex flex-wrap bg-white justify-center h-[69.7rem] p-[2rem]">
         <div className="flex flex-wrap justify-center">
           <div className="flex justify-between flex-wrap ">
             <div className="flex justify-between w-[22rem]">
@@ -264,16 +269,14 @@ const BlankNote = ({ id }: BlankNoteProps) => {
           <div
             ref={editableDivRef}
             contentEditable={isEditMode}
-            className="border p-4 w-[43rem] h-[53rem] overflow-hidden mb-1 "
+            className="p-4 w-[46rem] h-[53rem] overflow-hidden mb-1 "
             style={{
               color: globalTextColor,
               fontSize: '16px',
               backgroundColor: bgColor,
               overflowY: 'hidden',
               wordBreak: 'break-all',
-              whiteSpace: 'pre-wrap',
-              boxShadow: '0 4px 8px rgba(0, 0, 0, 10)',
-              borderRadius: '8px'
+              whiteSpace: 'pre-wrap'
             }}
             onInput={handleInput}
             onKeyDown={handleKeyDown}
