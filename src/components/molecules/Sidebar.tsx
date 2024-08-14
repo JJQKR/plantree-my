@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { DiAptana } from 'react-icons/di';
+import { BsPersonFillGear } from 'react-icons/bs';
 import useUserStore from '@/stores/user.store';
 import AttendanceCheck from '@/lib/utils/AttendanceCheck';
 import FetchUserData from '@/lib/utils/FetchUserData';
@@ -59,7 +59,7 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <li className="w-[24rem] h-[24.1rem] mt-[1rem] bg-white rounded-[1.6rem] flex flex-col items-center justify-center relative">
               <Link href="/member/mypage">
                 <div className="bg-[#E6F3E6] rounded-full w-[3.6rem] h-[3.6rem] border-white border-[0.2rem] flex items-center justify-center absolute top-3 right-3">
-                  <DiAptana className="text-[#008A02] w-[2em] h-[2rem]" />
+                  <BsPersonFillGear className="text-[#008A02] w-[2em] h-[2rem]" />
                 </div>
               </Link>
               <div className="flex flex-col items-center">
@@ -100,7 +100,7 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 <li key={cover.id}>
                   <Link
                     href={`/member/diary/${cover.diary_id}/parchment`}
-                    className="block pl-2 w-[15rem] h-[3.25rem] text-[1.13rem] font-semibold flex items-center rounded-[10px] text-black"
+                    className="pl-[2rem] w-[24rem] h-[5.2rem] text-[1.8rem] font-semibold flex items-center rounded-[1.2rem] text-black"
                     style={{
                       backgroundColor: cover.cover_bg_color || 'bg-white',
                       backgroundImage: cover.cover_bg_color ? `url(${cover.cover_bg_color})` : 'none',
