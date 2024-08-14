@@ -14,6 +14,28 @@ import Image from 'next/image';
 const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { nickname, levelName, attendance, userId, setLevelId, updatedLevelId } = useUserStore((state) => state);
   const [diaryCovers, setDiaryCovers] = useState<DiaryCover[]>([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // 사이드바 상태 추가
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setIsSidebarOpen(false); // 모바일 화면에서는 사이드바 닫기
+      } else {
+        setIsSidebarOpen(true); // 데스크톱 화면에서는 사이드바 열기
+      }
+    };
+
+    // 컴포넌트가 마운트될 때 초기 실행
+    handleResize();
+
+    // 창 크기 조정이 있을 때마다 실행
+    window.addEventListener('resize', handleResize);
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,7 +47,7 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           .single();
 
         if (!userError && user) {
-          setLevelId(user.level_id); // zustand로 전역 상태 관리하도록 변경
+          setLevelId(user.level_id);
 
           const { data: coversData, error: coversError } = await supabase
             .from('diary_covers')
@@ -35,7 +57,6 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           if (coversError) {
             console.error('다이어리 커버 정보 가져오기 실패:', coversError);
           } else {
-            // 생성일 기준으로 커버 데이터 정렬 (제일 먼저 만든 것이 앞에 오게)
             coversData.sort(
               (a, b) => new Date((a as any).created_at).getTime() - new Date((b as any).created_at).getTime()
             );
@@ -47,6 +68,8 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
     fetchData();
   }, [userId, setLevelId]);
+
+  if (!isSidebarOpen) return null; // 사이드바가 닫혀 있으면 렌더링하지 않음
 
   return (
     <div className="fixed top-[8rem] left-0 w-[32rem] h-[99.2rem] bg-[#E6F3E6] text-white">
