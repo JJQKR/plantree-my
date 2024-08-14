@@ -58,6 +58,7 @@ const DiaryCoverSidebar: React.FC<DiaryCoverSidebarProps> = ({ handleSelectMenu,
         <FaLayerGroup className="mb-1" />
         <span>레이어</span>
       </div>
+      <div className="flex-grow"></div>
       <div
         className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
         onClick={() => handleDeleteElement()}
@@ -65,7 +66,7 @@ const DiaryCoverSidebar: React.FC<DiaryCoverSidebarProps> = ({ handleSelectMenu,
         <FaTrash className="mb-1" />
         <span className="text-[1.2rem] text-center leading-tight">선택요소 삭제</span>
       </div>
-      <div className="flex-grow"></div>
+
       <div
         className="cursor-pointer p-4 hover:bg-gray-200 flex flex-col items-center"
         onClick={() => handleSelectMenu('Edit')}
