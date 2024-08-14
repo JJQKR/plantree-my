@@ -58,10 +58,18 @@ const LandingHeader = () => {
   };
 
   return (
-    <header className="bg-white text-black  w-full h-[6rem] flex justify-center shadow-b z-10">
+    <header className="bg-white text-black w-full h-[6rem] flex justify-center shadow-b z-10">
       <div className="w-[80rem] flex justify-between items-center">
         <h1 className="text-2xl font-bold">
-          <Image src="/images/Plantree.png" alt="Logo" width={200} height={50} />
+          <div className="relative w-[20rem] h-[5rem]">
+            <Image
+              src="/images/Plantree.png"
+              alt="Logo"
+              fill
+              className="object-contain"
+              sizes="(max-width: 1280px) 100vw, 20rem"
+            />
+          </div>
         </h1>
         <div className="flex gap-4">
           {isLoggedIn ? (

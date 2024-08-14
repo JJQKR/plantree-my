@@ -126,24 +126,24 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[999]"
       onClick={handleBackgroundClick}
     >
-      <div className="rounded-lg bg-white p-4 w-[400px] h-[400px] flex flex-col justify-center items-center">
+      <div className="rounded-lg bg-white p-4 w-[40rem] h-[40rem] flex flex-col justify-center items-center">
         <h1 className="text-4xl font-black mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
         <h2 className="text-2xl font-bold mb-4 text-center text-black">회원가입</h2>
         <input
           type="text"
           placeholder="닉네임"
-          className="mb-4 p-2 border rounded w-[350px] text-black"
+          className="mb-4 p-2 border rounded w-[35rem] text-black"
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
         />
         <input
           type="email"
           placeholder="이메일"
-          className="mb-4 p-2 border rounded w-[350px] text-black"
+          className="mb-4 p-2 border rounded w-[35rem] text-black"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <div className="relative w-[350px] mb-4">
+        <div className="relative w-[35rem] mb-4">
           <input
             type={passwordVisible ? 'text' : 'password'}
             placeholder="비밀번호"
@@ -158,7 +158,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
             {passwordVisible ? <FaEyeSlash /> : <FaEye />}
           </span>
         </div>
-        <div className="relative w-[350px] mb-4">
+        <div className="relative w-[35rem] mb-4">
           <input
             type={confirmPasswordVisible ? 'text' : 'password'}
             placeholder="비밀번호 재입력"
@@ -176,13 +176,13 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
         {passwordError && <p className="mb-4 text-red-500">{passwordError}</p>}
         <div className="flex flex-col gap-2 mt-4">
           <button
-            className="w-[350px] h-[50px] px-4 py-3 font-bold bg-blue-500 hover:bg-blue-700 hover:text-white text-black rounded"
+            className="w-[35rem] h-[5rem] px-4 py-3 font-bold bg-blue-500 hover:bg-blue-700 hover:text-white text-black rounded"
             onClick={signUp}
           >
             회원가입
           </button>
           <button
-            className="w-[350px] h-[50px] px-4 py-3 font-bold bg-gray-500 hover:bg-gray-700 hover:text-white text-black rounded"
+            className="w-[35rem] h-[5rem] px-4 py-3 font-bold bg-gray-500 hover:bg-gray-700 hover:text-white text-black rounded"
             onClick={onClose}
           >
             취소
