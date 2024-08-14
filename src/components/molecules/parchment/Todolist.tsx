@@ -92,7 +92,6 @@ const Todolist = ({
       alert('컬러를 먼저 지정해주세요');
       return;
     }
-    alert('!!');
     setSelectedColorTodo(todo);
   };
 
