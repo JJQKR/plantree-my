@@ -53,7 +53,7 @@ const PlantreeLoginModal: React.FC<{
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'kakao',
       options: {
-        redirectTo: 'http://localhost:3000/member/hub',
+        redirectTo: 'http://plantreeforest.com/member/hub',
         queryParams: {
           access_type: 'offline',
           prompt: 'consent'
@@ -76,7 +76,7 @@ const PlantreeLoginModal: React.FC<{
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: 'http://localhost:3000/member/hub',
+        redirectTo: 'http://plantreeforest.com/member/hub',
         queryParams: {
           access_type: 'offline',
           prompt: 'consent'

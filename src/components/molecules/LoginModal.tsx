@@ -157,7 +157,7 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
       }).then(() => {
         onClose();
         window.location.reload();
-        window.location.href = 'http://localhost:3000/member/hub';
+        window.location.href = 'http://plantreeforest.com/member/hub';
       });
     } catch (error) {
       console.error('로그인 실패:', error);
@@ -281,7 +281,7 @@ const ForgotPasswordModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
     event.preventDefault();
     try {
       const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: 'http://localhost:3000/member/reset-password?token=YOUR_TOKEN'
+        redirectTo: 'http://plantreeforest.com//member/reset-password?token=YOUR_TOKEN'
       });
       if (error) throw error;
       setMessage('인증 메일이 전송되었습니다.');
