@@ -70,7 +70,7 @@ const UnsplashImageSearch: React.FC<UnsplashImageSearchProps> = ({ handleSelectI
     if (images.length === 0) {
       handleSearch(true, true);
     }
-  }, []); // 컴포넌트 마운트 시에만 실행
+  }, []);
 
   useEffect(() => {
     saveToSessionStorage();

@@ -1291,7 +1291,7 @@ const DiaryCoverPage: React.FC = () => {
   return (
     <div className="flex h-full relative">
       <div ref={sidebarRef} className="relative z-5">
-        <DiaryCoverSidebar handleSelectMenu={handleSelectMenu} />
+        <DiaryCoverSidebar handleSelectMenu={handleSelectMenu} handleDeleteElement={handleDeleteElement} />
         {selectedMenu && (
           <div className="absolute top-0 left-full w-[18rem] h-full bg-gray-100 shadow-lg p-6 overflow-y-auto z-10">
             <button
