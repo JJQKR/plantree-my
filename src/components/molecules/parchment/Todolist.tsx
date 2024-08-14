@@ -104,7 +104,7 @@ const Todolist = ({
   };
 
   return (
-    <div className="w-[26.1rem] h-[40rem] overflow-y-auto bg-slate-100">
+    <div className="w-[26.1rem] h-[40rem] overflow-y-auto">
       <div className="w-[25rem">
         <ul className="relative">
           {todoList.map((todo) => {
@@ -160,7 +160,7 @@ const Todolist = ({
                   />
                 ) : (
                   <div className="w-[14rem]" onClick={() => handleSelectTodo(todo)}>
-                    <span className="h-[1.7rem] w-[14rem] bg-slate-300">{todo.text}</span>
+                    <span className="h-[1.7rem] w-[14rem]">{todo.text}</span>
                   </div>
                 )}
                 <div className="w-[4.6rem] flex gap-[0.6rem]">
