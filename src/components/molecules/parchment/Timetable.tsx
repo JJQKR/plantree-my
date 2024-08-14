@@ -64,8 +64,8 @@ const Timetable = ({ selectedColorTodo, timetable, setTimetable }: TimetableProp
   };
 
   return (
-    <div className=" w-full h-[38rem]" onMouseUp={handleMouseUp}>
-      <table className="border-collapse w-full text-[0.8rem]">
+    <div className=" w-full h-[54rem]" onMouseUp={handleMouseUp}>
+      <table className="border-collapse w-full text-[0.8rem] h-full">
         <tbody>
           {Array.from({ length: rows }, (_, rowIndex) => (
             <tr key={rowIndex}>
@@ -94,10 +94,7 @@ const Timetable = ({ selectedColorTodo, timetable, setTimetable }: TimetableProp
                       id={id}
                       className={`border border-gray-300 text-center h-[1rem]`}
                       style={{
-                        background:
-                          timetable && timetable[id]?.active
-                            ? getBackgroundColorClass(timetable[id]?.color)
-                            : 'transparent'
+                        background: timetable && timetable[id]?.active ? timetable[id]?.color : 'transparent'
                       }}
                       onMouseDown={() => handleMouseDown(id)}
                       onMouseOver={() => handleMouseOver(id)}

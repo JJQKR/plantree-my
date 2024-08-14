@@ -161,7 +161,7 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
   };
 
   return (
-    <div className={` w-[50rem] ${isEditMode ? 'h-[75rem]' : 'h-[70.2rem]'} bg-red-200`}>
+    <div className={` w-[50rem] ${isEditMode ? 'h-[75rem]' : 'h-[70.2rem]'} bg-white border-[0.1rem] border-[#C7D2B0]`}>
       <div className="mx-auto w-full">
         {isEditMode ? (
           <div className="bg-[#EDF1E6] w-full h-[4.8rem] py-[1.2rem] px-[1.5rem] flex flex-row justify-between">
@@ -214,7 +214,11 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
             />
           </div>
           <div className="w-[14.5rem] h-[2.7rem] bg-[#EAEAEA] rounded-[0.8rem] flex justify-center items-center text-[1.5rem] font-[600]">
-            {localPlanner.d_day}
+            {localPlanner.d_day ? (
+              localPlanner.d_day
+            ) : (
+              <div className=" h-[1.8rem] font-[600] text-[1.5rem]">D-000</div>
+            )}
           </div>
         </div>
         <div className="flex flex-row w-full h-[2.7rem] gap-[0.3rem] border-b-[0.3rem] border-[#EAEAEA]">
@@ -231,7 +235,7 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
         </div>
         <div className="flex flex-row justify-between gap-4 my-[2rem] h-full">
           <div className="flex flex-col">
-            <div className="w-[26.1rem] h-full bg-yellow-100">
+            <div className="w-[26.1rem] h-full ">
               <div className="text-[1.5rem] h-[2.7rem] w-full font-[600] text-[#727272] flex flex-row items-center justify-start border-b-[0.3rem] leading-[0.1rem]">
                 TASK
               </div>
@@ -240,6 +244,7 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
                 todoList={todoList}
                 setTodoList={setTodoList}
                 setSelectedColorTodo={setSelectedColorTodo}
+                selectedColorTodo={selectedColorTodo}
               />
             </div>
             <div className="h-[13.3rem]">
@@ -258,7 +263,7 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
               />
             </div>
           </div>
-          <div className="w-[18.2rem] h-full bg-blue-100">
+          <div className="w-[18.2rem] h-full">
             <div className='text-[1.5rem] h-[2.7rem] w-full font-[600] text-[#727272] flex flex-row items-center justify-start border-b-[0.3rem] leading-[0.1rem]"'>
               TIMETABLE
             </div>
