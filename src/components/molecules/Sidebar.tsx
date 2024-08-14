@@ -57,15 +57,19 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <nav>
           <ul className="flex flex-col items-center justify-center">
             <li className="w-[24rem] h-[24.1rem] mt-[1rem] bg-white rounded-[1.6rem] flex flex-col items-center justify-center relative">
-              <Link href="/member/mypage">
-                <div className="bg-[#E6F3E6] rounded-full w-[3.6rem] h-[3.6rem] border-white border-[0.2rem] flex items-center justify-center absolute top-3 right-3">
-                  <BsPersonFillGear className="text-[#008A02] w-[2em] h-[2rem]" />
-                </div>
-              </Link>
               <div className="flex flex-col items-center">
                 {updatedLevelId ? (
-                  <div className="w-[12rem] h-[12rem]">
+                  <div className="relative w-[12rem] h-[12rem]">
                     <ProfileStages size={120} /> {/* updatedLevelId 상태를 사용 */}
+                    <Link href="/member/mypage">
+                      <div
+                        className="bg-[#E6F3E6] rounded-full w-[3.6rem] h-[3.6rem] 
+                      border-white border-[0.2rem] flex items-center justify-center absolute top-3 right-3"
+                        style={{ top: '0.05rem', right: '0.5rem', zIndex: 10 }}
+                      >
+                        <BsPersonFillGear className="text-[#008A02] w-[2em] h-[2rem]" />
+                      </div>
+                    </Link>
                   </div>
                 ) : (
                   <div style={{ width: '12rem', height: '12rem' }} className="relative">
@@ -91,7 +95,7 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           </ul>
         </nav>
         <div>
-          <h1 className="font-semibold mt-[3.2rem] mb-[1.3rem] text-[#727272] text-[1.8rem]">내 다이어리</h1>
+          <h1 className="font-semibold mt-[3.2rem] text-[#727272] text-[1.8rem]">내 다이어리</h1>
         </div>
         <div className="">
           <ul className="list-none space-y-2 flex-col">
@@ -100,7 +104,7 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 <li key={cover.id}>
                   <Link
                     href={`/member/diary/${cover.diary_id}/parchment`}
-                    className="pl-[2rem] w-[24rem] h-[4.8rem] text-[1.6rem] font-semibold flex items-center rounded-[0.6rem] text-black"
+                    className="pl-[2rem] w-[24rem] h-[5.2rem] text-[1.8rem] font-semibold flex  items-center mt-[1.2rem] rounded-[1.2rem] text-black"
                     style={{
                       backgroundColor: cover.cover_bg_color || 'bg-white',
                       backgroundImage: cover.cover_bg_color ? `url(${cover.cover_bg_color})` : 'none',

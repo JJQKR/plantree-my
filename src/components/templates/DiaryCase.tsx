@@ -31,7 +31,7 @@ const DiaryCase: React.FC = () => {
   const [loadedImages, setLoadedImages] = useState<HTMLImageElement[]>([]);
   const [loadedBackgroundImages, setLoadedBackgroundImages] = useState<HTMLImageElement[]>([]);
   const [unsplashImages, setUnsplashImages] = useState<HTMLImageElement[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // 로딩 상태 초기화
 
   // Supabase에서 세션 정보를 가져오는 함수
   const fetchSession = async () => {
@@ -43,9 +43,11 @@ const DiaryCase: React.FC = () => {
 
   // 사용자 ID를 가져오고 커버 데이터를 가져오는 함수
   const getUserIdAndFetchCovers = async () => {
+    setLoading(true); // 로딩 시작
     const id = await fetchSession(); // 사용자 ID 가져오기
     if (!id) {
       setIsLoggedIn(false); // 로그인 상태가 아니면 로그인 필요 표시
+      setLoading(false); // 로딩 종료
       return;
     }
     setUserId(id); // 사용자 ID 설정
@@ -83,6 +85,7 @@ const DiaryCase: React.FC = () => {
 
     setDiaryCovers(covers); // 커버 상태 업데이트
     preloadImages(covers); // 이미지 미리 로드
+    setLoading(false); // 로딩 종료
   };
 
   // 이미지 미리 로드 함수
@@ -147,6 +150,7 @@ const DiaryCase: React.FC = () => {
     setDiaryId(id); // 클릭된 다이어리 ID 설정
     router.push(`/member/diary/${id}/parchment`); // 다이어리 페이지로 이동
   };
+
   return (
     <div>
       <div
@@ -343,7 +347,7 @@ const DiaryCase: React.FC = () => {
       <div className="fixed bottom-[3rem] right-[4rem]">
         <CreateDiaryButton onClick={handleCreateDiary} /> {/* 다이어리 생성 버튼 */}
       </div>
-      {loading && (
+      {loading && ( // 로딩 애니메이션 표시
         <div className="fixed inset-0 flex items-center justify-center">
           <img src="/images/loading.gif" alt="Loading" width={200} height={200} />
         </div>

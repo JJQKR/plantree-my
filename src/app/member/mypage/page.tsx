@@ -15,6 +15,8 @@ import ObtainedBadgesCount from '@/components/atoms/ObtainedBadges';
 // import AccountBarButton from '@/components/atoms/AccountBarButton';
 import useUserStore from '@/stores/user.store';
 // import AccountBarModal from '@/components/molecules/AccountBarModal';
+import { FaChevronLeft } from 'react-icons/fa';
+import { FaChevronRight } from 'react-icons/fa';
 
 const MyPage: React.FC = () => {
   const {
@@ -51,11 +53,13 @@ const MyPage: React.FC = () => {
   return (
     <>
       <div className="w-[128rem] h-[188rem] grid grid-cols-1 justify-items-center ">
-        <div className="w-[98rem] h-[163.8rem]">
-          <h2 className="w-[98rem] h-[4.8rem] text-[3.2rem] mt-[6.4rem] mb-0 text-black font-bold">
-            {' '}
-            <button onClick={toBack}>&#10094;</button> 마이페이지
-          </h2>
+        <div className="w-[98rem] h-[158.2rem]">
+          <div className="flex flex-row w-[98rem] h-[4.8rem] text-[3.2rem] mt-[6.4rem] mb-0 text-black font-bold">
+            <button onClick={toBack} className="items-center">
+              <FaChevronLeft className="text-[4rem] mr-[1.2rem]" />
+            </button>
+            <h2>마이페이지</h2>
+          </div>
           <div className="w-[98rem] h-[64.2rem] mt-[3.2rem] mb-[3.2rem]">
             <GrowthSummary />
             <GardenCarousel />
@@ -76,7 +80,7 @@ const MyPage: React.FC = () => {
             <BadgeCollection />
           </div>
 
-          <div className="flex items-center justify-between  font-semibold text-[2.6rem] my-[3.2rem] pl-[4rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[9.9rem]">
+          <div className="flex items-center justify-between  font-semibold text-[2.8rem] my-[3.2rem] pl-[4rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[9.9rem]">
             <p>계정 설정</p>
             <p className="mr-[4rem]">{email}</p>
             {/* {isAccountBarModalOpen && <AccountBarModal />} */}
@@ -85,21 +89,25 @@ const MyPage: React.FC = () => {
           <NicknameButton>
             <button
               onClick={handleToggleNicknameModal}
-              className="flex items-center justify-between font-semibold text-[2.6rem] my-[3.2rem] pl-[4rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[9.9rem]
+              className="flex items-center justify-between font-semibold text-[2.8rem] my-[3.2rem] pl-[4rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[9.9rem]
             "
             >
               <div>닉네임 변경</div>
-              <div className="text-[#008A02] text-[2.8rem] pr-[4rem]">&#10095;</div>
+              <div className="text-[#008A02]">
+                <FaChevronRight className="text-[4rem] mr-[4rem]" />
+              </div>
               {isNicknameModalOpen && <NicknameModal />}
             </button>
           </NicknameButton>
           <WithdrawalButton>
             <button
               onClick={handleToggleWithdrawalModal}
-              className="flex items-center justify-between font-semibold text-[2.6rem] my-[3.2rem] pl-[4rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[9.9rem]"
+              className="flex items-center justify-between font-semibold text-[2.8rem] my-[3.2rem] pl-[4rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[9.9rem]"
             >
               <div>회원 탈퇴</div>
-              <div className="text-[#008A02] text-[2.8rem] pr-[4rem]">&#10095;</div>
+              <div className="text-[#008A02]">
+                <FaChevronRight className="text-[4rem] mr-[4rem]" />
+              </div>
               {isWithdrawalModalOpen && <WithdrawalModal />}
             </button>
           </WithdrawalButton>
