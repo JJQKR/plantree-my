@@ -15,6 +15,7 @@ import { FaChevronLeft } from 'react-icons/fa6';
 import { FaChevronRight } from 'react-icons/fa6';
 import { FaBook } from 'react-icons/fa';
 import useBottomSheetStore from '@/stores/bottomsheet.store';
+import Swal from 'sweetalert2';
 
 type ParchmentType = 'tenMinPlanner' | 'lineNote' | 'blankNote';
 
@@ -38,6 +39,7 @@ export default function ParchmentList() {
   const { offEditMode } = useEditModeStore((state) => state);
   const { currentPageIndex, setCurrentPageIndex } = usePageStore((state) => state);
   const { activeCardIndices, setActiveCardIndices } = useBottomSheetStore((state) => state);
+
   // 커버 타이틀 가져오는 코드
   useEffect(() => {
     if (diaryId) {
@@ -52,30 +54,41 @@ export default function ParchmentList() {
     setCurrentPageIndex(0);
   }, [diaryId]);
 
-  // 현재 페이지 index
-  // const [currentPageIndex, setCurrentPageIndex] = useState(0);
-
   // 다이어리를 삭제 :  db diary 삭제 , db pages 삭제 , db cover 삭제, db Parchments 삭제
   const deleteDiary = async () => {
-    const confirmDeleteDiary = confirm('정말 다이어리를 삭제하시겠습니까? 되돌릴 수 없습니다.');
-    if (confirmDeleteDiary) {
-      deleteDbDiary(diaryId);
-      deleteDbPages(diaryId);
-      await supabase.from('diary_covers').delete().eq('diary_id', diaryId);
+    Swal.fire({
+      title: '정말 다이어리를 삭제하시겠습니까?',
+      text: '삭제된 내용은 되돌릴 수 없습니다!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '예',
+      cancelButtonText: '아니오'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        deleteDbDiary(diaryId);
+        deleteDbPages(diaryId);
+        await supabase.from('diary_covers').delete().eq('diary_id', diaryId);
 
-      const deletionPromises = pages!.map((page) => {
-        const tableName = changeDbName(page.parchment_style as ParchmentType) as
-          | 'ten_min_planner'
-          | 'line_note'
-          | 'blank_note';
-        return supabase.from(tableName).delete().eq('diary_id', diaryId);
-      });
+        const deletionPromises = pages!.map((page) => {
+          const tableName = changeDbName(page.parchment_style as ParchmentType) as
+            | 'ten_min_planner'
+            | 'line_note'
+            | 'blank_note';
+          return supabase.from(tableName).delete().eq('diary_id', diaryId);
+        });
 
-      await Promise.all(deletionPromises);
+        await Promise.all(deletionPromises);
 
-      alert('다이어리가 삭제 되었습니다.');
-      router.replace('/member/hub');
-    }
+        Swal.fire({
+          title: '삭제 완료!',
+          text: '다이어리가 성공적으로 삭제되었습니다.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
+
+        router.replace('/member/hub');
+      }
+    });
   };
 
   // 허브로 이동합니다.
@@ -85,18 +98,23 @@ export default function ParchmentList() {
 
   // 다이어리 표지 수정페이지로 이동합니다.
   const goDiaryCoverPage = () => {
-    router.push(`/member/diary/${diaryId}/cover`);
+    Swal.fire({
+      title: '다이어리 커버를 수정하시겠습니까?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: '예',
+      cancelButtonText: '아니오'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        router.push(`/member/diary/${diaryId}/cover`);
+      }
+    });
   };
-
-  // const index = (page) => {
-  //   pages?.indexOf(page);
-  // };
 
   // 앞페이지로 이동합니다.
   const handlePrevPage = () => {
     if (currentPageIndex < 1) return;
     if (currentPageIndex % 2 !== 0) {
-      console.log({ currentPageIndex });
       setCurrentPageIndex(currentPageIndex - 3);
       setActiveCardIndices([currentPageIndex - 3, currentPageIndex - 2]);
     } else if (currentPageIndex % 2 === 0) {
@@ -116,35 +134,48 @@ export default function ParchmentList() {
         setActiveCardIndices([currentPageIndex + 2, currentPageIndex + 3]);
       }
     } else if (pages![currentPageIndex]) {
-      if (confirm('더이상 페이지가 없습니다. 추가하시겠습니까?')) {
-        toggleParchmentOptionModal();
-      }
+      Swal.fire({
+        title: '더이상 페이지가 없습니다. 추가하시겠습니까?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: '예',
+        cancelButtonText: '아니오'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          toggleParchmentOptionModal();
+        }
+      });
     }
   };
 
   if (isPending) {
-    <div>로딩중</div>;
+    return <div>로딩중</div>;
   }
-  if (isError) return;
+  if (isError) {
+    return <div>오류 발생</div>;
+  }
 
   return (
     <div className="flex flex-row items-center justify-center w-[128rem] ">
-      <div onClick={handlePrevPage} className="text-[4.8rem] text-[#008A02]">
+      <div onClick={handlePrevPage} className="text-[4.8rem] text-[#008A02] cursor-pointer">
         <FaChevronLeft />
       </div>
       <div>
         <div className="flex flex-row justify-between px-[3.6rem] ">
           <div className="flex flex-row">
-            <span className="flex flex-row text-[3.5rem] w-[4.8rem] items-center justify-center " onClick={goHub}>
+            <span
+              className="flex flex-row text-[3.5rem] w-[4.8rem] items-center justify-center cursor-pointer"
+              onClick={goHub}
+            >
               <FaChevronLeft />
             </span>
             <span className=" text-[3.2rem] w-[82rem] px-[1rem] font-[600]">{coverTitle}</span>
           </div>
           <div className="flex flex-row gap-3">
-            <div onClick={goDiaryCoverPage} className=" text-[3.2rem]">
+            <div onClick={goDiaryCoverPage} className=" text-[3.2rem] cursor-pointer">
               <FaBook />
             </div>
-            <div onClick={deleteDiary} className=" text-[3.2rem]">
+            <div onClick={deleteDiary} className=" text-[3.2rem] cursor-pointer">
               <RiDeleteBin5Line />
             </div>
           </div>
@@ -155,7 +186,7 @@ export default function ParchmentList() {
           </div>
         </div>
       </div>
-      <div onClick={handleNextPage} className="text-[4.8rem] text-[#008A02]">
+      <div onClick={handleNextPage} className="text-[4.8rem] text-[#008A02] cursor-pointer">
         <FaChevronRight />
       </div>
     </div>

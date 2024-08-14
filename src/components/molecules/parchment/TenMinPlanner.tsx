@@ -10,6 +10,7 @@ import { useDeletePage } from '@/lib/hooks/usePages';
 import useEditModeStore from '@/stores/editMode.store';
 import { FaSave } from 'react-icons/fa';
 import { FaTrashAlt } from 'react-icons/fa';
+import Swal from 'sweetalert2';
 
 interface TenMinPlannerProps {
   id: string;
@@ -123,31 +124,80 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
   };
 
   const onSubmit = async () => {
-    await supabase
-      .from('ten_min_planner')
-      .update({
-        ...localPlanner,
-        todo_list: todoList,
-        timetable: timetable
-      })
-      .eq('id', id);
+    Swal.fire({
+      title: '저장하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '예',
+      cancelButtonText: '아니오'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const { error } = await supabase
+          .from('ten_min_planner')
+          .update({
+            ...localPlanner,
+            todo_list: todoList,
+            timetable: timetable
+          })
+          .eq('id', id);
 
-    router.replace(`/member/diary/${diaryId}/parchment`);
+        if (error) {
+          Swal.fire({
+            title: '저장 실패!',
+            text: '저장하는 중 오류가 발생했습니다. 다시 시도해주세요.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        } else {
+          Swal.fire({
+            title: '저장 성공!',
+            text: '성공적으로 저장되었습니다.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          });
+          router.replace(`/member/diary/${diaryId}/parchment`);
+        }
+      }
+    });
   };
 
   const handleDelete = async () => {
-    if (confirm('내용을 삭제 하시겠습니까?')) {
-      const { error: tenMinPlannerError } = await supabase.from('ten_min_planner').delete().eq('id', id);
-      deletePage(id);
-      if (tenMinPlannerError) {
-        alert('삭제 중 오류가 발생했습니다: ' + tenMinPlannerError.message);
-      } else if (isError) {
-        alert('삭제 중 오류가 발생했습니다');
-      } else {
-        alert('삭제되었습니다!');
-        router.replace(`/member/diary/${diaryId}/parchment`);
+    Swal.fire({
+      title: '삭제하시겠습니까?',
+      text: '삭제된 내용은 되돌릴 수 없습니다!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '예',
+      cancelButtonText: '아니오'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const { error: tenMinPlannerError } = await supabase.from('ten_min_planner').delete().eq('id', id);
+        deletePage(id);
+        if (tenMinPlannerError) {
+          Swal.fire({
+            title: '삭제 실패!',
+            text: '삭제 중 오류가 발생했습니다: ' + tenMinPlannerError.message,
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        } else if (isError) {
+          Swal.fire({
+            title: '삭제 실패!',
+            text: '삭제 중 오류가 발생했습니다',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        } else {
+          Swal.fire({
+            title: '삭제 성공!',
+            text: '성공적으로 삭제되었습니다.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          });
+          router.replace(`/member/diary/${diaryId}/parchment`);
+        }
       }
-    }
+    });
   };
 
   const changeStyleName = () => {
