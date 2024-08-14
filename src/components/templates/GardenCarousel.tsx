@@ -197,12 +197,15 @@ const GardenCarousel: React.FC = () => {
       <style jsx global>{`
         .swiper-container {
           height: 100%; /* Ensure Swiper container height is fixed */
+          padding: 0 !important;
+          margin: 0 !important;
         }
         .swiper-slide {
           height: 100%; /* Ensure each slide fits within the container */
         }
 
         .custom-bullet {
+          bottom: 1rem; /* 원하는 위치로 조정 */
           width: 5.1rem;
           height: 3.3rem;
           background-color: rgba(0, 0, 0, 0.5) !important;
@@ -215,6 +218,7 @@ const GardenCarousel: React.FC = () => {
           margin-top: -2rem !important; /* This will move the bullet upwards */
           z-index: 10;
         }
+
         .swiper-pagination-bullet-active.custom-bullet {
           width: 5.1rem;
           height: 3.3rem;
@@ -226,6 +230,10 @@ const GardenCarousel: React.FC = () => {
           margin-bottom: 2rem !important;
           margin-top: -2rem !important; /* This will move the bullet upwards */
           z-index: 10;
+        }
+
+        img {
+          display: block; /* 추가된 스타일 */
         }
       `}</style>
     </div>
