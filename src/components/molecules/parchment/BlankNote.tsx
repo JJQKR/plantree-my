@@ -211,31 +211,33 @@ const BlankNote = ({ id }: BlankNoteProps) => {
       <div className="flex flex-wrap bg-white justify-center h-[69.7rem] p-[2rem]">
         <div className="flex flex-wrap justify-center">
           <div className="flex justify-between flex-wrap ">
-            <div className="flex justify-between w-[22rem]">
-              <label className="flex w-[10rem] h-[2.2rem] justify-between items-center">
-                <p className="text-forestGreen font-semibold text-[1.2rem]">배경 색상</p>
-                <input
-                  type="color"
-                  value={bgColor}
-                  onChange={(e) => setBgColor(e.target.value)}
-                  className="w-[4.2rem] h-[2.2rem] bg-transparent border-none"
-                  disabled={!isEditMode}
-                />
-              </label>
+            {isEditMode ? (
+              <div className="flex justify-between w-[22rem]">
+                <label className="flex w-[10rem] h-[2.2rem] justify-between items-center">
+                  <p className="text-forestGreen font-semibold text-[1.2rem]">배경 색상</p>
+                  <input
+                    type="color"
+                    value={bgColor}
+                    onChange={(e) => setBgColor(e.target.value)}
+                    className="w-[4.2rem] h-[2.2rem] bg-transparent border-none"
+                    disabled={!isEditMode}
+                  />
+                </label>
+                <label className="flex w-[11rem] h-[2.2rem] justify-between items-center">
+                  <p className="text-forestGreen font-semibold text-[1.2rem]">텍스트 색상</p>
+                  <input
+                    type="color"
+                    value={globalTextColor}
+                    onChange={(e) => setGlobalTextColor(e.target.value)}
+                    className="w-[4.2rem] h-[2.2rem] bg-transparent border-none "
+                    disabled={!isEditMode}
+                  />
+                </label>
+              </div>
+            ) : null}
 
-              <label className="flex w-[11rem] h-[2.2rem] justify-between items-center">
-                <p className="text-forestGreen font-semibold text-[1.2rem]">텍스트 색상</p>
-                <input
-                  type="color"
-                  value={globalTextColor}
-                  onChange={(e) => setGlobalTextColor(e.target.value)}
-                  className="w-[4.2rem] h-[2.2rem] bg-transparent border-none "
-                  disabled={!isEditMode}
-                />
-              </label>
-            </div>
             <div className="flex justify-between items-center w-[46rem] h-[1.9rem]">
-              <div className="flex flex-col w-[30rem] border-b-2 pb-1">
+              <div className="flex flex-col w-[30rem] border-b-[0.3rem] pb-1">
                 <label htmlFor="title" className="flex items-center">
                   <p className="text-forestGray font-semibold text-[1.5rem]">TITLE</p>
                   <input
@@ -249,7 +251,7 @@ const BlankNote = ({ id }: BlankNoteProps) => {
                 </label>
               </div>
 
-              <div className="flex flex-col w-[14.5rem] border-b-2 pb-1">
+              <div className="flex flex-col w-[14.5rem] border-b-[0.3rem] pb-1">
                 <label htmlFor="date" className="flex items-center">
                   <p className="text-forestGray font-semibold text-[1.5rem]">DATE</p>
                   <div className="relative ml-2">
