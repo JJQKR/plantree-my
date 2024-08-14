@@ -2,9 +2,11 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import { supabase } from '@/supabase/client';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useDeletePage } from '@/lib/hooks/usePages';
 import useEditModeStore from '@/stores/editMode.store';
+import { FaSave } from 'react-icons/fa';
+import { FaTrashAlt } from 'react-icons/fa';
 
 interface BlankNoteProps {
   id: string;
@@ -28,6 +30,10 @@ const BlankNote = ({ id }: BlankNoteProps) => {
   const [diaryId, setDiaryId] = useState('');
   const { mutate: deletePage, isPending, isError } = useDeletePage();
   const { isEditMode } = useEditModeStore((state) => state);
+
+  const searchParams = useSearchParams();
+  const index = searchParams.get('index');
+  const style = searchParams.get('style');
 
   const router = useRouter();
 
@@ -163,11 +169,37 @@ const BlankNote = ({ id }: BlankNoteProps) => {
         title: title
       });
     }
-    // setIsEditMode(!isEditMode);
+  };
+
+  const changeStyleName = () => {
+    if (style === 'tenMinPlanner') {
+      return '10분 플래너';
+    } else if (style === 'lineNote') {
+      return '줄글노트';
+    } else if (style === 'stringNote') {
+      return '무지노트';
+    }
   };
 
   return (
-    <div className="bg-white w-full h-[430px]">
+    <div className={` w-[50rem] ${isEditMode ? 'h-[75rem]' : 'h-[70.2rem]'} bg-red-200`}>
+      <div className="mx-auto w-full">
+        {isEditMode ? (
+          <div className="bg-[#EDF1E6] w-full h-[4.8rem] py-[1.2rem] px-[1.5rem] flex flex-row justify-between">
+            <div className="text-[1.8rem] text-[#496E00] font-[600]">
+              {index} Page_{changeStyleName()}
+            </div>
+            <div>
+              <button className="text-[2.4rem] text-[#496E00]" onClick={handleSaveOrUpdate}>
+                <FaSave />
+              </button>
+              <button className="text-[2.4rem] text-[#496E00]" onClick={handleDelete}>
+                <FaTrashAlt />
+              </button>
+            </div>
+          </div>
+        ) : null}
+      </div>
       <div className="flex justify-between mb-4 mt-[52px]">
         <div>
           <label htmlFor="title" className="block m-2">
@@ -237,16 +269,6 @@ const BlankNote = ({ id }: BlankNoteProps) => {
         onInput={handleInput}
         onKeyDown={handleKeyDown}
       ></div>
-      {isEditMode ? (
-        <div>
-          <button onClick={handleSaveOrUpdate} className="p-2 bg-blue-500 text-white rounded mr-2 mt-3">
-            저장하기
-          </button>
-          <button onClick={handleDelete} className="p-2 bg-red-500 text-white rounded mr-2">
-            삭제하기
-          </button>
-        </div>
-      ) : null}
     </div>
   );
 };
