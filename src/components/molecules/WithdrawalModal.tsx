@@ -8,9 +8,15 @@ import useUserStore from '@/stores/user.store';
 const WithdrawalModal: React.FC = () => {
   const { nickname, membershipDays } = useUserStore((state) => state);
   const { isWithdrawalModalOpen, toggleWithdrawalModal } = useMyModalStore((state) => state);
-  const handleBackGroundClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (e.target === e.currentTarget) {
-      toggleWithdrawalModal();
+  // const handleBackGroundClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  //   if (e.target === e.currentTarget) {
+  //     toggleWithdrawalModal();
+  //   }
+  // };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === ' ') {
+      e.preventDefault(); // 스페이스바의 기본 동작 방지
     }
   };
 
@@ -42,9 +48,9 @@ const WithdrawalModal: React.FC = () => {
       } else {
         alert('회원 탈퇴가 완료되었습니다.');
         toggleWithdrawalModal();
+        window.location.href = '/';
         // 추가로 로그아웃 처리
         await supabase.auth.signOut();
-        window.location.href = '/';
       }
     } catch (error) {
       console.error('회원 탈퇴 중 오류 발생:', error);
@@ -56,61 +62,64 @@ const WithdrawalModal: React.FC = () => {
 
   return (
     <>
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-        onClick={handleBackGroundClick}
-      >
-        <div className="bg-white p-[4rem] rounded-[2rem] w-[46rem] h-[37rem]">
-          <div onClick={(e) => e.stopPropagation()}>
-            <div className="flex justify-between items-center">
-              <h2 className="text-[2.8rem] font-bold text-left text-black mb-[1.45rem]">회원 탈퇴</h2>
-              <button
-                className="text-[#008A02] font-bold text-[2.8rem] mb-[1.45rem]"
-                onClick={toggleWithdrawalModal}
-                type="button"
-              >
-                &#10005;
-              </button>
-            </div>
-            <div className="flex-col text-start text-[1.6rem]">
-              <p>{nickname} 님은</p>
-              <p>플랜트리와 {membershipDays}일 동안 함께 했어요.</p>
-              <div className="">
-                <p>&#39;안녕플랜트리&#39;를 입력하시면 탈퇴됩니다.</p>
-              </div>
-              <p className="text-[#D90000]">* 탈퇴 후 정보 복구가 어려우니 미리 저장해주세요.</p>
-            </div>
-
-            <input
-              type="text"
-              placeholder="안녕플랜트리"
-              className="mt-[3.2rem] mb-[1rem] pl-[1rem] border rounded-[1.2rem] w-full h-[5.2rem] text-[1.8rem] text-black"
-              value={goodbye}
-              onChange={(e) => setGoodbye(e.target.value)}
-              disabled={loading}
-            />
-            <div className="flex flex-col gap-2">
-              <form className="flex flex-col" onSubmit={handleSubmit}>
+      {isWithdrawalModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+          onKeyDown={handleKeyDown}
+          // onClick={handleBackGroundClick}
+        >
+          <div className="bg-white p-[4rem] rounded-[2rem] w-[46rem] h-[37rem]">
+            <div onClick={(e) => e.stopPropagation()}>
+              <div className="flex justify-between items-center">
+                <h2 className="text-[2.8rem] font-bold text-left text-black mb-[1.45rem]">회원 탈퇴</h2>
                 <button
-                  type="submit"
-                  className="w-full h-[5.2rem] text-[#720000] text-[1.8rem] rounded-[1.2rem]"
-                  style={{ backgroundColor: '#FFE5E5' }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#D90000';
-                    e.currentTarget.style.color = 'white'; // 텍스트 색깔을 white로 변경
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#FFE5E5';
-                    e.currentTarget.style.color = '#720000'; // 텍스트 색깔을 #720000으로 변경
-                  }}
+                  className="text-[#008A02] font-bold text-[2.8rem] mb-[1.45rem]"
+                  onClick={toggleWithdrawalModal}
+                  type="button"
                 >
-                  탈퇴하기
+                  &#10005;
                 </button>
-              </form>
+              </div>
+              <div className="flex-col text-start text-[1.6rem]">
+                <p>{nickname} 님은</p>
+                <p>플랜트리와 {membershipDays}일 동안 함께 했어요.</p>
+                <div className="">
+                  <p>&#39;안녕플랜트리&#39;를 입력하시면 탈퇴됩니다.</p>
+                </div>
+                <p className="text-[#D90000]">* 탈퇴 후 정보 복구가 어려우니 미리 저장해주세요.</p>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <form className="flex flex-col" onSubmit={handleSubmit}>
+                  <input
+                    type="text"
+                    placeholder="안녕플랜트리"
+                    className="mt-[3.2rem] mb-[1rem] pl-[1rem] border rounded-[1.2rem] w-full h-[5.2rem] text-[1.8rem] text-black"
+                    value={goodbye}
+                    onChange={(e) => setGoodbye(e.target.value)}
+                    disabled={loading}
+                  />
+                  <button
+                    type="submit"
+                    className="w-full h-[5.2rem] text-[#720000] text-[1.8rem] rounded-[1.2rem]"
+                    style={{ backgroundColor: '#FFE5E5' }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#D90000';
+                      e.currentTarget.style.color = 'white'; // 텍스트 색깔을 white로 변경
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#FFE5E5';
+                      e.currentTarget.style.color = '#720000'; // 텍스트 색깔을 #720000으로 변경
+                    }}
+                  >
+                    탈퇴하기
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
