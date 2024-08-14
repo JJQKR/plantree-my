@@ -2,7 +2,7 @@ import { supabase } from '@/supabase/client';
 
 export const addCover = async (coverData: any) => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diarycover/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diarycover`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
