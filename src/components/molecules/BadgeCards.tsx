@@ -43,15 +43,15 @@ const BadgeCards: React.FC = () => {
   }, [diaryCount, membershipDays]);
 
   return (
-    <div className="grid grid-cols-4 ml-[1.25rem]">
+    <div className="grid grid-cols-4">
       {badgesState.map((badge, index) => (
-        <div key={index} className="relative" style={{ width: '13.25rem', height: '22.25rem' }}>
+        <div key={index} className="relative" style={{ width: '20.8rem', height: '32.4rem', margin: '0.6rem' }}>
           <Image
             src={badge.content}
             alt={badge.isObtained ? 'Obtained Badge' : 'Unobtained Badge'}
             fill // 이미지가 부모 요소를 가득 채우도록 함
             style={{ objectFit: 'contain' }} // 왜곡 없이 이미지를 표시
-            className="rounded-[10px]"
+            className="rounded-[1.6rem]"
           />
         </div>
       ))}

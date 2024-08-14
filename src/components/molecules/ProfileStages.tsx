@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import useUserStore from '@/stores/user.store';
 
 const profileStages = [
   { id: 'lv1', src: '/images/Abstract0.png', name: '씨앗' },
@@ -11,15 +12,16 @@ const profileStages = [
 ];
 
 interface ProfileStagesProps {
-  levelId: string;
   size?: number;
 }
 
-const ProfileStages: React.FC<ProfileStagesProps> = ({ levelId, size = 120 }) => {
-  const profileStage = profileStages.find((stage) => stage.id === levelId);
+const ProfileStages: React.FC<ProfileStagesProps> = ({ size = 120 }) => {
+  const updatedLevelId = useUserStore((state) => state.updatedLevelId);
+
+  const profileStage = profileStages.find((stage) => stage.id === updatedLevelId);
 
   if (!profileStage) {
-    return <div style={{ width: size, height: size }} className="bg-gray-200 rounded-full mb-2"></div>; // 기본 로딩 상태
+    return <div style={{ width: size, height: size }} className="bg-gray-200 rounded-full mb-2"></div>;
   }
 
   return (

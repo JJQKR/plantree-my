@@ -59,42 +59,51 @@ const WithdrawalModal: React.FC = () => {
         className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
         onClick={handleBackGroundClick}
       >
-        <div className="bg-white p-[2.5rem] rounded-[10px] w-[31.25rem] h-[28rem]">
+        <div className="bg-white p-[4rem] rounded-[2rem] w-[46rem] h-[37rem]">
           <div onClick={(e) => e.stopPropagation()}>
-            <div className="flex justify-between items-center mb-[1.75rem]">
-              <h1 className="text-[1.63rem] font-bold text-left text-black">계정 탈퇴</h1>
-              <button className="text-black" onClick={toggleWithdrawalModal} type="button">
+            <div className="flex justify-between items-center">
+              <h2 className="text-[2.8rem] font-bold text-left text-black mb-[1.45rem]">회원 탈퇴</h2>
+              <button
+                className="text-[#008A02] font-bold text-[2.8rem] mb-[1.45rem]"
+                onClick={toggleWithdrawalModal}
+                type="button"
+              >
                 &#10005;
               </button>
             </div>
-            <div className="text-[1.25rem] mb-[1.75rem]">
+            <div className="flex-col text-start text-[1.6rem]">
               <p>{nickname} 님은</p>
-              <p>플랜트리와 {membershipDays}일 동안 기록을 키워나갔어요.</p>
-              <div className="mb-[1.75rem] mt-[1.75rem]">
-                <p>정말 탈퇴하시겠어요?</p>
-                <p>아래 텍스트를 입력해주세요.</p>
+              <p>플랜트리와 {membershipDays}일 동안 함께 했어요.</p>
+              <div className="">
+                <p>'안녕플랜트리'를 입력하시면 탈퇴됩니다.</p>
               </div>
+              <p className="text-[#D90000]">* 탈퇴 후 정보 복구가 어려우니 미리 저장해주세요.</p>
             </div>
 
             <input
               type="text"
-              placeholder="플랜트리잘있어"
-              className="mb-[1.75rem] p-2 border rounded w-full text-[1.13rem] text-black"
+              placeholder="안녕플랜트리"
+              className="mt-[3.2rem] mb-[1rem] pl-[1rem] border rounded-[1.2rem] w-full h-[5.2rem] text-[1.8rem] text-black"
               value={goodbye}
               onChange={(e) => setGoodbye(e.target.value)}
               disabled={loading}
             />
             <div className="flex flex-col gap-2">
-              <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
+              <form className="flex flex-col" onSubmit={handleSubmit}>
                 <button
-                  className="px-4 w-full h-[3.25rem] text-white text-[1.13rem] rounded-[5px]"
                   type="submit"
-                  disabled={loading}
-                  style={{ backgroundColor: '#9E9E9E' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#8A0000')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#9E9E9E')}
+                  className="w-full h-[5.2rem] text-[#720000] text-[1.8rem] rounded-[1.2rem]"
+                  style={{ backgroundColor: '#FFE5E5' }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#D90000';
+                    e.currentTarget.style.color = 'white'; // 텍스트 색깔을 white로 변경
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#FFE5E5';
+                    e.currentTarget.style.color = '#720000'; // 텍스트 색깔을 #720000으로 변경
+                  }}
                 >
-                  {loading ? '탈퇴 중...' : '탈퇴하기'}
+                  탈퇴하기
                 </button>
               </form>
             </div>
