@@ -134,16 +134,26 @@ export default function ParchmentList() {
         setActiveCardIndices([currentPageIndex + 2, currentPageIndex + 3]);
       }
     } else if (pages![currentPageIndex]) {
-      if (confirm('더이상 페이지가 없습니다. 추가하시겠습니까?')) {
-        toggleParchmentOptionModal();
-      }
+      Swal.fire({
+        title: '더이상 페이지가 없습니다. 추가하시겠습니까?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: '예',
+        cancelButtonText: '아니오'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          toggleParchmentOptionModal();
+        }
+      });
     }
   };
 
   if (isPending) {
-    <div>로딩중</div>;
+    return <div>로딩중</div>;
   }
-  if (isError) return;
+  if (isError) {
+    return <div>오류 발생</div>;
+  }
 
   return (
     <div className="flex flex-row items-center justify-center w-[128rem] ">
