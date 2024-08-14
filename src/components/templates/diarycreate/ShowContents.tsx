@@ -6,6 +6,7 @@ import { FaRegEdit } from 'react-icons/fa';
 import React from 'react';
 import { usePageToDiaryId } from '@/lib/hooks/usePages';
 import { useRouter } from 'next/navigation';
+import Swal from 'sweetalert2';
 
 interface ShowContentsProps {
   page: PageType;
@@ -16,15 +17,6 @@ const ShowContents = ({ page, diaryId }: ShowContentsProps) => {
   const { data: pages, isPending } = usePageToDiaryId(diaryId);
   const router = useRouter();
 
-  const handleEditMode = ({ id, style }: { id: string; style: string }) => {
-    const url = `/member/diary/${diaryId}/parchment/${id}?style=${encodeURIComponent(style)}&index=${diaryIndex}`;
-    router.push(url);
-  };
-
-  if (!pages) return;
-  if (!page) return;
-  const diaryIndex = pages?.indexOf(page) + 1;
-
   const pageStyle = () => {
     if (page.parchment_style === 'tenMinPlanner') {
       return '10분플래너';
@@ -33,9 +25,28 @@ const ShowContents = ({ page, diaryId }: ShowContentsProps) => {
     } else if (page.parchment_style === 'blankNote') {
       return '무지노트';
     } else {
-      return;
+      return '';
     }
   };
+
+  const handleEditMode = ({ id, style }: { id: string; style: string }) => {
+    const url = `/member/diary/${diaryId}/parchment/${id}?style=${encodeURIComponent(style)}&index=${diaryIndex}`;
+    Swal.fire({
+      title: `${pageStyle()}를 수정하시겠습니까?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: '예',
+      cancelButtonText: '아니오'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        router.push(url);
+      }
+    });
+  };
+
+  if (!pages) return null;
+  if (!page) return null;
+  const diaryIndex = pages?.indexOf(page) + 1;
 
   return (
     <div key={page.id} className="mx-auto w-full h-full">
