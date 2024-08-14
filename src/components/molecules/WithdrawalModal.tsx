@@ -75,7 +75,7 @@ const WithdrawalModal: React.FC = () => {
               <p>{nickname} 님은</p>
               <p>플랜트리와 {membershipDays}일 동안 함께 했어요.</p>
               <div className="">
-                <p>'안녕플랜트리'를 입력하시면 탈퇴됩니다.</p>
+                <p>&#39;안녕플랜트리&#39;를 입력하시면 탈퇴됩니다.</p>
               </div>
               <p className="text-[#D90000]">* 탈퇴 후 정보 복구가 어려우니 미리 저장해주세요.</p>
             </div>
