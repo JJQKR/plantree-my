@@ -168,19 +168,12 @@ const GardenCarousel: React.FC = () => {
     <div className="flex flex-col items-center">
       <div className="w-[98rem] h-[48rem]">
         <Swiper
-          effect="coverflow"
+          spaceBetween={0}
           grabCursor={true}
           centeredSlides={true}
           slidesPerView="auto"
-          coverflowEffect={{
-            rotate: 50,
-            stretch: 0,
-            depth: 100,
-            modifier: 1,
-            slideShadows: false
-          }}
           pagination={pagination}
-          modules={[EffectCoverflow, Pagination]}
+          modules={[Pagination]}
           style={{ marginTop: 0, paddingTop: 0 }}
           // 이거 왜 지맘대로 없어졌었을까
           // style={{ marginTop: 0, paddingTop: 0 }}
