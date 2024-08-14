@@ -8,7 +8,7 @@ const SideButton: React.FC<SideButtonProps> = ({ onClick }) => {
       onClick={onClick}
       className="p-2 bg-transparent border-none outline-none hover:bg-gray-600 rounded transition duration-300"
     >
-      <AiOutlineMenu className="text-[40px] text-green-400" />
+      <AiOutlineMenu className="text-[4rem] text-green-400" />
     </button>
   );
 };

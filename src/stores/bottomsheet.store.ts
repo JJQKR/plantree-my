@@ -8,6 +8,8 @@ type BottomSheetState = {
   // setBottomSheetList: (newList: UpdatePageType[]) => void;
   moveCard: (dragIndex: number, hoverIndex: number) => void;
   addPageToBottomSheet: (newPage: UpdatePageType) => void;
+  activeCardIndices: number[] | null;
+  setActiveCardIndices: (indices: number[] | null) => void;
 };
 
 const useBottomSheetStore = create<BottomSheetState>((set) => ({
@@ -26,6 +28,12 @@ const useBottomSheetStore = create<BottomSheetState>((set) => ({
   addPageToBottomSheet: (newPage) =>
     set((state) => ({
       bottomSheetList: [...state.bottomSheetList, newPage]
+    })),
+
+  activeCardIndices: null,
+  setActiveCardIndices: (indices) =>
+    set(() => ({
+      activeCardIndices: indices
     }))
 }));
 

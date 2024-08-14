@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { DiAptana } from 'react-icons/di';
@@ -33,6 +35,10 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           if (coversError) {
             console.error('다이어리 커버 정보 가져오기 실패:', coversError);
           } else {
+            // 생성일 기준으로 커버 데이터 정렬 (제일 먼저 만든 것이 앞에 오게)
+            coversData.sort(
+              (a, b) => new Date((a as any).created_at).getTime() - new Date((b as any).created_at).getTime()
+            );
             setDiaryCovers(coversData);
           }
         }
@@ -91,18 +97,22 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <ul className="list-none space-y-2 flex-col">
             {diaryCovers.length > 0 ? (
               diaryCovers.map((cover) => (
-                <li
-                  key={cover.id}
-                  className="pl-[2rem] w-[24rem] h-[5.2rem] text-[1.8rem] font-semibold flex items-center rounded-[1.2rem] text-black"
-                  style={{
-                    backgroundColor: cover.cover_bg_color || 'bg-white',
-                    backgroundImage: cover.cover_bg_color ? `url(${cover.cover_bg_color})` : 'none',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    color: cover.unsplash_image ? 'white' : 'black'
-                  }}
-                >
-                  {cover.cover_title || '제목 없음'}
+                <li key={cover.id}>
+                  <Link
+                    href={`/member/diary/${cover.diary_id}/parchment`}
+                    className="block pl-2 w-[15rem] h-[3.25rem] text-[1.13rem] font-semibold flex items-center rounded-[10px] text-black"
+                    style={{
+                      backgroundColor: cover.cover_bg_color || 'bg-white',
+                      backgroundImage: cover.cover_bg_color ? `url(${cover.cover_bg_color})` : 'none',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      color: cover.cover_title_color || 'black',
+                      fontFamily: cover.cover_title_fontfamily || 'inherit',
+                      fontWeight: cover.cover_title_fontweight || 'normal'
+                    }}
+                  >
+                    {cover.cover_title || '제목 없음'}
+                  </Link>
                 </li>
               ))
             ) : (

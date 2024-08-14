@@ -1,13 +1,11 @@
 import React, { useRef } from 'react';
 import { useParams, useRouter, usePathname } from 'next/navigation';
-import { useDiaryCoverStore } from '@/stores/diarycover.store';
 import BottomSheetCard from './BottomSheetCard';
-import { supabase } from '@/supabase/client';
-import useDiaryStore from '@/stores/diary.store';
 import { UpdatePageType } from '@/api/pages.api';
-import usePageStore from '@/stores/pages.store';
 import useParchmentModalStore from '@/stores/parchment.modal.store';
-import ParchmentOptionsModal from './ParchmentOptionsModal';
+import { usePageToDiaryId } from '@/lib/hooks/usePages';
+import { FaChevronUp } from 'react-icons/fa6';
+import { FaChevronDown } from 'react-icons/fa6';
 
 type BottomSheetProps = {
   isOpen: boolean;
@@ -16,141 +14,66 @@ type BottomSheetProps = {
   moveCard: (dragIndex: number, hoverIndex: number) => void;
 };
 
+type ParamTypes = {
+  [key: string]: string;
+  diaryId: string;
+};
+
 const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheetList, moveCard }) => {
   const router = useRouter();
+  const { diaryId } = useParams<ParamTypes>();
   const pathname = usePathname();
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { pages } = usePageStore((state) => state);
-  const { toggleParchmentOptionModal, isParchmentOptionModalOpen } = useParchmentModalStore((state) => state);
-  // const togglePageOptions = useDiaryCoverStore((state) => state.togglePageOptions);
-  // // const { setCurrentPage, currentPage } = useDiaryCoverStore((state) => state);
-  // const {
-  //   coverTitle,
-  //   coverTitlePosition,
-  //   coverTitleFontSize,
-  //   coverTitleWidth,
-  //   coverImagePosition,
-  //   coverImageSize,
-  //   coverBackgroundColor,
-  //   coverScale,
-  //   coverStageSize,
-  //   coverTitleRotation,
-  //   coverImageRotation,
-  //   imageFile,
-  //   setCoverData
-  // } = useDiaryCoverStore();
-  const { diaryId } = useParams();
+  const { data: pages, isPending } = usePageToDiaryId(diaryId);
 
-  const handleCoverPageClick = () => {
-    router.push(`/member/diary/${diaryId}/cover`);
-  };
+  const { toggleParchmentOptionModal } = useParchmentModalStore((state) => state);
 
-  // const handleCardClick = (pageIndex: number) => {
-  //   setCurrentPage(pageIndex - (pageIndex % 2));
+  // const scrollLeft = () => {
+  //   if (scrollRef.current) {
+  //     scrollRef.current.scrollBy({ left: -200, behavior: 'smooth' });
+  //   }
   // };
 
-  const scrollLeft = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -200, behavior: 'smooth' });
-    }
-  };
-
-  const scrollRight = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 200, behavior: 'smooth' });
-    }
-  };
+  // const scrollRight = () => {
+  //   if (scrollRef.current) {
+  //     scrollRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+  //   }
+  // };
 
   const handleAddPageModal = () => {
-    if (pathname.includes('diarycover')) {
-      handleSaveAndContinue();
-    } else {
-      toggleParchmentOptionModal();
-    }
+    toggleParchmentOptionModal();
   };
-
-  const handleSaveAndContinue = async () => {
-    // let publicUrl: string | null = null;
-
-    // if (imageFile) {
-    //   const fileName = `${Date.now()}_${imageFile.name}`;
-    //   const { data: uploadData, error: uploadError } = await supabase.storage
-    //     .from('cover_img')
-    //     .upload(fileName, imageFile);
-
-    //   if (uploadError) {
-    //     console.error('이미지 업로드 실패:', uploadError);
-    //     return;
-    //   }
-
-    //   const { data: publicUrlData } = supabase.storage.from('cover_img').getPublicUrl(fileName);
-
-    //   if (!publicUrlData) {
-    //     console.error('공개 URL 가져오기 실패');
-    //     return;
-    //   }
-
-    //   publicUrl = publicUrlData.publicUrl;
-    // }
-
-    // const coverDataToSave = {
-    //   cover_title: coverTitle || null,
-    //   cover_title_position: coverTitlePosition,
-    //   cover_title_fontsize: coverTitleFontSize,
-    //   cover_title_width: coverTitleWidth,
-    //   cover_title_rotation: coverTitleRotation,
-    //   cover_image: publicUrl,
-    //   cover_image_position: coverImagePosition,
-    //   cover_image_size: coverImageSize,
-    //   cover_image_rotation: coverImageRotation,
-    //   cover_bg_color: coverBackgroundColor,
-    //   cover_scale: coverScale,
-    //   cover_stage_size: coverStageSize
-    // };
-
-    // setCoverData(coverDataToSave);
-
-    router.push(`/member/diary/${diaryId}/parchment`);
-  };
-
-  // console.log(pages);
 
   return (
     <div
-      className={`fixed bottom-0 left-1/2 transform -translate-x-1/2 w-4/5 h-48 bg-white shadow-lg rounded-t-2xl transition-transform duration-300 ${
+      className={`fixed bottom-0 left-1/2 transform -translate-x-1/2 w-[118rem] h-48 bg-[#E6F3E6] border-[0.15rem] border-[#B0DBB1] shadow-lg rounded-t-2xl transition-transform duration-300 ${
         isOpen ? 'translate-y-0' : 'translate-y-44'
       } z-20`} // z-index 설정
     >
       <div className="flex justify-center">
         <div
-          className="absolute top-[-20px] w-28 h-8 bg-white rounded-t-xl cursor-pointer flex items-center justify-center z-50"
+          className="absolute top-[-25px] w-[11.4rem] h-[2.5rem] bg-[#E6F3E6] border-[0.15rem] border-x-[#B0DBB1] border-t-[#B0DBB1] border-b-[#E6F3E6] rounded-t-[1rem] cursor-pointer flex items-center justify-center z-50"
           onClick={onToggle}
         >
-          <span>{isOpen ? '▼' : '▲'}</span>
+          <span className="text-[2rem]">{isOpen ? <FaChevronDown /> : <FaChevronUp />}</span>
         </div>
       </div>
       <div className="relative">
         <button
           className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-300 p-2 rounded-full shadow-md z-50"
-          onClick={scrollLeft}
+          // onClick={scrollLeft}
         >
           ◀
         </button>
         <div ref={scrollRef} className="p-4 text-center overflow-x-auto flex space-x-4">
-          <div
-            onClick={handleCoverPageClick}
-            className="bg-gray-100 rounded-lg shadow-md p-4 w-32 h-40 flex-none cursor-pointer z-30" // z-index 설정
-          >
-            <h2 className="text-xl font-bold">커버 페이지</h2>
-          </div>
-          <div
-            // onClick={goDiaryParchmentPage}
-            className="bg-gray-100 rounded-lg shadow-md p-4 w-32 h-40 flex-none cursor-pointer z-30"
-          >
-            {pages.map((page) => {
-              return <BottomSheetCard page={page} moveCard={moveCard} onClick={onToggle} />;
+          <div className="flex flex-row gap-[1rem]">
+            {pages?.map((page) => {
+              return (
+                <BottomSheetCard key={page.id} page={page} moveCard={moveCard} onToggle={onToggle} pages={pages} />
+              );
             })}
           </div>
+
           <div
             onClick={handleAddPageModal}
             className="bg-gray-100 rounded-lg shadow-md p-4 w-32 h-40 flex-none cursor-pointer z-30" // z-index 설정
@@ -160,12 +83,11 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
         </div>
         <button
           className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-300 p-2 rounded-full shadow-md z-50"
-          onClick={scrollRight}
+          // onClick={scrollRight}
         >
           ▶
         </button>
       </div>
-      {/* {isParchmentOptionModalOpen ? <ParchmentOptionsModal /> : null} */}
     </div>
   );
 };

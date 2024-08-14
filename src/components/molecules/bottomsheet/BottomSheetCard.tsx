@@ -1,61 +1,88 @@
 import { UpdatePageType } from '@/api/pages.api';
+import useBottomSheetStore from '@/stores/bottomsheet.store';
+import usePageStore from '@/stores/pages.store';
 import React from 'react';
-import { useDrag, useDrop } from 'react-dnd';
+// import { useDrag, useDrop } from 'react-dnd';
 
-const ItemType = {
-  CARD: 'card'
-};
+// const ItemType = {
+//   CARD: 'card'
+// };
 
 type BottomSheetCardProps = {
   page: UpdatePageType;
   moveCard: (dragIndex: number, hoverIndex: number) => void;
-  onClick: () => void;
+  onToggle: () => void;
+  pages: UpdatePageType[];
 };
 
-type DragItemType = {
-  id: string;
-  index: number;
-  type: typeof ItemType.CARD;
-};
+// type DragItemType = {
+//   id: string;
+//   index: number;
+//   type: typeof ItemType.CARD;
+// };
 
-const BottomSheetCard: React.FC<BottomSheetCardProps> = ({ page, moveCard, onClick }) => {
+const BottomSheetCard: React.FC<BottomSheetCardProps> = ({ page, moveCard, onToggle, pages }) => {
   const ref = React.useRef(null);
-  const [, drop] = useDrop({
-    accept: ItemType.CARD,
-    hover(item: DragItemType) {
-      if (!ref.current) return;
+  const { setCurrentPageIndex } = usePageStore((state) => state);
+  const { activeCardIndices, setActiveCardIndices } = useBottomSheetStore((state) => state);
 
-      const dragIndex = item.index;
-      const hoverIndex = page.index;
+  // const [, drop] = useDrop({
+  //   accept: ItemType.CARD,
+  //   hover(item: DragItemType) {
+  //     if (!ref.current) return;
 
-      if (dragIndex === hoverIndex) return;
+  //     const dragIndex = item.index;
+  //     const hoverIndex = page.index;
 
-      moveCard(dragIndex, hoverIndex);
-      item.index = hoverIndex;
+  //     if (dragIndex === hoverIndex) return;
+
+  //     moveCard(dragIndex, hoverIndex);
+  //     item.index = hoverIndex;
+  //   }
+  // });
+
+  // const [{ isDragging }, drag] = useDrag({
+  //   type: ItemType.CARD,
+  //   item: (): DragItemType => ({ id: page.content_id, index: page.index, type: ItemType.CARD }),
+  //   collect: (monitor) => ({
+  //     isDragging: monitor.isDragging()
+  //   })
+  // });
+
+  // drag(drop(ref));
+
+  const showIndices = (index: number) => {
+    if (index % 2 !== 0) {
+      setCurrentPageIndex(index - 1);
+      setActiveCardIndices([index - 1, index]);
+    } else if (index % 2 === 0) {
+      setCurrentPageIndex(index);
+      setActiveCardIndices([index, index + 1]);
     }
-  });
+  };
 
-  const [{ isDragging }, drag] = useDrag({
-    type: ItemType.CARD,
-    item: (): DragItemType => ({ id: page.content_id, index: page.index, type: ItemType.CARD }),
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging()
-    })
-  });
+  const showPages = (index: number) => {
+    showIndices(index);
+  };
 
-  drag(drop(ref));
+  const isActive = activeCardIndices?.includes(pages.indexOf(page));
 
   return (
     <div
       ref={ref}
-      className={`relative bg-gray-100 rounded-lg shadow-md p-4 w-32 h-40 flex-none cursor-pointer ${
-        isDragging ? 'opacity-50' : ''
+      // ${isDragging ? 'opacity-50' : ''}
+      className={`flex items-end justify-center bg-white rounded-lg shadow-md p-4 w-32 h-40 flex-none cursor-pointer  ${
+        isActive ? 'border-[#008A02] border-[0.3rem]' : ''
       }`}
-      onClick={() => {
-        onClick();
-      }}
+      onClick={() => showPages(pages.indexOf(page))}
     >
-      <h2 className="text-xl font-bold">{page.index}</h2>
+      <div
+        className={`${
+          isActive ? 'bg-[#008A02]' : 'bg-[#BEBEBE]'
+        } text-white flex justify-center w-[1.5rem] h-[1.5rem] rounded text-[1.2rem] font-bold `}
+      >
+        {pages.indexOf(page) + 1}
+      </div>
     </div>
   );
 };

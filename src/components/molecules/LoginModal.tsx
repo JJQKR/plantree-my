@@ -5,6 +5,7 @@ import { supabase } from '../../supabase/client';
 import ResetPasswordModal from './ResetPasswordModal';
 import useUserStore from '@/stores/user.store';
 import Swal from 'sweetalert2';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> = ({ onClose, onSignupClick }) => {
   const [email, setEmail] = useState('');
@@ -15,6 +16,7 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
   const [resetToken, setResetToken] = useState<string | null>(null);
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const setUserId = useUserStore((state) => state.setUserId);
 
@@ -64,24 +66,77 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
       email,
       password
     });
-    if (error) throw error;
-    return data;
+    return { data, error };
   };
 
+  // 이메일 형식 검사 함수
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // 로그인 처리 함수
   const handleSignIn = async (email: string, password: string, fromAutoLogin = false) => {
     try {
-      const { user } = await signIn(email, password);
-      if (!user) {
+      // 이메일과 비밀번호가 비어 있는지 확인
+      if (!email || !password) {
         Swal.fire({
-          title: '로그인 실패.',
-          text: '등록되지 않은 사용자입니다!',
+          title: '로그인 실패',
+          text: '아이디와 비밀번호를 입력해주세요!',
           icon: 'error',
           confirmButtonText: 'OK'
         });
         return;
       }
-      setUserId(user.id);
-      console.log('로그인 성공:', user);
+
+      // 이메일 형식 검사
+      if (!isValidEmail(email)) {
+        Swal.fire({
+          title: '로그인 실패',
+          text: '아이디는 이메일 형식이어야 합니다!',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+        return;
+      }
+
+      const { data, error } = await signIn(email, password);
+
+      // 오류가 있는 경우
+      if (error) {
+        if (error.message === 'Invalid login credentials') {
+          // 아이디가 존재하지 않는 경우
+          Swal.fire({
+            title: '로그인 실패',
+            text: '아이디, 비밀번호를 다시 한 번 확인 해주세요!',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        } else {
+          // 기타 로그인 오류
+          Swal.fire({
+            title: '로그인 실패',
+            text: error.message,
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        }
+        return;
+      }
+
+      // 비밀번호가 일치하지 않는 경우
+      if (!data.user) {
+        Swal.fire({
+          title: '로그인 실패',
+          text: '비밀번호가 일치하지 않습니다!',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+        return;
+      }
+
+      setUserId(data.user.id);
+      console.log('로그인 성공:', data.user);
       if (rememberMe) {
         localStorage.setItem('email', email);
         localStorage.setItem('password', password);
@@ -108,7 +163,7 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
       console.error('로그인 실패:', error);
       setError(error instanceof Error ? error.message : 'An error occurred.');
       Swal.fire({
-        title: '로그인 실패!',
+        title: '로그인 실패',
         text: '다시 시도해주세요!',
         icon: 'error',
         confirmButtonText: 'OK'
@@ -121,6 +176,10 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
     await handleSignIn(email, password);
   };
 
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
   return (
     <>
       {!showForgotPasswordModal && !showResetPasswordModal && (
@@ -128,9 +187,8 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
           className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[999]"
           onClick={handleBackgroundClick}
         >
-          <div className="bg-white p-4 rounded">
-            <h1 className="text-xl font-bold mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
-            <h2 className="text-xl font-bold mb-4 text-center text-black">로그인</h2>
+          <div className="bg-white p-4 rounded w-[400px] h-[370px] flex flex-col justify-center items-center">
+            <h1 className="text-4xl font-bold mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
             <form onSubmit={handleFormSubmit}>
               <input
                 type="text"
@@ -139,13 +197,21 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <input
-                type="password"
-                placeholder="비밀번호"
-                className="mb-2 p-2 border rounded w-full text-black"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="relative w-full">
+                <input
+                  type={passwordVisible ? 'text' : 'password'}
+                  placeholder="비밀번호"
+                  className="mb-2 p-2 border rounded w-full text-black"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <span
+                  className="absolute right-3 top-3 cursor-pointer text-gray-500"
+                  onClick={togglePasswordVisibility}
+                >
+                  {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center ml-1">
                   <input
@@ -155,8 +221,8 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
                   />
-                  <label htmlFor="rememberMe" className="text-black">
-                    아이디, 패스워드 기억하기
+                  <label htmlFor="rememberMe" className="text-black mr-5">
+                    계정정보 기억하기
                   </label>
                 </div>
                 <div className="flex items-center mr-2">
@@ -168,7 +234,7 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
                     onChange={(e) => setAutoLogin(e.target.checked)}
                   />
                   <label htmlFor="autoLogin" className="text-black">
-                    자동 로그인
+                    자동로그인
                   </label>
                 </div>
               </div>
@@ -176,12 +242,15 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
                 비밀번호를 잊어버리셨나요?
               </h2>
               <div className="flex flex-col gap-2 mt-4">
-                <button type="submit" className="w-full px-4 py-3 font-bold bg-gray-500 text-black rounded">
+                <button
+                  type="submit"
+                  className="w-[350px] h-[50px] px-4 py-3 font-bold bg-gray-500 hover:bg-gray-700 hover:text-white text-black rounded"
+                >
                   로그인
                 </button>
                 <button
                   type="button"
-                  className="w-full px-4 py-3 font-bold bg-blue-500 text-black rounded"
+                  className="w-[350px] h-[50px] py-3 font-bold bg-blue-500 hover:bg-blue-700 hover:text-white text-black rounded"
                   onClick={onSignupClick}
                 >
                   회원가입
@@ -243,24 +312,31 @@ const ForgotPasswordModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[999]"
       onClick={handleBackgroundClick}
     >
-      <div className="bg-white p-4 rounded w-96">
-        <h1 className="text-xl font-bold mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
-        <h2 className="text-xl font-bold mb-4 text-center text-black">비밀번호 찾기</h2>
+      <div className="bg-white p-4 rounded w-[400px] h-[370px]  flex flex-col justify-center items-center">
+        <h1 className="text-4xl font-bold mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
+        <h2 className="text-2xl font-bold mb-4 text-center text-black">비밀번호 찾기</h2>
         <form onSubmit={handleResetPassword}>
           <input
             type="email"
             placeholder="이메일을 입력하세요."
-            className="mb-4 p-2 border rounded w-full text-black"
+            className="mb-4 p-2 border rounded w-[300px] text-black"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           {error && <p className="text-red-500">{error}</p>}
-          <h1 className="text-center text-xs text-black">인증 메일을 메일로 전송해드립니다.</h1>
+          <h1 className="text-center text-xl text-black">인증 메일을 메일로 전송해드립니다.</h1>
           <div className="flex flex-col gap-2 mt-4">
-            <button type="button" className="w-full px-4 py-3 bg-gray-500 text-white rounded" onClick={onClose}>
+            <button
+              type="button"
+              className="w-[350px] h-[50px] font-bold px-4 py-3 bg-gray-500 hover:bg-gray-700 hover:text-white text-black rounded"
+              onClick={onClose}
+            >
               취소
             </button>
-            <button type="submit" className="w-full px-4 py-3 bg-blue-500 text-white rounded">
+            <button
+              type="submit"
+              className="w-[350px] h-[50px] font-bold px-4 py-3 bg-blue-500 hover:bg-blue-700 hover:text-white text-black rounded"
+            >
               인증메일 받기
             </button>
           </div>

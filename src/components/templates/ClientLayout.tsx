@@ -19,7 +19,7 @@ const ClientLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         {sidebarOpen && <Sidebar onClose={toggleSidebar} />}
         <main
           className={`${
-            sidebarOpen ? 'w-[1920px]' : 'w-full'
+            sidebarOpen ? 'w-[192rem]' : 'w-full'
           } h-auto flex items-center justify-center transition-all duration-300`}
         >
           {children}

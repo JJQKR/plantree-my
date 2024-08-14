@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        'custom-green': '#e5eed6'
+      },
       fontFamily: {
         sans: ['Pretendard', 'sans-serif']
       },

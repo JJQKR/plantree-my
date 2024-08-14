@@ -31,6 +31,7 @@ const DiaryCase: React.FC = () => {
   const [loadedImages, setLoadedImages] = useState<HTMLImageElement[]>([]);
   const [loadedBackgroundImages, setLoadedBackgroundImages] = useState<HTMLImageElement[]>([]);
   const [unsplashImages, setUnsplashImages] = useState<HTMLImageElement[]>([]);
+  const [loading, setLoading] = useState(false);
 
   // Supabase에서 세션 정보를 가져오는 함수
   const fetchSession = async () => {
@@ -69,8 +70,16 @@ const DiaryCase: React.FC = () => {
       unsplash_image_size: JSON.parse(cover.unsplash_image_size) as Size,
       unsplash_image_rotation: cover.unsplash_image_rotation ?? 0,
       diary_id: cover.diary_id,
-      cover_id: cover.id
+      cover_id: cover.id,
+      cover_title_fontstyle: cover.cover_title_fontstyle ?? 'normal',
+      cover_title_fontfamily: cover.cover_title_fontfamily ?? 'Arial',
+      cover_title_color: cover.cover_title_color ?? '#000000',
+      cover_title_fontweight: cover.cover_title_fontweight ?? 'normal',
+      created_at: cover.created_at
     }));
+
+    // 생성일 기준으로 커버 데이터 정렬 (제일 먼저 만든 것이 앞에 오게)
+    covers.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
 
     setDiaryCovers(covers); // 커버 상태 업데이트
     preloadImages(covers); // 이미지 미리 로드
@@ -143,7 +152,7 @@ const DiaryCase: React.FC = () => {
       >
         {gridView ? (
           // 그리드 뷰에서 다이어리 커버 표시
-          <div className="grid grid-cols-3 gap-20 max-w-full mt-[100px]">
+          <div className="grid grid-cols-3 gap-20 max-w-full mt-[10rem]">
             {diaryCovers.length > 0 ? (
               diaryCovers.map((cover, index) =>
                 cover.cover_id ? (
@@ -152,8 +161,8 @@ const DiaryCase: React.FC = () => {
                     className="flex flex-col items-center justify-center cursor-pointer"
                     onClick={() => handleDiaryClick(cover.diary_id as string)}
                     style={{
-                      width: '250px',
-                      height: '400px'
+                      width: '25rem', // 250px -> 25rem
+                      height: '40rem' // 400px -> 40rem
                     }}
                   >
                     <div className="relative flex flex-col items-center justify-center w-full h-full rounded shadow-md overflow-hidden">
@@ -187,6 +196,9 @@ const DiaryCase: React.FC = () => {
                             y={cover.cover_title_position.y}
                             width={cover.cover_title_width}
                             rotation={cover.cover_title_rotation}
+                            fontFamily={cover.cover_title_fontfamily}
+                            fill={cover.cover_title_color}
+                            fontStyle={`${cover.cover_title_fontweight} ${cover.cover_title_fontstyle}`}
                           />
                           {loadedImages[index].src && (
                             <KonvaImage
@@ -215,7 +227,7 @@ const DiaryCase: React.FC = () => {
                 ) : null
               )
             ) : (
-              <div className="flex items-center justify-center w-[250px] h-[400px] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
+              <div className="flex items-center justify-center w-[25rem] h-[40rem] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
                 다이어리가 없습니다
               </div>
             )}
@@ -244,7 +256,7 @@ const DiaryCase: React.FC = () => {
                   <SwiperSlide
                     key={cover.cover_id}
                     onClick={() => handleDiaryClick(cover.diary_id as string)}
-                    className="relative cursor-pointer flex flex-col w-[480px] h-[720px] items-center justify-center rounded shadow-md text-2xl font-bold text-black"
+                    className="relative cursor-pointer flex flex-col w-[48rem] h-[72rem] items-center justify-center rounded shadow-md text-2xl font-bold text-black"
                     style={{
                       backgroundColor: cover.cover_bg_color,
                       width: cover.cover_stage_size.width * cover.cover_scale,
@@ -281,6 +293,9 @@ const DiaryCase: React.FC = () => {
                           y={cover.cover_title_position.y}
                           width={cover.cover_title_width}
                           rotation={cover.cover_title_rotation}
+                          fontFamily={cover.cover_title_fontfamily}
+                          fill={cover.cover_title_color}
+                          fontStyle={`${cover.cover_title_fontweight} ${cover.cover_title_fontstyle}`}
                         />
                         {loadedImages[index].src && (
                           <KonvaImage
@@ -308,7 +323,7 @@ const DiaryCase: React.FC = () => {
                 ) : null
               )
             ) : (
-              <SwiperSlide className="flex items-center justify-center w-[480px] h-[720px] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
+              <SwiperSlide className="flex items-center justify-center w-[48rem] h-[72rem] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
                 <button
                   onClick={handleCreateDiary}
                   className="flex flex-col items-center justify-center text-center"
@@ -321,9 +336,14 @@ const DiaryCase: React.FC = () => {
           </Swiper>
         )}
       </div>
-      <div className="fixed bottom-16 right-16">
+      <div className="fixed bottom-[3rem] right-[4rem]">
         <CreateDiaryButton onClick={handleCreateDiary} /> {/* 다이어리 생성 버튼 */}
       </div>
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center">
+          <img src="/images/loading.gif" alt="Loading" width={200} height={200} />
+        </div>
+      )}
     </div>
   );
 };
