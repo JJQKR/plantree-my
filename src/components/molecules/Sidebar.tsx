@@ -65,7 +65,7 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                       <div
                         className="bg-[#E6F3E6] rounded-full w-[3.6rem] h-[3.6rem] 
                       border-white border-[0.2rem] flex items-center justify-center absolute top-3 right-3"
-                        style={{ top: '0.05rem', right: '0.05rem', zIndex: 10 }}
+                        style={{ top: '0.05rem', right: '0.5rem', zIndex: 10 }}
                       >
                         <BsPersonFillGear className="text-[#008A02] w-[2em] h-[2rem]" />
                       </div>
