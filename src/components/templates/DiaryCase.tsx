@@ -370,7 +370,9 @@ const DiaryCase: React.FC = () => {
                     onClick={handleCreateDiary}
                     className="flex flex-col items-center justify-center text-center"
                     style={{ transform: 'translateY(-20%)' }}
-                  ></button>
+                  >
+                    +<br /> 다이어리 생성
+                  </button>
                 </SwiperSlide>
               )}
             </Swiper>
