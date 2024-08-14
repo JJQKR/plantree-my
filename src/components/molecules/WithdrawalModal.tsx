@@ -19,7 +19,7 @@ const WithdrawalModal: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (goodbye !== '플랜트리잘있어') {
+    if (goodbye !== '안녕플랜트리') {
       alert('입력한 값이 일치하지 않습니다. 다시 시도해주세요.');
       return;
     }
@@ -44,6 +44,7 @@ const WithdrawalModal: React.FC = () => {
         toggleWithdrawalModal();
         // 추가로 로그아웃 처리
         await supabase.auth.signOut();
+        window.location.href = '/';
       }
     } catch (error) {
       console.error('회원 탈퇴 중 오류 발생:', error);

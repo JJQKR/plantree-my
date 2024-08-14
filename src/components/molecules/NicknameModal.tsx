@@ -9,6 +9,7 @@ const NicknameModal: React.FC = () => {
   const { isNicknameModalOpen, toggleNicknameModal } = useMyModalStore((state) => state);
   const { nickname, setNickname } = useUserStore((state) => state);
   // 유저 상태 관리 스토어에서 닉네임 가져오기
+
   const nicknameRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,9 +41,15 @@ const NicknameModal: React.FC = () => {
     fetchNickname();
   }, [setNickname]);
 
-  const handleBackGroundClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (e.target === e.currentTarget) {
-      toggleNicknameModal();
+  // const handleBackGroundClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  //   if (e.target === e.currentTarget) {
+  //     toggleNicknameModal();
+  //   }
+  // };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === ' ') {
+      e.preventDefault(); // 스페이스바의 기본 동작 방지
     }
   };
 
@@ -67,7 +74,7 @@ const NicknameModal: React.FC = () => {
           if (error) {
             console.error('닉네임 업데이트 실패:', error);
           } else {
-            console.log('닉네임 업데이트 성공:', newNickname);
+            alert('닉네임 변경에 성공했습니다!');
             setNickname(newNickname); // 전역 상태에 닉네임 업데이트
             toggleNicknameModal();
           }
@@ -83,9 +90,9 @@ const NicknameModal: React.FC = () => {
       {isNicknameModalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-          // onClick={handleBackGroundClick}
+          onKeyDown={handleKeyDown}
         >
-          <div className="bg-white rounded-[2rem] w-[46rem] h-[29.9rem] p-[4rem]">
+          <div className="bg-white rounded-[2rem] w-[46rem] h-[29.9rem] p-[4rem]" onClick={(e) => e.stopPropagation()}>
             <div onClick={(e) => e.stopPropagation()}>
               <div className="flex justify-between items-center">
                 <h2 className="font-bold text-[2.8rem] h-[4rem]">닉네임 변경</h2>
