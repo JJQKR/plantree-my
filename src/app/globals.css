@@ -37,6 +37,10 @@ body {
 .mySwiper {
   width: 48rem; /* 1080px = 108rem */
   height: 72rem; /* 720px = 72rem */
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .swiper-slide {

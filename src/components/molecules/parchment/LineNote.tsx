@@ -247,7 +247,7 @@ const LineNote = ({ id }: LineNoteProps) => {
   };
 
   return (
-    <div className={`w-[50rem] ${isEditMode ? 'h-[75rem]' : 'h-[70.2rem]'} bg-white`}>
+    <div className={`w-[50rem] ${isEditMode ? 'h-[75rem]' : 'h-[70.2rem]'} bg-white border-[0.1rem] border-[#C7D2B0]`}>
       <div className="mx-auto w-full">
         {isEditMode ? (
           <div className="bg-[#EDF1E6] w-full h-[4.8rem] py-[1.2rem] px-[1.5rem] flex flex-row justify-between">
