@@ -106,10 +106,10 @@ const NicknameModal: React.FC = () => {
                 <div className="flex flex-col mb-[2.5rem]">
                   <button
                     type="submit"
-                    className="w-full h-[5.2rem] text-white text-[1.8rem] rounded-[1.2rem] mb-[2.5rem]"
+                    className="w-full h-[5.2rem] bg-[#8AC98B] text-white text-[1.8rem] rounded-[1.2rem] mb-[2.5rem]"
                     style={{ backgroundColor: '##8AC98B' }}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#8AC98B')}
                     onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#008A02')}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#8AC98B')}
                   >
                     변경하기
                   </button>
