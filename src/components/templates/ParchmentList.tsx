@@ -172,12 +172,18 @@ export default function ParchmentList() {
             <span className=" text-[3.2rem] w-[82rem] px-[1rem] font-[600]">{coverTitle}</span>
           </div>
           <div className="flex flex-row gap-3">
-            <div onClick={goDiaryCoverPage} className=" text-[3.2rem] cursor-pointer">
-              <FaBook />
-            </div>
-            <div onClick={deleteDiary} className=" text-[3.2rem] cursor-pointer">
-              <RiDeleteBin5Line />
-            </div>
+            <button
+              onClick={goDiaryCoverPage}
+              className=" w-[10.3rem] h-[5.2rem] border-[0.1rem] rounded-[1.2rem] border-[#008A02] text-[#008A02] text-[1.8rem] cursor-pointer"
+            >
+              표지수정
+            </button>
+            <button
+              onClick={deleteDiary}
+              className=" text-[1.8rem] w-[13.8rem] h-[5.2rem] border-[0.1rem] cursor-pointer rounded-[1.2rem] border-[##D90000] text-[#D90000]"
+            >
+              다이어리 삭제
+            </button>
           </div>
         </div>
         <div className="flex flex-row">
