@@ -13,7 +13,7 @@ const Header: React.FC<MainHeaderProps> = ({ toggleSidebar, toggleGrid }) => {
   const { gridView } = useStore();
 
   return (
-    <header className="fixed flex justify-between items-center w-[192rem] h-[8rem] p-4 bg-white">
+    <header className="fixed flex justify-between items-center w-full h-[8rem] p-4 bg-white">
       <SideButton onClick={toggleSidebar}>Menu</SideButton>
       <div className="flex-grow flex justify-center">
         <Link href="/member/hub">
