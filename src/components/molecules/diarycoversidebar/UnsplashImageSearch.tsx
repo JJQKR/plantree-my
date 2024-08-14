@@ -3,9 +3,10 @@ import { fetchImages, UnsplashImage } from '../../../lib/utils/unsplash';
 
 interface UnsplashImageSearchProps {
   handleSelectImage: (imageUrl: string) => void;
+  handleDeselectElement: () => void;
 }
 
-const UnsplashImageSearch: React.FC<UnsplashImageSearchProps> = ({ handleSelectImage }) => {
+const UnsplashImageSearch: React.FC<UnsplashImageSearchProps> = ({ handleSelectImage, handleDeselectElement }) => {
   const [query, setQuery] = useState(() => sessionStorage.getItem('unsplashQuery') || '');
   const [images, setImages] = useState<UnsplashImage[]>(() => {
     const savedImages = sessionStorage.getItem('unsplashImages');
@@ -69,7 +70,7 @@ const UnsplashImageSearch: React.FC<UnsplashImageSearchProps> = ({ handleSelectI
     if (images.length === 0) {
       handleSearch(true, true);
     }
-  }, []); // 컴포넌트 마운트 시에만 실행
+  }, []);
 
   useEffect(() => {
     saveToSessionStorage();
@@ -86,6 +87,7 @@ const UnsplashImageSearch: React.FC<UnsplashImageSearchProps> = ({ handleSelectI
         <input
           type="text"
           value={query}
+          onFocus={handleDeselectElement} //포커스 시 트랜스폼 해제
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search for images"
           className="my-2 px-2 py-1 border rounded w-full"
