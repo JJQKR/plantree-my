@@ -10,8 +10,8 @@ type InputProps = {
 } & ComponentProps<'input'>; // HTML input 요소의 모든 속성을 포함
 
 // 컴포넌트에 사용될 스타일을 변수로 정의
-const tenMinplannerRegularStyle = '';
-const tenMinplannerTodoStyle = '';
+const tenMinPlannerRegularStyle = 'bg-transparent';
+const tenMinPlannerTodoStyle = '';
 const blankNoteStyle = 'border w-[8rem] text-[0.8rem]';
 
 // ParchmentInput 함수형 컴포넌트를 정의합니다. 이 컴포넌트는 입력 필드를 생성합니다.
@@ -20,18 +20,18 @@ function ParchmentInput({ label, required, id, identity, warnning, innerClassNam
   const inputId = id || inputUid; // // 제공된 id 또는 생성된 고유 id를 사용
 
   let inputStyle = ''; // 입력 필드에 적용할 스타일을 초기화
-  if (identity === 'tenMinplannerRegular') {
-    inputStyle = tenMinplannerRegularStyle;
+  if (identity === 'tenMinPlannerRegular') {
+    inputStyle = tenMinPlannerRegularStyle;
   } else if (identity === 'tenMinplannerTodo') {
-    inputStyle = tenMinplannerTodoStyle;
+    inputStyle = tenMinPlannerTodoStyle;
   } else if (identity === 'blank') {
     inputStyle = blankNoteStyle;
   }
   return (
-    <div className="flex flex-col gap-y-2 [&+&]:mt-8 w-full">
+    <div className="flex flex-row border-b-[0.3rem] w-[14.5rem]">
       {/* 라벨이 있는 경우 : 라벨 요소 렌더링 */}
       {label && (
-        <label htmlFor={inputId} className={`text-[0.7rem] font-semibold text-gray-500 ${label && 'h-4'}`}>
+        <label htmlFor={inputId} className={`text-[1.5rem] font-[600] text-[#727272] w-[10rem] bg-red-200`}>
           {label}
         </label>
       )}

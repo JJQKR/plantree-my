@@ -25,15 +25,12 @@ const Todolist = ({ tenMinPlannerId, todoList, setTodoList, setSelectedColorTodo
   const { isEditMode } = useEditModeStore((state) => state);
 
   const { isTenMinplannerColorModalOpen, toggleTenMinplannerColorModal } = useParchmentModalStore((state) => state);
-  // const { mutate: createTenMinTodo } = useCreateTenMinTodo();
 
   const updateTodoInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTodoInput(e.target.value);
   };
 
   const handleAddTodo = () => {
-    if (todoInput.trim() === '') return;
-    // addTodo({ id: uuid(), text: todoInput, isDone: false, color: 'transparent', planner_id: tenMinPlannerId });
     setTodoList((prev) => [
       ...prev,
       { id: uuid(), text: todoInput, isDone: false, color: 'transparent', planner_id: tenMinPlannerId }
@@ -43,20 +40,17 @@ const Todolist = ({ tenMinPlannerId, todoList, setTodoList, setSelectedColorTodo
 
   const submitOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      // e.preventDefault();
       handleAddTodo();
       setTodoInput('');
     }
   };
 
   const handleToggle = (id: string) => {
-    // toggleTodoCompletion(id);
     setTodoList(todoList.map((todo) => (todo.id === id ? { ...todo, isDone: !todo.isDone } : todo)));
   };
 
   const handleEditingChange = (e: React.ChangeEvent<HTMLInputElement>, todoId: string) => {
     if (todoId) {
-      // editTodo(editingId, e.target.value);
       setTodoList(todoList.map((todo) => (todo.id === todoId ? { ...todo, text: e.target.value } : todo)));
     }
   };
@@ -67,7 +61,6 @@ const Todolist = ({ tenMinPlannerId, todoList, setTodoList, setSelectedColorTodo
 
   const submitEdit = (id: string, e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      // stopEditing();
       setEditingId('');
     }
   };
@@ -94,14 +87,14 @@ const Todolist = ({ tenMinPlannerId, todoList, setTodoList, setSelectedColorTodo
   };
 
   return (
-    <div className="border-2  h-[38rem]">
+    <div className="">
       <div className="w-ful">
         <ul className="relative">
           {todoList.map((todo) => {
             return (
               <li
                 key={todo.id}
-                className={`flex flex-row border`}
+                className="flex flex-row border-b-[0.15rem] border-[#EAEAEA] min-h-[3.2rem]"
                 style={{ backgroundColor: todo.isDone ? getBackgroundColorClass(todo.color) : 'transparent' }}
               >
                 <span
@@ -137,7 +130,7 @@ const Todolist = ({ tenMinPlannerId, todoList, setTodoList, setSelectedColorTodo
             );
           })}
         </ul>
-        {isEditMode ? (
+        {/* {isEditMode ? (
           <div className="w-full">
             <input
               type="text"
@@ -150,7 +143,14 @@ const Todolist = ({ tenMinPlannerId, todoList, setTodoList, setSelectedColorTodo
               <FaPlus />
             </button>
           </div>
-        ) : null}
+        ) : null} */}
+        <div
+          onClick={handleAddTodo}
+          className="h-[3.1rem] py-[0.6rem] flex flex-row justify-center items-center text-[#727272] font-[600]"
+        >
+          <FaPlus />
+          <span className="h-[1.9rem] ml-[0.2rem]"> 리스트 추가 </span>
+        </div>
       </div>
       {isTenMinplannerColorModalOpen && <ColorModal todoId={selectedTodoId} changeTodoColor={changeTodoColor} />}
     </div>

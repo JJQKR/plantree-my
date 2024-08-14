@@ -5,15 +5,12 @@ import Todolist from './Todolist';
 import Timetable from './Timetable';
 import { supabase } from '@/supabase/client';
 import { TodoType } from '@/api/tenMinPlanner.api';
-import ParchmentInput from '@/components/atoms/ParchmentInput';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useDeletePage } from '@/lib/hooks/usePages';
 import useEditModeStore from '@/stores/editMode.store';
+import { FaSave } from 'react-icons/fa';
+import { FaTrashAlt } from 'react-icons/fa';
 
-/**
- * 1. 속지 내용 변경 -> localPlanner 변경
- * 2. 속지 리스트 관리 -> localPlanner 변경 시 setTenMinPlanners
- */
 interface TenMinPlannerProps {
   id: string;
 }
@@ -47,6 +44,9 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
   const [diaryId, setDiaryId] = useState('');
   const [selectedColorTodo, setSelectedColorTodo] = useState<Todo | null>(null);
   const { isEditMode } = useEditModeStore((state) => state);
+  const searchParams = useSearchParams();
+  const index = searchParams.get('index');
+  const style = searchParams.get('style');
 
   const { mutate: deletePage, isPending, isError } = useDeletePage();
   const router = useRouter();
@@ -54,7 +54,7 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
   // db에서 현재 데이터 가져오기
   useEffect(() => {
     const getData = async () => {
-      const { data, error } = await supabase.from('ten_min_planner').select('*').eq('id', id).maybeSingle();
+      const { data } = await supabase.from('ten_min_planner').select('*').eq('id', id).maybeSingle();
       if (data) {
         setLocalPlanner({
           id: data.id,
@@ -150,70 +150,120 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
     }
   };
 
+  const changeStyleName = () => {
+    if (style === 'tenMinPlanner') {
+      return '10분 플래너';
+    } else if (style === 'lineNote') {
+      return '줄글노트';
+    } else if (style === 'stringNote') {
+      return '무지노트';
+    }
+  };
+
   return (
-    <div className="w-full max-w-screen-md h-[60rem] overflow-auto mt-1">
-      {isEditMode ? <button onClick={onSubmit}>저장하기</button> : null}
-      {isEditMode ? <button onClick={handleDelete}>삭제하기</button> : null}
-      <div className="relative border-2 flex flex-col gap-4 m-auto p-4 h-[60rem]">
-        <div className="flex gap-2">
-          <div className="w-1/3">
-            <label>date</label>
-            <ParchmentInput
-              identity="tenMinPlannerRegular"
+    <div className={` w-[50rem] ${isEditMode ? 'h-[75rem]' : 'h-[70.2rem]'} bg-red-200`}>
+      <div className="mx-auto w-full">
+        {isEditMode ? (
+          <div className="bg-[#EDF1E6] w-full h-[4.8rem] py-[1.2rem] px-[1.5rem] flex flex-row justify-between">
+            <div className="text-[1.8rem] text-[#496E00] font-[600]">
+              {index} Page_{changeStyleName()}
+            </div>
+            <div>
+              <button className="text-[2.4rem] text-[#496E00]" onClick={onSubmit}>
+                <FaSave />
+              </button>
+              <button className="text-[2.4rem] text-[#496E00]" onClick={handleDelete}>
+                <FaTrashAlt />
+              </button>
+            </div>
+          </div>
+        ) : null}
+      </div>
+      <div className="relative flex flex-col gap-4 m-auto w-[46rem] h-[66.2rem] bg-white my-[2rem]">
+        <div className="flex flex-row justify-between">
+          <div className="w-[14.5rem] h-[2.7rem] flex flex-row gap-[0.3rem] border-b-[0.3rem] border-[#EAEAEA]">
+            <label
+              htmlFor="date"
+              className="text-[1.5rem] font-[600] text-[#727272] w-[3.8rem] flex items-center justify-center"
+            >
+              DATE
+            </label>
+            <input
               id="date"
               type="date"
               onChange={handleDate}
               value={localPlanner.date || ''}
               disabled={!isEditMode}
+              className="text-[1.5rem] w-[10.3rem]"
             />
           </div>
-          <div className="w-1/3 relative">
-            <label>d-day</label>
-            <ParchmentInput
-              identity="tenMinPlannerRegular"
+          <div className="w-[14.5rem] h-[2.7rem] flex flex-row gap-[0.2rem] border-b-[0.3rem] border-[#EAEAEA]">
+            <label
+              htmlFor="date"
+              className="text-[1.5rem] font-[600] text-[#727272] w-[4.4rem] flex items-center justify-center"
+            >
+              D-Day
+            </label>
+            <input
               id="d-day"
               type="date"
               onChange={handleDdayDate}
               value={localPlanner.d_day_date || ''}
               disabled={!isEditMode}
+              className="text-[1.5rem] w-[10.2rem]"
             />
-            <span className="absolute right-3 top-0 font-bold">{localPlanner.d_day}</span>
           </div>
-          <div className="w-1/3">
-            <label>goal</label>
-            <ParchmentInput
-              identity="tenMinPlannerRegular"
-              id="goal"
-              onChange={handleGoal}
-              value={localPlanner.goal || ''}
-              disabled={!isEditMode}
-            />
+          <div className="w-[14.5rem] h-[2.7rem] bg-[#EAEAEA] rounded-[0.8rem] flex justify-center items-center text-[1.5rem] font-[600]">
+            {localPlanner.d_day}
           </div>
         </div>
-        <div className="flex flex-row gap-4 ">
-          <div className="w-1/2 h-[40rem]">
-            <div>todolist</div>
-            <Todolist
-              tenMinPlannerId={id}
-              todoList={todoList}
-              setTodoList={setTodoList}
-              setSelectedColorTodo={setSelectedColorTodo}
-            />
+        <div className="flex flex-row w-full h-[2.7rem] gap-[0.3rem] border-b-[0.3rem] border-[#EAEAEA]">
+          <label className="text-[1.5rem] font-[600] text-[#727272] w-[3.8rem] flex items-center justify-center">
+            GOAL
+          </label>
+          <input
+            id="goal"
+            onChange={handleGoal}
+            value={localPlanner.goal || ''}
+            disabled={!isEditMode}
+            className="w-full"
+          />
+        </div>
+        <div className="flex flex-row justify-between gap-4 my-[2rem] h-full">
+          <div className="flex flex-col">
+            <div className="w-[26.1rem] h-full bg-yellow-100">
+              <div className="text-[1.5rem] h-[2.7rem] w-full font-[600] text-[#727272] flex flex-row items-center justify-start border-b-[0.3rem] leading-[0.1rem]">
+                TASK
+              </div>
+              <Todolist
+                tenMinPlannerId={id}
+                todoList={todoList}
+                setTodoList={setTodoList}
+                setSelectedColorTodo={setSelectedColorTodo}
+              />
+            </div>
+            <div className="h-[13.3rem]">
+              <label
+                htmlFor="memo"
+                className="text-[1.5rem] h-[2.7rem] w-full font-[600] text-[#727272] flex flex-row items-center justify-start border-b-[0.3rem] leading-[0.1rem]"
+              >
+                MEMO
+              </label>
+              <textarea
+                id="memo"
+                className="h-[9.5rem] w-full"
+                onChange={handleMemo}
+                value={localPlanner.memo || ''}
+                disabled={!isEditMode}
+              />
+            </div>
           </div>
-          <div className="w-1/2 h-[40rem]">
-            <div>timetable</div>
+          <div className="w-[18.2rem] h-full bg-blue-100">
+            <div className='text-[1.5rem] h-[2.7rem] w-full font-[600] text-[#727272] flex flex-row items-center justify-start border-b-[0.3rem] leading-[0.1rem]"'>
+              TIMETABLE
+            </div>
             <Timetable selectedColorTodo={selectedColorTodo} timetable={timetable} setTimetable={setTimetable} />
           </div>
-        </div>
-        <div>
-          <label htmlFor="memo">memo</label>
-          <textarea
-            id="memo"
-            className="h-[8.5rem] w-full"
-            onChange={handleMemo}
-            value={localPlanner.memo || ''}
-            disabled={!isEditMode}
-          />
         </div>
       </div>
     </div>

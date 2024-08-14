@@ -120,16 +120,6 @@ export default function ParchmentList() {
         toggleParchmentOptionModal();
       }
     }
-
-    // if (currentPageIndex + 2 < pages!.length) {
-    //   console.log({ currentPageIndex });
-    //   setCurrentPageIndex(currentPageIndex + 2);
-    //   setActiveCardIndices([currentPageIndex, currentPageIndex - 1]);
-    // } else if (pages![currentPageIndex]) {
-    //   if (confirm('더이상 페이지가 없습니다. 추가하시겠습니까?')) {
-    //     toggleParchmentOptionModal();
-    //   }
-    // }
   };
 
   if (isPending) {
@@ -150,7 +140,6 @@ export default function ParchmentList() {
             </span>
             <span className=" text-[3.2rem] w-[82rem] px-[1rem] font-[600]">{coverTitle}</span>
           </div>
-
           <div className="flex flex-row gap-3">
             <div onClick={goDiaryCoverPage} className=" text-[3.2rem]">
               <FaBook />
@@ -161,7 +150,7 @@ export default function ParchmentList() {
           </div>
         </div>
         <div className="flex flex-row">
-          <div className="w-[97.6rem] h-[72rem] mx-[3.6rem] my-[4.3rem]">
+          <div className="w-[100rem] h-[75rem] mx-[3.6rem] my-[4.3rem]">
             <DiaryContents diaryId={diaryId} currentPageIndex={currentPageIndex} />
           </div>
         </div>
