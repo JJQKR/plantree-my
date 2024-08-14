@@ -23,7 +23,7 @@ export interface NoteLine {
 
 const LineNote = ({ id }: LineNoteProps) => {
   const [lines, setLines] = useState<NoteLine[]>(
-    Array.from({ length: 16 }, () => ({ text: '', fontSize: 16, textColor: '#000000' }))
+    Array.from({ length: 16 }, () => ({ text: '', fontSize: 25, textColor: '#000000' }))
   );
   const [lineColor, setLineColor] = useState('#000000');
   const [lineThickness, setLineThickness] = useState(1);
@@ -113,82 +113,46 @@ const LineNote = ({ id }: LineNoteProps) => {
       return;
     }
 
-    console.log('Updating data with parchment Id:', id);
-    const { data, error } = await supabase
-      .from('line_note')
-      .update({
-        line_color: lineColor,
-        line_thickness: lineThickness,
-        bg_color: bgColor,
-        global_text_color: globalTextColor,
-        lines: lines as unknown as Json
-      })
-      .eq('id', id);
+    Swal.fire({
+      title: '수정 하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '예',
+      cancelButtonText: '아니오'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const { data, error } = await supabase
+          .from('line_note')
+          .update({
+            line_color: lineColor,
+            line_thickness: lineThickness,
+            bg_color: bgColor,
+            global_text_color: globalTextColor,
+            lines: lines as unknown as Json
+          })
+          .eq('id', id);
 
-    if (error) {
-      console.error('Error updating data:', error);
-      Swal.fire({
-        title: '수정 실패!',
-        text: '속지 수정에 실패했어요. 다시 시도해주세요!',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
-    } else {
-      console.log('Data updated:', data);
-      Swal.fire({
-        title: '수정 성공!',
-        text: '속지를 성공적으로 수정했어요!',
-        icon: 'success',
-        confirmButtonText: 'OK'
-      });
-    }
-    router.replace(`/member/diary/${diaryId}/parchment`);
+        if (error) {
+          console.error('Error updating data:', error);
+          Swal.fire({
+            title: '수정 실패!',
+            text: '속지 수정에 실패했어요. 다시 시도해주세요!',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        } else {
+          console.log('Data updated:', data);
+          Swal.fire({
+            title: '수정 성공!',
+            text: '속지를 성공적으로 수정했어요!',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          });
+          router.replace(`/member/diary/${diaryId}/parchment`);
+        }
+      }
+    });
   };
-
-  // const deleteData = useCallback(async () => {
-  //   if (!userId) {
-  //     console.error('userId is undefined');
-  //     return;
-  //   }
-
-  //   Swal.fire({
-  //     title: '정말 삭제하시겠어요?',
-  //     text: '삭제된 속지는 되돌릴 수 없습니다!',
-  //     icon: 'warning',
-  //     showCancelButton: true,
-  //     confirmButtonText: 'OK',
-  //     cancelButtonText: 'NO'
-  //   }).then(async (result) => {
-  //     if (result.isConfirmed) {
-  //       console.log('Deleting data with user_id:', userId);
-  //       const { data, error } = await supabase.from('line_note').delete().eq('user_id', userId);
-
-  //       if (error) {
-  //         console.error('Error deleting data:', error);
-  //         Swal.fire({
-  //           title: '삭제 실패!',
-  //           text: '속지 삭제에 실패했어요! 다시 시도해주세요!',
-  //           icon: 'error',
-  //           confirmButtonText: 'OK'
-  //         });
-  //       } else {
-  //         console.log('Data deleted:', data);
-  //         setLines(Array.from({ length: 15 }, () => ({ text: '', fontSize: 16, textColor: '#000000' })));
-  //         setLineColor('#000000');
-  //         setLineThickness(1);
-  //         setBgColor('#ffffff');
-  //         setGlobalTextColor('#000000');
-  //         setDataExists(false);
-  //         Swal.fire({
-  //           title: '삭제 성공!',
-  //           text: '속지를 성공적으로 삭제했어요!',
-  //           icon: 'success',
-  //           confirmButtonText: 'OK'
-  //         });
-  //       }
-  //     }
-  //   });
-  // }, [userId]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -233,19 +197,43 @@ const LineNote = ({ id }: LineNoteProps) => {
   }, []);
 
   const handleDelete = async () => {
-    if (confirm('내용을 삭제 하시겠습니까?')) {
-      const { error: lineNoteError } = await supabase.from('line_note').delete().eq('id', id);
-      deletePage(id);
-      if (lineNoteError) {
-        alert('삭제 중 오류가 발생했습니다: ' + lineNoteError.message);
-      } else if (isError) {
-        alert('삭제 중 오류가 발생했습니다');
-      } else {
-        alert('삭제되었습니다!');
-        console.log(diaryId);
-        router.push(`/member/diary/${diaryId}/parchment`);
+    Swal.fire({
+      title: '정말 삭제하시겠어요?',
+      text: '삭제된 속지는 되돌릴 수 없습니다!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '예',
+      cancelButtonText: '아니오'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const { error: lineNoteError } = await supabase.from('line_note').delete().eq('id', id);
+        deletePage(id);
+        if (lineNoteError) {
+          Swal.fire({
+            title: '삭제 실패!',
+            text: '삭제 중 오류가 발생했습니다: ' + lineNoteError.message,
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        } else if (isError) {
+          Swal.fire({
+            title: '삭제 실패!',
+            text: '삭제 중 오류가 발생했습니다',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        } else {
+          Swal.fire({
+            title: '삭제 성공!',
+            text: '속지가 성공적으로 삭제되었습니다!',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          });
+          console.log(diaryId);
+          router.push(`/member/diary/${diaryId}/parchment`);
+        }
       }
-    }
+    });
   };
 
   const changeStyleName = () => {
@@ -259,18 +247,26 @@ const LineNote = ({ id }: LineNoteProps) => {
   };
 
   return (
-    <div className={` w-[50rem] ${isEditMode ? 'h-[75rem]' : 'h-[70.2rem]'} bg-red-200`}>
+    <div className={`w-[50rem] ${isEditMode ? 'h-[75rem]' : 'h-[70.2rem]'} bg-white`}>
       <div className="mx-auto w-full">
         {isEditMode ? (
           <div className="bg-[#EDF1E6] w-full h-[4.8rem] py-[1.2rem] px-[1.5rem] flex flex-row justify-between">
             <div className="text-[1.8rem] text-[#496E00] font-[600]">
-              {index} Page_{changeStyleName()}
+              {index} Page_{changeStyleName()} (수정중)
             </div>
             <div>
-              <button className="text-[2.4rem] text-[#496E00]" onClick={updateData}>
+              <button
+                className="text-[2.4rem] text-[#496E00] hover:text-black mr-[1.2rem]"
+                onClick={updateData}
+                title="클릭해서 저장!"
+              >
                 <FaSave />
               </button>
-              <button className="text-[2.4rem] text-[#496E00]" onClick={handleDelete}>
+              <button
+                className="text-[2.4rem] text-[#496E00] hover:text-black"
+                onClick={handleDelete}
+                title="클릭하면 삭제!"
+              >
                 <FaTrashAlt />
               </button>
             </div>
@@ -278,67 +274,65 @@ const LineNote = ({ id }: LineNoteProps) => {
         ) : null}
       </div>
       {isEditMode ? (
-        <div className="flex justify-between mb-4 bg-white">
-          <div>
-            <label className="block m-2">
-              줄 색상:
-              <input
-                type="color"
-                value={lineColor}
-                onChange={(e) => setLineColor(e.target.value)}
-                className="ml-2 p-1 border"
-              />
-            </label>
-            <label className="block m-2">
-              줄 굵기:
-              <select
-                value={lineThickness}
-                onChange={(e) => setLineThickness(parseInt(e.target.value))}
-                className="ml-2 p-1 border"
-              >
-                <option value="1">Thin</option>
-                <option value="2">Medium</option>
-                <option value="3">Thick</option>
-              </select>
-            </label>
-          </div>
-          <div>
-            <label className="block m-2">
-              줄노트 배경 색상:
+        <div className="flex flex-row gap-[0.3rem] mt-[1.25rem] bg-white">
+          <div className="flex gap-[0.3rem]">
+            <label className="block ml-[1.3rem]">
+              배경 색상
               <input
                 type="color"
                 value={bgColor}
                 onChange={(e) => setBgColor(e.target.value)}
-                className="ml-2 p-1 border"
+                className="ml-[0.1rem] p-[0.1rem] border-0 bg-white"
               />
             </label>
-            <label className="block m-2">
-              전체 텍스트 색상:
+            <div className="flex">
+              <label className="block">
+                텍스트 색상
+                <input
+                  type="color"
+                  value={globalTextColor}
+                  onChange={(e) => setGlobalTextColor(e.target.value)}
+                  className="ml-[0.1rem] p-[0.1rem] border-0 bg-white"
+                />
+              </label>
+            </div>
+            <label className="block">
+              줄 색상
               <input
                 type="color"
-                value={globalTextColor}
-                onChange={(e) => setGlobalTextColor(e.target.value)}
-                className="ml-2 p-1 border"
+                value={lineColor}
+                onChange={(e) => setLineColor(e.target.value)}
+                className="ml-[0.2rem] p-[0.1rem] border-0 bg-white"
               />
+            </label>
+            <label className="block">
+              줄 굵기
+              <select
+                value={lineThickness}
+                onChange={(e) => setLineThickness(parseInt(e.target.value))}
+                className="ml-[0.3rem] p-[0.30rem] border bg-white"
+              >
+                <option value="1">얇음</option>
+                <option value="2">보통</option>
+                <option value="3">굵음</option>
+              </select>
             </label>
           </div>
         </div>
       ) : null}
       <div
-        className="border p-4 ml-3 mr-3"
+        className="p-[0.4rem] ml-[0.3rem] mr-[0.3rem] mt-[1.25rem]"
         style={{
           backgroundColor: bgColor,
-          minHeight: '530px',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 1)',
-          borderRadius: '8px'
+          minHeight: '65rem'
         }}
       >
-        <div className="relative w-full overflow-hidden" style={{ height: '510px' }}>
+        <div className="relative w-full overflow-hidden" style={{ height: '65rem' }}>
           {lines.map((line, index) => (
             <div
               key={index}
               className={`relative`}
-              style={{ height: '30px', borderBottom: `${lineThickness}px solid ${lineColor}` }}
+              style={{ height: '3.8rem', borderBottom: `${lineThickness / 10}rem solid ${lineColor}` }}
             >
               <input
                 type="text"
@@ -347,9 +341,9 @@ const LineNote = ({ id }: LineNoteProps) => {
                 ref={(el) => {
                   inputRefs.current[index] = el;
                 }}
-                className="absolute top-0 left-0 w-full border-none outline-none bg-transparent"
+                className="text-xl absolute top-0 left-0 w-full h-[4rem] border-none outline-none bg-transparent"
                 style={{
-                  fontSize: `${line.fontSize}px`,
+                  fontSize: `${line.fontSize / 10}rem`,
                   color: globalTextColor,
                   width: '100%'
                 }}
