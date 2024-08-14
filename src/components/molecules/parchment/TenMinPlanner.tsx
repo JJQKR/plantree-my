@@ -5,7 +5,6 @@ import Todolist from './Todolist';
 import Timetable from './Timetable';
 import { supabase } from '@/supabase/client';
 import { TodoType } from '@/api/tenMinPlanner.api';
-import ParchmentInput from '@/components/atoms/ParchmentInput';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useDeletePage } from '@/lib/hooks/usePages';
 import useEditModeStore from '@/stores/editMode.store';
