@@ -7,6 +7,8 @@ import { useDeletePage } from '@/lib/hooks/usePages';
 import useEditModeStore from '@/stores/editMode.store';
 import { FaSave } from 'react-icons/fa';
 import { FaTrashAlt } from 'react-icons/fa';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 interface BlankNoteProps {
   id: string;
@@ -182,14 +184,20 @@ const BlankNote = ({ id }: BlankNoteProps) => {
   };
 
   return (
-    <div className={` w-[50rem] ${isEditMode ? 'h-[75rem]' : 'h-[70.2rem]'} bg-red-200`}>
-      <div className="mx-auto w-full">
+    <div
+      className={`w-[50rem] ${isEditMode ? 'h-[75rem]' : 'h-[70.2rem]'}`}
+      style={{
+        border: '1px solid #C7D2B0',
+        boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.1)'
+      }}
+    >
+      <div className="mx-auto w-[49.8rem] ">
         {isEditMode ? (
-          <div className="bg-[#EDF1E6] w-full h-[4.8rem] py-[1.2rem] px-[1.5rem] flex flex-row justify-between">
+          <div className="bg-[#EDF1E6] w-full h-full py-[1.2rem] px-[2rem] flex flex-row justify-between">
             <div className="text-[1.8rem] text-[#496E00] font-[600]">
               {index} Page_{changeStyleName()}
             </div>
-            <div>
+            <div className="flex justify-between items-center w-[6rem] h-[2.4rem]">
               <button className="text-[2.4rem] text-[#496E00]" onClick={handleSaveOrUpdate}>
                 <FaSave />
               </button>
@@ -200,75 +208,81 @@ const BlankNote = ({ id }: BlankNoteProps) => {
           </div>
         ) : null}
       </div>
-      <div className="flex justify-between mb-4 mt-[52px]">
-        <div>
-          <label htmlFor="title" className="block m-2">
-            제목:
-            <input
-              id="title"
-              type="text"
-              className="border w-[80%] text-[1.3rem] ml-2"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              disabled={!isEditMode}
-            />
-          </label>
-          {isEditMode ? (
-            <label className="block m-2">
-              노트 배경 색상:
-              <input
-                type="color"
-                value={bgColor}
-                onChange={(e) => setBgColor(e.target.value)}
-                className="ml-2 p-1 border"
-                disabled={!isEditMode}
-              />
-            </label>
-          ) : null}
-        </div>
-        <div>
-          <label htmlFor="date" className="block m-2">
-            날짜:
-            <input
-              id="date"
-              type="date"
-              className="border w-[60%] h-[2rem] text-[0.9rem] ml-2"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              disabled={!isEditMode}
-            />
-          </label>
-          {isEditMode ? (
-            <label className="block m-2">
-              텍스트 색상:
-              <input
-                type="color"
-                value={globalTextColor}
-                onChange={(e) => setGlobalTextColor(e.target.value)}
-                className="ml-2 p-1 border"
-                disabled={!isEditMode}
-              />
-            </label>
-          ) : null}
+      <div className="flex flex-wrap bg-white justify-center h-[69.7rem] p-[2rem]">
+        <div className="flex flex-wrap justify-center">
+          <div className="flex justify-between flex-wrap ">
+            <div className="flex justify-between w-[22rem]">
+              <label className="flex w-[10rem] h-[2.2rem] justify-between items-center">
+                <p className="text-forestGreen font-semibold text-[1.2rem]">배경 색상</p>
+                <input
+                  type="color"
+                  value={bgColor}
+                  onChange={(e) => setBgColor(e.target.value)}
+                  className="w-[4.2rem] h-[2.2rem] bg-transparent border-none"
+                  disabled={!isEditMode}
+                />
+              </label>
+
+              <label className="flex w-[11rem] h-[2.2rem] justify-between items-center">
+                <p className="text-forestGreen font-semibold text-[1.2rem]">텍스트 색상</p>
+                <input
+                  type="color"
+                  value={globalTextColor}
+                  onChange={(e) => setGlobalTextColor(e.target.value)}
+                  className="w-[4.2rem] h-[2.2rem] bg-transparent border-none "
+                  disabled={!isEditMode}
+                />
+              </label>
+            </div>
+            <div className="flex justify-between items-center w-[46rem] h-[1.9rem]">
+              <div className="flex flex-col w-[30rem] border-b-2 pb-1">
+                <label htmlFor="title" className="flex items-center">
+                  <p className="text-forestGray font-semibold text-[1.5rem]">TITLE</p>
+                  <input
+                    id="title"
+                    type="text"
+                    className="w-full h-full text-[1.5rem] bg-transparent border-none ml-2"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    disabled={!isEditMode}
+                  />
+                </label>
+              </div>
+
+              <div className="flex flex-col w-[14.5rem] border-b-2 pb-1">
+                <label htmlFor="date" className="flex items-center">
+                  <p className="text-forestGray font-semibold text-[1.5rem]">DATE</p>
+                  <div className="relative ml-2">
+                    <DatePicker
+                      selected={date ? new Date(date) : null}
+                      onChange={(date) => setDate(date ? date.toISOString().split('T')[0] : '')}
+                      dateFormat="yyyy/MM/dd"
+                      className="w-full h-full text-[1.5rem] bg-transparent border-none placeholder-[#181818]"
+                      disabled={!isEditMode}
+                      placeholderText="연도-월-일"
+                    />
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div
+            ref={editableDivRef}
+            contentEditable={isEditMode}
+            className="p-4 w-[46rem] h-[53rem] overflow-hidden mb-1 "
+            style={{
+              color: globalTextColor,
+              fontSize: '16px',
+              backgroundColor: bgColor,
+              overflowY: 'hidden',
+              wordBreak: 'break-all',
+              whiteSpace: 'pre-wrap'
+            }}
+            onInput={handleInput}
+            onKeyDown={handleKeyDown}
+          ></div>
         </div>
       </div>
-      <div
-        ref={editableDivRef}
-        contentEditable={isEditMode}
-        className="border p-4 w-[43rem] h-[53rem] overflow-hidden mb-1 mt-5 ml-4 mr-3"
-        style={{
-          color: globalTextColor,
-          fontSize: '16px',
-          backgroundColor: bgColor,
-          overflowY: 'hidden',
-          wordBreak: 'break-all',
-          whiteSpace: 'pre-wrap',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 10)',
-          borderRadius: '8px'
-        }}
-        onInput={handleInput}
-        onKeyDown={handleKeyDown}
-      ></div>
     </div>
   );
 };

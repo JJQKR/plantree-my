@@ -16,18 +16,12 @@ import { useCreateDiary } from '@/lib/hooks/useDiaries';
 import UnsplashImageSearch from '@/components/molecules/diarycoversidebar/UnsplashImageSearch';
 import UnsplashBackgroundSearch from '@/components/molecules/diarycoversidebar/UnsplashBackgroundSearch';
 import Swal from 'sweetalert2';
-import { FaTrash } from 'react-icons/fa';
 
 type ParamTypes = {
   [key: string]: string;
   diaryId: string;
 };
-// 타입 정의
-interface DeleteButtonPosition {
-  x: number;
-  y: number;
-  rotation: number;
-}
+
 const DiaryCoverPage: React.FC = () => {
   const router = useRouter();
   const userId = useUserStore((state) => state.userId);
@@ -110,7 +104,6 @@ const DiaryCoverPage: React.FC = () => {
   const [selectedMenu, setSelectedMenu] = useState<string | null>(null);
   const [loading, setLoading] = useState(false); // 로딩 상태 추가
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const [deleteButtonPosition, setDeleteButtonPosition] = useState<DeleteButtonPosition | null>(null);
 
   useEffect(() => {
     const fetchDiaryCover = async () => {
@@ -514,7 +507,7 @@ const DiaryCoverPage: React.FC = () => {
 
     if (clickedOnEmpty) {
       setCoverSelectedElement(null);
-      setDeleteButtonPosition(null);
+
       if (trRef.current) {
         trRef.current.nodes([]);
         trRef.current.getLayer()?.batchDraw();
@@ -1240,6 +1233,16 @@ const DiaryCoverPage: React.FC = () => {
     const img = new window.Image();
     img.src = imageUrl;
     img.onload = () => {
+      const stageWidth = coverStageSize.width;
+      const stageHeight = coverStageSize.height;
+
+      const scaleX = stageWidth / img.width;
+      const scaleY = stageHeight / img.height;
+      const scale = Math.max(scaleX, scaleY);
+
+      img.width = img.width * scale;
+      img.height = img.height * scale;
+
       setCoverBackgroundColor(imageUrl);
       if (stageRef.current) {
         stageRef.current.batchDraw();
@@ -1281,7 +1284,6 @@ const DiaryCoverPage: React.FC = () => {
 
   const handleDeselectElement = () => {
     setCoverSelectedElement(null);
-    setDeleteButtonPosition(null);
     if (trRef.current) {
       trRef.current.nodes([]); // 트랜스포머에서 선택된 요소 해제
       trRef.current.getLayer()?.batchDraw(); // 레이어 다시 그리기
@@ -1427,7 +1429,7 @@ const DiaryCoverPage: React.FC = () => {
       </div>
 
       {/* 삭제 버튼 렌더링 */}
-      {coverSelectedElement && (
+      {/* {coverSelectedElement && (
         <button
           className="absolute top-4 right-8 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 z-10 flex items-center space-x-2"
           onClick={handleDeleteElement}
@@ -1435,7 +1437,7 @@ const DiaryCoverPage: React.FC = () => {
           <FaTrash className="text-white" />
           <span className="text-[1rem] font-medium">선택 요소 삭제</span>
         </button>
-      )}
+      )} */}
 
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-white z-50">

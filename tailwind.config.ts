@@ -9,7 +9,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'custom-green': '#e5eed6'
+        'custom-green': '#e5eed6',
+        forestGreen: '#008A02',
+        forestGray: '#727272',
+        forestBorderGreen: '#727272'
       },
       fontFamily: {
         sans: ['Pretendard', 'sans-serif']
