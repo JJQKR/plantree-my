@@ -28,9 +28,9 @@ const GrowthSummary = () => {
       <FetchUserData />
       <FetchMembershipDays />
 
-      <div className="flex flex-row w-[98rem] h-[15.2rem] pt-[3.2rem] pb-[3.2rem] bg-white rounded-tr-[2rem] rounded-tl-[2rem]">
-        <div className="ml-[4rem]">{updatedLevelId && <ProfileStages size={100} />}</div> {/* updatedLevelId 사용 */}
-        <div className="items-center ml-[1.6rem]">
+      <div className="flex flex-row w-[98rem] h-[16rem] pt-[3.2rem] pb-[3.2rem] bg-white rounded-tr-[2rem] rounded-tl-[2rem]">
+        <div className="mx-[4rem]">{updatedLevelId && <ProfileStages size={100} />}</div> {/* updatedLevelId 사용 */}
+        <div className="items-center">
           <span className="font-semibold text-[2.6rem] text-[#008A02]">{levelName}</span>
           <span className="font-semibold text-[2.6rem] ml-[2rem]">{nickname} 님의 정원</span>
 

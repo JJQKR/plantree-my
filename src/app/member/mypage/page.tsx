@@ -95,7 +95,7 @@ const MyPage: React.FC = () => {
           </NicknameButton>
           <WithdrawalButton>
             <button
-              onClick={handleToggleBadgeModal}
+              onClick={handleToggleWithdrawalModal}
               className="flex items-center justify-between font-semibold text-[2.6rem] my-[3.2rem] pl-[4rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[9.9rem]"
             >
               <div>회원 탈퇴</div>

@@ -100,7 +100,7 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 <li key={cover.id}>
                   <Link
                     href={`/member/diary/${cover.diary_id}/parchment`}
-                    className="pl-[2rem] w-[24rem] h-[5.2rem] text-[1.8rem] font-semibold flex items-center rounded-[1.2rem] text-black"
+                    className="pl-[2rem] w-[24rem] h-[4.8rem] text-[1.6rem] font-semibold flex items-center rounded-[0.6rem] text-black"
                     style={{
                       backgroundColor: cover.cover_bg_color || 'bg-white',
                       backgroundImage: cover.cover_bg_color ? `url(${cover.cover_bg_color})` : 'none',

@@ -71,7 +71,7 @@ const WithdrawalModal: React.FC = () => {
                 &#10005;
               </button>
             </div>
-            <div className="flex-col text-[1.6rem]">
+            <div className="flex-col text-start text-[1.6rem]">
               <p>{nickname} 님은</p>
               <p>플랜트리와 {membershipDays}일 동안 함께 했어요.</p>
               <div className="">
@@ -92,8 +92,8 @@ const WithdrawalModal: React.FC = () => {
               <form className="flex flex-col" onSubmit={handleSubmit}>
                 <button
                   type="submit"
-                  className="w-full h-[5.2rem] text-white text-[1.8rem] rounded-[1.2rem]"
-                  style={{ backgroundColor: '#9E9E9E' }}
+                  className="w-full h-[5.2rem] text-[#720000] text-[1.8rem] rounded-[1.2rem]"
+                  style={{ backgroundColor: '#FFE5E5' }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = '#D90000';
                     e.currentTarget.style.color = 'white'; // 텍스트 색깔을 white로 변경
