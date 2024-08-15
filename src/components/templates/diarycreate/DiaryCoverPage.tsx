@@ -1337,25 +1337,6 @@ const DiaryCoverPage: React.FC = () => {
                       fill={coverBackgroundColor.startsWith('http') ? undefined : coverBackgroundColor}
                     />
 
-                    {/* 로컬 이미지 */}
-                    {coverImage && loadedImage && (
-                      <KonvaImage
-                        image={loadedImage}
-                        x={coverImagePosition.x * coverScale}
-                        y={coverImagePosition.y * coverScale}
-                        width={coverImageSize.width}
-                        height={coverImageSize.height}
-                        draggable
-                        ref={coverImageRef}
-                        onDragEnd={handleImageChange}
-                        onTransformEnd={handleImageTransform}
-                        onClick={handleImageSelect}
-                        scaleX={coverScale}
-                        scaleY={coverScale}
-                        rotation={coverImageRotation}
-                      />
-                    )}
-
                     {/* 언스플레쉬 이미지 */}
                     {unsplashImage && loadedUnsplashImage && (
                       <KonvaImage
@@ -1372,6 +1353,25 @@ const DiaryCoverPage: React.FC = () => {
                         scaleX={unsplashScale}
                         scaleY={unsplashScale}
                         rotation={unsplashImageRotation}
+                      />
+                    )}
+
+                    {/* 로컬 이미지 */}
+                    {coverImage && loadedImage && (
+                      <KonvaImage
+                        image={loadedImage}
+                        x={coverImagePosition.x * coverScale}
+                        y={coverImagePosition.y * coverScale}
+                        width={coverImageSize.width}
+                        height={coverImageSize.height}
+                        draggable
+                        ref={coverImageRef}
+                        onDragEnd={handleImageChange}
+                        onTransformEnd={handleImageTransform}
+                        onClick={handleImageSelect}
+                        scaleX={coverScale}
+                        scaleY={coverScale}
+                        rotation={coverImageRotation}
                       />
                     )}
 
