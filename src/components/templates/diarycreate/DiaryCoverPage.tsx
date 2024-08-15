@@ -1337,25 +1337,6 @@ const DiaryCoverPage: React.FC = () => {
                       fill={coverBackgroundColor.startsWith('http') ? undefined : coverBackgroundColor}
                     />
 
-                    {/* 언스플레쉬 이미지 */}
-                    {unsplashImage && loadedUnsplashImage && (
-                      <KonvaImage
-                        image={loadedUnsplashImage}
-                        x={unsplashImagePosition.x * coverScale}
-                        y={unsplashImagePosition.y * coverScale}
-                        width={unsplashImageSize.width}
-                        height={unsplashImageSize.height}
-                        draggable
-                        ref={unsplashImageRef}
-                        onDragEnd={handleUnsplashImageChange}
-                        onTransformEnd={handleUnsplashImageTransform}
-                        onClick={handleUnsplashImageSelect}
-                        scaleX={unsplashScale}
-                        scaleY={unsplashScale}
-                        rotation={unsplashImageRotation}
-                      />
-                    )}
-
                     {/* 로컬 이미지 */}
                     {coverImage && loadedImage && (
                       <KonvaImage
@@ -1372,6 +1353,25 @@ const DiaryCoverPage: React.FC = () => {
                         scaleX={coverScale}
                         scaleY={coverScale}
                         rotation={coverImageRotation}
+                      />
+                    )}
+
+                    {/* 언스플레쉬 이미지 */}
+                    {unsplashImage && loadedUnsplashImage && (
+                      <KonvaImage
+                        image={loadedUnsplashImage}
+                        x={unsplashImagePosition.x * coverScale}
+                        y={unsplashImagePosition.y * coverScale}
+                        width={unsplashImageSize.width}
+                        height={unsplashImageSize.height}
+                        draggable
+                        ref={unsplashImageRef}
+                        onDragEnd={handleUnsplashImageChange}
+                        onTransformEnd={handleUnsplashImageTransform}
+                        onClick={handleUnsplashImageSelect}
+                        scaleX={unsplashScale}
+                        scaleY={unsplashScale}
+                        rotation={unsplashImageRotation}
                       />
                     )}
 
