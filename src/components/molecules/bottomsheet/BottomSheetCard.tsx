@@ -25,6 +25,7 @@ const BottomSheetCard: React.FC<BottomSheetCardProps> = ({ page, moveCard, onTog
   const ref = React.useRef(null);
   const { setCurrentPageIndex } = usePageStore((state) => state);
   const { activeCardIndices, setActiveCardIndices } = useBottomSheetStore((state) => state);
+  console.log(page);
 
   // const [, drop] = useDrop({
   //   accept: ItemType.CARD,
@@ -71,9 +72,17 @@ const BottomSheetCard: React.FC<BottomSheetCardProps> = ({ page, moveCard, onTog
     <div
       ref={ref}
       // ${isDragging ? 'opacity-50' : ''}
-      className={`flex items-end justify-center bg-white rounded-lg shadow-md p-4 w-32 h-40 flex-none cursor-pointer  ${
+      className={`flex items-end justify-center bg-contain ${
+        page.parchment_style === 'tenMinPlanner'
+          ? "bg-[url('/images/tenMinPlannerImage.png')]"
+          : page.parchment_style === 'lineNote'
+          ? "bg-[url('/images/lineNoteImage.png')]"
+          : page.parchment_style === 'blankNote'
+          ? "bg-[url('/images/blankNoteImage.png')]"
+          : ''
+      } rounded-lg shadow-md p-4 w-32 h-40 flex-none cursor-pointer ${
         isActive ? 'border-[#008A02] border-[0.3rem]' : ''
-      }`}
+      } `}
       onClick={() => showPages(pages.indexOf(page))}
     >
       <div
