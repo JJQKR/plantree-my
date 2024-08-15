@@ -251,17 +251,6 @@ const DiaryCase: React.FC = () => {
                             }
                             fill={cover.cover_bg_color.startsWith('http') ? undefined : cover.cover_bg_color}
                           />
-                          <Text
-                            text={cover.cover_title}
-                            fontSize={cover.cover_title_fontsize}
-                            x={cover.cover_title_position.x}
-                            y={cover.cover_title_position.y}
-                            width={cover.cover_title_width}
-                            rotation={cover.cover_title_rotation}
-                            fontFamily={cover.cover_title_fontfamily}
-                            fill={cover.cover_title_color}
-                            fontStyle={`${cover.cover_title_fontweight} ${cover.cover_title_fontstyle}`}
-                          />
                           {loadedImages[index].src && (
                             <KonvaImage
                               image={loadedImages[index]}
@@ -282,6 +271,17 @@ const DiaryCase: React.FC = () => {
                               rotation={cover.unsplash_image_rotation}
                             />
                           )}
+                          <Text
+                            text={cover.cover_title}
+                            fontSize={cover.cover_title_fontsize}
+                            x={cover.cover_title_position.x}
+                            y={cover.cover_title_position.y}
+                            width={cover.cover_title_width}
+                            rotation={cover.cover_title_rotation}
+                            fontFamily={cover.cover_title_fontfamily}
+                            fill={cover.cover_title_color}
+                            fontStyle={`${cover.cover_title_fontweight} ${cover.cover_title_fontstyle}`}
+                          />
                         </Layer>
                       </Stage>
                     </div>
@@ -350,17 +350,6 @@ const DiaryCase: React.FC = () => {
                             }
                             fill={cover.cover_bg_color.startsWith('http') ? undefined : cover.cover_bg_color}
                           />
-                          <Text
-                            text={cover.cover_title}
-                            fontSize={cover.cover_title_fontsize}
-                            x={cover.cover_title_position.x}
-                            y={cover.cover_title_position.y}
-                            width={cover.cover_title_width}
-                            rotation={cover.cover_title_rotation}
-                            fontFamily={cover.cover_title_fontfamily}
-                            fill={cover.cover_title_color}
-                            fontStyle={`${cover.cover_title_fontweight} ${cover.cover_title_fontstyle}`}
-                          />
                           {loadedImages[index].src && (
                             <KonvaImage
                               image={loadedImages[index]}
@@ -381,6 +370,17 @@ const DiaryCase: React.FC = () => {
                               rotation={cover.unsplash_image_rotation}
                             />
                           )}
+                          <Text
+                            text={cover.cover_title}
+                            fontSize={cover.cover_title_fontsize}
+                            x={cover.cover_title_position.x}
+                            y={cover.cover_title_position.y}
+                            width={cover.cover_title_width}
+                            rotation={cover.cover_title_rotation}
+                            fontFamily={cover.cover_title_fontfamily}
+                            fill={cover.cover_title_color}
+                            fontStyle={`${cover.cover_title_fontweight} ${cover.cover_title_fontstyle}`}
+                          />
                         </Layer>
                       </Stage>
                     </SwiperSlide>
