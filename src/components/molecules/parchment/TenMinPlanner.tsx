@@ -314,7 +314,7 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
               </label>
               <textarea
                 id="memo"
-                className="h-[9.5rem] w-full"
+                className="h-[9.5rem] w-full resize-none"
                 onChange={handleMemo}
                 value={localPlanner.memo || ''}
                 disabled={!isEditMode}
