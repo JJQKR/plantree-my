@@ -31,11 +31,8 @@ const Todolist = ({
   // document.querySelector => dom에 접근 <input />
   // 1. useRef로 dom에 접근할 수 있음
   const editTextareaRef = useRef<HTMLTextAreaElement | null>(null);
-  // const textareaRef = useRef();
 
   const { isEditMode } = useEditModeStore((state) => state);
-
-  // const { isTenMinplannerColorModalOpen, toggleTenMinplannerColorModal } = useParchmentModalStore((state) => state);
 
   // const updateTodoInput = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   setTodoInput(e.target.value);
@@ -44,7 +41,7 @@ const Todolist = ({
   const handleAddTodo = () => {
     setTodoList((prev) => [
       ...prev,
-      { id: uuid(), text: todoInput, isDone: false, color: 'transparent', planner_id: tenMinPlannerId }
+      { id: uuid(), text: todoInput, isDone: false, color: '#BEBEBE', planner_id: tenMinPlannerId }
     ]);
     setTodoInput('');
   };
@@ -82,11 +79,6 @@ const Todolist = ({
     }
   };
 
-  // const openModal = (id: string) => {
-  //   // toggleTenMinplannerColorModal();
-  //   setSelectedTodoId(id);
-  // };
-
   const handleSelectTodo = (todo: Todo) => {
     if (todo.color === 'transparent') {
       alert('컬러를 먼저 지정해주세요');
@@ -95,8 +87,8 @@ const Todolist = ({
     setSelectedColorTodo(todo);
   };
 
-  const changeTodoColor = (todoId: string, newColor: string) => {
-    setTodoList(todoList.map((todo) => (todo.id === todoId ? { ...todo, color: newColor } : todo)));
+  const changeTodoColor = (todoId: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    setTodoList(todoList.map((todo) => (todo.id === todoId ? { ...todo, color: e.target.value } : todo)));
   };
 
   const removeTodo = (id: string) => {
@@ -119,7 +111,8 @@ const Todolist = ({
                 <input
                   type="color"
                   className="color-input"
-                  onChange={(e) => changeTodoColor(todo.id, e.target.value)}
+                  value={todo.color}
+                  onChange={(e) => changeTodoColor(todo.id, e)}
                 />
                 {/* {
                     todo.color === "transparent" ? 
@@ -189,7 +182,6 @@ const Todolist = ({
           </div>
         ) : null}
       </div>
-      {/* {isTenMinplannerColorModalOpen && <ColorModal todoId={selectedTodoId} changeTodoColor={changeTodoColor} />} */}
     </div>
   );
 };
