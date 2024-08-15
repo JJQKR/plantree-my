@@ -178,6 +178,26 @@ const DiaryCase: React.FC = () => {
     router.push(`/member/diary/${id}/parchment`); // 다이어리 페이지로 이동
   };
 
+  // 인라인 스타일 정의
+  const swiperContainerStyle = {
+    width: '100%',
+    marginTop: '12rem',
+    paddingBottom: '5rem'
+  };
+
+  const mySwiperStyle = {
+    width: '108rem', // 1080px
+    height: '72rem' // 720px
+  };
+
+  const swiperSlideStyle = {
+    display: 'flex',
+    alignItems: 'center', // 카드 내부의 내용 중앙 정렬
+    justifyContent: 'center',
+    padding: 0, // 슬라이드 사이의 간격 조정
+    zIndex: 0
+  };
+
   return (
     <div>
       <div
@@ -269,119 +289,133 @@ const DiaryCase: React.FC = () => {
                 ) : null
               )
             ) : (
-              <div className="flex items-center justify-center w-[25rem] h-[40rem] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
+              <div className="flex items-center justify-center w-[25rem] h-[40rem] bg-white rounded shadow-md text-2xl font-bold text-black">
                 다이어리가 없습니다
               </div>
             )}
           </div>
         ) : (
           // 스와이프 뷰에서 다이어리 커버 표시
-          <Swiper
-            effect="coverflow"
-            grabCursor={true}
-            centeredSlides={true}
-            slidesPerView="auto"
-            coverflowEffect={{
-              rotate: 50,
-              stretch: 0,
-              depth: 100,
-              modifier: 1,
-              slideShadows: true
-            }}
-            pagination={{ clickable: true }}
-            modules={[EffectCoverflow, Pagination]}
-            className="mySwiper"
-          >
-            {diaryCovers.length > 0 ? (
-              diaryCovers.map((cover, index) =>
-                cover.cover_id ? (
-                  <SwiperSlide
-                    key={cover.cover_id}
-                    onClick={() => handleDiaryClick(cover.diary_id as string)}
-                    className="relative cursor-pointer flex flex-col w-[48rem] h-[72rem] items-center justify-center rounded shadow-md text-2xl font-bold text-black"
-                    style={{
-                      backgroundColor: cover.cover_bg_color,
-                      width: cover.cover_stage_size.width * cover.cover_scale,
-                      height: cover.cover_stage_size.height * cover.cover_scale
-                    }}
-                  >
-                    <Stage
-                      width={cover.cover_stage_size.width}
-                      height={cover.cover_stage_size.height}
-                      scaleX={cover.cover_scale}
-                      scaleY={cover.cover_scale}
+          <div style={swiperContainerStyle}>
+            <Swiper
+              effect="coverflow"
+              grabCursor={true}
+              centeredSlides={true}
+              slidesPerView="auto"
+              coverflowEffect={{
+                rotate: 50,
+                stretch: 0,
+                depth: 100,
+                modifier: 1,
+                slideShadows: true
+              }}
+              pagination={{ clickable: true }}
+              modules={[EffectCoverflow, Pagination]}
+              className="mySwiper"
+              style={mySwiperStyle}
+            >
+              {diaryCovers.length > 0 ? (
+                diaryCovers.map((cover, index) =>
+                  cover.cover_id ? (
+                    <SwiperSlide
+                      key={cover.cover_id}
+                      onClick={() => handleDiaryClick(cover.diary_id as string)}
+                      style={{
+                        ...swiperSlideStyle,
+                        backgroundColor: cover.cover_bg_color,
+                        width: cover.cover_stage_size.width * cover.cover_scale,
+                        height: cover.cover_stage_size.height * cover.cover_scale
+                      }}
                     >
-                      <Layer>
-                        <Rect
-                          x={0}
-                          y={0}
-                          width={cover.cover_stage_size.width}
-                          height={cover.cover_stage_size.height}
-                          fillPatternImage={
-                            cover.cover_bg_color.startsWith('http')
-                              ? (() => {
-                                  const img = new window.Image();
-                                  img.src = cover.cover_bg_color;
-                                  return img;
-                                })()
-                              : undefined
-                          }
-                          fill={cover.cover_bg_color.startsWith('http') ? undefined : cover.cover_bg_color}
-                        />
-                        <Text
-                          text={cover.cover_title}
-                          fontSize={cover.cover_title_fontsize}
-                          x={cover.cover_title_position.x}
-                          y={cover.cover_title_position.y}
-                          width={cover.cover_title_width}
-                          rotation={cover.cover_title_rotation}
-                          fontFamily={cover.cover_title_fontfamily}
-                          fill={cover.cover_title_color}
-                          fontStyle={`${cover.cover_title_fontweight} ${cover.cover_title_fontstyle}`}
-                        />
-                        {loadedImages[index].src && (
-                          <KonvaImage
-                            image={loadedImages[index]}
-                            x={cover.cover_image_position.x}
-                            y={cover.cover_image_position.y}
-                            width={cover.cover_image_size.width}
-                            height={cover.cover_image_size.height}
-                            rotation={cover.cover_image_rotation}
+                      <Stage
+                        width={cover.cover_stage_size.width}
+                        height={cover.cover_stage_size.height}
+                        scaleX={cover.cover_scale}
+                        scaleY={cover.cover_scale}
+                      >
+                        <Layer>
+                          <Rect
+                            x={0}
+                            y={0}
+                            width={cover.cover_stage_size.width}
+                            height={cover.cover_stage_size.height}
+                            fillPatternImage={
+                              cover.cover_bg_color.startsWith('http')
+                                ? (() => {
+                                    const img = new window.Image();
+                                    img.src = cover.cover_bg_color;
+                                    return img;
+                                  })()
+                                : undefined
+                            }
+                            fill={cover.cover_bg_color.startsWith('http') ? undefined : cover.cover_bg_color}
                           />
-                        )}
-                        {unsplashImages[index].src && (
-                          <KonvaImage
-                            image={unsplashImages[index]}
-                            x={cover.unsplash_image_position.x}
-                            y={cover.unsplash_image_position.y}
-                            width={cover.unsplash_image_size.width}
-                            height={cover.unsplash_image_size.height}
-                            rotation={cover.unsplash_image_rotation}
+                          <Text
+                            text={cover.cover_title}
+                            fontSize={cover.cover_title_fontsize}
+                            x={cover.cover_title_position.x}
+                            y={cover.cover_title_position.y}
+                            width={cover.cover_title_width}
+                            rotation={cover.cover_title_rotation}
+                            fontFamily={cover.cover_title_fontfamily}
+                            fill={cover.cover_title_color}
+                            fontStyle={`${cover.cover_title_fontweight} ${cover.cover_title_fontstyle}`}
                           />
-                        )}
-                      </Layer>
-                    </Stage>
-                  </SwiperSlide>
-                ) : null
-              )
-            ) : (
-              <SwiperSlide className="flex items-center justify-center w-[48rem] h-[72rem] bg-white rounded shadow-md text-2xl font-bold text-black">
-                <button
-                  onClick={handleCreateDiary}
-                  className="flex flex-col items-center justify-center text-center"
-                  style={{ transform: 'translateY(-20%)' }}
+                          {loadedImages[index].src && (
+                            <KonvaImage
+                              image={loadedImages[index]}
+                              x={cover.cover_image_position.x}
+                              y={cover.cover_image_position.y}
+                              width={cover.cover_image_size.width}
+                              height={cover.cover_image_size.height}
+                              rotation={cover.cover_image_rotation}
+                            />
+                          )}
+                          {unsplashImages[index].src && (
+                            <KonvaImage
+                              image={unsplashImages[index]}
+                              x={cover.unsplash_image_position.x}
+                              y={cover.unsplash_image_position.y}
+                              width={cover.unsplash_image_size.width}
+                              height={cover.unsplash_image_size.height}
+                              rotation={cover.unsplash_image_rotation}
+                            />
+                          )}
+                        </Layer>
+                      </Stage>
+                    </SwiperSlide>
+                  ) : null
+                )
+              ) : (
+                <SwiperSlide
+                  style={{
+                    ...swiperSlideStyle, // 기존 swiperSlideStyle 스타일만 적용
+                    backgroundColor: 'white', // 필요한 스타일만 개별적으로 추가
+                    width: '48rem', // SwiperSlide의 너비를 개별적으로 설정
+                    height: '72rem', // SwiperSlide의 높이를 개별적으로 설정
+                    display: 'flex',
+                    alignItems: 'center', // 카드 내부의 내용 중앙 정렬
+                    justifyContent: 'center',
+                    fontWeight: 'bold'
+                  }}
                 >
-                  +<br /> 다이어리 생성
-                </button>
-              </SwiperSlide>
-            )}
-          </Swiper>
+                  <button
+                    onClick={handleCreateDiary}
+                    className="flex flex-col items-center justify-center text-center"
+                    style={{ transform: 'translateY(-20%)' }}
+                  >
+                    +<br /> 다이어리 생성
+                  </button>
+                </SwiperSlide>
+              )}
+            </Swiper>
+          </div>
         )}
       </div>
       <div className="fixed bottom-[3rem] right-[4rem]">
         {!gridView && <CreateDiaryButton onClick={handleCreateDiary} />}
       </div>
-      {loading && ( // 로딩 애니메이션 표시
+      {loading && (
         <div className="fixed inset-0 flex items-center justify-center">
           <img src="/images/loading.gif" alt="Loading" width={200} height={200} />
         </div>
