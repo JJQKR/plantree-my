@@ -251,16 +251,6 @@ const DiaryCase: React.FC = () => {
                             }
                             fill={cover.cover_bg_color.startsWith('http') ? undefined : cover.cover_bg_color}
                           />
-                          {loadedImages[index].src && (
-                            <KonvaImage
-                              image={loadedImages[index]}
-                              x={cover.cover_image_position.x}
-                              y={cover.cover_image_position.y}
-                              width={cover.cover_image_size.width}
-                              height={cover.cover_image_size.height}
-                              rotation={cover.cover_image_rotation}
-                            />
-                          )}
                           {unsplashImages[index].src && (
                             <KonvaImage
                               image={unsplashImages[index]}
@@ -269,6 +259,16 @@ const DiaryCase: React.FC = () => {
                               width={cover.unsplash_image_size.width}
                               height={cover.unsplash_image_size.height}
                               rotation={cover.unsplash_image_rotation}
+                            />
+                          )}
+                          {loadedImages[index].src && (
+                            <KonvaImage
+                              image={loadedImages[index]}
+                              x={cover.cover_image_position.x}
+                              y={cover.cover_image_position.y}
+                              width={cover.cover_image_size.width}
+                              height={cover.cover_image_size.height}
+                              rotation={cover.cover_image_rotation}
                             />
                           )}
                           <Text
@@ -350,16 +350,6 @@ const DiaryCase: React.FC = () => {
                             }
                             fill={cover.cover_bg_color.startsWith('http') ? undefined : cover.cover_bg_color}
                           />
-                          {loadedImages[index].src && (
-                            <KonvaImage
-                              image={loadedImages[index]}
-                              x={cover.cover_image_position.x}
-                              y={cover.cover_image_position.y}
-                              width={cover.cover_image_size.width}
-                              height={cover.cover_image_size.height}
-                              rotation={cover.cover_image_rotation}
-                            />
-                          )}
                           {unsplashImages[index].src && (
                             <KonvaImage
                               image={unsplashImages[index]}
@@ -368,6 +358,16 @@ const DiaryCase: React.FC = () => {
                               width={cover.unsplash_image_size.width}
                               height={cover.unsplash_image_size.height}
                               rotation={cover.unsplash_image_rotation}
+                            />
+                          )}
+                          {loadedImages[index].src && (
+                            <KonvaImage
+                              image={loadedImages[index]}
+                              x={cover.cover_image_position.x}
+                              y={cover.cover_image_position.y}
+                              width={cover.cover_image_size.width}
+                              height={cover.cover_image_size.height}
+                              rotation={cover.cover_image_rotation}
                             />
                           )}
                           <Text

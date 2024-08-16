@@ -216,13 +216,21 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
         {isEditMode ? (
           <div className="bg-[#EDF1E6] w-full h-[4.8rem] py-[1.2rem] px-[1.5rem] flex flex-row justify-between">
             <div className="text-[1.8rem] text-[#496E00] font-[600]">
-              {index} Page_{changeStyleName()}
+              {index} Page_{changeStyleName()} (수정중)
             </div>
             <div>
-              <button className="text-[2.4rem] text-[#496E00]" onClick={onSubmit}>
+              <button
+                className="text-[2.4rem] text-[#496E00] hover:text-black mr-[1.2rem]"
+                onClick={onSubmit}
+                title="클릭해서 저장!"
+              >
                 <FaSave />
               </button>
-              <button className="text-[2.4rem] text-[#496E00]" onClick={handleDelete}>
+              <button
+                className="text-[2.4rem] text-[#496E00] hover:text-black"
+                onClick={handleDelete}
+                title="클릭하면 삭제!"
+              >
                 <FaTrashAlt />
               </button>
             </div>
@@ -306,7 +314,7 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
               </label>
               <textarea
                 id="memo"
-                className="h-[9.5rem] w-full"
+                className="h-[9.5rem] w-full resize-none"
                 onChange={handleMemo}
                 value={localPlanner.memo || ''}
                 disabled={!isEditMode}

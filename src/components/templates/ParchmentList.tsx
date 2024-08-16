@@ -160,9 +160,9 @@ export default function ParchmentList() {
       <div onClick={handlePrevPage} className="text-[4.8rem] text-[#008A02] cursor-pointer">
         <FaChevronLeft />
       </div>
-      <div>
-        <div className="flex flex-row justify-between px-[3.6rem] ">
-          <div className="flex flex-row">
+      <div className=" w-[100rem]">
+        <div className="flex flex-row justify-between ">
+          <div className="flex flex-row w-[72rem]">
             <span
               className="flex flex-row text-[3.5rem] w-[4.8rem] items-center justify-center cursor-pointer"
               onClick={goHub}
@@ -180,13 +180,13 @@ export default function ParchmentList() {
             </button>
             <button
               onClick={deleteDiary}
-              className=" text-[1.8rem] w-[13.8rem] h-[5.2rem] border-[0.1rem] cursor-pointer rounded-[1.2rem] border-[##D90000] text-[#D90000]"
+              className=" text-[1.8rem] w-[13.8rem] h-[5.2rem] border-[0.1rem] cursor-pointer rounded-[1.2rem] border-[#D90000] text-[#D90000]"
             >
               다이어리 삭제
             </button>
           </div>
         </div>
-        <div className="flex flex-row">
+        <div className="flex flex-row items-center justify-center">
           <div className="w-[100rem] h-[75rem] mx-[3.6rem] my-[4.3rem]">
             <DiaryContents diaryId={diaryId} currentPageIndex={currentPageIndex} />
           </div>
