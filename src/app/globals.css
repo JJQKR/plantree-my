@@ -20,12 +20,6 @@ html {
   }
 }
 
-/* @media (max-width: 767px) {
-  html {
-    font-size: 6px;
-  }
-} */
-
 body {
   width: 100%;
   height: 100%;
@@ -96,14 +90,4 @@ body {
   width: 35rem;
   height: 50rem;
   object-fit: cover;
-}
-
-@media (max-width: 430px) {
-  html {
-    font-size: 9px; /* 모바일에서는 더 작은 기본 폰트 크기 */
-  }
-
-  body {
-    font-size: 1.1rem;
-  }
 }
