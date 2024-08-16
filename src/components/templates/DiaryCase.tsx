@@ -181,8 +181,9 @@ const DiaryCase: React.FC = () => {
   // 인라인 스타일 정의
   const swiperContainerStyle = {
     width: '100%',
+    height: '100%',
     marginTop: '12rem',
-    paddingBottom: '5rem'
+    paddingBottom: '10rem'
   };
 
   const mySwiperStyle = {
@@ -196,6 +197,12 @@ const DiaryCase: React.FC = () => {
     justifyContent: 'center',
     padding: 0, // 슬라이드 사이의 간격 조정
     zIndex: 0
+  };
+
+  const paginationStyle: React.CSSProperties = {
+    position: 'absolute',
+    bottom: '3rem',
+    textAlign: 'center'
   };
 
   return (
@@ -309,7 +316,7 @@ const DiaryCase: React.FC = () => {
                 modifier: 1,
                 slideShadows: true
               }}
-              pagination={{ clickable: true }}
+              pagination={{ clickable: true, el: '.swiper-pagination' }}
               modules={[EffectCoverflow, Pagination]}
               className="mySwiper"
               style={mySwiperStyle}
@@ -389,12 +396,12 @@ const DiaryCase: React.FC = () => {
               ) : (
                 <SwiperSlide
                   style={{
-                    ...swiperSlideStyle, // 기존 swiperSlideStyle 스타일만 적용
-                    backgroundColor: 'white', // 필요한 스타일만 개별적으로 추가
-                    width: '48rem', // SwiperSlide의 너비를 개별적으로 설정
-                    height: '72rem', // SwiperSlide의 높이를 개별적으로 설정
+                    ...swiperSlideStyle,
+                    backgroundColor: 'white',
+                    width: '48rem',
+                    height: '72rem',
                     display: 'flex',
-                    alignItems: 'center', // 카드 내부의 내용 중앙 정렬
+                    alignItems: 'center',
                     justifyContent: 'center',
                     fontWeight: 'bold'
                   }}
@@ -409,6 +416,7 @@ const DiaryCase: React.FC = () => {
                 </SwiperSlide>
               )}
             </Swiper>
+            <div className="swiper-pagination" style={paginationStyle}></div>
           </div>
         )}
       </div>
