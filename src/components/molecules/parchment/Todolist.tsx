@@ -41,7 +41,7 @@ const Todolist = ({
   const handleAddTodo = () => {
     setTodoList((prev) => [
       ...prev,
-      { id: uuid(), text: todoInput, isDone: false, color: '#BEBEBE', planner_id: tenMinPlannerId }
+      { id: uuid(), text: todoInput, isDone: false, color: '#EAEAEA', planner_id: tenMinPlannerId }
     ]);
     setTodoInput('');
   };
@@ -64,17 +64,19 @@ const Todolist = ({
     }
   };
 
-  const startEditing = (todoId: string) => {
-    setEditingId(todoId);
-    // 실행 컨텍스트 -> 야매
-    setTimeout(() => {
-      // 3. editInputRef.current => <input />
-      if (editTextareaRef.current) {
-        editTextareaRef.current?.focus();
-        adjustHeight(editTextareaRef.current);
-      }
-    });
-  };
+  // const startEditing = (todo: TodoType) => {
+  //   setEditingId(todo.id);
+  //   setSelectedColorTodo(todo);
+
+  //   // 실행 컨텍스트 -> 야매
+  //   setTimeout(() => {
+  //     // 3. editInputRef.current => <input />
+  //     if (editTextareaRef.current) {
+  //       editTextareaRef.current?.focus();
+  //       adjustHeight(editTextareaRef.current);
+  //     }
+  //   });
+  // };
 
   const endEdit = (id: string, e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter') {
@@ -83,11 +85,20 @@ const Todolist = ({
   };
 
   const handleSelectTodo = (todo: Todo) => {
-    if (todo.color === 'transparent') {
-      alert('컬러를 먼저 지정해주세요');
-      return;
-    }
+    // if (todo.color === 'transparent') {
+    //   alert('컬러를 먼저 지정해주세요');
+    //   return;
+    // }
     setSelectedColorTodo(todo);
+    setEditingId(todo.id);
+
+    setTimeout(() => {
+      // 3. editInputRef.current => <input />
+      if (editTextareaRef.current) {
+        editTextareaRef.current?.focus();
+        adjustHeight(editTextareaRef.current);
+      }
+    });
   };
 
   const changeTodoColor = (todoId: string, e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,8 +110,12 @@ const Todolist = ({
   };
 
   const adjustHeight = (e: HTMLTextAreaElement) => {
-    e.style.height = 'auto'; // 높이를 auto로 설정
-    e.style.height = `${e.scrollHeight}px`; // scrollHeight를 이용해 높이 조정
+    if (e.value.trim() !== '') {
+      e.style.height = 'auto'; // 높이를 auto로 설정
+      e.style.height = `${e.scrollHeight}px`; // 내용에 따라 높이 조정
+    } else {
+      e.style.height = '3.2rem'; // 기본 높이 유지
+    }
   };
 
   return (
@@ -121,6 +136,7 @@ const Todolist = ({
                   className="color-input"
                   value={todo.color}
                   onChange={(e) => changeTodoColor(todo.id, e)}
+                  disabled={!isEditMode}
                 />
                 {/* {
                     todo.color === "transparent" ? 
@@ -160,29 +176,36 @@ const Todolist = ({
                     }}
                     onKeyUp={(e) => endEdit(todo.id, e)}
                     disabled={!isEditMode}
-                    className=" w-[14rem] h-[3.2rem] overflow-y-auto resize-none"
+                    className=" w-[17rem] h-[3.2rem] overflow-y-auto resize-none text-[1.4rem] p-[0.5rem]"
                   />
                 ) : (
                   <div>
                     <div
-                      className="min-h-[3.2rem] w-[14rem] whitespace-pre-wrap break-words break-all"
-                      onClick={() => handleSelectTodo(todo)}
+                      className="min-h-[3.2rem] w-[17rem] whitespace-pre-wrap break-words break-all flex items-center"
+                      onClick={() => isEditMode && handleSelectTodo(todo)}
                     >
-                      {todo.text}
+                      {
+                        todo.text || ''
+                        // (
+                        //   <span className="text-gray-500 flex items-end text-[1.4rem]">
+                        //     작성버튼을 눌러 작성해주세요.
+                        //   </span>
+                        // )
+                      }
                     </div>
                   </div>
                 )}
-                <div className="w-[4.6rem] flex gap-[0.6rem]">
-                  {isEditMode ? (
+                <div className="w-[2rem] flex gap-[0.6rem]">
+                  {/* {isEditMode ? (
                     <button
                       onClick={() => {
-                        startEditing(todo.id);
+                        startEditing(todo);
                       }}
                       className="text-[#9E9E9E] text-[2rem]"
                     >
                       <FaRegEdit />
                     </button>
-                  ) : null}
+                  ) : null} */}
                   {isEditMode ? (
                     <button onClick={() => removeTodo(todo.id)} className="text-[#9E9E9E] text-[2rem]">
                       <FaTrashAlt />
