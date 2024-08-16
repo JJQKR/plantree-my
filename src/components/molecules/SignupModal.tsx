@@ -54,6 +54,17 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
       return;
     }
 
+    // 닉네임이 비어있는지 확인
+    if (!nickname.trim()) {
+      Swal.fire({
+        title: '회원가입 실패.',
+        text: '닉네임을 입력해주세요!',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+
     // 비밀번호 길이 확인
     if (password.length < 6) {
       Swal.fire({
@@ -67,11 +78,14 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
 
     // 비밀번호 확인
     if (password !== confirmPassword) {
-      setPasswordError('비밀번호가 일치하지 않습니다.');
+      Swal.fire({
+        title: '회원가입 실패.',
+        text: '비밀번호와 비밀번호 재입력이 일치하지 않습니다!',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
       return;
     }
-
-    setPasswordError(null);
 
     try {
       const { data: authData, error: authError } = await supabase.auth.signUp({
