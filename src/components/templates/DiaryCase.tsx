@@ -36,6 +36,7 @@ const DiaryCase: React.FC = () => {
   // 상태 초기화
   const [diaryCardWidth, setDiaryCardWidth] = useState(400);
   const [diaryCardHeight, setDiaryCardHeight] = useState(600);
+  const [swiperStyle, setSwiperStyle] = useState({ width: '108rem', height: '72rem' });
 
   // Supabase에서 세션 정보를 가져오는 함수
   const fetchSession = async () => {
@@ -128,57 +129,28 @@ const DiaryCase: React.FC = () => {
     getUserIdAndFetchCovers();
   }, []);
 
-  // 화면 크기에 따라 카드 크기 조정
-  useEffect(() => {
-    const updateCardSize = () => {
-      if (window.innerWidth <= 768) {
-        setDiaryCardWidth(200); // 모바일 화면에서는 카드 너비를 줄임
-        setDiaryCardHeight(300); // 모바일 화면에서는 카드 높이를 줄임
-      } else {
-        setDiaryCardWidth(250); // 데스크톱 화면에서는 카드 너비를 늘림
-        setDiaryCardHeight(400); // 데스크톱 화면에서는 카드 높이를 늘림
-      }
-    };
-
-    // 초기 크기 설정
-    updateCardSize();
-
-    // 창 크기 변경 시 크기 업데이트
-    window.addEventListener('resize', updateCardSize);
-
-    return () => {
-      window.removeEventListener('resize', updateCardSize);
-    };
-  }, []);
-
-  const getSwiperStyle = () => {
+  // 화면 크기에 따라 스타일을 업데이트하는 함수
+  const updateStyles = () => {
     if (window.innerWidth <= 768) {
-      return {
-        width: '48rem', // 모바일 화면에서는 카드 너비를 줄임
-        height: '72rem' // 모바일 화면에서는 카드 높이를 줄임
-      };
+      setDiaryCardWidth(200);
+      setDiaryCardHeight(300);
+      setSwiperStyle({ width: '48rem', height: '72rem' });
     } else {
-      return {
-        width: '108rem', // 기본 데스크톱 화면 크기
-        height: '72rem'
-      };
+      setDiaryCardWidth(250);
+      setDiaryCardHeight(400);
+      setSwiperStyle({ width: '108rem', height: '72rem' });
     }
   };
 
-  const [swiperStyle, setSwiperStyle] = useState(getSwiperStyle);
-
   useEffect(() => {
-    const updateSwiperStyle = () => {
-      setSwiperStyle(getSwiperStyle());
-    };
+    // 초기 렌더링 시 스타일 설정
+    updateStyles();
 
-    window.addEventListener('resize', updateSwiperStyle);
-
-    // 초기 렌더링 시에 스타일 설정
-    updateSwiperStyle();
+    // 창 크기 변경 시 스타일 업데이트
+    window.addEventListener('resize', updateStyles);
 
     return () => {
-      window.removeEventListener('resize', updateSwiperStyle);
+      window.removeEventListener('resize', updateStyles);
     };
   }, []);
 
@@ -215,11 +187,6 @@ const DiaryCase: React.FC = () => {
     height: '100%',
     marginTop: '12rem',
     paddingBottom: '10rem'
-  };
-
-  const mySwiperStyle = {
-    width: '108rem', // 1080px
-    height: '72rem' // 720px
   };
 
   const swiperSlideStyle = {
@@ -434,7 +401,8 @@ const DiaryCase: React.FC = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontWeight: 'bold'
+                    fontWeight: 'bold',
+                    borderRadius: '1rem'
                   }}
                 >
                   <button
