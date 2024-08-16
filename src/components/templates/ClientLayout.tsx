@@ -10,10 +10,10 @@ import Sidebar from '@/components/molecules/Sidebar';
 // 클라이언트 컴포넌트로 분리한게 이 ClientLayout.tsx
 
 const ClientLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { sidebarOpen, toggleSidebar, toggleGrid } = useStore(); // 상태와 상태 변경 함수 가져오기
+  const { sidebarOpen, toggleSidebar, toggleGrid } = useStore();
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen relative">
       <Header toggleSidebar={toggleSidebar} toggleGrid={toggleGrid} />
       <div className="flex flex-grow">
         {sidebarOpen && <Sidebar onClose={toggleSidebar} />}
@@ -24,6 +24,13 @@ const ClientLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         >
           {children}
         </main>
+        {/* 배경 오버레이 추가 */}
+        {sidebarOpen && (
+          <div
+            className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-40"
+            onClick={toggleSidebar} // 오버레이를 클릭하면 사이드바가 닫히도록 설정
+          />
+        )}
       </div>
     </div>
   );
