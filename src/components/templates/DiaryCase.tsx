@@ -294,7 +294,7 @@ const DiaryCase: React.FC = () => {
                 ) : null
               )
             ) : (
-              <div className="flex items-center justify-center w-[25rem] h-[40rem] bg-white rounded shadow-md text-2xl font-bold text-black">
+              <div className="col-span-full flex items-center justify-center w-[25rem] h-[40rem] bg-white rounded shadow-md text-2xl font-bold text-black">
                 다이어리가 없습니다
               </div>
             )}
