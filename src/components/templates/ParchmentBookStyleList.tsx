@@ -1,6 +1,5 @@
 'use client';
 
-import { RiDeleteBin5Line } from 'react-icons/ri';
 import DiaryContents from './diarycreate/DiaryContents';
 import { useEffect, useState } from 'react';
 import { getCover } from '@/services/diarycover.service';
@@ -12,8 +11,8 @@ import { useDeleteDiary } from '@/lib/hooks/useDiaries';
 import usePageStore from '@/stores/pages.store';
 import useEditModeStore from '@/stores/editMode.store';
 import { FaChevronLeft } from 'react-icons/fa6';
-import { FaChevronRight } from 'react-icons/fa6';
-import { FaBook } from 'react-icons/fa';
+import { FaChevronCircleRight } from 'react-icons/fa';
+import { FaChevronCircleLeft } from 'react-icons/fa';
 import useBottomSheetStore from '@/stores/bottomsheet.store';
 import Swal from 'sweetalert2';
 
@@ -38,7 +37,7 @@ export default function ParchmentBookStyleList() {
   const { mutate: deleteDbDiary } = useDeleteDiary();
   const { offEditMode } = useEditModeStore((state) => state);
   const { currentPageIndex, setCurrentPageIndex } = usePageStore((state) => state);
-  const { activeCardIndices, setActiveCardIndices } = useBottomSheetStore((state) => state);
+  const { setActiveCardIndices } = useBottomSheetStore((state) => state);
 
   // 커버 타이틀 가져오는 코드
   useEffect(() => {
@@ -92,12 +91,12 @@ export default function ParchmentBookStyleList() {
   };
 
   // 허브로 이동합니다.
-  const goHub = () => {
+  const goToHub = () => {
     router.push('/member/hub');
   };
 
   // 다이어리 표지 수정페이지로 이동합니다.
-  const goDiaryCoverPage = () => {
+  const goToDiaryCoverPage = () => {
     router.push(`/member/diary/${diaryId}/cover`);
   };
 
@@ -138,6 +137,10 @@ export default function ParchmentBookStyleList() {
     }
   };
 
+  const addPage = () => {
+    toggleParchmentOptionModal();
+  };
+
   if (isPending) {
     return <div>로딩중</div>;
   }
@@ -147,30 +150,39 @@ export default function ParchmentBookStyleList() {
 
   return (
     <div className="flex flex-row items-center justify-center w-[128rem] ">
-      <div onClick={handlePrevPage} className="text-[4.8rem] text-[#008A02] cursor-pointer">
-        <FaChevronLeft />
+      <div
+        onClick={handlePrevPage}
+        className={`text-[3.2rem]  cursor-pointer ${currentPageIndex < 2 ? 'text-[#BEBEBE]' : 'text-[#008A02]'}`}
+      >
+        <FaChevronCircleLeft />
       </div>
-      <div className=" w-[100rem]">
+      <div className=" w-[100rem] mx-[4.3rem]">
         <div className="flex flex-row justify-between ">
           <div className="flex flex-row w-[72rem]">
             <span
               className="flex flex-row text-[3.5rem] w-[4.8rem] items-center justify-center cursor-pointer"
-              onClick={goHub}
+              onClick={goToHub}
             >
               <FaChevronLeft />
             </span>
-            <span className=" text-[3.2rem] w-[82rem] px-[1rem] font-[600]">{coverTitle}</span>
+            <span className=" text-[3.2rem] w-[61rem] px-[1rem] font-[600]">{coverTitle}</span>
           </div>
           <div className="flex flex-row gap-3">
             <button
-              onClick={goDiaryCoverPage}
-              className=" w-[10.3rem] h-[5.2rem] border-[0.1rem] rounded-[1.2rem] border-[#008A02] text-[#008A02] text-[1.8rem] cursor-pointer"
+              onClick={addPage}
+              className="w-[9.2rem] h-[4.8rem] border-[0.1rem] rounded-[1rem] border-[#565656] text-[#565656] text-[1.6rem] cursor-pointer"
+            >
+              속지추가
+            </button>
+            <button
+              onClick={goToDiaryCoverPage}
+              className=" w-[9.2rem] h-[4.8rem] border-[0.1rem] rounded-[1rem] border-[#008A02] text-[#008A02] text-[1.6rem] cursor-pointer"
             >
               표지수정
             </button>
             <button
               onClick={deleteDiary}
-              className=" text-[1.8rem] w-[13.8rem] h-[5.2rem] border-[0.1rem] cursor-pointer rounded-[1.2rem] border-[#D90000] text-[#D90000]"
+              className=" text-[1.6rem] w-[12.3rem] h-[4.8rem] border-[0.1rem] cursor-pointer rounded-[1rem] border-[#D90000] text-[#D90000]"
             >
               다이어리 삭제
             </button>
@@ -182,8 +194,13 @@ export default function ParchmentBookStyleList() {
           </div>
         </div>
       </div>
-      <div onClick={handleNextPage} className="text-[4.8rem] text-[#008A02] cursor-pointer">
-        <FaChevronRight />
+      <div
+        onClick={handleNextPage}
+        className={`text-[3.2rem] ${
+          currentPageIndex + 2 < pages!.length ? 'text-[#008A02]' : 'text-[#BEBEBE]'
+        } cursor-pointer`}
+      >
+        <FaChevronCircleRight />
       </div>
     </div>
   );
