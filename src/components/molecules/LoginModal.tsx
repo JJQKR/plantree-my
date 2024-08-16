@@ -369,13 +369,13 @@ const ForgotPasswordModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
             >
               재설정 메일 전송하기
             </button>
-            <button
+            {/* <button
               type="button"
               className="w-[35rem] h-[5rem] font-bold px-[0.4rem] py-[0.3rem] bg-white hover:bg-gray-200 text-black rounded-2xl border-1 border-black shadow-md"
               onClick={onClose}
             >
               취소
-            </button>
+            </button> */}
           </div>
         </form>
       </div>
