@@ -166,7 +166,7 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
         <div className="pl-[4rem] pr-[4rem]">
           <div>
-            <h2 className="font-semibold mt-[3.2rem] text-[#727272] text-[1.8rem] mr-[2rem]">내 다이어리</h2>
+            <h2 className="mt-[3.2rem] text-[#727272] text-[1.6rem] font-semibold">내 다이어리</h2>
           </div>
           <div className="">
             <ul className="list-none space-y-2 flex-col">
@@ -175,7 +175,7 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   <li key={cover.id}>
                     <Link
                       href={`/member/diary/${cover.diary_id}/parchment`}
-                      className="pl-[2rem] w-[24rem] h-[5.2rem] text-[1.8rem] font-semibold flex  items-center mt-[1.2rem] rounded-[1.2rem] text-black"
+                      className="pl-[2rem] w-[24rem] h-[5.2rem] text-[1.5rem] flex items-center mt-[1.2rem] rounded-[1.2rem] text-black"
                       style={{
                         backgroundColor: cover.cover_bg_color || 'bg-white',
                         backgroundImage: cover.cover_bg_color ? `url(${cover.cover_bg_color})` : 'none',
@@ -191,7 +191,11 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   </li>
                 ))
               ) : (
-                <li className="text-gray-400 text-center">다이어리가 없습니다.</li>
+                <div className="w-[24rem] h-[5.2rem] mt-[1.2rem] rounded-[1.2rem] border-[#9E9E9E] border-2 flex flex-row items-center  justify-center">
+                  <li className="text-[1.5rem] text-[#9E9E9E] text-center rounded-[1.2rem]">
+                    생성된 다이어리가 없습니다.
+                  </li>
+                </div>
               )}
             </ul>
           </div>
