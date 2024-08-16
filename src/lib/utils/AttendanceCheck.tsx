@@ -64,7 +64,7 @@ const AttendanceCheck = () => {
 
           setAttendance(newAttendanceCount);
           setHasCheckedToday(true); // 오늘 출석 체크 완료 표시
-          alert('출석체크 성공!');
+          alert(`오늘도 플랜트리와 함께 하시네요!\n누적 출석 횟수 ${newAttendanceCount}회입니다.`);
         } else {
           setAttendance(userData.attendance);
           setHasCheckedToday(true); // 이미 출석 체크된 경우에도 표시
