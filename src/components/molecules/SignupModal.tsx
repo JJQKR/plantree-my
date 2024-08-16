@@ -27,7 +27,19 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
   // 이메일 형식 검사 함수
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+
+    // 이메일 전체 형식이 맞는지 먼저 확인
+    if (!emailRegex.test(email)) {
+      return false;
+    }
+
+    // 로컬 파트(골뱅이 앞 부분) 검사
+    const [localPart] = email.split('@');
+    if (!localPart || localPart.trim().length < 4) {
+      return false;
+    }
+
+    return true;
   };
 
   const signUp = async () => {
@@ -35,7 +47,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
     if (!isValidEmail(email)) {
       Swal.fire({
         title: '회원가입 실패.',
-        text: '이메일 형식을 지켜주세요!',
+        text: '이메일 형식을 지켜주세요! 골뱅이(@) 앞에 아이디를 최소 4자 이상 입력해주세요.',
         icon: 'error',
         confirmButtonText: 'OK'
       });
@@ -211,12 +223,6 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
           >
             회원가입
           </button>
-          {/* <button
-            className="w-[35rem] h-[5rem] px-4 py-3 font-bold bg-gray-500 hover:bg-gray-700 hover:text-white text-black rounded"
-            onClick={onClose}
-          >
-            취소
-          </button> */}
         </div>
       </div>
     </div>
