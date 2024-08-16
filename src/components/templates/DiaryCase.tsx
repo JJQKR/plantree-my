@@ -151,6 +151,37 @@ const DiaryCase: React.FC = () => {
     };
   }, []);
 
+  const getSwiperStyle = () => {
+    if (window.innerWidth <= 768) {
+      return {
+        width: '48rem', // 모바일 화면에서는 카드 너비를 줄임
+        height: '72rem' // 모바일 화면에서는 카드 높이를 줄임
+      };
+    } else {
+      return {
+        width: '108rem', // 기본 데스크톱 화면 크기
+        height: '72rem'
+      };
+    }
+  };
+
+  const [swiperStyle, setSwiperStyle] = useState(getSwiperStyle);
+
+  useEffect(() => {
+    const updateSwiperStyle = () => {
+      setSwiperStyle(getSwiperStyle());
+    };
+
+    window.addEventListener('resize', updateSwiperStyle);
+
+    // 초기 렌더링 시에 스타일 설정
+    updateSwiperStyle();
+
+    return () => {
+      window.removeEventListener('resize', updateSwiperStyle);
+    };
+  }, []);
+
   // 다이어리 생성 버튼 클릭 핸들러
   const handleCreateDiary = async () => {
     if (!isLoggedIn) {
@@ -319,7 +350,7 @@ const DiaryCase: React.FC = () => {
               pagination={{ clickable: true, el: '.swiper-pagination' }}
               modules={[EffectCoverflow, Pagination]}
               className="mySwiper"
-              style={mySwiperStyle}
+              style={swiperStyle}
             >
               {diaryCovers.length > 0 ? (
                 diaryCovers.map((cover, index) =>
