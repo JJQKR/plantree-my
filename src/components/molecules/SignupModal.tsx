@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { supabase } from '../../supabase/client';
 import Swal from 'sweetalert2';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaTimes } from 'react-icons/fa';
 
 interface SignupModalProps {
   onClose: () => void;
@@ -27,7 +27,19 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
   // 이메일 형식 검사 함수
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+
+    // 이메일 전체 형식이 맞는지 먼저 확인
+    if (!emailRegex.test(email)) {
+      return false;
+    }
+
+    // 로컬 파트(골뱅이 앞 부분) 검사
+    const [localPart] = email.split('@');
+    if (!localPart || localPart.trim().length < 4) {
+      return false;
+    }
+
+    return true;
   };
 
   const signUp = async () => {
@@ -35,7 +47,18 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
     if (!isValidEmail(email)) {
       Swal.fire({
         title: '회원가입 실패.',
-        text: '이메일 형식을 지켜주세요!',
+        text: '이메일 형식을 지켜주세요! 골뱅이(@) 앞에 아이디를 최소 4자 이상 입력해주세요.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+
+    // 닉네임이 비어있는지 확인
+    if (!nickname.trim()) {
+      Swal.fire({
+        title: '회원가입 실패.',
+        text: '닉네임을 입력해주세요!',
         icon: 'error',
         confirmButtonText: 'OK'
       });
@@ -55,11 +78,14 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
 
     // 비밀번호 확인
     if (password !== confirmPassword) {
-      setPasswordError('비밀번호가 일치하지 않습니다.');
+      Swal.fire({
+        title: '회원가입 실패.',
+        text: '비밀번호와 비밀번호 재입력이 일치하지 않습니다!',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
       return;
     }
-
-    setPasswordError(null);
 
     try {
       const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -121,71 +147,95 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
     setConfirmPasswordVisible(!confirmPasswordVisible);
   };
 
+  const clearEmail = () => setEmail('');
+  const clearNickname = () => setNickname('');
+
   return (
     <div
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[999]"
       onClick={handleBackgroundClick}
     >
-      <div className="rounded-lg bg-white p-4 w-[40rem] h-[40rem] flex flex-col justify-center items-center">
-        <h1 className="text-4xl font-black mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
-        <h2 className="text-2xl font-bold mb-4 text-center text-black">회원가입</h2>
-        <input
-          type="text"
-          placeholder="닉네임"
-          className="mb-4 p-2 border rounded w-[35rem] text-black"
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
-        />
-        <input
-          type="email"
-          placeholder="이메일"
-          className="mb-4 p-2 border rounded w-[35rem] text-black"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <div className="relative w-[35rem] mb-4">
-          <input
-            type={passwordVisible ? 'text' : 'password'}
-            placeholder="비밀번호"
-            className="p-2 border rounded w-full text-black"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <span
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
-            onClick={togglePasswordVisibility}
-          >
-            {passwordVisible ? <FaEyeSlash /> : <FaEye />}
-          </span>
-        </div>
-        <div className="relative w-[35rem] mb-4">
-          <input
-            type={confirmPasswordVisible ? 'text' : 'password'}
-            placeholder="비밀번호 재입력"
-            className="p-2 border rounded w-full text-black"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-          <span
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
-            onClick={toggleConfirmPasswordVisibility}
-          >
-            {confirmPasswordVisible ? <FaEyeSlash /> : <FaEye />}
-          </span>
-        </div>
+      <div className="rounded-3xl bg-white p-4 w-[40rem] h-[45rem] flex flex-col justify-center items-center">
+        <form>
+          <h2 className="text-3xl font-bold mb-4 text-center text-green-600">회원가입</h2>
+          <h1 className="text-xl font-bold mb-1">사용할 이메일 주소</h1>
+          <div className="relative w-[35rem] mb-4">
+            <input
+              type="email"
+              placeholder="이메일 형식을 지켜서 입력해주세요"
+              className="p-2 border rounded-[0.7rem] w-full text-black"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            {email && (
+              <span
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+                onClick={clearEmail}
+              >
+                <FaTimes />
+              </span>
+            )}
+          </div>
+          <h1 className="text-xl font-bold mb-1">사용할 비밀번호</h1>
+          <div className="relative w-[35rem] mb-4">
+            <input
+              type={passwordVisible ? 'text' : 'password'}
+              placeholder="최소 6글자 이상 입력해주세요."
+              className="p-2 border rounded-[0.7rem] w-full text-black"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <span
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+              onClick={togglePasswordVisibility}
+            >
+              {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+          <h1 className="text-xl font-bold mb-1">비밀번호 재입력</h1>
+          <div className="relative w-[35rem] mb-4">
+            <input
+              type={confirmPasswordVisible ? 'text' : 'password'}
+              placeholder="위 비밀번호와 동일하게 입력해주세요"
+              className="p-2 border rounded-[0.7rem] w-full text-black"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            <span
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+              onClick={toggleConfirmPasswordVisibility}
+            >
+              {confirmPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+          <h1 className="text-xl font-bold mb-1">닉네임 설정</h1>
+          <div className="relative w-[35rem] mb-4">
+            <input
+              type="text"
+              placeholder="플랜트리에서 사용할 별명이에요"
+              className="p-2 border rounded-[0.7rem] w-full text-black"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+            />
+            {nickname && (
+              <span
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+                onClick={clearNickname}
+              >
+                <FaTimes />
+              </span>
+            )}
+          </div>
+        </form>
+
         {passwordError && <p className="mb-4 text-red-500">{passwordError}</p>}
+
         <div className="flex flex-col gap-2 mt-4">
           <button
-            className="w-[35rem] h-[5rem] px-4 py-3 font-bold bg-blue-500 hover:bg-blue-700 hover:text-white text-black rounded"
+            className="w-[35rem] h-[5rem] px-4 py-3 font-bold bg-green-600 hover:bg-green-800 hover:text-white text-white rounded-[0.7rem]"
             onClick={signUp}
           >
             회원가입
-          </button>
-          <button
-            className="w-[35rem] h-[5rem] px-4 py-3 font-bold bg-gray-500 hover:bg-gray-700 hover:text-white text-black rounded"
-            onClick={onClose}
-          >
-            취소
           </button>
         </div>
       </div>
