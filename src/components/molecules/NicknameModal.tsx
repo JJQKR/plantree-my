@@ -4,6 +4,7 @@ import useMyModalStore from '@/stores/my.modal.store';
 import React, { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/supabase/client';
 import useUserStore from '@/stores/user.store'; // 유저 상태 관리 스토어 추가
+import Swal from 'sweetalert2';
 
 const NicknameModal: React.FC = () => {
   const { isNicknameModalOpen, toggleNicknameModal } = useMyModalStore((state) => state);
@@ -58,7 +59,13 @@ const NicknameModal: React.FC = () => {
     if (nicknameRef.current) {
       const newNickname = nicknameRef.current.value.trim();
       if (newNickname.length < 2 || newNickname.length > 9) {
-        alert('닉네임은 최소 2글자, 최대 9글자입니다.');
+        Swal.fire({
+          title: '변경 실패',
+          text: '닉네임은 최소 2글자, 최대 9글자입니다.',
+          icon: 'error',
+          confirmButtonText: '확인'
+        });
+
         return;
       }
 
@@ -74,7 +81,12 @@ const NicknameModal: React.FC = () => {
           if (error) {
             console.error('닉네임 업데이트 실패:', error);
           } else {
-            alert('닉네임 변경에 성공했습니다!');
+            Swal.fire({
+              title: '변경 성공',
+              text: '닉네임 변경에 성공했습니다!',
+              icon: 'success',
+              confirmButtonText: '확인'
+            });
             setNickname(newNickname); // 전역 상태에 닉네임 업데이트
             toggleNicknameModal();
           }
