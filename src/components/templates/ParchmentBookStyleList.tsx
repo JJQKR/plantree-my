@@ -28,7 +28,7 @@ const changeDbName = (parchmentStyle: ParchmentType) => {
   return dbTableName[parchmentStyle];
 };
 
-export default function ParchmentList() {
+export default function ParchmentBookStyleList() {
   const router = useRouter();
   const { diaryId } = useParams<{ diaryId: string }>();
   const [coverTitle, setCoverTitle] = useState('');
@@ -98,17 +98,7 @@ export default function ParchmentList() {
 
   // 다이어리 표지 수정페이지로 이동합니다.
   const goDiaryCoverPage = () => {
-    Swal.fire({
-      title: '다이어리 커버를 수정하시겠습니까?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: '예',
-      cancelButtonText: '아니오'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        router.push(`/member/diary/${diaryId}/cover`);
-      }
-    });
+    router.push(`/member/diary/${diaryId}/cover`);
   };
 
   // 앞페이지로 이동합니다.
@@ -160,9 +150,9 @@ export default function ParchmentList() {
       <div onClick={handlePrevPage} className="text-[4.8rem] text-[#008A02] cursor-pointer">
         <FaChevronLeft />
       </div>
-      <div>
-        <div className="flex flex-row justify-between px-[3.6rem] ">
-          <div className="flex flex-row">
+      <div className=" w-[100rem]">
+        <div className="flex flex-row justify-between ">
+          <div className="flex flex-row w-[72rem]">
             <span
               className="flex flex-row text-[3.5rem] w-[4.8rem] items-center justify-center cursor-pointer"
               onClick={goHub}
@@ -180,13 +170,13 @@ export default function ParchmentList() {
             </button>
             <button
               onClick={deleteDiary}
-              className=" text-[1.8rem] w-[13.8rem] h-[5.2rem] border-[0.1rem] cursor-pointer rounded-[1.2rem] border-[##D90000] text-[#D90000]"
+              className=" text-[1.8rem] w-[13.8rem] h-[5.2rem] border-[0.1rem] cursor-pointer rounded-[1.2rem] border-[#D90000] text-[#D90000]"
             >
               다이어리 삭제
             </button>
           </div>
         </div>
-        <div className="flex flex-row">
+        <div className="flex flex-row items-center justify-center">
           <div className="w-[100rem] h-[75rem] mx-[3.6rem] my-[4.3rem]">
             <DiaryContents diaryId={diaryId} currentPageIndex={currentPageIndex} />
           </div>

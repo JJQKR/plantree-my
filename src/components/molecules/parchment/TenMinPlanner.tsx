@@ -216,13 +216,21 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
         {isEditMode ? (
           <div className="bg-[#EDF1E6] w-full h-[4.8rem] py-[1.2rem] px-[1.5rem] flex flex-row justify-between">
             <div className="text-[1.8rem] text-[#496E00] font-[600]">
-              {index} Page_{changeStyleName()}
+              {index} Page_{changeStyleName()} (수정중)
             </div>
             <div>
-              <button className="text-[2.4rem] text-[#496E00]" onClick={onSubmit}>
+              <button
+                className="text-[2.4rem] text-[#496E00] hover:text-black mr-[1.2rem]"
+                onClick={onSubmit}
+                title="클릭해서 저장!"
+              >
                 <FaSave />
               </button>
-              <button className="text-[2.4rem] text-[#496E00]" onClick={handleDelete}>
+              <button
+                className="text-[2.4rem] text-[#496E00] hover:text-black"
+                onClick={handleDelete}
+                title="클릭하면 삭제!"
+              >
                 <FaTrashAlt />
               </button>
             </div>
@@ -244,7 +252,7 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
               onChange={handleDate}
               value={localPlanner.date || ''}
               disabled={!isEditMode}
-              className="text-[1.5rem] w-[10.3rem]"
+              className="text-[1.3rem] w-[10.3rem]"
             />
           </div>
           <div className="w-[14.5rem] h-[2.7rem] flex flex-row gap-[0.2rem] border-b-[0.3rem] border-[#EAEAEA]">
@@ -260,7 +268,7 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
               onChange={handleDdayDate}
               value={localPlanner.d_day_date || ''}
               disabled={!isEditMode}
-              className="text-[1.5rem] w-[10.2rem]"
+              className="text-[1.3rem] w-[10rem]"
             />
           </div>
           <div className="w-[14.5rem] h-[2.7rem] bg-[#EAEAEA] rounded-[0.8rem] flex justify-center items-center text-[1.5rem] font-[600]">
@@ -280,7 +288,8 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
             onChange={handleGoal}
             value={localPlanner.goal || ''}
             disabled={!isEditMode}
-            className="w-full"
+            className="w-full ml-[0.2rem] px-[0.5rem] text-[1.5rem]"
+            placeholder="목표를 입력해주세요."
           />
         </div>
         <div className="flex flex-row justify-between gap-4 my-[2rem] h-full">
@@ -306,7 +315,7 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
               </label>
               <textarea
                 id="memo"
-                className="h-[9.5rem] w-full"
+                className="h-[9.5rem] w-full resize-none"
                 onChange={handleMemo}
                 value={localPlanner.memo || ''}
                 disabled={!isEditMode}

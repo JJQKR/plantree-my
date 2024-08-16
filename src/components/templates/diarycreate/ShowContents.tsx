@@ -50,7 +50,7 @@ const ShowContents = ({ page, diaryId }: ShowContentsProps) => {
 
   return (
     <div key={page.id} className="mx-auto w-full h-full">
-      <div className="bg-[#EDF1E6] w-full h-[4.8rem] py-[1.2rem] px-[1.5rem] flex flex-row justify-between">
+      <div className="bg-[#EDF1E6] w-full h-[4.8rem] py-[1.2rem] px-[1.5rem] flex flex-row justify-between border-x-[0.1rem] border-t-[0.1rem] border-[#C7D2B0] ">
         <div className="text-[1.8rem] text-[#C7D2B0] font-[600]">
           {diaryIndex} Page_{pageStyle()}
         </div>
