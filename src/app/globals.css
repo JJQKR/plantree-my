@@ -95,3 +95,9 @@ body {
     font-size: 1.1rem;
   }
 }
+
+@media (max-width: 1278px) {
+  html {
+    font-size: 8px;
+  }
+}
