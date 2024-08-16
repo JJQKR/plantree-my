@@ -188,11 +188,11 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
           onClick={handleBackgroundClick}
         >
           <div className="bg-white p-4 rounded w-[40rem] h-[37rem] flex flex-col justify-center items-center">
-            <h1 className="text-4xl font-bold mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
+            <h1 className="text-4xl font-bold mb-4 text-center text-emerald-400"> 플랜트리에 어서오세요! </h1>
             <form onSubmit={handleFormSubmit}>
               <input
                 type="text"
-                placeholder="아이디"
+                placeholder="아이디 (이메일)"
                 className="mb-2 p-2 border rounded w-full text-black"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -281,7 +281,7 @@ const ForgotPasswordModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
     event.preventDefault();
     try {
       const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: 'http://plantreeforest.com//member/reset-password?token=YOUR_TOKEN'
+        redirectTo: 'http://plantreeforest.com/member/reset-password?token=YOUR_TOKEN'
       });
       if (error) throw error;
       setMessage('인증 메일이 전송되었습니다.');
