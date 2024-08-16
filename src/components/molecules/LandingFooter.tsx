@@ -43,7 +43,7 @@ const LandingFooter = () => {
 
         <div className="grid grid-cols-3 gap-4 max-w-[80rem] mt-1">
           <div className="flex flex-row items-center gap-[1.1rem]">
-            <h2 className="text-xs font-bold">FE</h2>
+            <h2 className="text-lg font-bold">FE</h2>
             <p>이보영</p>
             <Link href="https://github.com/osoon9295" target="_blank" rel="noopener noreferrer">
               <div className="relative w-10 h-10">
@@ -76,7 +76,7 @@ const LandingFooter = () => {
             <h2 className="text-lg font-bold">FE</h2>
             <p>김재훈</p>
             <Link href="https://github.com/hoondolla" target="_blank" rel="noopener noreferrer">
-              <div className="relative w-10 h-10">
+              <div className="relative w-10 h-10 ml-[0.25rem]">
                 <Image
                   src="/images/githublogo.png"
                   alt="GitHub Logo"
