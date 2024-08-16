@@ -28,7 +28,7 @@ const changeDbName = (parchmentStyle: ParchmentType) => {
   return dbTableName[parchmentStyle];
 };
 
-export default function ParchmentList() {
+export default function ParchmentBookStyleList() {
   const router = useRouter();
   const { diaryId } = useParams<{ diaryId: string }>();
   const [coverTitle, setCoverTitle] = useState('');
@@ -98,17 +98,7 @@ export default function ParchmentList() {
 
   // 다이어리 표지 수정페이지로 이동합니다.
   const goDiaryCoverPage = () => {
-    Swal.fire({
-      title: '다이어리 커버를 수정하시겠습니까?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: '예',
-      cancelButtonText: '아니오'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        router.push(`/member/diary/${diaryId}/cover`);
-      }
-    });
+    router.push(`/member/diary/${diaryId}/cover`);
   };
 
   // 앞페이지로 이동합니다.

@@ -61,7 +61,7 @@ const DiaryContents = ({ diaryId, currentPageIndex }: DiaryContentsProps) => {
           </div>
         ) : (
           <div
-            className="w-[50rem] h-[75rem] border-dashed border-[0.1rem] border-[#ABBC8A] flex items-center justify-center cursor-pointer"
+            className="w-[50rem] h-[75rem] border-dashed bg-[#EDF1E6] border-[0.1rem] border-[#ABBC8A] flex items-center justify-center cursor-pointer"
             onClick={toggleParchmentOptionModal}
           >
             <span className="text-[#ABBC8A] text-[3rem] flex flex-row items-center gap-[1.1rem]">
@@ -77,7 +77,7 @@ const DiaryContents = ({ diaryId, currentPageIndex }: DiaryContentsProps) => {
           </div>
         ) : pages?.[currentPageIndex] ? (
           <div
-            className="w-[50rem] h-[75rem] border-dashed border-[0.1rem] border-[#ABBC8A] flex items-center justify-center cursor-pointer"
+            className="w-[50rem] h-[75rem] border-dashed bg-[#EDF1E6] border-[0.1rem] border-[#ABBC8A] flex items-center justify-center cursor-pointer"
             onClick={toggleParchmentOptionModal}
           >
             <span className="text-[#ABBC8A] text-[3rem] flex flex-row items-center gap-[1.1rem]">

@@ -252,13 +252,13 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
               onChange={handleDate}
               value={localPlanner.date || ''}
               disabled={!isEditMode}
-              className="text-[1.5rem] w-[10.3rem]"
+              className="text-[1.3rem] w-[10.3rem]"
             />
           </div>
           <div className="w-[14.5rem] h-[2.7rem] flex flex-row gap-[0.2rem] border-b-[0.3rem] border-[#EAEAEA]">
             <label
               htmlFor="date"
-              className="text-[1.5rem] font-[600] text-[#727272] w-[4.4rem] flex items-center justify-center"
+              className="text-[1.5rem] font-[600] text-[#727272] w-[4.6rem] flex items-center justify-center"
             >
               D-Day
             </label>
@@ -268,7 +268,7 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
               onChange={handleDdayDate}
               value={localPlanner.d_day_date || ''}
               disabled={!isEditMode}
-              className="text-[1.5rem] w-[10.2rem]"
+              className="text-[1.3rem] w-[10rem]"
             />
           </div>
           <div className="w-[14.5rem] h-[2.7rem] bg-[#EAEAEA] rounded-[0.8rem] flex justify-center items-center text-[1.5rem] font-[600]">
@@ -288,7 +288,8 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
             onChange={handleGoal}
             value={localPlanner.goal || ''}
             disabled={!isEditMode}
-            className="w-full"
+            className="w-full ml-[0.2rem] px-[0.5rem] text-[1.5rem]"
+            placeholder="목표를 입력해주세요."
           />
         </div>
         <div className="flex flex-row justify-between gap-4 my-[2rem] h-full">
