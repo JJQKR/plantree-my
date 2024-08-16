@@ -31,11 +31,8 @@ const Todolist = ({
   // document.querySelector => dom에 접근 <input />
   // 1. useRef로 dom에 접근할 수 있음
   const editTextareaRef = useRef<HTMLTextAreaElement | null>(null);
-  // const textareaRef = useRef();
 
   const { isEditMode } = useEditModeStore((state) => state);
-
-  // const { isTenMinplannerColorModalOpen, toggleTenMinplannerColorModal } = useParchmentModalStore((state) => state);
 
   // const updateTodoInput = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   setTodoInput(e.target.value);
@@ -44,7 +41,7 @@ const Todolist = ({
   const handleAddTodo = () => {
     setTodoList((prev) => [
       ...prev,
-      { id: uuid(), text: todoInput, isDone: false, color: 'transparent', planner_id: tenMinPlannerId }
+      { id: uuid(), text: todoInput, isDone: false, color: '#BEBEBE', planner_id: tenMinPlannerId }
     ]);
     setTodoInput('');
   };
@@ -72,7 +69,10 @@ const Todolist = ({
     // 실행 컨텍스트 -> 야매
     setTimeout(() => {
       // 3. editInputRef.current => <input />
-      editTextareaRef.current?.focus();
+      if (editTextareaRef.current) {
+        editTextareaRef.current?.focus();
+        adjustHeight(editTextareaRef.current);
+      }
     });
   };
 
@@ -82,11 +82,6 @@ const Todolist = ({
     }
   };
 
-  // const openModal = (id: string) => {
-  //   // toggleTenMinplannerColorModal();
-  //   setSelectedTodoId(id);
-  // };
-
   const handleSelectTodo = (todo: Todo) => {
     if (todo.color === 'transparent') {
       alert('컬러를 먼저 지정해주세요');
@@ -95,23 +90,28 @@ const Todolist = ({
     setSelectedColorTodo(todo);
   };
 
-  const changeTodoColor = (todoId: string, newColor: string) => {
-    setTodoList(todoList.map((todo) => (todo.id === todoId ? { ...todo, color: newColor } : todo)));
+  const changeTodoColor = (todoId: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    setTodoList(todoList.map((todo) => (todo.id === todoId ? { ...todo, color: e.target.value } : todo)));
   };
 
   const removeTodo = (id: string) => {
     setTodoList(todoList.filter((todo) => todo.id !== id));
   };
 
+  const adjustHeight = (e: HTMLTextAreaElement) => {
+    e.style.height = 'auto'; // 높이를 auto로 설정
+    e.style.height = `${e.scrollHeight}px`; // scrollHeight를 이용해 높이 조정
+  };
+
   return (
-    <div className="w-[26.1rem] h-[40rem] overflow-y-auto bg-slate-100">
+    <div className="w-[26.1rem] h-[40rem] overflow-y-auto overflow-x-hidden">
       <div className="w-[25rem">
         <ul className="relative">
           {todoList.map((todo) => {
             return (
               <li
                 key={todo.id}
-                className="flex flex-row justify-between w-[26.1rem] border-b-[0.15rem] border-[#EAEAEA] min-h-[3.2rem] text-[1.5rem] font-[400] items-center"
+                className="flex flex-row justify-between w-full border-b-[0.15rem] border-[#EAEAEA] min-h-[3.2rem] text-[1.5rem] font-[400] items-center"
                 style={{
                   backgroundColor: selectedColorTodo?.id === todo.id ? todo.color : 'transparent'
                 }}
@@ -119,7 +119,8 @@ const Todolist = ({
                 <input
                   type="color"
                   className="color-input"
-                  onChange={(e) => changeTodoColor(todo.id, e.target.value)}
+                  value={todo.color}
+                  onChange={(e) => changeTodoColor(todo.id, e)}
                 />
                 {/* {
                     todo.color === "transparent" ? 
@@ -153,19 +154,32 @@ const Todolist = ({
                     // 2. ref 속성에 값 넣기
                     ref={editTextareaRef}
                     value={todo.text}
-                    onChange={(e) => handleEditingChange(e, todo.id)}
+                    onChange={(e) => {
+                      handleEditingChange(e, todo.id);
+                      adjustHeight(e.target); // 높이 조절 함수 호출
+                    }}
                     onKeyUp={(e) => endEdit(todo.id, e)}
                     disabled={!isEditMode}
-                    className="bg-transparent w-[14rem] min-h-[3.2rem]"
+                    className=" w-[14rem] h-[3.2rem] overflow-y-auto resize-none"
                   />
                 ) : (
-                  <div className="w-[14rem]" onClick={() => handleSelectTodo(todo)}>
-                    <span className="h-[1.7rem] w-[14rem] bg-slate-300">{todo.text}</span>
+                  <div>
+                    <div
+                      className="min-h-[3.2rem] w-[14rem] whitespace-pre-wrap break-words break-all"
+                      onClick={() => handleSelectTodo(todo)}
+                    >
+                      {todo.text}
+                    </div>
                   </div>
                 )}
                 <div className="w-[4.6rem] flex gap-[0.6rem]">
                   {isEditMode ? (
-                    <button onClick={() => startEditing(todo.id)} className="text-[#9E9E9E] text-[2rem]">
+                    <button
+                      onClick={() => {
+                        startEditing(todo.id);
+                      }}
+                      className="text-[#9E9E9E] text-[2rem]"
+                    >
                       <FaRegEdit />
                     </button>
                   ) : null}
@@ -189,7 +203,6 @@ const Todolist = ({
           </div>
         ) : null}
       </div>
-      {/* {isTenMinplannerColorModalOpen && <ColorModal todoId={selectedTodoId} changeTodoColor={changeTodoColor} />} */}
     </div>
   );
 };

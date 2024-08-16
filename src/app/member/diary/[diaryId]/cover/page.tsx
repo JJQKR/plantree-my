@@ -12,14 +12,14 @@ const DiaryEdit: React.FC = () => {
   return (
     <div className="relative">
       <DiaryCoverPage />
-      <DndProvider backend={HTML5Backend}>
+      {/* <DndProvider backend={HTML5Backend}>
         <BottomSheet
           isOpen={isSheetOpen}
           onToggle={toggleSheet}
           bottomSheetList={bottomSheetList}
           moveCard={moveCard}
         />
-      </DndProvider>
+      </DndProvider> */}
     </div>
   );
 };
