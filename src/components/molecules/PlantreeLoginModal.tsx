@@ -100,11 +100,11 @@ const PlantreeLoginModal: React.FC<{
       onClick={handleBackgroundClick}
     >
       {loading ? (
-        <div className="fixed inset-0 flex items-center justify-center bg-white">
+        <div className="fixed inset-0 flex items-center justify-center bg-white ">
           <img src="/images/loading.gif" alt="Loading" className="w-[8rem] h-[8rem]" />
         </div>
       ) : (
-        <div className="rounded-lg bg-white p-[4rem] w-[41rem] h-[39rem] flex flex-col justify-center items-center">
+        <div className="rounded-3xl bg-white p-[4rem] w-[41rem] h-[39rem] flex flex-col justify-center items-center">
           <h1 className="text-4xl font-black mb-[1rem] text-center text-green-600">🪴플랜트리에 어서오세요!</h1>
           <h1 className="text-2xl font-black mb-[1rem] text-center text-gray-400">소셜 로그인을 통해</h1>
           <h1 className="text-2xl font-black mb-[1rem] text-center text-gray-400">

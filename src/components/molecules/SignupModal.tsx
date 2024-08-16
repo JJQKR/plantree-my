@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { supabase } from '../../supabase/client';
 import Swal from 'sweetalert2';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaTimes } from 'react-icons/fa';
 
 interface SignupModalProps {
   onClose: () => void;
@@ -121,72 +121,102 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
     setConfirmPasswordVisible(!confirmPasswordVisible);
   };
 
+  const clearEmail = () => setEmail('');
+  const clearNickname = () => setNickname('');
+
   return (
     <div
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[999]"
       onClick={handleBackgroundClick}
     >
-      <div className="rounded-lg bg-white p-4 w-[40rem] h-[40rem] flex flex-col justify-center items-center">
-        <h1 className="text-4xl font-black mb-4 text-center text-emerald-400">Welcome to PlanTree! </h1>
-        <h2 className="text-2xl font-bold mb-4 text-center text-black">회원가입</h2>
-        <input
-          type="text"
-          placeholder="닉네임"
-          className="mb-4 p-2 border rounded w-[35rem] text-black"
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
-        />
-        <input
-          type="email"
-          placeholder="이메일"
-          className="mb-4 p-2 border rounded w-[35rem] text-black"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <div className="relative w-[35rem] mb-4">
-          <input
-            type={passwordVisible ? 'text' : 'password'}
-            placeholder="비밀번호"
-            className="p-2 border rounded w-full text-black"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <span
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
-            onClick={togglePasswordVisibility}
-          >
-            {passwordVisible ? <FaEyeSlash /> : <FaEye />}
-          </span>
-        </div>
-        <div className="relative w-[35rem] mb-4">
-          <input
-            type={confirmPasswordVisible ? 'text' : 'password'}
-            placeholder="비밀번호 재입력"
-            className="p-2 border rounded w-full text-black"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-          <span
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
-            onClick={toggleConfirmPasswordVisibility}
-          >
-            {confirmPasswordVisible ? <FaEyeSlash /> : <FaEye />}
-          </span>
-        </div>
+      <div className="rounded-3xl bg-white p-4 w-[40rem] h-[45rem] flex flex-col justify-center items-center">
+        <form>
+          <h2 className="text-3xl font-bold mb-4 text-center text-green-600">회원가입</h2>
+          <h1 className="text-xl font-bold mb-1">사용할 이메일 주소</h1>
+          <div className="relative w-[35rem] mb-4">
+            <input
+              type="email"
+              placeholder="이메일 형식을 지켜서 입력해주세요"
+              className="p-2 border rounded-[0.7rem] w-full text-black"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            {email && (
+              <span
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+                onClick={clearEmail}
+              >
+                <FaTimes />
+              </span>
+            )}
+          </div>
+          <h1 className="text-xl font-bold mb-1">사용할 비밀번호</h1>
+          <div className="relative w-[35rem] mb-4">
+            <input
+              type={passwordVisible ? 'text' : 'password'}
+              placeholder="최소 6글자 이상 입력해주세요."
+              className="p-2 border rounded-[0.7rem] w-full text-black"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <span
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+              onClick={togglePasswordVisibility}
+            >
+              {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+          <h1 className="text-xl font-bold mb-1">비밀번호 재입력</h1>
+          <div className="relative w-[35rem] mb-4">
+            <input
+              type={confirmPasswordVisible ? 'text' : 'password'}
+              placeholder="위 비밀번호와 동일하게 입력해주세요"
+              className="p-2 border rounded-[0.7rem] w-full text-black"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            <span
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+              onClick={toggleConfirmPasswordVisibility}
+            >
+              {confirmPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+          <h1 className="text-xl font-bold mb-1">닉네임 설정</h1>
+          <div className="relative w-[35rem] mb-4">
+            <input
+              type="text"
+              placeholder="플랜트리에서 사용할 별명이에요"
+              className="p-2 border rounded-[0.7rem] w-full text-black"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+            />
+            {nickname && (
+              <span
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+                onClick={clearNickname}
+              >
+                <FaTimes />
+              </span>
+            )}
+          </div>
+        </form>
+
         {passwordError && <p className="mb-4 text-red-500">{passwordError}</p>}
+
         <div className="flex flex-col gap-2 mt-4">
           <button
-            className="w-[35rem] h-[5rem] px-4 py-3 font-bold bg-blue-500 hover:bg-blue-700 hover:text-white text-black rounded"
+            className="w-[35rem] h-[5rem] px-4 py-3 font-bold bg-green-600 hover:bg-green-800 hover:text-white text-white rounded-[0.7rem]"
             onClick={signUp}
           >
             회원가입
           </button>
-          <button
+          {/* <button
             className="w-[35rem] h-[5rem] px-4 py-3 font-bold bg-gray-500 hover:bg-gray-700 hover:text-white text-black rounded"
             onClick={onClose}
           >
             취소
-          </button>
+          </button> */}
         </div>
       </div>
     </div>
