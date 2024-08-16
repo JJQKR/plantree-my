@@ -12,7 +12,7 @@ const MyPageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="flex justify-between items-center h-[8rem] p-4 bg-white">
+      <header className="flex justify-between items-center h-[8rem] p-4 bg-white shadow-lg">
         <SideButton onClick={toggleSidebar}>Menu</SideButton>
         <div className="flex-grow flex justify-center">
           <Link href="/member/hub">

@@ -131,7 +131,7 @@ const DiaryCase: React.FC = () => {
 
   // 화면 크기에 따라 스타일을 업데이트하는 함수
   const updateStyles = () => {
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= 1278) {
       setDiaryCardWidth(200);
       setDiaryCardHeight(300);
       setSwiperStyle({ width: '48rem', height: '72rem' });
