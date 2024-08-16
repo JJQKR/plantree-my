@@ -258,7 +258,7 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
           <div className="w-[14.5rem] h-[2.7rem] flex flex-row gap-[0.2rem] border-b-[0.3rem] border-[#EAEAEA]">
             <label
               htmlFor="date"
-              className="text-[1.5rem] font-[600] text-[#727272] w-[4.4rem] flex items-center justify-center"
+              className="text-[1.5rem] font-[600] text-[#727272] w-[4.6rem] flex items-center justify-center"
             >
               D-Day
             </label>
