@@ -23,10 +23,10 @@ export interface NoteLine {
 
 const LineNote = ({ id }: LineNoteProps) => {
   const [lines, setLines] = useState<NoteLine[]>(
-    Array.from({ length: 16 }, () => ({ text: '', fontSize: 25, textColor: '#000000' }))
+    Array.from({ length: 16 }, () => ({ text: '', fontSize: 22.5, textColor: '#000000' }))
   );
   const [lineColor, setLineColor] = useState('#000000');
-  const [lineThickness, setLineThickness] = useState(1);
+  const [lineThickness, setLineThickness] = useState(0.9);
   const [bgColor, setBgColor] = useState('#ffffff');
   const [globalTextColor, setGlobalTextColor] = useState('#000000');
   const [diaryId, setDiaryId] = useState('');
@@ -45,7 +45,7 @@ const LineNote = ({ id }: LineNoteProps) => {
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
     if (context) {
-      context.font = `${fontSize}px sans-serif`;
+      context.font = `${fontSize * 0.9}px sans-serif`;
       return context.measureText(text).width;
     }
     return 0;
@@ -247,23 +247,23 @@ const LineNote = ({ id }: LineNoteProps) => {
   };
 
   return (
-    <div className={`w-[50rem] ${isEditMode ? 'h-[75rem]' : 'h-[70.2rem]'} bg-white border-[0.1rem] border-[#C7D2B0]`}>
+    <div className={` w-[45rem] ${isEditMode ? 'h-[67.5rem]' : 'h-[63rem]'} bg-white border-[0.1rem] border-[#C7D2B0]`}>
       <div className="mx-auto w-full">
         {isEditMode ? (
-          <div className="bg-[#EDF1E6] w-full h-[4.8rem] py-[1.2rem] px-[1.5rem] flex flex-row justify-between">
-            <div className="text-[1.8rem] text-[#496E00] font-[600]">
+          <div className="bg-[#EDF1E6] w-full h-[4.32rem] py-[1.1rem] px-[1.35rem] border-b-[0.1rem] border-[#C7D2B0] flex flex-row justify-between">
+            <div className="text-[1.62rem] text-[#496E00] font-[600]">
               {index} Page_{changeStyleName()} (수정중)
             </div>
             <div>
               <button
-                className="text-[2.4rem] text-[#496E00] hover:text-black mr-[1.2rem]"
+                className="text-[2.16rem] text-[#496E00] hover:text-black mr-[1.08rem]"
                 onClick={updateData}
                 title="클릭해서 저장!"
               >
                 <FaSave />
               </button>
               <button
-                className="text-[2.4rem] text-[#496E00] hover:text-black"
+                className="text-[2.16rem] text-[#496E00] hover:text-black"
                 onClick={handleDelete}
                 title="클릭하면 삭제!"
               >
@@ -274,7 +274,7 @@ const LineNote = ({ id }: LineNoteProps) => {
         ) : null}
       </div>
       {isEditMode ? (
-        <div className="flex flex-row gap-[0.3rem] mt-[1.25rem] bg-white">
+        <div className="flex flex-row gap-[0.3rem] mt-[3rem] bg-white">
           <div className="flex gap-[0.3rem]">
             <label className="block ml-[1.3rem]">
               배경 색상
@@ -324,15 +324,15 @@ const LineNote = ({ id }: LineNoteProps) => {
         className="p-[0.4rem] ml-[0.3rem] mr-[0.3rem] mt-[1.25rem]"
         style={{
           backgroundColor: bgColor,
-          minHeight: '65rem'
+          minHeight: '53rem'
         }}
       >
-        <div className="relative w-full overflow-hidden" style={{ height: '65rem' }}>
+        <div className="relative w-full overflow-hidden" style={{ height: '53rem' }}>
           {lines.map((line, index) => (
             <div
               key={index}
               className={`relative`}
-              style={{ height: '3.8rem', borderBottom: `${lineThickness / 10}rem solid ${lineColor}` }}
+              style={{ height: '3.42rem', borderBottom: `${lineThickness / 10}rem solid ${lineColor}` }}
             >
               <input
                 type="text"
@@ -341,9 +341,9 @@ const LineNote = ({ id }: LineNoteProps) => {
                 ref={(el) => {
                   inputRefs.current[index] = el;
                 }}
-                className="text-xl absolute top-0 left-0 w-full h-[4rem] border-none outline-none bg-transparent"
+                className="text-xl absolute top-0 left-0 w-full h-[3.6rem] border-none outline-none bg-transparent"
                 style={{
-                  fontSize: `${line.fontSize / 10}rem`,
+                  fontSize: `${(line.fontSize * 0.9) / 10}rem`,
                   color: globalTextColor,
                   width: '100%'
                 }}

@@ -14,17 +14,11 @@ html {
   font-size: 10px;
 }
 
-@media (max-width: 1278px) {
+@media (min-width: 768px) and(max-width: 1278px) {
   html {
     font-size: 8px;
   }
 }
-
-/* @media (max-width: 767px) {
-  html {
-    font-size: 6px;
-  }
-} */
 
 body {
   width: 100%;
@@ -38,20 +32,6 @@ body {
 
 #app {
   height: 100%;
-}
-
-.swiper {
-  width: 100%;
-  margin-top: 5rem; /* 50px = 5rem */
-  padding-bottom: 5rem; /* 50px = 5rem */
-}
-
-.swiper-slide {
-  display: flex;
-  align-items: center; /* 카드 내부의 내용 중앙 정렬 */
-  justify-content: center;
-  padding: 0; /* 슬라이드 사이의 간격 조정 */
-  z-index: 0 !important;
 }
 
 .custom-height {
@@ -96,14 +76,4 @@ body {
   width: 35rem;
   height: 50rem;
   object-fit: cover;
-}
-
-@media (max-width: 430px) {
-  html {
-    font-size: 9px; /* 모바일에서는 더 작은 기본 폰트 크기 */
-  }
-
-  body {
-    font-size: 1.1rem;
-  }
 }

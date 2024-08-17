@@ -42,7 +42,9 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
     return true;
   };
 
-  const signUp = async () => {
+  const signUp = async (e: React.FormEvent) => {
+    e.preventDefault(); // 엔터 시 폼이 제출되지 않도록 기본 동작 막기
+
     // 이메일 형식 확인
     if (!isValidEmail(email)) {
       Swal.fire({
@@ -156,7 +158,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
       onClick={handleBackgroundClick}
     >
       <div className="rounded-3xl bg-white p-4 w-[40rem] h-[45rem] flex flex-col justify-center items-center">
-        <form>
+        <form onSubmit={signUp}>
           <h2 className="text-3xl font-bold mb-4 text-center text-green-600">회원가입</h2>
           <h1 className="text-xl font-bold mb-1">사용할 이메일 주소</h1>
           <div className="relative w-[35rem] mb-4">
@@ -226,18 +228,18 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
               </span>
             )}
           </div>
+
+          {passwordError && <p className="mb-4 text-red-500">{passwordError}</p>}
+
+          <div className="flex flex-col gap-2 mt-4">
+            <button
+              type="submit"
+              className="w-[35rem] h-[5rem] px-4 py-3 font-bold bg-green-600 hover:bg-green-800 hover:text-white text-white rounded-[0.7rem]"
+            >
+              회원가입
+            </button>
+          </div>
         </form>
-
-        {passwordError && <p className="mb-4 text-red-500">{passwordError}</p>}
-
-        <div className="flex flex-col gap-2 mt-4">
-          <button
-            className="w-[35rem] h-[5rem] px-4 py-3 font-bold bg-green-600 hover:bg-green-800 hover:text-white text-white rounded-[0.7rem]"
-            onClick={signUp}
-          >
-            회원가입
-          </button>
-        </div>
       </div>
     </div>
   );

@@ -72,25 +72,13 @@ const BottomSheetCard: React.FC<BottomSheetCardProps> = ({ page, moveCard, onTog
     <div
       ref={ref}
       // ${isDragging ? 'opacity-50' : ''}
-      className={`flex items-end justify-center bg-contain ${
-        page.parchment_style === 'tenMinPlanner'
-          ? "bg-[url('/images/tenMinPlannerImage.png')]"
-          : page.parchment_style === 'lineNote'
-          ? "bg-[url('/images/lineNoteImage.png')]"
-          : page.parchment_style === 'blankNote'
-          ? "bg-[url('/images/blankNoteImage.png')]"
-          : ''
-      } rounded-lg shadow-md p-4 w-32 h-40 flex-none cursor-pointer ${
-        isActive ? 'border-[#008A02] border-[0.3rem]' : ''
+      className={`flex items-end justify-center bg-contain rounded-[0.4rem] p-4 w-[5.2rem] h-[3.6rem] flex-none cursor-pointer ${
+        isActive ? 'bg-[#6D8B33] ' : 'bg-[#9E9E9E]'
       } `}
       onClick={() => showPages(pages.indexOf(page))}
     >
-      <div
-        className={`${
-          isActive ? 'bg-[#008A02]' : 'bg-[#BEBEBE]'
-        } text-white flex justify-center w-[1.5rem] h-[1.5rem] rounded text-[1.2rem] font-bold `}
-      >
-        {pages.indexOf(page) + 1}
+      <div className=" text-white flex justify-center items-center w-[1.5rem] h-[1.5rem] rounded text-[1.5rem] font-bold">
+        {pages.indexOf(page) + 1}p
       </div>
     </div>
   );

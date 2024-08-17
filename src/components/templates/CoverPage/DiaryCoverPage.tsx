@@ -943,10 +943,10 @@ const DiaryCoverPage: React.FC = () => {
 
   const handleAddText = () => {
     resetTextProperties(); // 텍스트 속성을 초기화
-    setCoverTitle('표지를 작성해 주세요');
-    setCoverTitlePosition({ x: 90, y: 150 });
+    setCoverTitle('Create Cover Title');
+    setCoverTitlePosition({ x: 120, y: 150 });
     setCoverTitleFontSize(30);
-    setCoverTitleWidth(290);
+    setCoverTitleWidth(260);
     setCoverTitleRotation(0);
   };
   const handleDownload = () => {
@@ -1291,137 +1291,154 @@ const DiaryCoverPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full relative">
-      {/* 상단에 고정된 사이드바 */}
-      <div className="sticky top-0 z-20">
+    <div className="flex h-full relative mt-[10rem]">
+      <div ref={sidebarRef} className="relative z-5">
         <DiaryCoverSidebar handleSelectMenu={handleSelectMenu} handleDeleteElement={handleDeleteElement} />
-      </div>
-
-      {/* 선택된 메뉴가 있을 때 나타나는 메뉴 콘텐츠 */}
-      {selectedMenu && (
-        <div className="absolute top-[5rem] left-0 w-full max-h-[20rem] bg-gray-100 shadow-lg p-4 z-20 transition-transform duration-300 ease-in-out overflow-y-auto">
-          {renderMenuContent()}
-        </div>
-      )}
-
-      {/* 메인 커버 페이지 컨텐츠 */}
-      <div className="flex-grow flex justify-center items-center mt-[-5rem]">
-        <div className="w-full max-w-[50rem] ">
-          <div className="grid aspect-w-2 aspect-h-3 w-full">
-            <Stage
-              className="col-start-1 col-end-2 row-start-1 row-end-2 w-full h-full"
-              width={coverStageSize.width}
-              height={coverStageSize.height}
-              ref={stageRef}
-              onClick={handleStageClick}
+        {selectedMenu && (
+          <div className="absolute top-0 left-full w-[18rem] h-full bg-gray-100 shadow-lg p-6 overflow-y-auto z-10">
+            <button
+              onClick={() => setSelectedMenu(null)}
+              className="absolute right-2 top-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full px-2 py-0.3 transition duration-300"
             >
-              <Layer>
-                {/* 배경 색 또는 패턴 */}
-                <Rect
-                  x={0}
-                  y={0}
+              X
+            </button>
+            <div className="mt-10">{renderMenuContent()}</div>
+          </div>
+        )}
+      </div>
+      <div className="relative flex-grow flex z-0">
+        <div className="flex flex-col overflow-hidden w-full">
+          <div className="flex-grow flex justify-center items-center overflow-auto">
+            <div className="w-full max-w-[48rem] mr-4">
+              <div className="grid aspect-w-2 aspect-h-3 w-full">
+                <Stage
+                  className="col-start-1 col-end-2 row-start-1 row-end-2 w-full h-full"
                   width={coverStageSize.width}
                   height={coverStageSize.height}
-                  fillPatternImage={
-                    coverBackgroundColor.startsWith('http')
-                      ? (() => {
-                          const img = new window.Image();
-                          img.src = coverBackgroundColor;
-                          return img;
-                        })()
-                      : undefined
-                  }
-                  fill={coverBackgroundColor.startsWith('http') ? undefined : coverBackgroundColor}
-                />
+                  ref={stageRef}
+                  onClick={handleStageClick}
+                >
+                  <Layer>
+                    {/* 배경 색 또는 패턴 */}
+                    <Rect
+                      x={0}
+                      y={0}
+                      width={coverStageSize.width}
+                      height={coverStageSize.height}
+                      fillPatternImage={
+                        coverBackgroundColor.startsWith('http')
+                          ? (() => {
+                              const img = new window.Image();
+                              img.src = coverBackgroundColor;
+                              return img;
+                            })()
+                          : undefined
+                      }
+                      fill={coverBackgroundColor.startsWith('http') ? undefined : coverBackgroundColor}
+                    />
 
-                {/* 언스플레쉬 이미지 */}
-                {unsplashImage && loadedUnsplashImage && (
-                  <KonvaImage
-                    image={loadedUnsplashImage}
-                    x={unsplashImagePosition.x * coverScale}
-                    y={unsplashImagePosition.y * coverScale}
-                    width={unsplashImageSize.width}
-                    height={unsplashImageSize.height}
-                    draggable
-                    ref={unsplashImageRef}
-                    onDragEnd={handleUnsplashImageChange}
-                    onTransformEnd={handleUnsplashImageTransform}
-                    onClick={handleUnsplashImageSelect}
-                    scaleX={unsplashScale}
-                    scaleY={unsplashScale}
-                    rotation={unsplashImageRotation}
-                  />
-                )}
+                    {/* 언스플레쉬 이미지 */}
+                    {unsplashImage && loadedUnsplashImage && (
+                      <KonvaImage
+                        image={loadedUnsplashImage}
+                        x={unsplashImagePosition.x * coverScale}
+                        y={unsplashImagePosition.y * coverScale}
+                        width={unsplashImageSize.width}
+                        height={unsplashImageSize.height}
+                        draggable
+                        ref={unsplashImageRef}
+                        onDragEnd={handleUnsplashImageChange}
+                        onTransformEnd={handleUnsplashImageTransform}
+                        onClick={handleUnsplashImageSelect}
+                        scaleX={unsplashScale}
+                        scaleY={unsplashScale}
+                        rotation={unsplashImageRotation}
+                      />
+                    )}
 
-                {/* 로컬 이미지 */}
-                {coverImage && loadedImage && (
-                  <KonvaImage
-                    image={loadedImage}
-                    x={coverImagePosition.x * coverScale}
-                    y={coverImagePosition.y * coverScale}
-                    width={coverImageSize.width}
-                    height={coverImageSize.height}
-                    draggable
-                    ref={coverImageRef}
-                    onDragEnd={handleImageChange}
-                    onTransformEnd={handleImageTransform}
-                    onClick={handleImageSelect}
-                    scaleX={coverScale}
-                    scaleY={coverScale}
-                    rotation={coverImageRotation}
-                  />
-                )}
+                    {/* 로컬 이미지 */}
+                    {coverImage && loadedImage && (
+                      <KonvaImage
+                        image={loadedImage}
+                        x={coverImagePosition.x * coverScale}
+                        y={coverImagePosition.y * coverScale}
+                        width={coverImageSize.width}
+                        height={coverImageSize.height}
+                        draggable
+                        ref={coverImageRef}
+                        onDragEnd={handleImageChange}
+                        onTransformEnd={handleImageTransform}
+                        onClick={handleImageSelect}
+                        scaleX={coverScale}
+                        scaleY={coverScale}
+                        rotation={coverImageRotation}
+                      />
+                    )}
 
-                {/* 타이틀 텍스트 */}
-                <Text
-                  text={coverTitle ?? ''}
-                  fontSize={coverTitleFontSize}
-                  x={coverTitlePosition.x * coverScale}
-                  y={coverTitlePosition.y * coverScale}
-                  width={coverTitleWidth}
-                  fill="black"
-                  draggable
-                  ref={textRef}
-                  onDragEnd={() =>
-                    setCoverTitlePosition({ x: textRef.current?.x() ?? 0, y: textRef.current?.y() ?? 0 })
-                  }
-                  onTransformEnd={handleTextTransform}
-                  onClick={handleTextSelect}
-                  onDblClick={handleTextDblClick}
-                  onDblTap={handleTextDblClick} // 모바일 환경에서 더블 탭 처리
-                  scaleX={coverScale}
-                  scaleY={coverScale}
-                  rotation={coverTitleRotation}
-                />
+                    {/* 타이틀 텍스트 */}
+                    <Text
+                      text={coverTitle ?? ''}
+                      fontSize={coverTitleFontSize}
+                      x={coverTitlePosition.x * coverScale}
+                      y={coverTitlePosition.y * coverScale}
+                      width={coverTitleWidth}
+                      fill="black"
+                      draggable
+                      ref={textRef}
+                      onDragEnd={() =>
+                        setCoverTitlePosition({ x: textRef.current?.x() ?? 0, y: textRef.current?.y() ?? 0 })
+                      }
+                      onTransformEnd={handleTextTransform}
+                      onClick={handleTextSelect}
+                      onDblClick={handleTextDblClick}
+                      onDblTap={handleTextDblClick} // 모바일 환경에서 더블 탭 처리
+                      scaleX={coverScale}
+                      scaleY={coverScale}
+                      rotation={coverTitleRotation}
+                    />
 
-                {/* 선택된 요소에 대한 트랜스포머 */}
-                {coverSelectedElement && (
-                  <Transformer
-                    ref={trRef}
-                    nodes={[coverSelectedElement]} // 현재 선택된 요소에만 트랜스포머 적용
-                    boundBoxFunc={(oldBox, newBox) => ({
-                      ...newBox,
-                      width: Math.max(20, newBox.width),
-                      height: Math.max(20, newBox.height)
-                    })}
-                    resizeEnabled={true}
-                    enabledAnchors={[
-                      'top-left',
-                      'top-right',
-                      'bottom-left',
-                      'bottom-right',
-                      'middle-left',
-                      'middle-right'
-                    ]}
-                  />
-                )}
-              </Layer>
-            </Stage>
+                    {/* 선택된 요소에 대한 트랜스포머 */}
+                    {coverSelectedElement && (
+                      <Transformer
+                        ref={trRef}
+                        nodes={[coverSelectedElement]} // 현재 선택된 요소에만 트랜스포머 적용
+                        boundBoxFunc={(oldBox, newBox) => ({
+                          ...newBox,
+                          width: Math.max(20, newBox.width),
+                          height: Math.max(20, newBox.height)
+                        })}
+                        resizeEnabled={true}
+                        enabledAnchors={[
+                          'top-left',
+                          'top-right',
+                          'bottom-left',
+                          'bottom-right',
+                          'middle-left',
+                          'middle-right'
+                        ]}
+                      />
+                    )}
+                  </Layer>
+                </Stage>
+              </div>
+            </div>
+
+            <div className="flex flex-col items-start max-w-[10rem] w-full"></div>
           </div>
         </div>
       </div>
 
-      {/* 로딩 상태 표시 */}
+      {/* 삭제 버튼 렌더링 */}
+      {/* {coverSelectedElement && (
+        <button
+          className="absolute top-4 right-8 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 z-10 flex items-center space-x-2"
+          onClick={handleDeleteElement}
+        >
+          <FaTrash className="text-white" />
+          <span className="text-[1rem] font-medium">선택 요소 삭제</span>
+        </button>
+      )} */}
+
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
           <img src="/images/loading.gif" alt="Loading" width={200} height={200} />
