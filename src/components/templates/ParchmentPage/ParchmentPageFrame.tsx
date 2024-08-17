@@ -1,7 +1,5 @@
 'use client';
 
-import { RiDeleteBin5Line } from 'react-icons/ri';
-import DiaryContents from './diarycreate/DiaryContents';
 import { useEffect, useState } from 'react';
 import { getCover } from '@/services/diarycover.service';
 import { useParams, useRouter } from 'next/navigation';
@@ -12,10 +10,12 @@ import { useDeleteDiary } from '@/lib/hooks/useDiaries';
 import usePageStore from '@/stores/pages.store';
 import useEditModeStore from '@/stores/editMode.store';
 import { FaChevronLeft } from 'react-icons/fa6';
-import { FaChevronRight } from 'react-icons/fa6';
-import { FaBook } from 'react-icons/fa';
+import { FaChevronCircleRight } from 'react-icons/fa';
+import { FaChevronCircleLeft } from 'react-icons/fa';
 import useBottomSheetStore from '@/stores/bottomsheet.store';
 import Swal from 'sweetalert2';
+import PcParchmentCase from './PcParchmentCase';
+import MoParchmentCase from './MoParchmentCase';
 
 type ParchmentType = 'tenMinPlanner' | 'lineNote' | 'blankNote';
 
@@ -28,7 +28,7 @@ const changeDbName = (parchmentStyle: ParchmentType) => {
   return dbTableName[parchmentStyle];
 };
 
-export default function ParchmentBookStyleList() {
+export default function ParchmentPageFrame() {
   const router = useRouter();
   const { diaryId } = useParams<{ diaryId: string }>();
   const [coverTitle, setCoverTitle] = useState('');
@@ -38,7 +38,14 @@ export default function ParchmentBookStyleList() {
   const { mutate: deleteDbDiary } = useDeleteDiary();
   const { offEditMode } = useEditModeStore((state) => state);
   const { currentPageIndex, setCurrentPageIndex } = usePageStore((state) => state);
-  const { activeCardIndices, setActiveCardIndices } = useBottomSheetStore((state) => state);
+  const { setActiveCardIndices } = useBottomSheetStore((state) => state);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // 커버 타이틀 가져오는 코드
   useEffect(() => {
@@ -92,12 +99,12 @@ export default function ParchmentBookStyleList() {
   };
 
   // 허브로 이동합니다.
-  const goHub = () => {
+  const goToHub = () => {
     router.push('/member/hub');
   };
 
   // 다이어리 표지 수정페이지로 이동합니다.
-  const goDiaryCoverPage = () => {
+  const goToDiaryCoverPage = () => {
     router.push(`/member/diary/${diaryId}/cover`);
   };
 
@@ -138,6 +145,10 @@ export default function ParchmentBookStyleList() {
     }
   };
 
+  const addPage = () => {
+    toggleParchmentOptionModal();
+  };
+
   if (isPending) {
     return <div>로딩중</div>;
   }
@@ -146,44 +157,66 @@ export default function ParchmentBookStyleList() {
   }
 
   return (
-    <div className="flex flex-row items-center justify-center w-[128rem] ">
-      <div onClick={handlePrevPage} className="text-[4.8rem] text-[#008A02] cursor-pointer">
-        <FaChevronLeft />
+    <div className="flex flex-row items-center justify-center w-[37.8rem] md:w-[128rem]">
+      <div
+        onClick={handlePrevPage}
+        className={`text-[2rem] md:text-[3.2rem] cursor-pointer ${
+          currentPageIndex < 2 ? 'text-[#BEBEBE]' : 'text-[#008A02]'
+        }`}
+      >
+        <FaChevronCircleLeft />
       </div>
-      <div className=" w-[100rem]">
-        <div className="flex flex-row justify-between ">
+      <div className="w-[37.8rem] md:w-[90rem] md:mx-[4.3rem]">
+        <div className="flex flex-col gap-[1.2rem] md:flex-row md:justify-between ">
           <div className="flex flex-row w-[72rem]">
             <span
-              className="flex flex-row text-[3.5rem] w-[4.8rem] items-center justify-center cursor-pointer"
-              onClick={goHub}
+              className="flex flex-row text-[2.4rem] md:text-[3.5rem] w-[2.4rem] md:w-[4.8rem] items-center justify-center cursor-pointer text-[#008A02]"
+              onClick={goToHub}
             >
               <FaChevronLeft />
             </span>
-            <span className=" text-[3.2rem] w-[82rem] px-[1rem] font-[600]">{coverTitle}</span>
+            <span className="text-[2rem] md:text-[3.2rem] w-[50rem] px-[1rem] font-[600]">{coverTitle}</span>
           </div>
-          <div className="flex flex-row gap-3">
+          <div className="flex flex-row gap-3 justify-end ">
             <button
-              onClick={goDiaryCoverPage}
-              className=" w-[10.3rem] h-[5.2rem] border-[0.1rem] rounded-[1.2rem] border-[#008A02] text-[#008A02] text-[1.8rem] cursor-pointer"
+              onClick={addPage}
+              className="w-[5.5rem] h-[2.8rem] md:w-[9.2rem] md:h-[4.8rem] border-[0.1rem] rounded-[0.8rem] md:rounded-[1rem] border-[#565656] text-[#565656] text-[1.1rem] md:text-[1.6rem] cursor-pointer"
+            >
+              속지추가
+            </button>
+            <button
+              onClick={goToDiaryCoverPage}
+              className="w-[5.5rem] h-[2.8rem] md:w-[9.2rem] md:h-[4.8rem] border-[0.1rem] rounded-[0.8rem] md:rounded-[1rem] border-[#008A02] text-[#008A02] text-[1.1rem] md:text-[1.6rem] cursor-pointer"
             >
               표지수정
             </button>
             <button
               onClick={deleteDiary}
-              className=" text-[1.8rem] w-[13.8rem] h-[5.2rem] border-[0.1rem] cursor-pointer rounded-[1.2rem] border-[#D90000] text-[#D90000]"
+              className=" w-[7.6rem] text-[1.1rem] md:text-[1.6rem] md:w-[12.3rem] h-[2.8rem] md:h-[4.8rem] border-[0.1rem] cursor-pointer rounded-[0.8rem] md:rounded-[1rem] border-[#D90000] text-[#D90000]"
             >
               다이어리 삭제
             </button>
           </div>
         </div>
         <div className="flex flex-row items-center justify-center">
-          <div className="w-[100rem] h-[75rem] mx-[3.6rem] my-[4.3rem]">
-            <DiaryContents diaryId={diaryId} currentPageIndex={currentPageIndex} />
-          </div>
+          {windowWidth > 767 ? (
+            <div className="w-[90rem] h-[69.5rem] mx-[3.24rem] my-[3.87rem]">
+              <PcParchmentCase diaryId={diaryId} currentPageIndex={currentPageIndex} />
+            </div>
+          ) : (
+            <div className="w-[32.5rem] h-[50rem] mx-[0.8rem] my-[2.4rem] ">
+              <MoParchmentCase diaryId={diaryId} currentPageIndex={currentPageIndex} />
+            </div>
+          )}
         </div>
       </div>
-      <div onClick={handleNextPage} className="text-[4.8rem] text-[#008A02] cursor-pointer">
-        <FaChevronRight />
+      <div
+        onClick={handleNextPage}
+        className={`text-[2rem] md:text-[3.2rem] ${
+          currentPageIndex + 2 < pages!.length ? 'text-[#008A02]' : 'text-[#BEBEBE]'
+        } cursor-pointer`}
+      >
+        <FaChevronCircleRight />
       </div>
     </div>
   );

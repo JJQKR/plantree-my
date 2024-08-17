@@ -119,14 +119,14 @@ const Todolist = ({
   };
 
   return (
-    <div className="w-[26.1rem] h-[40rem] overflow-y-auto overflow-x-hidden">
-      <div className="w-[25rem">
+    <div className="w-[23.49rem] h-[36rem]overflow-y-auto overflow-x-hidden">
+      <div className="w-[22.5rem]">
         <ul className="relative">
           {todoList.map((todo) => {
             return (
               <li
                 key={todo.id}
-                className="flex flex-row justify-between w-full border-b-[0.15rem] border-[#EAEAEA] min-h-[3.2rem] text-[1.5rem] font-[400] items-center"
+                className="flex flex-row justify-between w-full border-b-[0.135rem] border-[#EAEAEA] min-h-[2.88rem] text-[1.35rem] font-[400] items-center"
                 style={{
                   backgroundColor: selectedColorTodo?.id === todo.id ? todo.color : 'transparent'
                 }}
@@ -162,7 +162,7 @@ const Todolist = ({
                   checked={todo.isDone}
                   onChange={() => handleToggle(todo.id)}
                   disabled={!isEditMode}
-                  style={{ zoom: 1.7 }}
+                  style={{ zoom: 1.53 }}
                 />
                 {editingId === todo.id ? (
                   <textarea
@@ -176,36 +176,19 @@ const Todolist = ({
                     }}
                     onKeyUp={(e) => endEdit(todo.id, e)}
                     disabled={!isEditMode}
-                    className=" w-[17rem] h-[3.2rem] overflow-y-auto resize-none text-[1.4rem] p-[0.5rem]"
+                    className=" w-[15.3rem] h-[2.88rem] overflow-y-auto resize-none text-[1.26rem] p-[0.45rem]"
                   />
                 ) : (
                   <div>
                     <div
-                      className="min-h-[3.2rem] w-[17rem] whitespace-pre-wrap break-words break-all flex items-center"
+                      className="min-h-[2.88rem] w-[15.3rem] whitespace-pre-wrap break-words break-all flex items-center"
                       onClick={() => isEditMode && handleSelectTodo(todo)}
                     >
-                      {
-                        todo.text || ''
-                        // (
-                        //   <span className="text-gray-500 flex items-end text-[1.4rem]">
-                        //     작성버튼을 눌러 작성해주세요.
-                        //   </span>
-                        // )
-                      }
+                      {todo.text || ''}
                     </div>
                   </div>
                 )}
-                <div className="w-[2rem] flex gap-[0.6rem]">
-                  {/* {isEditMode ? (
-                    <button
-                      onClick={() => {
-                        startEditing(todo);
-                      }}
-                      className="text-[#9E9E9E] text-[2rem]"
-                    >
-                      <FaRegEdit />
-                    </button>
-                  ) : null} */}
+                <div className="w-[1.8rem] flex gap-[0.5rem]">
                   {isEditMode ? (
                     <button onClick={() => removeTodo(todo.id)} className="text-[#9E9E9E] text-[2rem]">
                       <FaTrashAlt />
@@ -219,10 +202,10 @@ const Todolist = ({
         {isEditMode ? (
           <div
             onClick={handleAddTodo}
-            className="h-[3.1rem] py-[0.6rem] flex flex-row justify-center items-center text-[#727272] font-[600]"
+            className="h-[2.79rem] py-[0.54rem]  flex flex-row justify-center items-center text-[#727272] font-[600]"
           >
             <FaPlus />
-            <span className="h-[1.9rem] ml-[0.2rem]"> 리스트 추가 </span>
+            <span className="h-[1.71rem] ml-[0.18rem]"> 리스트 추가 </span>
           </div>
         ) : null}
       </div>
