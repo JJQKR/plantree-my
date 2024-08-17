@@ -12,7 +12,7 @@ const MyPageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="flex justify-between items-center h-[8rem] p-4 bg-white">
+      <header className="fixed flex justify-between items-center w-full h-[8rem] p-4 bg-white shadow-md z-50">
         <SideButton onClick={toggleSidebar}>Menu</SideButton>
         <div className="flex-grow flex justify-center">
           <Link href="/member/hub">
@@ -20,7 +20,7 @@ const MyPageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
               src="/images/Plantree.png"
               alt="Logo"
               width={250} // 원하는 너비
-              height={50} // 원하는 높이
+              height={20} // 원하는 높이
             />
           </Link>
         </div>
@@ -34,6 +34,13 @@ const MyPageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         >
           {children}
         </main>
+        {/* 배경 오버레이 추가 */}
+        {sidebarOpen && (
+          <div
+            className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-40"
+            onClick={toggleSidebar} // 오버레이를 클릭하면 사이드바가 닫히도록 설정
+          />
+        )}
       </div>
     </div>
   );

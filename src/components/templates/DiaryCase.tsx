@@ -36,6 +36,7 @@ const DiaryCase: React.FC = () => {
   // 상태 초기화
   const [diaryCardWidth, setDiaryCardWidth] = useState(400);
   const [diaryCardHeight, setDiaryCardHeight] = useState(600);
+  const [swiperStyle, setSwiperStyle] = useState({ width: '108rem', height: '72rem' });
 
   // Supabase에서 세션 정보를 가져오는 함수
   const fetchSession = async () => {
@@ -128,26 +129,28 @@ const DiaryCase: React.FC = () => {
     getUserIdAndFetchCovers();
   }, []);
 
-  // 화면 크기에 따라 카드 크기 조정
+  // 화면 크기에 따라 스타일을 업데이트하는 함수
+  const updateStyles = () => {
+    if (window.innerWidth <= 1278) {
+      setDiaryCardWidth(200);
+      setDiaryCardHeight(300);
+      setSwiperStyle({ width: '48rem', height: '72rem' });
+    } else {
+      setDiaryCardWidth(250);
+      setDiaryCardHeight(400);
+      setSwiperStyle({ width: '108rem', height: '72rem' });
+    }
+  };
+
   useEffect(() => {
-    const updateCardSize = () => {
-      if (window.innerWidth <= 768) {
-        setDiaryCardWidth(200); // 모바일 화면에서는 카드 너비를 줄임
-        setDiaryCardHeight(300); // 모바일 화면에서는 카드 높이를 줄임
-      } else {
-        setDiaryCardWidth(250); // 데스크톱 화면에서는 카드 너비를 늘림
-        setDiaryCardHeight(400); // 데스크톱 화면에서는 카드 높이를 늘림
-      }
-    };
+    // 초기 렌더링 시 스타일 설정
+    updateStyles();
 
-    // 초기 크기 설정
-    updateCardSize();
-
-    // 창 크기 변경 시 크기 업데이트
-    window.addEventListener('resize', updateCardSize);
+    // 창 크기 변경 시 스타일 업데이트
+    window.addEventListener('resize', updateStyles);
 
     return () => {
-      window.removeEventListener('resize', updateCardSize);
+      window.removeEventListener('resize', updateStyles);
     };
   }, []);
 
@@ -176,6 +179,28 @@ const DiaryCase: React.FC = () => {
   const handleDiaryClick = (id: string) => {
     setDiaryId(id); // 클릭된 다이어리 ID 설정
     router.push(`/member/diary/${id}/parchment`); // 다이어리 페이지로 이동
+  };
+
+  // 인라인 스타일 정의
+  const swiperContainerStyle = {
+    width: '100%',
+    height: '100%',
+    marginTop: '12rem',
+    paddingBottom: '10rem'
+  };
+
+  const swiperSlideStyle = {
+    display: 'flex',
+    alignItems: 'center', // 카드 내부의 내용 중앙 정렬
+    justifyContent: 'center',
+    padding: 0, // 슬라이드 사이의 간격 조정
+    zIndex: 0
+  };
+
+  const paginationStyle: React.CSSProperties = {
+    position: 'absolute',
+    bottom: '3rem',
+    textAlign: 'center'
   };
 
   return (
@@ -231,6 +256,26 @@ const DiaryCase: React.FC = () => {
                             }
                             fill={cover.cover_bg_color.startsWith('http') ? undefined : cover.cover_bg_color}
                           />
+                          {unsplashImages[index].src && (
+                            <KonvaImage
+                              image={unsplashImages[index]}
+                              x={cover.unsplash_image_position.x}
+                              y={cover.unsplash_image_position.y}
+                              width={cover.unsplash_image_size.width}
+                              height={cover.unsplash_image_size.height}
+                              rotation={cover.unsplash_image_rotation}
+                            />
+                          )}
+                          {loadedImages[index].src && (
+                            <KonvaImage
+                              image={loadedImages[index]}
+                              x={cover.cover_image_position.x}
+                              y={cover.cover_image_position.y}
+                              width={cover.cover_image_size.width}
+                              height={cover.cover_image_size.height}
+                              rotation={cover.cover_image_rotation}
+                            />
+                          )}
                           <Text
                             text={cover.cover_title}
                             fontSize={cover.cover_title_fontsize}
@@ -242,26 +287,6 @@ const DiaryCase: React.FC = () => {
                             fill={cover.cover_title_color}
                             fontStyle={`${cover.cover_title_fontweight} ${cover.cover_title_fontstyle}`}
                           />
-                          {loadedImages[index].src && (
-                            <KonvaImage
-                              image={loadedImages[index]}
-                              x={cover.cover_image_position.x}
-                              y={cover.cover_image_position.y}
-                              width={cover.cover_image_size.width}
-                              height={cover.cover_image_size.height}
-                              rotation={cover.cover_image_rotation}
-                            />
-                          )}
-                          {unsplashImages[index].src && (
-                            <KonvaImage
-                              image={unsplashImages[index]}
-                              x={cover.unsplash_image_position.x}
-                              y={cover.unsplash_image_position.y}
-                              width={cover.unsplash_image_size.width}
-                              height={cover.unsplash_image_size.height}
-                              rotation={cover.unsplash_image_rotation}
-                            />
-                          )}
                         </Layer>
                       </Stage>
                     </div>
@@ -269,14 +294,14 @@ const DiaryCase: React.FC = () => {
                 ) : null
               )
             ) : (
-              <div className="flex items-center justify-center w-[25rem] h-[40rem] bg-red-300 rounded shadow-md text-2xl font-bold text-black">
+              <div className="col-span-full flex items-center justify-center w-[25rem] h-[40rem] bg-white rounded shadow-md text-2xl font-bold text-black">
                 다이어리가 없습니다
               </div>
             )}
           </div>
         ) : (
           // 스와이프 뷰에서 다이어리 커버 표시
-          <div className="w-[108rem] h-[72rem]">
+          <div style={swiperContainerStyle}>
             <Swiper
               effect="coverflow"
               grabCursor={true}
@@ -289,8 +314,10 @@ const DiaryCase: React.FC = () => {
                 modifier: 1,
                 slideShadows: true
               }}
-              pagination={{ clickable: true }}
+              pagination={{ clickable: true, el: '.swiper-pagination' }}
               modules={[EffectCoverflow, Pagination]}
+              className="mySwiper"
+              style={swiperStyle}
             >
               {diaryCovers.length > 0 ? (
                 diaryCovers.map((cover, index) =>
@@ -298,8 +325,8 @@ const DiaryCase: React.FC = () => {
                     <SwiperSlide
                       key={cover.cover_id}
                       onClick={() => handleDiaryClick(cover.diary_id as string)}
-                      className="relative cursor-pointer flex flex-col w-[48rem] h-[72rem] items-center justify-center rounded shadow-md text-2xl font-bold text-black"
                       style={{
+                        ...swiperSlideStyle,
                         backgroundColor: cover.cover_bg_color,
                         width: cover.cover_stage_size.width * cover.cover_scale,
                         height: cover.cover_stage_size.height * cover.cover_scale
@@ -328,6 +355,26 @@ const DiaryCase: React.FC = () => {
                             }
                             fill={cover.cover_bg_color.startsWith('http') ? undefined : cover.cover_bg_color}
                           />
+                          {unsplashImages[index].src && (
+                            <KonvaImage
+                              image={unsplashImages[index]}
+                              x={cover.unsplash_image_position.x}
+                              y={cover.unsplash_image_position.y}
+                              width={cover.unsplash_image_size.width}
+                              height={cover.unsplash_image_size.height}
+                              rotation={cover.unsplash_image_rotation}
+                            />
+                          )}
+                          {loadedImages[index].src && (
+                            <KonvaImage
+                              image={loadedImages[index]}
+                              x={cover.cover_image_position.x}
+                              y={cover.cover_image_position.y}
+                              width={cover.cover_image_size.width}
+                              height={cover.cover_image_size.height}
+                              rotation={cover.cover_image_rotation}
+                            />
+                          )}
                           <Text
                             text={cover.cover_title}
                             fontSize={cover.cover_title_fontsize}
@@ -339,48 +386,43 @@ const DiaryCase: React.FC = () => {
                             fill={cover.cover_title_color}
                             fontStyle={`${cover.cover_title_fontweight} ${cover.cover_title_fontstyle}`}
                           />
-                          {loadedImages[index].src && (
-                            <KonvaImage
-                              image={loadedImages[index]}
-                              x={cover.cover_image_position.x}
-                              y={cover.cover_image_position.y}
-                              width={cover.cover_image_size.width}
-                              height={cover.cover_image_size.height}
-                              rotation={cover.cover_image_rotation}
-                            />
-                          )}
-                          {unsplashImages[index].src && (
-                            <KonvaImage
-                              image={unsplashImages[index]}
-                              x={cover.unsplash_image_position.x}
-                              y={cover.unsplash_image_position.y}
-                              width={cover.unsplash_image_size.width}
-                              height={cover.unsplash_image_size.height}
-                              rotation={cover.unsplash_image_rotation}
-                            />
-                          )}
                         </Layer>
                       </Stage>
                     </SwiperSlide>
                   ) : null
                 )
               ) : (
-                <SwiperSlide className="flex items-center justify-center w-[48rem] h-[72rem] bg-white rounded shadow-md text-2xl font-bold text-black">
+                <SwiperSlide
+                  style={{
+                    ...swiperSlideStyle,
+                    backgroundColor: 'white',
+                    width: '48rem',
+                    height: '72rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 'bold',
+                    borderRadius: '1rem'
+                  }}
+                >
                   <button
                     onClick={handleCreateDiary}
                     className="flex flex-col items-center justify-center text-center"
                     style={{ transform: 'translateY(-20%)' }}
-                  ></button>
+                  >
+                    +<br /> 다이어리 생성
+                  </button>
                 </SwiperSlide>
               )}
             </Swiper>
+            <div className="swiper-pagination" style={paginationStyle}></div>
           </div>
         )}
       </div>
       <div className="fixed bottom-[3rem] right-[4rem]">
         {!gridView && <CreateDiaryButton onClick={handleCreateDiary} />}
       </div>
-      {loading && ( // 로딩 애니메이션 표시
+      {loading && (
         <div className="fixed inset-0 flex items-center justify-center">
           <img src="/images/loading.gif" alt="Loading" width={200} height={200} />
         </div>

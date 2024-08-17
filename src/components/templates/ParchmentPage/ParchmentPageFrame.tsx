@@ -157,7 +157,7 @@ export default function ParchmentPageFrame() {
   }
 
   return (
-    <div className="flex flex-row items-center justify-center w-[37.8rem] md:w-[128rem]">
+    <div className="flex flex-row items-center justify-center w-[37.8rem] md:w-[128rem] mt-[9.9rem]">
       <div
         onClick={handlePrevPage}
         className={`text-[2rem] md:text-[3.2rem] cursor-pointer ${

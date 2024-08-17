@@ -8,7 +8,7 @@ type StoreState = {
 };
 
 export const useStore = create<StoreState>((set) => ({
-  sidebarOpen: true, // 초기 사이드바 열림 상태를 true로 설정
+  sidebarOpen: false, // 초기 사이드바 열림 상태를 false로 설정
   gridView: false, // 초기 그리드 뷰 상태를 false로 설정
   toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })), // 사이드바 열림 상태를 토글하는 함수 정의
   toggleGrid: () => set((state) => ({ gridView: !state.gridView })) // 그리드 뷰 상태를 토글하는 함수 정의
