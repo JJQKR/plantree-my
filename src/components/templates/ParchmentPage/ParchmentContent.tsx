@@ -13,7 +13,7 @@ interface ShowContentsProps {
   diaryId: string;
 }
 
-const ShowContents = ({ page, diaryId }: ShowContentsProps) => {
+const ParchmentContent = ({ page, diaryId }: ShowContentsProps) => {
   const { data: pages, isPending } = usePageToDiaryId(diaryId);
   const router = useRouter();
 
@@ -43,7 +43,7 @@ const ShowContents = ({ page, diaryId }: ShowContentsProps) => {
       }
     });
   };
-
+  if (isPending) <div>로딩중...</div>;
   if (!pages) return null;
   if (!page) return null;
   const diaryIndex = pages?.indexOf(page) + 1;
@@ -63,7 +63,6 @@ const ShowContents = ({ page, diaryId }: ShowContentsProps) => {
           <FaRegEdit />
         </button>
       </div>
-
       {page.parchment_style === 'tenMinPlanner' ? (
         <TenMinPlanner id={page.content_id} />
       ) : page.parchment_style === 'lineNote' ? (
@@ -75,4 +74,4 @@ const ShowContents = ({ page, diaryId }: ShowContentsProps) => {
   );
 };
 
-export default ShowContents;
+export default ParchmentContent;
