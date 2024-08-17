@@ -157,42 +157,42 @@ export default function ParchmentPageFrame() {
   }
 
   return (
-    <div className="flex flex-row items-center justify-center w-[37.8rem] md:w-[128rem] mt-[9.9rem]">
+    <div className="flex flex-row items-center justify-center sm:bg-slate-200 sm:w-[37.8rem] w-[128rem] mt-[9.9rem]">
       <div
         onClick={handlePrevPage}
-        className={`text-[2rem] md:text-[3.2rem] cursor-pointer ${
+        className={`sm:text-[2rem] text-[3.2rem] cursor-pointer ${
           currentPageIndex < 2 ? 'text-[#BEBEBE]' : 'text-[#008A02]'
         }`}
       >
         <FaChevronCircleLeft />
       </div>
-      <div className="w-[37.8rem] md:w-[90rem] md:mx-[4.3rem]">
-        <div className="flex flex-col gap-[1.2rem] md:flex-row md:justify-between ">
+      <div className="sm:w-[37.8rem] w-[90rem] mx-[4.3rem]">
+        <div className="flex sm:flex-col gap-[1.2rem] flex-row justify-between ">
           <div className="flex flex-row w-[72rem]">
             <span
-              className="flex flex-row text-[2.4rem] md:text-[3.5rem] w-[2.4rem] md:w-[4.8rem] items-center justify-center cursor-pointer text-[#008A02]"
+              className="flex flex-row sm:text-[2.4rem] text-[3.5rem] sm:w-[2.4rem] w-[4.8rem] items-center justify-center cursor-pointer text-[#008A02]"
               onClick={goToHub}
             >
               <FaChevronLeft />
             </span>
-            <span className="text-[2rem] md:text-[3.2rem] w-[50rem] px-[1rem] font-[600]">{coverTitle}</span>
+            <span className="text-[2rem] sm:text-[3.2rem] w-[50rem] px-[1rem] font-[600]">{coverTitle}</span>
           </div>
           <div className="flex flex-row gap-3 justify-end ">
             <button
               onClick={addPage}
-              className="w-[5.5rem] h-[2.8rem] md:w-[9.2rem] md:h-[4.8rem] border-[0.1rem] rounded-[0.8rem] md:rounded-[1rem] border-[#565656] text-[#565656] text-[1.1rem] md:text-[1.6rem] cursor-pointer"
+              className="sm:w-[5.5rem] sm:h-[2.8rem] w-[9.2rem] h-[4.8rem] border-[0.1rem] sm:rounded-[0.8rem] rounded-[1rem] border-[#565656] text-[#565656] sm:text-[1.1rem] text-[1.6rem] cursor-pointer"
             >
               속지추가
             </button>
             <button
               onClick={goToDiaryCoverPage}
-              className="w-[5.5rem] h-[2.8rem] md:w-[9.2rem] md:h-[4.8rem] border-[0.1rem] rounded-[0.8rem] md:rounded-[1rem] border-[#008A02] text-[#008A02] text-[1.1rem] md:text-[1.6rem] cursor-pointer"
+              className="sm:w-[5.5rem] sm:h-[2.8rem] w-[9.2rem] h-[4.8rem] border-[0.1rem] sm:rounded-[0.8rem] rounded-[1rem] border-[#008A02] text-[#008A02] sm:text-[1.1rem] text-[1.6rem] cursor-pointer"
             >
               표지수정
             </button>
             <button
               onClick={deleteDiary}
-              className=" w-[7.6rem] text-[1.1rem] md:text-[1.6rem] md:w-[12.3rem] h-[2.8rem] md:h-[4.8rem] border-[0.1rem] cursor-pointer rounded-[0.8rem] md:rounded-[1rem] border-[#D90000] text-[#D90000]"
+              className=" sm:w-[7.6rem] sm:text-[1.1rem] text-[1.6rem] w-[12.3rem] sm:h-[2.8rem] h-[4.8rem] border-[0.1rem] cursor-pointer sm:rounded-[0.8rem] rounded-[1rem] border-[#D90000] text-[#D90000]"
             >
               다이어리 삭제
             </button>
@@ -212,7 +212,7 @@ export default function ParchmentPageFrame() {
       </div>
       <div
         onClick={handleNextPage}
-        className={`text-[2rem] md:text-[3.2rem] ${
+        className={`sm:text-[2rem] text-[3.2rem] ${
           currentPageIndex + 2 < pages!.length ? 'text-[#008A02]' : 'text-[#BEBEBE]'
         } cursor-pointer`}
       >
