@@ -151,6 +151,26 @@ const DiaryCase: React.FC = () => {
     router.push(`/member/diary/${id}/parchment`); // 다이어리 페이지로 이동
   };
 
+  const swiperContainerStyle: React.CSSProperties = {
+    width: '100%',
+    height: '100%',
+    marginTop: '8rem',
+    paddingBottom: '10rem' // 페이지네이션을 위한 여백 추가
+  };
+
+  // Swiper 스타일
+  const mySwiperStyle: React.CSSProperties = {
+    width: '108rem', // 1080px
+    height: '72rem' // 720px
+  };
+
+  // 페이지네이션 스타일
+  const paginationStyle: React.CSSProperties = {
+    position: 'relative',
+    bottom: '-2rem', // 페이지네이션을 카드 하단에 배치
+    textAlign: 'center'
+  };
+
   return (
     <div className="flex-grow flex items-center justify-center transition-all duration-300 mt-8">
       {gridView ? (
@@ -225,14 +245,14 @@ const DiaryCase: React.FC = () => {
               ) : null
             )
           ) : (
-            <div className="flex items-center justify-center w-[25rem] h-[40rem] bg-white rounded shadow-md text-2xl font-bold text-black">
+            <div className="col-span-full flex items-center justify-center w-[25rem] h-[40rem] bg-white rounded shadow-md text-2xl font-bold text-black">
               다이어리가 없습니다
             </div>
           )}
         </div>
       ) : (
         // 스와이프 뷰에서 다이어리 커버 표시
-        <div className="relative mt-12">
+        <div style={swiperContainerStyle}>
           <Swiper
             effect="coverflow"
             grabCursor={true}
@@ -245,9 +265,9 @@ const DiaryCase: React.FC = () => {
               modifier: 1,
               slideShadows: true
             }}
-            pagination={{ clickable: true }}
+            pagination={{ clickable: true, el: '.swiper-pagination' }}
             modules={[EffectCoverflow, Pagination]}
-            className="w-[108rem] h-[72rem]"
+            style={mySwiperStyle}
           >
             {diaryCovers.length > 0 ? (
               diaryCovers.map((cover, index) =>
@@ -333,6 +353,7 @@ const DiaryCase: React.FC = () => {
               </SwiperSlide>
             )}
           </Swiper>
+          <div className="swiper-pagination" style={paginationStyle}></div>
         </div>
       )}
       <div className="fixed bottom-[3rem] right-[4rem]">
