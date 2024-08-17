@@ -157,7 +157,7 @@ export default function ParchmentPageFrame() {
   }
 
   return (
-    <div className="flex flex-row items-center justify-center sm:bg-slate-200 sm:w-[37.8rem] w-[128rem] mt-[9.9rem]">
+    <div className="flex flex-row items-center justify-center bg-slate-200 sm:w-[37.8rem] w-[128rem] mt-[9.9rem]">
       <div
         onClick={handlePrevPage}
         className={`sm:text-[2rem] text-[3.2rem] cursor-pointer ${
@@ -166,7 +166,7 @@ export default function ParchmentPageFrame() {
       >
         <FaChevronCircleLeft />
       </div>
-      <div className="sm:w-[37.8rem] w-[90rem] mx-[4.3rem]">
+      <div className="sm:w-[37.8rem] w-[90rem] mx-[4.3rem] sm:mx-[-2rem]">
         <div className="flex sm:flex-col gap-[1.2rem] flex-row justify-between ">
           <div className="flex flex-row w-[72rem]">
             <span

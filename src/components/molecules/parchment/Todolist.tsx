@@ -133,30 +133,11 @@ const Todolist = ({
               >
                 <input
                   type="color"
-                  className="color-input"
+                  className="round-color-input"
                   value={todo.color}
                   onChange={(e) => changeTodoColor(todo.id, e)}
                   disabled={!isEditMode}
                 />
-                {/* {
-                    todo.color === "transparent" ? 
-                  } */}
-                <style jsx>{`
-                  .color-input {
-                    width: 2.5rem;
-                    height: 2.9rem;
-                    -webkit-appearance: none;
-                    -moz-appearance: none;
-                    appearance: none;
-                    background-color: transparent;
-                    border: none;
-                  }
-                  .color-input::-webkit-color-swatch {
-                    border-radius: 50%;
-                    border: none;
-                  }
-                `}</style>
-                {/* </span> */}
                 <input
                   type="checkbox"
                   checked={todo.isDone}

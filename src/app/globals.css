@@ -77,3 +77,50 @@ body {
   height: 50rem;
   object-fit: cover;
 }
+
+.round-color-input {
+  width: 2.5rem;
+  height: 2.9rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+}
+
+.round-color-input::-webkit-color-swatch {
+  border-radius: 50%;
+  border: none;
+}
+
+.square-color-input {
+  width: 4.5rem;
+  height: 3rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+}
+
+.square-color-input::-webkit-color-swatch {
+  border-radius: 0.36rem;
+  border: none;
+}
+
+@media (max-width: 767px) {
+  .square-color-input {
+    width: 3.1rem;
+    height: 2.2rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    border: none;
+  }
+
+  .square-color-input::-webkit-color-swatch {
+    border-radius: 0.36rem;
+    border: none;
+  }
+}

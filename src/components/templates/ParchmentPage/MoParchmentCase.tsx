@@ -21,7 +21,7 @@ const MoParchmentCase = ({ diaryId, currentPageIndex }: DiaryContentsProps) => {
   return (
     <div className="flex">
       <div className="  flex items-center justify-center">
-        <div className=" w-[32.5rem] h-[50rem] bg-white shadow-md">
+        <div className=" w-[32.5rem] h-[48rem] bg-white shadow-md">
           <ParchmentContent page={pages![currentPageIndex]} diaryId={diaryId} />
         </div>
       </div>
