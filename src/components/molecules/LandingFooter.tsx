@@ -10,9 +10,9 @@ const LandingFooter = () => {
   };
 
   return (
-    <footer className="w-full h-[23rem] bg-green-950 text-white p-8">
-      <div className="w-[80rem] container mx-auto text-center flex flex-col items-center font-bold text-white">
-        <div className="flex flex-row mb-8 items-center">
+    <footer className="w-full h-auto bg-green-950 text-white p-8">
+      <div className="w-full max-w-[80rem] container mx-auto text-center flex flex-col items-center font-bold text-white">
+        <div className="flex flex-col sm:flex-row mb-8 items-center">
           <div className="relative w-[20rem] h-[4rem]">
             <Image
               src="/images/footer_logo.png"
@@ -22,10 +22,10 @@ const LandingFooter = () => {
               sizes="(max-width: 1280px) 100vw, 20rem"
             />
           </div>
-          <div className="text-xl ml-4 mt-4">플랜트리 - 일상을 기록하는 새로운 방법</div>
+          <div className="text-xl ml-0 sm:ml-4 mt-4 sm:mt-0">플랜트리 - 일상을 기록하는 새로운 방법</div>
         </div>
 
-        <div className="flex justify-center items-center w-full mb-6 gap-[29rem]">
+        <div className="flex flex-col sm:flex-row justify-center items-center w-full mb-6 gap-4 sm:gap-[29rem]">
           <span className="text-lg hover:text-gray-500 cursor-pointer" onClick={scrollToTop}>
             페이지 최상단으로 이동
           </span>
@@ -37,11 +37,11 @@ const LandingFooter = () => {
           </Link>
         </div>
 
-        <div className="text-left w-[37.5rem] mb-1">
+        <div className="text-left w-full sm:w-[37.5rem] mb-1">
           <p>© 2024 Team Plantree</p>
         </div>
 
-        <div className="grid grid-cols-3 gap-4 max-w-[80rem] mt-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-[80rem] mt-1">
           <div className="flex flex-row items-center gap-[1.1rem]">
             <h2 className="text-lg font-bold">FE</h2>
             <p>이보영</p>

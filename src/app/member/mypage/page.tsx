@@ -52,7 +52,7 @@ const MyPage: React.FC = () => {
 
   return (
     <>
-      <div className="w-[128rem] h-[188rem] grid grid-cols-1 justify-items-center max-w-[128rem] ">
+      <div className="w-[128rem] h-[188rem] grid grid-cols-1 justify-items-center max-w-[128rem] mt-[8rem]">
         <div className="w-[98rem] h-[158.2rem]">
           <div className="flex flex-row w-[98rem] h-[4.8rem] text-[3.2rem] mt-[6.4rem] mb-0 text-black font-bold">
             <button onClick={toBack} className="items-center">
