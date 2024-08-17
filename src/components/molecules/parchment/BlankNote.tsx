@@ -184,66 +184,68 @@ const BlankNote = ({ id }: BlankNoteProps) => {
   };
 
   return (
-    <div
-      className={`w-[50rem] ${isEditMode ? 'h-[75rem]' : 'h-[70.2rem]'}`}
-      style={{
-        border: '1px solid #C7D2B0',
-        boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.1)'
-      }}
-    >
-      <div className="mx-auto w-[49.8rem] ">
+    <div className={` w-[45rem] ${isEditMode ? 'h-[67.5rem]' : 'h-[63rem]'} bg-white border-[0.1rem] border-[#C7D2B0]`}>
+      <div className="mx-auto w-full">
         {isEditMode ? (
-          <div className="bg-[#EDF1E6] w-full h-full py-[1.2rem] px-[2rem] flex flex-row justify-between">
-            <div className="text-[1.8rem] text-[#496E00] font-[600]">
-              {index} Page_{changeStyleName()}
+          <div className="bg-[#EDF1E6] w-full h-[4.32rem] py-[1.1rem] px-[1.35rem] border-b-[0.1rem] border-[#C7D2B0] flex flex-row justify-between">
+            <div className="text-[1.62rem] text-[#496E00] font-[600]">
+              {index} Page_{changeStyleName()} (수정중)
             </div>
-            <div className="flex justify-between items-center w-[6rem] h-[2.4rem]">
-              <button className="text-[2.4rem] text-[#496E00]" onClick={handleSaveOrUpdate}>
+            <div>
+              <button
+                className="text-[2.16rem] text-[#496E00] hover:text-black mr-[1.08rem]"
+                onClick={handleSaveOrUpdate}
+                title="클릭해서 저장!"
+              >
                 <FaSave />
               </button>
-              <button className="text-[2.4rem] text-[#496E00]" onClick={handleDelete}>
+              <button
+                className="text-[2.16rem] text-[#496E00] hover:text-black"
+                onClick={handleDelete}
+                title="클릭하면 삭제!"
+              >
                 <FaTrashAlt />
               </button>
             </div>
           </div>
         ) : null}
       </div>
-      <div className="flex flex-wrap bg-white justify-center h-[69.7rem] p-[2rem]">
+      <div className="relative flex flex-col gap-[1.44rem] mx-auto mt-[1rem] w-[41.4rem] h-[59.58rem] bg-white my-[1.8rem] pt-[2rem]">
         <div className="flex flex-wrap justify-center">
-          <div className="flex justify-between flex-wrap ">
+          <div className="flex justify-between flex-wrap">
             {isEditMode ? (
-              <div className="flex justify-between w-[22rem]">
-                <label className="flex w-[10rem] h-[2.2rem] justify-between items-center">
-                  <p className="text-forestGreen font-semibold text-[1.2rem]">배경 색상</p>
+              <div className="flex justify-between w-[19.8rem] ">
+                <label className="flex w-[9rem] h-[1.98rem] justify-between items-center">
+                  <p className="text-forestGreen font-semibold text-[1.08rem]">배경 색상</p>
                   <input
                     type="color"
                     value={bgColor}
                     onChange={(e) => setBgColor(e.target.value)}
-                    className="w-[4.2rem] h-[2.2rem] bg-transparent border-none"
+                    className="w-[3.78rem] h-[1.98rem] bg-transparent border-none"
                     disabled={!isEditMode}
                   />
                 </label>
-                <label className="flex w-[11rem] h-[2.2rem] justify-between items-center">
-                  <p className="text-forestGreen font-semibold text-[1.2rem]">텍스트 색상</p>
+                <label className="flex w-[9.9rem] h-[1.98rem] justify-between items-center">
+                  <p className="text-forestGreen font-semibold text-[1.08rem]">텍스트 색상</p>
                   <input
                     type="color"
                     value={globalTextColor}
                     onChange={(e) => setGlobalTextColor(e.target.value)}
-                    className="w-[4.2rem] h-[2.2rem] bg-transparent border-none "
+                    className="w-[3.78rem] h-[1.98rem] bg-transparent border-none "
                     disabled={!isEditMode}
                   />
                 </label>
               </div>
             ) : null}
 
-            <div className="flex justify-between items-center w-[46rem] h-[1.9rem]">
-              <div className="flex flex-col w-[30rem] border-b-[0.3rem] pb-1">
+            <div className="flex justify-between items-center w-[41.4rem] h-[1.71rem]">
+              <div className="flex flex-col w-[27rem] border-b-[0.27rem] pb-[0.1rem]">
                 <label htmlFor="title" className="flex items-center">
-                  <p className="text-forestGray font-semibold text-[1.5rem]">TITLE</p>
+                  <p className="text-forestGray font-semibold text-[1.35rem]">TITLE</p>
                   <input
                     id="title"
                     type="text"
-                    className="w-full h-full text-[1.5rem] bg-transparent border-none ml-2"
+                    className="w-full h-full text-[1.35rem] bg-transparent border-none ml-[0.45rem]"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     disabled={!isEditMode}
@@ -251,10 +253,10 @@ const BlankNote = ({ id }: BlankNoteProps) => {
                 </label>
               </div>
 
-              <div className="flex flex-col w-[14.5rem] border-b-[0.3rem] pb-1">
+              <div className="flex flex-col w-[13.05rem] border-b-[0.27rem] pb-1">
                 <label htmlFor="date" className="flex items-center">
-                  <p className="text-forestGray font-semibold text-[1.5rem]">DATE</p>
-                  <div className="relative ml-2">
+                  <p className="text-forestGray font-semibold text-[1.35rem]">DATE</p>
+                  <div className="relative ml-[0.45rem]">
                     <DatePicker
                       selected={date ? new Date(date) : null}
                       onChange={(date) => setDate(date ? date.toISOString().split('T')[0] : '')}
@@ -271,10 +273,10 @@ const BlankNote = ({ id }: BlankNoteProps) => {
           <div
             ref={editableDivRef}
             contentEditable={isEditMode}
-            className="p-4 w-[46rem] h-[53rem] overflow-hidden mb-1 "
+            className="p-[0.9rem] w-[41.4rem] h-[47.7rem] overflow-hidden mb-1 "
             style={{
               color: globalTextColor,
-              fontSize: '16px',
+              fontSize: '1.44rem',
               backgroundColor: bgColor,
               overflowY: 'hidden',
               wordBreak: 'break-all',

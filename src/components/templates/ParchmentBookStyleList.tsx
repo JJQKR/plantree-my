@@ -149,14 +149,14 @@ export default function ParchmentBookStyleList() {
   }
 
   return (
-    <div className="flex flex-row items-center justify-center w-[128rem] ">
+    <div className="flex flex-row items-center justify-center w-[128rem]  ">
       <div
         onClick={handlePrevPage}
         className={`text-[3.2rem]  cursor-pointer ${currentPageIndex < 2 ? 'text-[#BEBEBE]' : 'text-[#008A02]'}`}
       >
         <FaChevronCircleLeft />
       </div>
-      <div className=" w-[100rem] mx-[4.3rem]">
+      <div className=" w-[90rem] mx-[4.3rem]">
         <div className="flex flex-row justify-between ">
           <div className="flex flex-row w-[72rem]">
             <span
@@ -165,7 +165,7 @@ export default function ParchmentBookStyleList() {
             >
               <FaChevronLeft />
             </span>
-            <span className=" text-[3.2rem] w-[61rem] px-[1rem] font-[600]">{coverTitle}</span>
+            <span className=" text-[3.2rem] w-[50rem] px-[1rem] font-[600]">{coverTitle}</span>
           </div>
           <div className="flex flex-row gap-3">
             <button
@@ -189,7 +189,7 @@ export default function ParchmentBookStyleList() {
           </div>
         </div>
         <div className="flex flex-row items-center justify-center">
-          <div className="w-[100rem] h-[75rem] mx-[3.6rem] my-[4.3rem]">
+          <div className="w-[90rem] h-[69.5rem] mx-[3.24rem] my-[3.87rem]">
             <DiaryContents diaryId={diaryId} currentPageIndex={currentPageIndex} />
           </div>
         </div>
