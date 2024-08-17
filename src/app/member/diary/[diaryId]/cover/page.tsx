@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import DiaryCoverPage from '@/components/templates/diarycreate/DiaryCoverPage';
+import DiaryCoverPage from '@/components/templates/CoverPage/DiaryCoverPage';
 import BottomSheet from '@/components/molecules/bottomsheet/BottomSheet';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';

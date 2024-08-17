@@ -3,15 +3,15 @@
 import { usePageToDiaryId } from '@/lib/hooks/usePages';
 import useParchmentModalStore from '@/stores/parchment.modal.store';
 import React from 'react';
-import ShowContents from './ShowContents';
 import { FaPlus } from 'react-icons/fa';
+import ParchmentContent from './ParchmentContent';
 
 interface DiaryContentsProps {
   diaryId: string;
   currentPageIndex: number;
 }
 
-const DiaryContents = ({ diaryId, currentPageIndex }: DiaryContentsProps) => {
+const PcParchmentCase = ({ diaryId, currentPageIndex }: DiaryContentsProps) => {
   const { data: pages, isPending } = usePageToDiaryId(diaryId);
   const { toggleParchmentOptionModal } = useParchmentModalStore((state) => state);
 
@@ -25,7 +25,7 @@ const DiaryContents = ({ diaryId, currentPageIndex }: DiaryContentsProps) => {
       <div className="  flex items-center justify-center">
         {pages?.[currentPageIndex] ? (
           <div className=" w-[45rem] h-[67.5rem] bg-white shadow-lg">
-            <ShowContents page={pages[currentPageIndex]} diaryId={diaryId} />
+            <ParchmentContent page={pages[currentPageIndex]} diaryId={diaryId} />
           </div>
         ) : (
           <div
@@ -41,7 +41,7 @@ const DiaryContents = ({ diaryId, currentPageIndex }: DiaryContentsProps) => {
       <div className="flex items-center justify-center">
         {pages?.[currentPageIndex + 1] ? (
           <div className="w-[45rem] h-[67.5rem] bg-white shadow-lg">
-            <ShowContents page={pages[currentPageIndex + 1]} diaryId={diaryId} />
+            <ParchmentContent page={pages[currentPageIndex + 1]} diaryId={diaryId} />
           </div>
         ) : pages?.[currentPageIndex] ? (
           <div
@@ -58,4 +58,4 @@ const DiaryContents = ({ diaryId, currentPageIndex }: DiaryContentsProps) => {
   );
 };
 
-export default DiaryContents;
+export default PcParchmentCase;

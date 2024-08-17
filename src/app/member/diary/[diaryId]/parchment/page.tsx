@@ -6,7 +6,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import useBottomSheetStore from '@/stores/bottomsheet.store';
 import ParchmentOptionsModal from '@/components/molecules/bottomsheet/ParchmentOptionsModal';
-import ParchmentBookStyleList from '@/components/templates/ParchmentBookStyleList';
+import ParchmentPageFrame from '@/components/templates/ParchmentPage/ParchmentPageFrame';
 
 /**
  * 투두리스트
@@ -25,7 +25,7 @@ const DiaryParchment = () => {
 
   return (
     <div className="relative">
-      <ParchmentBookStyleList />
+      <ParchmentPageFrame />
       <DndProvider backend={HTML5Backend}>
         <BottomSheet
           isOpen={isSheetOpen}
