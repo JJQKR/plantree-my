@@ -101,40 +101,42 @@ const WithdrawalModal: React.FC = () => {
           onKeyDown={handleKeyDown}
           // onClick={handleBackGroundClick}
         >
-          <div className="bg-white p-[4rem] rounded-[2rem] w-[46rem] h-[37rem]">
+          <div className="bg-white p-[4rem] rounded-[2rem] w-[46rem] h-[38.5rem]">
             <div onClick={(e) => e.stopPropagation()}>
               <div className="flex justify-between items-center">
-                <h2 className="text-[2.8rem] font-bold text-left text-black mb-[1.45rem]">회원 탈퇴</h2>
+                <h2 className="font-semibold text-[2.4rem] h-[4rem]">회원 탈퇴</h2>
                 <button
-                  className="text-[#008A02] font-bold text-[2.8rem] mb-[1.45rem]"
+                  className="text-[#008A02] font-bold text-[2.2rem] mb-[1.45rem]"
                   onClick={toggleWithdrawalModal}
                   type="button"
                 >
                   &#10005;
                 </button>
               </div>
-              <div className="flex-col text-start text-[1.6rem]">
+              <div className="flex-col text-start text-[1.8rem] font-semibold">
                 <p>{nickname} 님은</p>
                 <p>플랜트리와 {membershipDays}일 동안 함께 했어요.</p>
                 <div className="">
                   <p>&#39;안녕플랜트리&#39;를 입력하시면 탈퇴됩니다.</p>
                 </div>
-                <p className="text-[#D90000]">* 탈퇴 후 정보 복구가 어려우니 미리 저장해주세요.</p>
+                <p className="text-[#D90000] text-[1.64rem] mt-[1.2rem]">
+                  &#10033;이후 정보복구가 어려우니 미리 저장해주세요.
+                </p>
               </div>
 
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col">
                 <form className="flex flex-col" onSubmit={handleSubmit}>
                   <input
                     type="text"
                     placeholder="안녕플랜트리"
-                    className="mt-[3.2rem] mb-[1rem] pl-[1rem] border rounded-[1.2rem] w-full h-[5.2rem] text-[1.8rem] text-black"
+                    className="mt-[2.4rem] pl-[1rem] border rounded-[1.2rem] w-full h-[5.2rem] text-[1.8rem] text-black"
                     value={goodbye}
                     onChange={(e) => setGoodbye(e.target.value)}
                     disabled={loading}
                   />
                   <button
                     type="submit"
-                    className="w-full h-[5.2rem] text-[#720000] text-[1.8rem] rounded-[1.2rem]"
+                    className="w-full h-[5.2rem] text-[#720000] text-[1.8rem] rounded-[1.2rem] mt-[1.2rem]"
                     style={{ backgroundColor: '#FFE5E5' }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.backgroundColor = '#D90000';
