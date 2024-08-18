@@ -27,11 +27,11 @@ const BadgeModal: React.FC = () => {
           <div onClick={(e) => e.stopPropagation()} className="h-full">
             <div className="flex justify-stretch items-center mb-[1.4rem]">
               <h2 className="font-semibold text-[2.8rem] ml-[1rem]">도전과제</h2>
-              <p className="font-semibold ml-[1.6rem]">
+              <p className="font-semibold text-[2rem] ml-[1.6rem] mt-[0.3rem]">
                 <ObtainedBadgesCount /> / {totalBadges.length}
               </p>
               <button
-                className="text-[#008A02] ml-[67rem] font-bold text-[2.75rem]"
+                className="text-[#008A02] ml-[66rem] font-bold text-[2.75rem]"
                 onClick={toggleBadgeModal}
                 type="button"
               >
