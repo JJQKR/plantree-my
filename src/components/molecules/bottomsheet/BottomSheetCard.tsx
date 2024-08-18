@@ -1,7 +1,7 @@
 import { UpdatePageType } from '@/api/pages.api';
 import useBottomSheetStore from '@/stores/bottomsheet.store';
 import usePageStore from '@/stores/pages.store';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 // import { useDrag, useDrop } from 'react-dnd';
 
 // const ItemType = {
@@ -25,7 +25,14 @@ const BottomSheetCard: React.FC<BottomSheetCardProps> = ({ page, moveCard, onTog
   const ref = React.useRef(null);
   const { setCurrentPageIndex } = usePageStore((state) => state);
   const { activeCardIndices, setActiveCardIndices } = useBottomSheetStore((state) => state);
-  console.log(page);
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // const [, drop] = useDrop({
   //   accept: ItemType.CARD,
@@ -53,12 +60,17 @@ const BottomSheetCard: React.FC<BottomSheetCardProps> = ({ page, moveCard, onTog
   // drag(drop(ref));
 
   const showIndices = (index: number) => {
-    if (index % 2 !== 0) {
-      setCurrentPageIndex(index - 1);
-      setActiveCardIndices([index - 1, index]);
-    } else if (index % 2 === 0) {
+    if (windowWidth < 768) {
       setCurrentPageIndex(index);
-      setActiveCardIndices([index, index + 1]);
+      setActiveCardIndices([index]);
+    } else {
+      if (index % 2 !== 0) {
+        setCurrentPageIndex(index - 1);
+        setActiveCardIndices([index - 1, index]);
+      } else if (index % 2 === 0) {
+        setCurrentPageIndex(index);
+        setActiveCardIndices([index, index + 1]);
+      }
     }
   };
 

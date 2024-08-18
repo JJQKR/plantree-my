@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import uuid from 'react-uuid';
 import { useParams } from 'next/navigation';
 import usePageStore, { PageType } from '@/stores/pages.store';
@@ -28,6 +28,13 @@ const ParchmentOptionsModal: React.FC = () => {
   const { mutate: createTenMinPlanner } = useCreateTenMinPlanner();
   const { currentPageIndex, setCurrentPageIndex } = usePageStore((state) => state);
   const { activeCardIndices, setActiveCardIndices } = useBottomSheetStore((state) => state);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // * 4개 이상의 파치먼트 옵션이 생기면 생성
   // const [currentOptionPage, setCurrentOptionPage] = useState(0);
@@ -66,7 +73,11 @@ const ParchmentOptionsModal: React.FC = () => {
     };
 
     setCurrentPageIndex(currentIndex(newPage.index));
-    setActiveCardIndices([currentIndex(newPage.index), currentIndex(newPage.index) + 1]);
+    if (windowWidth < 768) {
+      setActiveCardIndices([currentIndex(newPage.index)]);
+    } else {
+      setActiveCardIndices([currentIndex(newPage.index), currentIndex(newPage.index) + 1]);
+    }
 
     if (parchment.parchmentStyle === 'tenMinPlanner') {
       const newTenMinPlanner = {
