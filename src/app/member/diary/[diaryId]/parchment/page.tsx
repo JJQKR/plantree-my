@@ -1,12 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import BottomSheet from '@/components/molecules/bottomsheet/BottomSheet';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import useBottomSheetStore from '@/stores/bottomsheet.store';
 import ParchmentOptionsModal from '@/components/molecules/bottomsheet/ParchmentOptionsModal';
-import ParchmentPageFrame from '@/components/templates/ParchmentPage/ParchmentPageFrame';
+import PcParchmentPageFrame from '@/components/templates/ParchmentPage/PcParchmentPageFrame';
+import MoParchmentPageFrame from '@/components/templates/ParchmentPage/MoParchmentPageFrame';
 
 /**
  * 투두리스트
@@ -22,10 +23,17 @@ import ParchmentPageFrame from '@/components/templates/ParchmentPage/ParchmentPa
 
 const DiaryParchment = () => {
   const { bottomSheetList, isSheetOpen, toggleSheet, moveCard } = useBottomSheetStore();
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div className="relative">
-      <ParchmentPageFrame />
+      {windowWidth < 768 ? <MoParchmentPageFrame /> : <PcParchmentPageFrame />}
       <DndProvider backend={HTML5Backend}>
         <BottomSheet
           isOpen={isSheetOpen}

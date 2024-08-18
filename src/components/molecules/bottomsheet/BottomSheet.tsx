@@ -7,6 +7,8 @@ import { usePageToDiaryId } from '@/lib/hooks/usePages';
 import { FaChevronUp } from 'react-icons/fa6';
 import { FaChevronDown } from 'react-icons/fa6';
 import { FaPlus } from 'react-icons/fa6';
+import { FaChevronLeft } from 'react-icons/fa6';
+import { FaChevronRight } from 'react-icons/fa6';
 
 type BottomSheetProps = {
   isOpen: boolean;
@@ -47,8 +49,8 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
 
   return (
     <div
-      className={`fixed bottom-0 left-1/2 transform -translate-x-1/2 w-[118rem] h-[6.5rem] bg-[#EDF1E6] border-[0.15rem] border-[#B0DBB1] shadow-lg rounded-t-2xl transition-transform duration-300 ${
-        isOpen ? 'translate-y-0' : 'translate-y-[5rem]'
+      className={`fixed bottom-0 left-1/2 transform -translate-x-1/2 sm:w-[42.8rem] w-[118rem] sm:h-[4.5rem] h-[5.5rem] bg-[#EDF1E6] border-[0.15rem] border-[#B0DBB1] shadow-lg rounded-t-2xl transition-transform duration-300 ${
+        isOpen ? 'translate-y-0' : 'sm:translate-y-[4rem] translate-y-[5rem]'
       } z-20`} // z-index 설정
     >
       <div className="flex justify-center">
@@ -56,7 +58,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
           className="absolute top-[-3rem] w-[11.4rem] h-[3rem] bg-[#EDF1E6] border-[0.15rem] border-x-[#B0DBB1] border-t-[#B0DBB1] border-b-[#EDF1E6] rounded-t-[1rem] cursor-pointer flex items-end justify-center z-50"
           onClick={onToggle}
         >
-          <span className="text-[1.5rem] flex items-center">
+          <span className="sm:text-[1.3rem] text-[1.5rem] flex items-center">
             {isOpen ? (
               <div className="flex flex-row gap-[0.4rem]  text-[#6D8B33] font-[700]">
                 <FaChevronDown />
@@ -71,15 +73,18 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
           </span>
         </div>
       </div>
-      <div className="relative">
+      <div className="relative flex justify-center">
         <button
-          className="absolute left-0 top-[2.5rem] w-[3rem] h-[3rem] transform -translate-y-1/2  rounded-full flex items-center justify-center bg-[#EAEAEA] z-50"
+          className="absolute left-0 top-[2.5rem] ml-[1rem] text-[2rem] transform -translate-y-1/2 "
           onClick={scrollLeft}
         >
-          ◀
+          <FaChevronLeft />
         </button>
-        <div ref={scrollRef} className="py-4 px-[4rem] text-center overflow-x-auto flex space-x-4">
-          <div className="flex flex-row gap-[1rem]">
+        <div
+          ref={scrollRef}
+          className="flex sm:w-[36rem] w-[111rem] py-4 text-center overflow-hidden overflow-x-auto sm:gap-[0.8rem] gap-[1rem] "
+        >
+          <div className="flex flex-row sm:gap-[0.8rem] gap-[1rem]">
             {pages?.map((page) => {
               return (
                 <BottomSheetCard key={page.id} page={page} moveCard={moveCard} onToggle={onToggle} pages={pages} />
@@ -88,19 +93,19 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
           </div>
           <div
             onClick={handleAddPageModal}
-            className="border-[#6D8B33] border-[0.1rem] rounded-[0.4rem] p-4 w-[6.5rem] h-[3.6rem] flex-none cursor-pointer z-30 flex items-center justify-center" // z-index 설정
+            className="border-[#6D8B33] border-[0.1rem] rounded-[0.4rem] p-4 sm:w-[5.5rem] w-[6.5rem] sm:h-[3rem] h-[3.6rem] flex-none cursor-pointer z-30 flex items-center justify-center" // z-index 설정
           >
-            <div className="text-[1.5rem] h-[1.8rem] font-[700] flex flex-row justify-end items-center text-[#6D8B33] ">
+            <div className="sm:text-[1.2rem] text-[1.5rem] h-[1.8rem] font-[700] flex flex-row justify-end items-center text-[#6D8B33] ">
               <FaPlus />
-              추가
+              <div className=" sm:h-[1.4rem]">추가</div>
             </div>
           </div>
         </div>
         <button
-          className="absolute right-0 top-[2.5rem] w-[3rem] h-[3rem] transform -translate-y-1/2  rounded-full flex items-center justify-center bg-[#EAEAEA] z-50"
+          className="absolute right-0 mr-[1rem] top-[2.5rem] text-[2rem] transform -translate-y-1/2 "
           onClick={scrollRight}
         >
-          ▶
+          <FaChevronRight />
         </button>
       </div>
     </div>

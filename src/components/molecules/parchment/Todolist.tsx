@@ -110,105 +110,95 @@ const Todolist = ({
   };
 
   const adjustHeight = (e: HTMLTextAreaElement) => {
-    if (e.value.trim() !== '') {
-      e.style.height = 'auto'; // 높이를 auto로 설정
-      e.style.height = `${e.scrollHeight}px`; // 내용에 따라 높이 조정
+    if (window.innerWidth < 768) {
+      if (e.value.trim() !== '') {
+        e.style.height = 'auto'; // 높이를 auto로 설정
+        e.style.height = `${e.scrollHeight}px`; // 내용에 따라 높이 조정
+      } else {
+        e.style.height = '1.8rem'; // 기본 높이를 1.2rem로 설정 (화면 크기 767px 이하)
+      }
     } else {
-      e.style.height = '3.2rem'; // 기본 높이 유지
+      if (e.value.trim() !== '') {
+        e.style.height = 'auto'; // 높이를 auto로 설정
+        e.style.height = `${e.scrollHeight}px`; // 내용에 따라 높이 조정
+      } else {
+        e.style.height = '3.2rem'; // 기본 높이를 3.2rem로 유지 (화면 크기 767px 초과)
+      }
     }
   };
 
   return (
-    <div className="w-[23.49rem] h-[36rem]overflow-y-auto overflow-x-hidden">
-      <div className="w-[22.5rem]">
-        <ul className="relative">
-          {todoList.map((todo) => {
-            return (
-              <li
-                key={todo.id}
-                className="flex flex-row justify-between w-full border-b-[0.135rem] border-[#EAEAEA] min-h-[2.88rem] text-[1.35rem] font-[400] items-center"
-                style={{
-                  backgroundColor: selectedColorTodo?.id === todo.id ? todo.color : 'transparent'
-                }}
-              >
+    <div className="w-full sm:h-[27rem] h-[36rem] overflow-y-auto overflow-x-hidden">
+      <ul className="relative">
+        {todoList.map((todo) => {
+          return (
+            <li
+              key={todo.id}
+              className="flex flex-row justify-between w-full border-b-[0.135rem] border-[#EAEAEA] sm:min-h-[2.08rem] min-h-[2.88rem] sm:text-[0.97rem] text-[1.35rem] font-[400] items-center"
+              style={{
+                backgroundColor: selectedColorTodo?.id === todo.id ? todo.color : 'transparent'
+              }}
+            >
+              <div className="flex gap-[0.2rem]">
                 <input
                   type="color"
-                  className="color-input"
+                  className="round-color-input"
                   value={todo.color}
                   onChange={(e) => changeTodoColor(todo.id, e)}
                   disabled={!isEditMode}
                 />
-                {/* {
-                    todo.color === "transparent" ? 
-                  } */}
-                <style jsx>{`
-                  .color-input {
-                    width: 2.5rem;
-                    height: 2.9rem;
-                    -webkit-appearance: none;
-                    -moz-appearance: none;
-                    appearance: none;
-                    background-color: transparent;
-                    border: none;
-                  }
-                  .color-input::-webkit-color-swatch {
-                    border-radius: 50%;
-                    border: none;
-                  }
-                `}</style>
-                {/* </span> */}
                 <input
                   type="checkbox"
                   checked={todo.isDone}
                   onChange={() => handleToggle(todo.id)}
                   disabled={!isEditMode}
-                  style={{ zoom: 1.53 }}
+                  className="checkbox"
                 />
-                {editingId === todo.id ? (
-                  <textarea
-                    key={todo.id}
-                    // 2. ref 속성에 값 넣기
-                    ref={editTextareaRef}
-                    value={todo.text}
-                    onChange={(e) => {
-                      handleEditingChange(e, todo.id);
-                      adjustHeight(e.target); // 높이 조절 함수 호출
-                    }}
-                    onKeyUp={(e) => endEdit(todo.id, e)}
-                    disabled={!isEditMode}
-                    className=" w-[15.3rem] h-[2.88rem] overflow-y-auto resize-none text-[1.26rem] p-[0.45rem]"
-                  />
-                ) : (
-                  <div>
-                    <div
-                      className="min-h-[2.88rem] w-[15.3rem] whitespace-pre-wrap break-words break-all flex items-center"
-                      onClick={() => isEditMode && handleSelectTodo(todo)}
-                    >
-                      {todo.text || ''}
-                    </div>
+              </div>
+              {editingId === todo.id ? (
+                <textarea
+                  key={todo.id}
+                  // 2. ref 속성에 값 넣기
+                  ref={editTextareaRef}
+                  value={todo.text}
+                  onChange={(e) => {
+                    handleEditingChange(e, todo.id);
+                    adjustHeight(e.target); // 높이 조절 함수 호출
+                  }}
+                  onKeyUp={(e) => endEdit(todo.id, e)}
+                  disabled={!isEditMode}
+                  className=" sm:w-[10.9rem] w-[15.3rem] overflow-y-auto resize-none sm:text-[0.9rem] text-[1.26rem] p-[0.45rem] "
+                />
+              ) : (
+                <div>
+                  <div
+                    className="sm:min-h-[2rem] min-h-[2.88rem] sm:w-[10.5rem] w-[15.3rem] whitespace-pre-wrap break-words break-all flex items-center"
+                    onClick={() => isEditMode && handleSelectTodo(todo)}
+                  >
+                    {todo.text || ''}
                   </div>
-                )}
-                <div className="w-[1.8rem] flex gap-[0.5rem]">
-                  {isEditMode ? (
-                    <button onClick={() => removeTodo(todo.id)} className="text-[#9E9E9E] text-[2rem]">
-                      <FaTrashAlt />
-                    </button>
-                  ) : null}
                 </div>
-              </li>
-            );
-          })}
-        </ul>
-        {isEditMode ? (
-          <div
-            onClick={handleAddTodo}
-            className="h-[2.79rem] py-[0.54rem]  flex flex-row justify-center items-center text-[#727272] font-[600]"
-          >
-            <FaPlus />
-            <span className="h-[1.71rem] ml-[0.18rem]"> 리스트 추가 </span>
-          </div>
-        ) : null}
-      </div>
+              )}
+              <div className="flex items-center">
+                {isEditMode ? (
+                  <button onClick={() => removeTodo(todo.id)} className="text-[#9E9E9E] sm:text-[1.3rem] text-[2rem]">
+                    <FaTrashAlt />
+                  </button>
+                ) : null}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+      {isEditMode ? (
+        <div
+          onClick={handleAddTodo}
+          className="sm:h-[1.98rem] h-[2.79rem] sm:py-[0.39rem] py-[0.54rem] sm:text-[0.97rem]  flex flex-row justify-center items-center text-[#727272] font-[600]"
+        >
+          <FaPlus />
+          <span className="sm:h-[1.2rem] h-[1.71rem] ml-[0.18rem]"> 리스트 추가 </span>
+        </div>
+      ) : null}
     </div>
   );
 };

@@ -159,9 +159,9 @@ const DiaryCase: React.FC = () => {
   };
 
   return (
-    <div className="flex-grow flex items-center justify-center transition-all duration-300 mt-8">
+    <div className="flex-grow flex items-center justify-center transition-all duration-300 mt-8 sm:mb-[20rem]">
       {gridView ? (
-        <div className={`grid grid-cols-2 gap-10 md:grid-cols-3 lg:grid-cols-3 max-w-full mt-[10rem]`}>
+        <div className={`grid sm:grid-cols-2 gap-10 grid-cols-3 lg:grid-cols-3 max-w-full mt-[10rem]`}>
           {diaryCovers.length > 0 ? (
             diaryCovers.map((cover, index) =>
               cover.cover_id ? (
@@ -254,7 +254,7 @@ const DiaryCase: React.FC = () => {
             }}
             pagination={{ clickable: true, el: '.swiper-pagination' }}
             modules={[EffectCoverflow, Pagination]}
-            className="w-full h-full md:w-[95rem] md:h-[72rem]"
+            className="sm:w-[32rem] sm:h-[50rem] w-[95rem] h-[72rem]"
           >
             {diaryCovers.length > 0 ? (
               diaryCovers.map((cover, index) =>
@@ -262,7 +262,7 @@ const DiaryCase: React.FC = () => {
                   <SwiperSlide
                     key={cover.cover_id}
                     onClick={() => handleDiaryClick(cover.diary_id as string)}
-                    className="flex items-center justify-center cursor-pointer w-[32rem] h-[50rem] md:w-[48rem] md:h-[72rem]"
+                    className="flex items-center justify-center cursor-pointer sm:w-[32rem] sm:h-[50rem] w-[48rem] h-[72rem]"
                     style={{
                       backgroundColor: cover.cover_bg_color,
                       width: cover.cover_stage_size.width * cover.cover_scale,
@@ -332,7 +332,7 @@ const DiaryCase: React.FC = () => {
                 ) : null
               )
             ) : (
-              <SwiperSlide className="flex items-center justify-center w-[32rem] h-[50rem] md:w-[48rem] md:h-[72rem] bg-white text-2xl font-bold text-black">
+              <SwiperSlide className="flex items-center justify-center sm:w-[32rem] sm:h-[50rem] w-[48rem] h-[72rem] bg-white text-2xl font-bold text-black">
                 <button
                   onClick={handleCreateDiary}
                   className="flex flex-col items-center justify-center text-center"
@@ -346,7 +346,7 @@ const DiaryCase: React.FC = () => {
           <div className="swiper-pagination" style={paginationStyle}></div>
         </div>
       )}
-      <div className="fixed bottom-[12rem] right-[4rem] md:bottom-[3rem] md:right-[2rem]">
+      <div className="fixed sm:bottom-[12rem] sm:right-[4rem] sm:mb-[10rem] bottom-[3rem] right-[2rem]">
         {!gridView && <CreateDiaryButton onClick={handleCreateDiary} />}
       </div>
       {loading && ( // 로딩 애니메이션 표시
