@@ -151,19 +151,6 @@ const DiaryCase: React.FC = () => {
     router.push(`/member/diary/${id}/parchment`); // 다이어리 페이지로 이동
   };
 
-  const swiperContainerStyle: React.CSSProperties = {
-    width: '100%',
-    height: '100%',
-    marginTop: '8rem',
-    paddingBottom: '10rem' // 페이지네이션을 위한 여백 추가
-  };
-
-  // Swiper 스타일
-  const mySwiperStyle: React.CSSProperties = {
-    width: '108rem', // 1080px
-    height: '72rem' // 720px
-  };
-
   // 페이지네이션 스타일
   const paginationStyle: React.CSSProperties = {
     position: 'relative',
@@ -252,7 +239,7 @@ const DiaryCase: React.FC = () => {
         </div>
       ) : (
         // 스와이프 뷰에서 다이어리 커버 표시
-        <div style={swiperContainerStyle}>
+        <div className="w-full h-full mt-[10rem] pb-[10rem] ">
           <Swiper
             effect="coverflow"
             grabCursor={true}
@@ -267,7 +254,7 @@ const DiaryCase: React.FC = () => {
             }}
             pagination={{ clickable: true, el: '.swiper-pagination' }}
             modules={[EffectCoverflow, Pagination]}
-            style={mySwiperStyle}
+            className="w-full h-full md:w-[95rem] md:h-[72rem]"
           >
             {diaryCovers.length > 0 ? (
               diaryCovers.map((cover, index) =>
@@ -275,11 +262,14 @@ const DiaryCase: React.FC = () => {
                   <SwiperSlide
                     key={cover.cover_id}
                     onClick={() => handleDiaryClick(cover.diary_id as string)}
-                    className="flex items-center justify-center cursor-pointer"
+                    className="flex items-center justify-center cursor-pointer "
                     style={{
                       backgroundColor: cover.cover_bg_color,
                       width: cover.cover_stage_size.width * cover.cover_scale,
-                      height: cover.cover_stage_size.height * cover.cover_scale
+                      height: cover.cover_stage_size.height * cover.cover_scale,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
                     }}
                   >
                     <Stage
@@ -342,11 +332,11 @@ const DiaryCase: React.FC = () => {
                 ) : null
               )
             ) : (
-              <SwiperSlide className="flex items-center justify-center w-[48rem] h-[72rem] bg-white text-2xl font-bold text-black">
+              <SwiperSlide className="flex items-center justify-center w-[32rem] h-[50rem] md:w-[48rem] md:h-[72rem] bg-white text-2xl font-bold text-black">
                 <button
                   onClick={handleCreateDiary}
                   className="flex flex-col items-center justify-center text-center"
-                  style={{ transform: 'translateY(-20%)' }}
+                  style={{ transform: 'none' }}
                 >
                   +<br /> 다이어리 생성
                 </button>
@@ -356,7 +346,7 @@ const DiaryCase: React.FC = () => {
           <div className="swiper-pagination" style={paginationStyle}></div>
         </div>
       )}
-      <div className="fixed bottom-[3rem] right-[4rem]">
+      <div className="fixed bottom-[6rem] right-[11rem] md:bottom-[3rem] md:right-[2rem]">
         {!gridView && <CreateDiaryButton onClick={handleCreateDiary} />}
       </div>
       {loading && ( // 로딩 애니메이션 표시
