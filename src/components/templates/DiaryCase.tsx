@@ -262,7 +262,7 @@ const DiaryCase: React.FC = () => {
                   <SwiperSlide
                     key={cover.cover_id}
                     onClick={() => handleDiaryClick(cover.diary_id as string)}
-                    className="flex items-center justify-center cursor-pointer "
+                    className="flex items-center justify-center cursor-pointer w-[32rem] h-[50rem] md:w-[48rem] md:h-[72rem]"
                     style={{
                       backgroundColor: cover.cover_bg_color,
                       width: cover.cover_stage_size.width * cover.cover_scale,
@@ -346,7 +346,7 @@ const DiaryCase: React.FC = () => {
           <div className="swiper-pagination" style={paginationStyle}></div>
         </div>
       )}
-      <div className="fixed bottom-[6rem] right-[11rem] md:bottom-[3rem] md:right-[2rem]">
+      <div className="fixed bottom-[12rem] right-[4rem] md:bottom-[3rem] md:right-[2rem]">
         {!gridView && <CreateDiaryButton onClick={handleCreateDiary} />}
       </div>
       {loading && ( // 로딩 애니메이션 표시
