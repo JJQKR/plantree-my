@@ -45,7 +45,7 @@ const BadgeCards: React.FC = () => {
   return (
     <div className="grid grid-cols-4">
       {badgesState.map((badge, index) => (
-        <div key={index} className="relative" style={{ width: '20.8rem', height: '32.4rem', margin: '0.6rem' }}>
+        <div key={index} className="relative" style={{ width: '20.8rem', height: '32.4rem', margin: '0.8rem' }}>
           <Image
             src={badge.content}
             alt={badge.isObtained ? 'Obtained Badge' : 'Unobtained Badge'}

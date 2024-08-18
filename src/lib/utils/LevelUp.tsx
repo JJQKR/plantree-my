@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { supabase } from '@/supabase/client';
 import useUserStore from '@/stores/user.store';
+import Swal from 'sweetalert2';
 
 interface Level {
   id: string;
@@ -11,7 +12,7 @@ interface Level {
 }
 
 const LevelUp = () => {
-  const { userId, attendance, setLevelName, setUpdatedLevelId } = useUserStore((state) => state);
+  const { userId, attendance, setLevelName, setUpdatedLevelId, nickname } = useUserStore((state) => state);
 
   useEffect(() => {
     const updateUserLevel = async (userId: string, attendance: number) => {
@@ -45,6 +46,13 @@ const LevelUp = () => {
         } else {
           setLevelName(newLevelName);
           setUpdatedLevelId(newLevelId);
+
+          // Swal.fire({
+          //   title: '한 단계 성장!',
+          //   text: `플랜트리와 ${nickname}님의 기억나무가 자라났어요!`,
+          //   icon: 'info',
+          //   confirmButtonText: 'OK'
+          // });
         }
       }
     };
