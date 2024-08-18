@@ -211,23 +211,27 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
   };
 
   return (
-    <div className={` w-[45rem] ${isEditMode ? 'h-[67.5rem]' : 'h-[63rem]'} bg-white border-[0.1rem] border-[#C7D2B0]`}>
+    <div
+      className={`sm:w-[32.5rem] w-[45rem] ${
+        isEditMode ? 'sm:h-[48.7rem] h-[67.5rem]' : 'sm:h-[45.6rem] h-[63rem]'
+      } bg-white border-[0.1rem] border-[#C7D2B0]`}
+    >
       <div className="mx-auto w-full">
         {isEditMode ? (
-          <div className="bg-[#EDF1E6] w-full h-[4.32rem] py-[1.1rem] px-[1.35rem] border-b-[0.1rem] border-[#C7D2B0] flex flex-row justify-between">
-            <div className="text-[1.62rem] text-[#496E00] font-[600]">
+          <div className="bg-[#EDF1E6] w-full sm:h-[3.1rem] h-[4.32rem] sm:pt-[0.8rem] pt-[1.1rem] sm:px-[1.5rem] px-[1.35rem] border-b-[0.1rem] border-[#C7D2B0] flex flex-row justify-between">
+            <div className="sm:text-[1.2rem] text-[1.62rem] text-[#496E00] font-[600]">
               {index} Page_{changeStyleName()} (수정중)
             </div>
             <div>
               <button
-                className="text-[2.16rem] text-[#496E00] hover:text-black mr-[1.08rem]"
+                className="sm:text-[1.6rem] text-[2.16rem] text-[#496E00] hover:text-black mr-[1.08rem]"
                 onClick={onSubmit}
                 title="클릭해서 저장!"
               >
                 <FaSave />
               </button>
               <button
-                className="text-[2.16rem] text-[#496E00] hover:text-black"
+                className="sm:text-[1.6rem] text-[2.16rem] text-[#496E00] hover:text-black"
                 onClick={handleDelete}
                 title="클릭하면 삭제!"
               >
@@ -237,12 +241,12 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
           </div>
         ) : null}
       </div>
-      <div className="relative flex flex-col gap-[1.44rem] mx-auto mt-[1rem] w-[41.4rem] h-[59.58rem] bg-white my-[1.8rem]">
+      <div className="relative flex flex-col sm:gap-[0.8rem] gap-[1.44rem] mx-auto mt-[1rem] sm:w-[29.9rem] w-[41.4rem] sm:h-[43rem] h-[59.58rem] sm:my-[1.3rem] my-[1.8rem] ">
         <div className="flex flex-row justify-between">
-          <div className="w-[13.05rem] h-[2.43rem] flex flex-row gap-[0.27rem] border-b-[0.2rem] border-[#EAEAEA]">
+          <div className="sm:w-[9.45rem] w-[13.05rem] sm:h-[1.72rem] h-[2.43rem] flex flex-row sm:gap-[0.2rem] gap-[0.27rem] border-b-[0.2rem] border-[#EAEAEA]">
             <label
               htmlFor="date"
-              className="text-[1.35rem] font-[600] text-[#727272] w-[3.42rem] flex items-center justify-center"
+              className="sm:text-[0.97rem] text-[1.35rem]  font-[600] text-[#727272] flex items-center justify-center"
             >
               DATE
             </label>
@@ -252,13 +256,13 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
               onChange={handleDate}
               value={localPlanner.date || ''}
               disabled={!isEditMode}
-              className="text-[1.17rem] w-[9.27rem]"
+              className="sm:text-[0.97rem] text-[1.17rem] sm:w-[6.69rem] w-[9.27rem]"
             />
           </div>
-          <div className="w-[13.05rem] h-[2.43rem] flex flex-row gap-[0.18rem] border-b-[0.2rem] border-[#EAEAEA]">
+          <div className="sm:w-[9.45rem] w-[13.05rem] sm:h-[1.72rem] h-[2.43rem] flex flex-row sm:gap-[0.2rem] gap-[0.18rem] border-b-[0.2rem] border-[#EAEAEA]">
             <label
               htmlFor="date"
-              className="text-[1.35rem] font-[600] text-[#727272] w-[4.14rem] flex items-center justify-center tracking-tight"
+              className="sm:text-[0.97rem] text-[1.35rem] font-[600] text-[#727272] w-[4.14rem] flex items-center justify-center tracking-tight"
             >
               D-Day
             </label>
@@ -268,19 +272,19 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
               onChange={handleDdayDate}
               value={localPlanner.d_day_date || ''}
               disabled={!isEditMode}
-              className="text-[1.17rem] w-[9rem]"
+              className="sm:text-[0.97rem] text-[1.17rem] sm:w-[6.28rem] w-[9rem]"
             />
           </div>
-          <div className="w-[13.05rem] h-[2.43rem] bg-[#EAEAEA] rounded-[0.72rem] flex justify-center items-center text-[1.35rem] font-[600]">
+          <div className=" sm:w-[9.44rem] w-[13.05rem] sm:h-[1.72rem] h-[2.43rem] bg-[#EAEAEA] rounded-[0.72rem] flex justify-center items-center font-[600]">
             {localPlanner.d_day ? (
               localPlanner.d_day
             ) : (
-              <div className=" h-[1.62rem] font-[600] text-[1.35rem]">D-000</div>
+              <div className=" sm:h-[1.4rem] h-[1.62rem] font-[600] sm:text-[0.97rem] text-[1.35rem]">D-000</div>
             )}
           </div>
         </div>
-        <div className="flex flex-row w-full h-[2.43rem] gap-[0.27rem] border-b-[0.2rem] border-[#EAEAEA]">
-          <label className="text-[1.35rem] font-[600] text-[#727272] w-[3.42rem] flex items-center justify-center">
+        <div className="flex flex-row w-full sm:h-[1.72rem] h-[2.43rem] gap-[0.27rem] border-b-[0.2rem] border-[#EAEAEA]">
+          <label className="sm:text-[0.97rem] text-[1.35rem] font-[600] text-[#727272] sm:w-[2.6rem] w-[3.42rem] flex items-center justify-center">
             GOAL
           </label>
           <input
@@ -288,14 +292,14 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
             onChange={handleGoal}
             value={localPlanner.goal || ''}
             disabled={!isEditMode}
-            className="w-full ml-[0.18rem] px-[0.45rem] text-[1.35rem]"
+            className="w-full ml-[0.18rem] px-[0.45rem] sm:text-[0.97rem] text-[1.35rem]"
             placeholder="목표를 입력해주세요."
           />
         </div>
-        <div className="flex flex-row justify-between gap-[1.44rem] my-[0.5rem] h-full">
+        <div className="flex flex-row justify-between sm:gap-[1.1rem] gap-[1.44rem] h-full">
           <div className="flex flex-col">
-            <div className="w-[23.49rem] h-full ">
-              <div className="text-[1.35rem] h-[2.43rem] w-full font-[600] text-[#727272] flex flex-row items-center justify-start border-b-[0.2rem] leading-[0.09rem]">
+            <div className="sm:w-[17rem] w-[23.49rem] h-full ">
+              <div className="sm:text-[0.97rem] text-[1.35rem] sm:h-[1.72rem] h-[2.43rem] w-full font-[600] text-[#727272] flex flex-row items-center justify-start border-b-[0.2rem] leading-[0.09rem]">
                 TASK
               </div>
               <Todolist
@@ -306,24 +310,24 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
                 selectedColorTodo={selectedColorTodo}
               />
             </div>
-            <div className="h-[11.97rem]">
+            <div className="sm:h-[8.65rem] h-[11.97rem]">
               <label
                 htmlFor="memo"
-                className="text-[1.35rem] h-[2.43rem] w-full font-[600] text-[#727272] flex flex-row items-center justify-start border-b-[0.2rem] leading-[0.09rem]"
+                className="sm:text-[0.97rem] text-[1.35rem] sm:h-[1.72rem] h-[2.43rem] w-full font-[600] text-[#727272] flex flex-row items-center justify-start border-b-[0.2rem] leading-[0.09rem]"
               >
                 MEMO
               </label>
               <textarea
                 id="memo"
-                className="h-[8.55rem] w-full resize-none"
+                className="sm:h-[6.17rem] h-[8.55rem] w-full resize-none"
                 onChange={handleMemo}
                 value={localPlanner.memo || ''}
                 disabled={!isEditMode}
               />
             </div>
           </div>
-          <div className="w-[16.38rem] h-full">
-            <div className='text-[1.35rem] h-[2.43rem] w-full font-[600] text-[#727272] flex flex-row items-center justify-start border-b-[0.2rem] leading-[0.1rem]"'>
+          <div className="sm:w-[11.8rem] w-[16.38rem] h-full">
+            <div className='sm:text-[0.97rem] text-[1.35rem] sm:h-[1.72rem] h-[2.43rem] w-full font-[600] text-[#727272] flex flex-row items-center justify-start border-b-[0.2rem] leading-[0.1rem]"'>
               TIMETABLE
             </div>
             <Timetable selectedColorTodo={selectedColorTodo} timetable={timetable} setTimetable={setTimetable} />
