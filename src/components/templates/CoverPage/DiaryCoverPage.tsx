@@ -890,19 +890,44 @@ const DiaryCoverPage: React.FC = () => {
     setLoading(false); // 로딩 상태 해제
   };
 
-  const handleResize = () => {
-    const newWidth = window.innerWidth > 450 ? 450 : window.innerWidth;
-    const newHeight = (newWidth / 450) * 675;
-    const newScale = newWidth / 450;
-
-    setCoverStageSize({ width: newWidth, height: newHeight });
-    setCoverScale(newScale);
-    setUnsplashScale(newScale);
-  };
-
   useEffect(() => {
+    const handleResize = () => {
+      const containerElement = document.querySelector<HTMLElement>('.stage-wrapper');
+      if (containerElement) {
+        let containerWidth = containerElement.offsetWidth;
+        let containerHeight;
+
+        // 767px 이하일 때 사이즈 조정
+        if (window.innerWidth <= 767) {
+          containerWidth = 325;
+          containerHeight = 487.5;
+        } else if (window.innerWidth <= 1278) {
+          containerWidth = 360;
+          containerHeight = 540;
+        } else {
+          containerWidth = 450;
+          containerHeight = 675;
+        }
+
+        const newScale = containerWidth / 450;
+
+        setCoverStageSize({ width: containerWidth, height: containerHeight });
+        setCoverScale(newScale);
+
+        if (stageRef.current) {
+          stageRef.current.width(containerWidth);
+          stageRef.current.height(containerHeight);
+          stageRef.current.scale({ x: newScale, y: newScale });
+          stageRef.current.container().style.width = `${containerWidth}px`;
+          stageRef.current.container().style.height = `${containerHeight}px`;
+          stageRef.current.batchDraw();
+        }
+      }
+    };
+
     handleResize();
     window.addEventListener('resize', handleResize);
+
     return () => {
       window.removeEventListener('resize', handleResize);
     };
@@ -1302,9 +1327,9 @@ const DiaryCoverPage: React.FC = () => {
     <div className="w-full h-full mt-[8rem]">
       <div className="flex flex-col h-full relative mb-[8rem]">
         {/* 다이어리 제목 수정 중 박스 */}
-        <div className="w-full h-[8.5rem] flex items-center justify-center text-[#496200] font-semibold text-[2.8rem] z-20">
+        <div className="w-full h-[8.5rem] flex items-center justify-center text-[#496200] font-semibold text-[2.8rem] sm:text-[1.8rem] z-20">
           <span className="text-black">[</span>
-          <span className="text-black overflow-hidden text-ellipsis whitespace-nowrap max-w-[300px] inline-block">
+          <span className="text-black overflow-hidden text-ellipsis whitespace-nowrap max-w-[300px] sm:max-w-[200px] inline-block">
             {coverTitle}
           </span>
           <span className="text-black">]</span>
@@ -1312,12 +1337,12 @@ const DiaryCoverPage: React.FC = () => {
         </div>
 
         {/* 사이드바 메뉴 */}
-        <div className="z-20">
+        <div className="z-20 sm:mb-[1.6rem]">
           <DiaryCoverSidebar handleSelectMenu={handleSelectMenu} handleDeleteElement={handleDeleteElement} />
         </div>
 
         {selectedMenu && (
-          <div className="absolute top-[14rem] left-0 w-full max-h-[30rem] bg-gray-100 shadow-lg p-4 z-20 transition-transform duration-300 ease-in-out overflow-y-auto">
+          <div className="absolute top-[14rem] sm:top-[12rem] left-0 w-full max-h-[30rem] sm:max-h-[20rem] bg-gray-100 shadow-lg p-4 sm:p-2 z-20 transition-transform duration-300 ease-in-out overflow-y-auto">
             {renderMenuContent()}
           </div>
         )}
@@ -1327,10 +1352,12 @@ const DiaryCoverPage: React.FC = () => {
           <div className="w-full max-w-[45rem]">
             <div className="grid aspect-w-2 aspect-h-3 w-full">
               <Stage
-                className="col-start-1 col-end-2 row-start-1 row-end-2 w-full h-full"
+                className="stage-container"
                 width={coverStageSize.width}
                 height={coverStageSize.height}
                 ref={stageRef}
+                scaleX={coverScale}
+                scaleY={coverScale}
                 onClick={handleStageClick}
                 onTouchEnd={handleStageClick}
               >
@@ -1356,16 +1383,14 @@ const DiaryCoverPage: React.FC = () => {
                       image={loadedUnsplashImage}
                       x={unsplashImagePosition.x * coverScale}
                       y={unsplashImagePosition.y * coverScale}
-                      width={unsplashImageSize.width}
-                      height={unsplashImageSize.height}
+                      width={unsplashImageSize.width * coverScale}
+                      height={unsplashImageSize.height * coverScale}
                       draggable
                       ref={unsplashImageRef}
                       onDragEnd={handleUnsplashImageChange}
                       onTransformEnd={handleUnsplashImageTransform}
                       onClick={handleUnsplashImageSelect}
                       onTouchEnd={handleUnsplashImageSelect}
-                      scaleX={unsplashScale}
-                      scaleY={unsplashScale}
                       rotation={unsplashImageRotation}
                     />
                   )}
@@ -1374,38 +1399,37 @@ const DiaryCoverPage: React.FC = () => {
                       image={loadedImage}
                       x={coverImagePosition.x * coverScale}
                       y={coverImagePosition.y * coverScale}
-                      width={coverImageSize.width}
-                      height={coverImageSize.height}
+                      width={coverImageSize.width * coverScale}
+                      height={coverImageSize.height * coverScale}
                       draggable
                       ref={coverImageRef}
                       onDragEnd={handleImageChange}
                       onTransformEnd={handleImageTransform}
                       onClick={handleImageSelect}
                       onTouchEnd={handleImageSelect}
-                      scaleX={coverScale}
-                      scaleY={coverScale}
                       rotation={coverImageRotation}
                     />
                   )}
                   <Text
                     text={coverTitle ?? ''}
-                    fontSize={coverTitleFontSize}
+                    fontSize={coverTitleFontSize * coverScale}
                     x={coverTitlePosition.x * coverScale}
                     y={coverTitlePosition.y * coverScale}
-                    width={coverTitleWidth}
+                    width={coverTitleWidth * coverScale}
                     fill="black"
                     draggable
                     ref={textRef}
                     onDragEnd={() =>
-                      setCoverTitlePosition({ x: textRef.current?.x() ?? 0, y: textRef.current?.y() ?? 0 })
+                      setCoverTitlePosition({
+                        x: textRef.current?.x() ?? 0,
+                        y: textRef.current?.y() ?? 0
+                      })
                     }
                     onTransformEnd={handleTextTransform}
                     onClick={handleTextSelect}
                     onTouchEnd={handleTextSelect}
                     onDblClick={handleTextDblClick}
                     onDblTap={handleTextDblClick}
-                    scaleX={coverScale}
-                    scaleY={coverScale}
                     rotation={coverTitleRotation}
                   />
                   {coverSelectedElement && (
