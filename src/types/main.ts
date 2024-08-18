@@ -9,6 +9,7 @@ export type MainSidebarProps = {
 
 export type SideButtonProps = {
   onClick: () => void; // 버튼 클릭 함수
+  sideView: boolean;
   children: React.ReactNode; // 버튼 내부의 텍스트 또는 컴포넌트
 };
 

@@ -154,7 +154,7 @@ const DiaryCase: React.FC = () => {
   // 페이지네이션 스타일
   const paginationStyle: React.CSSProperties = {
     position: 'relative',
-    bottom: '-2rem', // 페이지네이션을 카드 하단에 배치
+    bottom: '8rem', // 페이지네이션을 카드 하단에 배치
     textAlign: 'center'
   };
 
@@ -239,98 +239,100 @@ const DiaryCase: React.FC = () => {
         </div>
       ) : (
         // 스와이프 뷰에서 다이어리 커버 표시
-        <div className="w-full h-full mt-[10rem] pb-[10rem] ">
-          <Swiper
-            effect="coverflow"
-            grabCursor={true}
-            centeredSlides={true}
-            slidesPerView="auto"
-            coverflowEffect={{
-              rotate: 50,
-              stretch: 0,
-              depth: 100,
-              modifier: 1,
-              slideShadows: true
-            }}
-            pagination={{ clickable: true, el: '.swiper-pagination' }}
-            modules={[EffectCoverflow, Pagination]}
-            className="sm:w-[32rem] sm:h-[50rem] w-[95rem] h-[72rem]"
-          >
+        <div>
+          <div className="w-full h-full mt-[10rem] pb-[10rem] flex items-center justify-center">
             {diaryCovers.length > 0 ? (
-              diaryCovers.map((cover, index) =>
-                cover.cover_id ? (
-                  <SwiperSlide
-                    key={cover.cover_id}
-                    onClick={() => handleDiaryClick(cover.diary_id as string)}
-                    className="flex items-center justify-center cursor-pointer sm:w-[32rem] sm:h-[50rem] w-[48rem] h-[72rem]"
-                    style={{
-                      backgroundColor: cover.cover_bg_color,
-                      width: cover.cover_stage_size.width * cover.cover_scale,
-                      height: cover.cover_stage_size.height * cover.cover_scale,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    <Stage
-                      width={cover.cover_stage_size.width}
-                      height={cover.cover_stage_size.height}
-                      scaleX={cover.cover_scale}
-                      scaleY={cover.cover_scale}
+              <Swiper
+                effect="coverflow"
+                grabCursor={true}
+                centeredSlides={true}
+                slidesPerView="auto"
+                coverflowEffect={{
+                  rotate: 50,
+                  stretch: 0,
+                  depth: 100,
+                  modifier: 1,
+                  slideShadows: true
+                }}
+                pagination={{ clickable: true, el: '.swiper-pagination' }}
+                modules={[EffectCoverflow, Pagination]}
+                className="sm:w-[32rem] sm:h-[50rem] w-[95rem] h-[72rem]"
+              >
+                {diaryCovers.map((cover, index) =>
+                  cover.cover_id ? (
+                    <SwiperSlide
+                      key={cover.cover_id}
+                      onClick={() => handleDiaryClick(cover.diary_id as string)}
+                      className="flex items-center justify-center cursor-pointer sm:w-[32rem] sm:h-[50rem] w-[48rem] h-[72rem]"
+                      style={{
+                        backgroundColor: cover.cover_bg_color,
+                        width: cover.cover_stage_size.width * cover.cover_scale,
+                        height: cover.cover_stage_size.height * cover.cover_scale,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
                     >
-                      <Layer>
-                        <Rect
-                          x={0}
-                          y={0}
-                          width={cover.cover_stage_size.width}
-                          height={cover.cover_stage_size.height}
-                          fillPatternImage={
-                            cover.cover_bg_color.startsWith('http')
-                              ? (() => {
-                                  const img = new window.Image();
-                                  img.src = cover.cover_bg_color;
-                                  return img;
-                                })()
-                              : undefined
-                          }
-                          fill={cover.cover_bg_color.startsWith('http') ? undefined : cover.cover_bg_color}
-                        />
-                        {unsplashImages[index].src && (
-                          <KonvaImage
-                            image={unsplashImages[index]}
-                            x={cover.unsplash_image_position.x}
-                            y={cover.unsplash_image_position.y}
-                            width={cover.unsplash_image_size.width}
-                            height={cover.unsplash_image_size.height}
-                            rotation={cover.unsplash_image_rotation}
+                      <Stage
+                        width={cover.cover_stage_size.width}
+                        height={cover.cover_stage_size.height}
+                        scaleX={cover.cover_scale}
+                        scaleY={cover.cover_scale}
+                      >
+                        <Layer>
+                          <Rect
+                            x={0}
+                            y={0}
+                            width={cover.cover_stage_size.width}
+                            height={cover.cover_stage_size.height}
+                            fillPatternImage={
+                              cover.cover_bg_color.startsWith('http')
+                                ? (() => {
+                                    const img = new window.Image();
+                                    img.src = cover.cover_bg_color;
+                                    return img;
+                                  })()
+                                : undefined
+                            }
+                            fill={cover.cover_bg_color.startsWith('http') ? undefined : cover.cover_bg_color}
                           />
-                        )}
-                        {loadedImages[index].src && (
-                          <KonvaImage
-                            image={loadedImages[index]}
-                            x={cover.cover_image_position.x}
-                            y={cover.cover_image_position.y}
-                            width={cover.cover_image_size.width}
-                            height={cover.cover_image_size.height}
-                            rotation={cover.cover_image_rotation}
+                          {unsplashImages[index].src && (
+                            <KonvaImage
+                              image={unsplashImages[index]}
+                              x={cover.unsplash_image_position.x}
+                              y={cover.unsplash_image_position.y}
+                              width={cover.unsplash_image_size.width}
+                              height={cover.unsplash_image_size.height}
+                              rotation={cover.unsplash_image_rotation}
+                            />
+                          )}
+                          {loadedImages[index].src && (
+                            <KonvaImage
+                              image={loadedImages[index]}
+                              x={cover.cover_image_position.x}
+                              y={cover.cover_image_position.y}
+                              width={cover.cover_image_size.width}
+                              height={cover.cover_image_size.height}
+                              rotation={cover.cover_image_rotation}
+                            />
+                          )}
+                          <Text
+                            text={cover.cover_title}
+                            fontSize={cover.cover_title_fontsize}
+                            x={cover.cover_title_position.x}
+                            y={cover.cover_title_position.y}
+                            width={cover.cover_title_width}
+                            rotation={cover.cover_title_rotation}
+                            fontFamily={cover.cover_title_fontfamily}
+                            fill={cover.cover_title_color}
+                            fontStyle={`${cover.cover_title_fontweight} ${cover.cover_title_fontstyle}`}
                           />
-                        )}
-                        <Text
-                          text={cover.cover_title}
-                          fontSize={cover.cover_title_fontsize}
-                          x={cover.cover_title_position.x}
-                          y={cover.cover_title_position.y}
-                          width={cover.cover_title_width}
-                          rotation={cover.cover_title_rotation}
-                          fontFamily={cover.cover_title_fontfamily}
-                          fill={cover.cover_title_color}
-                          fontStyle={`${cover.cover_title_fontweight} ${cover.cover_title_fontstyle}`}
-                        />
-                      </Layer>
-                    </Stage>
-                  </SwiperSlide>
-                ) : null
-              )
+                        </Layer>
+                      </Stage>
+                    </SwiperSlide>
+                  ) : null
+                )}
+              </Swiper>
             ) : (
               <SwiperSlide className="flex items-center justify-center sm:w-[32rem] sm:h-[50rem] w-[48rem] h-[72rem] bg-white text-2xl font-bold text-black">
                 <button
@@ -342,7 +344,7 @@ const DiaryCase: React.FC = () => {
                 </button>
               </SwiperSlide>
             )}
-          </Swiper>
+          </div>
           <div className="swiper-pagination" style={paginationStyle}></div>
         </div>
       )}
