@@ -3,12 +3,12 @@ import Image from 'next/image';
 import useUserStore from '@/stores/user.store';
 
 const profileStages = [
-  { id: 'lv1', src: '/images/Abstract0.png', name: '씨앗' },
-  { id: 'lv2', src: '/images/Abstract1.png', name: '새싹' },
-  { id: 'lv3', src: '/images/Abstract2.png', name: '풀' },
-  { id: 'lv4', src: '/images/Abstract3.png', name: '묘목' },
-  { id: 'lv5', src: '/images/Abstract4.png', name: '나무' },
-  { id: 'lv6', src: '/images/Abstract5.png', name: '열매' }
+  { id: 'lv1', src: '/images/profileImage1.png', name: '씨앗' },
+  { id: 'lv2', src: '/images/profileImage2.png', name: '새싹' },
+  { id: 'lv3', src: '/images/profileImage3.png', name: '풀' },
+  { id: 'lv4', src: '/images/profileImage4.png', name: '묘목' },
+  { id: 'lv5', src: '/images/profileImage5.png', name: '나무' },
+  { id: 'lv6', src: '/images/profileImage6.png', name: '열매' }
 ];
 
 interface ProfileStagesProps {
