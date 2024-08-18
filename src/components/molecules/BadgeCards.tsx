@@ -43,7 +43,7 @@ const BadgeCards: React.FC = () => {
   }, [diaryCount, membershipDays]);
 
   return (
-    <div className="grid grid-cols-4">
+    <div className="grid grid-cols-4 sm:grid-cols-2">
       {badgesState.map((badge, index) => (
         <div key={index} className="relative" style={{ width: '20.8rem', height: '32.4rem', margin: '0.8rem' }}>
           <Image
