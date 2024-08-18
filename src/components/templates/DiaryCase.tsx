@@ -335,15 +335,13 @@ const DiaryCase: React.FC = () => {
               </Swiper>
             ) : (
               <div className="flex items-center justify-center sm:w-[32rem] sm:h-[50rem] w-[48rem] h-[72rem] bg-white">
-                <SwiperSlide className="flex items-center justify-center text-2xl font-bold text-black">
-                  <button
-                    onClick={handleCreateDiary}
-                    className="flex flex-col items-center justify-center text-center"
-                    style={{ transform: 'none' }}
-                  >
-                    +<br /> 다이어리 생성
-                  </button>
-                </SwiperSlide>
+                <button
+                  onClick={handleCreateDiary}
+                  className="flex flex-col items-center justify-center text-center font-bold text-[2rem]"
+                  style={{ transform: 'none' }}
+                >
+                  +<br /> 다이어리 생성
+                </button>
               </div>
             )}
           </div>
