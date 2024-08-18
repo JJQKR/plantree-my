@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/supabase/client';
 import useUserStore from '@/stores/user.store'; // 유저 상태 관리 스토어 추가
 import Swal from 'sweetalert2';
+import { FaTimes } from 'react-icons/fa';
 
 const NicknameModal: React.FC = () => {
   const { isNicknameModalOpen, toggleNicknameModal } = useMyModalStore((state) => state);
@@ -104,32 +105,37 @@ const NicknameModal: React.FC = () => {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
           onKeyDown={handleKeyDown}
         >
-          <div className="bg-white rounded-[2rem] w-[46rem] h-[28.1rem] p-[4rem]" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="bg-white rounded-[2rem] w-[46rem] h-[28.1rem] p-[4rem] sm:w-[38rem] sm:h-[20.1rem] sm:p-[2.4rem]"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div onClick={(e) => e.stopPropagation()}>
               <div className="flex justify-between items-center">
-                <h2 className="font-semibold text-[2.4rem] h-[4rem]">닉네임 변경</h2>
+                <h2 className="font-semibold text-[2.4rem] sm:text-[2rem] h-[4rem] sm:h-[2.5rem]">닉네임 변경</h2>
                 <button
-                  className="text-[#008A02] font-bold text-[2.2rem] mb-[1rem]"
+                  className="text-[#008A02] font-bold text-[2.2rem] sm:text-[1.65rem] mb-[1rem] sm:mb-[0.4rem]"
                   onClick={toggleNicknameModal}
                   type="button"
                 >
-                  &#10005;
+                  <FaTimes />
                 </button>
               </div>
-              <p className="text-[1.8rem] mt-[0.6rem] mb-[1.6rem]">원하시는 닉네임을 입력 후 버튼을 눌러주세요.</p>
+              <p className="text-[1.72rem] sm:pl-[-3rem] sm:text-[1.5rem] mt-[0.6rem] sm:mt-[0.8rem] mb-[1.6rem] sm:mb-[1.6rem]">
+                원하시는 닉네임을 입력한 후 버튼을 눌러주세요.
+              </p>
               <form className="flex flex-col" onSubmit={handleNicknameSubmit}>
                 <input
                   type="text"
                   placeholder="새 닉네임 입력"
-                  className="mb-[1rem] p-[1rem] border rounded-[1.2rem] h-[5.2rem] w-full text-black text-[1.8rem]"
+                  className="mb-[1rem] sm:mb-[0.4rem] p-[1rem] sm:p-[0.4rem] border rounded-[1.2rem] h-[5.2rem] sm:h-[3.6rem] w-full text-black text-[1.8rem] sm:text-[1.3rem]"
                   ref={nicknameRef}
                   defaultValue={nickname ?? ''}
                 />
                 {error && <p className="text-red-500">{error}</p>}
-                <div className="flex flex-col mb-[2.5rem]">
+                <div className="flex flex-col mb-[2.5rem] sm:mb-[1rem]">
                   <button
                     type="submit"
-                    className="w-full h-[5.2rem] bg-[#8AC98B] text-white text-[1.8rem] rounded-[1.2rem]"
+                    className="w-full h-[5.2rem] sm:h-[3.6rem] bg-[#8AC98B] text-white text-[1.8rem] sm:text-[1.5rem] rounded-[1.2rem]"
                     style={{ backgroundColor: '##8AC98B' }}
                     onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#008A02')}
                     onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#8AC98B')}
