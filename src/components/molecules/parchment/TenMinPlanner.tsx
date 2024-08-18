@@ -243,7 +243,7 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
       </div>
       <div className="relative flex flex-col sm:gap-[0.8rem] gap-[1.44rem] mx-auto mt-[1rem] sm:w-[29.9rem] w-[41.4rem] sm:h-[43rem] h-[59.58rem] sm:my-[1.3rem] my-[1.8rem] ">
         <div className="flex flex-row justify-between">
-          <div className="sm:w-[9.45rem] w-[13.05rem] sm:h-[1.72rem] h-[2.43rem] flex flex-row sm:gap-[0.2rem] gap-[0.27rem] border-b-[0.2rem] border-[#EAEAEA]">
+          <div className="sm:w-[10rem] w-[13.05rem] sm:h-[1.72rem] h-[2.43rem] flex flex-row sm:gap-[0.2rem] gap-[0.27rem] border-b-[0.2rem] border-[#EAEAEA]">
             <label
               htmlFor="date"
               className="sm:text-[0.97rem] text-[1.35rem]  font-[600] text-[#727272] flex items-center justify-center"
@@ -256,10 +256,10 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
               onChange={handleDate}
               value={localPlanner.date || ''}
               disabled={!isEditMode}
-              className="sm:text-[0.97rem] text-[1.17rem] sm:w-[6.69rem] w-[9.27rem]"
+              className="sm:text-[0.97rem] text-[1.17rem] sm:w-[7.5rem] w-[9.27rem]"
             />
           </div>
-          <div className="sm:w-[9.45rem] w-[13.05rem] sm:h-[1.72rem] h-[2.43rem] flex flex-row sm:gap-[0.2rem] gap-[0.18rem] border-b-[0.2rem] border-[#EAEAEA]">
+          <div className="sm:w-[10rem] w-[13.05rem] sm:h-[1.72rem] h-[2.43rem] flex flex-row sm:gap-[0.2rem] gap-[0.18rem] border-b-[0.2rem] border-[#EAEAEA]">
             <label
               htmlFor="date"
               className="sm:text-[0.97rem] text-[1.35rem] font-[600] text-[#727272] w-[4.14rem] flex items-center justify-center tracking-tight"
@@ -272,10 +272,10 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
               onChange={handleDdayDate}
               value={localPlanner.d_day_date || ''}
               disabled={!isEditMode}
-              className="sm:text-[0.97rem] text-[1.17rem] sm:w-[6.28rem] w-[9rem]"
+              className="sm:text-[0.97rem] text-[1.17rem] sm:w-[7rem] w-[9rem]"
             />
           </div>
-          <div className=" sm:w-[9.44rem] w-[13.05rem] sm:h-[1.72rem] h-[2.43rem] bg-[#EAEAEA] rounded-[0.72rem] flex justify-center items-center font-[600]">
+          <div className=" sm:w-[8.5rem] w-[13.05rem] sm:h-[1.72rem] h-[2.43rem] bg-[#EAEAEA] sm:rounded-[0.52rem] rounded-[0.72rem] flex justify-center items-center sm:text-[0.97rem] text-[1.35rem] font-[600]">
             {localPlanner.d_day ? (
               localPlanner.d_day
             ) : (
@@ -319,7 +319,7 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
               </label>
               <textarea
                 id="memo"
-                className="sm:h-[6.17rem] h-[8.55rem] w-full resize-none"
+                className="sm:h-[6.17rem] h-[8.55rem] w-full resize-none sm:text-[0.97rem] text-[1.5rem] "
                 onChange={handleMemo}
                 value={localPlanner.memo || ''}
                 disabled={!isEditMode}
