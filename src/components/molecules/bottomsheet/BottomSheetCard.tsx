@@ -72,12 +72,12 @@ const BottomSheetCard: React.FC<BottomSheetCardProps> = ({ page, moveCard, onTog
     <div
       ref={ref}
       // ${isDragging ? 'opacity-50' : ''}
-      className={`flex items-end justify-center bg-contain rounded-[0.4rem] p-4 w-[5.2rem] h-[3.6rem] flex-none cursor-pointer ${
+      className={`flex items-center justify-center bg-contain rounded-[0.4rem] w-[5.2rem] sm:h-[3rem] h-[3.6rem] flex-none cursor-pointer ${
         isActive ? 'bg-[#6D8B33] ' : 'bg-[#9E9E9E]'
       } `}
       onClick={() => showPages(pages.indexOf(page))}
     >
-      <div className=" text-white flex justify-center items-center w-[1.5rem] h-[1.5rem] rounded text-[1.5rem] font-bold">
+      <div className=" text-white flex justify-center items-center w-[1.5rem] h-[1.5rem] rounded sm:text-[1.2rem] text-[1.5rem] font-bold">
         {pages.indexOf(page) + 1}p
       </div>
     </div>
