@@ -14,6 +14,8 @@ const BadgeCollection: React.FC = () => {
     }))
   );
 
+  const [sliceIndex, setSliceIndex] = useState(4);
+
   useEffect(() => {
     const updateBadges = () => {
       setBadgesState((prevBadges) =>
@@ -39,15 +41,35 @@ const BadgeCollection: React.FC = () => {
       );
     };
 
+    const handleResize = () => {
+      const mediaQuery = window.matchMedia('(max-width: 767px)');
+      if (mediaQuery.matches) {
+        setSliceIndex(2); // 화면이 sm 사이즈일 때 2개 요소만 보여줌
+      } else {
+        setSliceIndex(4); // 화면이 sm 사이즈가 아닐 때 4개 요소를 보여줌
+      }
+    };
+
     updateBadges();
+
+    // 초기 화면 크기에 따라 설정
+    handleResize();
+
+    // 화면 크기가 변경될 때마다 설정 변경
+    window.addEventListener('resize', handleResize);
+
+    // 클린업: 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, [diaryCount, membershipDays]);
 
   return (
     <div className="flex justify-center">
-      <div className="bg-white rounded-[2rem] w-[90rem] h-[32.4rem]">
-        <div className="flex flex-row justify-between w-[90rem] h-[32.4rem]">
-          {badgesState.slice(0, 4).map((badge, index) => (
-            <div key={index} className="relative w-[20.8rem] h-[32.4rem]">
+      <div className="rounded-[2rem] w-[90rem] h-[32.4rem] sm:w-[38rem] sm:h-[29.735rem]">
+        <div className="flex flex-row justify-between">
+          {badgesState.slice(0, sliceIndex).map((badge, index) => (
+            <div key={index} className="relative w-[20.8rem] h-[32.4rem] sm:w-[15.47rem] sm:h-[23.035rem]">
               <Image
                 src={badge.content}
                 alt={badge.isObtained ? 'Obtained Badge' : 'Unobtained Badge'}
