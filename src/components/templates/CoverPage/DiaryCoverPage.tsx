@@ -258,7 +258,7 @@ const DiaryCoverPage: React.FC = () => {
     resetTextProperties(); // 텍스트 관련 속성 초기화
     setCoverBackgroundColor('#ffffff');
     setCoverScale(1);
-    setCoverStageSize({ width: 480, height: 720 });
+    setCoverStageSize({ width: 450, height: 675 });
     setCoverSelectedElement(null);
     setLoadedImage(null);
     setCoverImage(null);
@@ -483,16 +483,19 @@ const DiaryCoverPage: React.FC = () => {
   const handleImageSelect = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
     e.cancelBubble = true;
     setCoverSelectedElement(coverImageRef.current);
+    handleCloseMenu();
   };
 
   const handleUnsplashImageSelect = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
     e.cancelBubble = true;
     setCoverSelectedElement(unsplashImageRef.current);
+    handleCloseMenu();
   };
 
   const handleTextSelect = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
     e.cancelBubble = true;
     setCoverSelectedElement(textRef.current);
+    handleCloseMenu();
   };
 
   const handleBackgroundColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -512,6 +515,8 @@ const DiaryCoverPage: React.FC = () => {
         trRef.current.nodes([]);
         trRef.current.getLayer()?.batchDraw();
       }
+
+      handleCloseMenu();
     }
   };
 
@@ -600,7 +605,7 @@ const DiaryCoverPage: React.FC = () => {
       cover_image_rotation: coverImageRotation ?? 0,
       cover_bg_color: coverBackgroundColor,
       cover_scale: coverScale ?? 1,
-      cover_stage_size: coverStageSize ?? { width: 480, height: 720 },
+      cover_stage_size: coverStageSize ?? { width: 450, height: 675 },
       diary_id: diaryId,
       user_id: userId,
       unsplash_image: unsplashImage ? unsplashImage.src : null,
@@ -848,10 +853,10 @@ const DiaryCoverPage: React.FC = () => {
     resetCoverState();
 
     const coverData = {
-      cover_title: 'Create Cover Title',
-      cover_title_position: JSON.stringify({ x: 120, y: 150 }),
+      cover_title: '표지를 작성해 주세요',
+      cover_title_position: JSON.stringify({ x: 90, y: 270 }),
       cover_title_fontsize: 30,
-      cover_title_width: 220,
+      cover_title_width: 290,
       cover_title_rotation: 0,
       cover_image: null,
       cover_image_position: JSON.stringify({ x: 50, y: 50 }),
@@ -859,7 +864,7 @@ const DiaryCoverPage: React.FC = () => {
       cover_image_rotation: 0,
       cover_bg_color: '#ffffff',
       cover_scale: 1,
-      cover_stage_size: JSON.stringify({ width: 480, height: 720 }),
+      cover_stage_size: JSON.stringify({ width: 450, height: 675 }),
       diary_id: diaryId,
       user_id: userId,
       unsplash_image: null,
@@ -886,9 +891,9 @@ const DiaryCoverPage: React.FC = () => {
   };
 
   const handleResize = () => {
-    const newWidth = window.innerWidth > 480 ? 480 : window.innerWidth;
-    const newHeight = (newWidth / 480) * 720;
-    const newScale = newWidth / 480;
+    const newWidth = window.innerWidth > 450 ? 450 : window.innerWidth;
+    const newHeight = (newWidth / 450) * 675;
+    const newScale = newWidth / 450;
 
     setCoverStageSize({ width: newWidth, height: newHeight });
     setCoverScale(newScale);
@@ -943,10 +948,10 @@ const DiaryCoverPage: React.FC = () => {
 
   const handleAddText = () => {
     resetTextProperties(); // 텍스트 속성을 초기화
-    setCoverTitle('Create Cover Title');
-    setCoverTitlePosition({ x: 120, y: 150 });
+    setCoverTitle('표지를 작성해 주세요');
+    setCoverTitlePosition({ x: 90, y: 270 });
     setCoverTitleFontSize(30);
-    setCoverTitleWidth(260);
+    setCoverTitleWidth(290);
     setCoverTitleRotation(0);
   };
   const handleDownload = () => {
@@ -975,85 +980,87 @@ const DiaryCoverPage: React.FC = () => {
     switch (selectedMenu) {
       case 'Templates':
         return <div>템플릿</div>;
+
       case 'Text':
         return (
-          <div>
-            <button
-              onClick={handleAddText}
-              className="mb-2 px-2 py-1 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300 w-full"
-            >
-              글씨 생성 / 초기화
-            </button>
-            {/* 글씨 크기 */}
-            <div className="mb-2">
-              <label htmlFor="fontSizeInput" className="font-semibold block mb-1">
-                글씨 크기 (픽셀):
-              </label>
-              <div className="flex items-center">
-                <input
-                  id="fontSizeInput"
-                  type="number"
-                  min="10"
-                  max="100"
-                  value={coverTitleFontSize}
-                  onChange={(e) => {
-                    const newSize = Number(e.target.value);
-                    setCoverTitleFontSize(newSize);
-                    if (textRef.current) {
-                      textRef.current.fontSize(newSize);
-                      textRef.current.getLayer()?.batchDraw();
-                    }
-                  }}
-                  className="w-16 border border-gray-300 rounded p-1 mr-2"
-                />
-                <input
-                  id="fontSizeSlider"
-                  type="range"
-                  min="10"
-                  max="100"
-                  value={coverTitleFontSize}
-                  onChange={(e) => {
-                    const newSize = Number(e.target.value);
-                    setCoverTitleFontSize(newSize);
-                    if (textRef.current) {
-                      textRef.current.fontSize(newSize);
-                      textRef.current.getLayer()?.batchDraw();
-                    }
-                  }}
-                  className="w-full border border-gray-300 rounded p-1"
-                />
+          <div className="grid grid-cols-2 gap-4">
+            {/* 글씨 생성 / 초기화와 글씨 크기 */}
+            <div className="col-span-2 flex">
+              <button
+                onClick={handleAddText}
+                className="w-1/2  mr-4 px-2 py-1 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300"
+              >
+                글씨 생성 / 초기화
+              </button>
+              <div className="w-1/2 flex flex-col">
+                <label htmlFor="fontSizeSlider" className="font-semibold mb-1">
+                  글씨 크기 (픽셀):
+                </label>
+                <div className="flex items-center w-full">
+                  <input
+                    id="fontSizeInput"
+                    type="number"
+                    min="10"
+                    max="100"
+                    value={coverTitleFontSize}
+                    onChange={(e) => {
+                      const newSize = Number(e.target.value);
+                      setCoverTitleFontSize(newSize);
+                      if (textRef.current) {
+                        textRef.current.fontSize(newSize);
+                        textRef.current.getLayer()?.batchDraw();
+                      }
+                    }}
+                    className="w-20 border border-gray-300 rounded p-1 mr-2"
+                  />
+                  <input
+                    id="fontSizeSlider"
+                    type="range"
+                    min="10"
+                    max="100"
+                    value={coverTitleFontSize}
+                    onChange={(e) => {
+                      const newSize = Number(e.target.value);
+                      setCoverTitleFontSize(newSize);
+                      if (textRef.current) {
+                        textRef.current.fontSize(newSize);
+                        textRef.current.getLayer()?.batchDraw();
+                      }
+                    }}
+                    className="w-full border border-gray-300 rounded p-1"
+                  />
+                </div>
               </div>
             </div>
 
-            {/* 색상 선택 */}
-            <div className="mb-2">
+            {/* 색상 선택과 글꼴 */}
+            <div className="col-span-1">
               <label htmlFor="colorPicker" className="font-semibold block mb-1">
                 글씨 색상:
               </label>
               <input
                 id="colorPicker"
                 type="color"
-                value={coverTitleColor} // 상태에서 가져온 색상 값으로 설정
+                value={coverTitleColor}
                 onChange={(e) => {
                   const newColor = e.target.value;
-                  setCoverTitleColor(newColor); // 상태 업데이트
+                  setCoverTitleColor(newColor);
                   if (textRef.current) {
-                    textRef.current.fill(newColor); // 텍스트 색상 설정
-                    textRef.current.getLayer()?.batchDraw(); // 텍스트 다시 그리기
+                    textRef.current.fill(newColor);
+                    textRef.current.getLayer()?.batchDraw();
                   }
                 }}
                 className="w-full"
               />
             </div>
 
-            {/* 글꼴 선택 */}
-            <div className="mb-2">
+            <div className="col-span-1">
               <label htmlFor="fontSelect" className="font-semibold block mb-1">
                 글꼴:
               </label>
               <select
                 id="fontSelect"
-                value={coverTitleFontFamily} // 현재 선택된 글꼴을 상태에서 가져오기
+                value={coverTitleFontFamily}
                 onChange={(e) => {
                   const newFontFamily = e.target.value;
                   setCoverTitleFontFamily(newFontFamily);
@@ -1070,25 +1077,24 @@ const DiaryCoverPage: React.FC = () => {
                 <option value="Georgia">Georgia</option>
                 <option value="Courier New">Courier New</option>
                 <option value="Roboto">Roboto</option>
-                {/* 글꼴추가 */}
               </select>
             </div>
 
-            {/* 두께 선택 */}
-            <div className="mb-2">
+            {/* 두께 선택과 기울기 */}
+            <div className="col-span-1">
               <label htmlFor="fontWeightSelect" className="font-semibold block mb-1">
                 글씨 두께:
               </label>
               <select
                 id="fontWeightSelect"
-                value={coverTitleFontWeight} // 현재 선택된 두께 값
+                value={coverTitleFontWeight}
                 onChange={(e) => {
                   const newWeight = Number(e.target.value);
-                  setCoverTitleFontWeight(newWeight); // 새로운 두께 값 설정
+                  setCoverTitleFontWeight(newWeight);
                   if (textRef.current) {
-                    const fontWeightStyle = newWeight === 700 ? 'bold' : 'normal'; // 두께에 따른 스타일 결정
-                    textRef.current.fontStyle(`${fontWeightStyle} ${coverTitleFontStyle}`); // 텍스트 스타일 적용
-                    textRef.current.getLayer()?.batchDraw(); // 레이어 다시 그리기
+                    const fontWeightStyle = newWeight === 700 ? 'bold' : 'normal';
+                    textRef.current.fontStyle(`${fontWeightStyle} ${coverTitleFontStyle}`);
+                    textRef.current.getLayer()?.batchDraw();
                   }
                 }}
                 className="w-full border border-gray-300 rounded p-1"
@@ -1101,18 +1107,17 @@ const DiaryCoverPage: React.FC = () => {
               </select>
             </div>
 
-            {/* 기울기 선택 */}
-            <div className="mb-2">
+            <div className="col-span-1">
               <label className="font-semibold block mb-1">글씨 기울기:</label>
               <button
                 onClick={() => {
                   const currentStyle = coverTitleFontStyle === 'italic' ? 'normal' : 'italic';
-                  setCoverTitleFontStyle(currentStyle); // 상태 업데이트
+                  setCoverTitleFontStyle(currentStyle);
                   if (textRef.current) {
-                    textRef.current.fontStyle(currentStyle); // 텍스트 스타일 설정
-                    textRef.current.fill(coverTitleColor); // 기존 색상 유지
-                    textRef.current.fontFamily(coverTitleFontFamily); // 기존 글꼴 유지
-                    textRef.current.getLayer()?.batchDraw(); // 텍스트 다시 그리기
+                    textRef.current.fontStyle(currentStyle);
+                    textRef.current.fill(coverTitleColor);
+                    textRef.current.fontFamily(coverTitleFontFamily);
+                    textRef.current.getLayer()?.batchDraw();
                   }
                 }}
                 className="px-2 py-1 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300 w-full"
@@ -1120,34 +1125,13 @@ const DiaryCoverPage: React.FC = () => {
                 기울기 / 취소
               </button>
             </div>
-
-            {/* 밑줄 선택 */}
-            {/* <div className="mb-2">
-              <label className="font-semibold block mb-1">밑줄 추가:</label>
-              <button
-                onClick={() => handleToggleUnderline()}
-                className="px-2 py-1 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300 w-full"
-              >
-                밑줄 추가 / 제거
-              </button>
-            </div> */}
-
-            {/* 취소선 선택 */}
-            {/* <div className="mb-2">
-              <label className="font-semibold block mb-1">취소선 추가:</label>
-              <button
-                onClick={() => handleToggleStrikethrough()}
-                className="px-2 py-1 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300 w-full"
-              >
-                취소선 추가 / 제거
-              </button>
-            </div> */}
           </div>
         );
+
       case 'Photos':
         return (
-          <div>
-            <div>
+          <div className="grid gap-4">
+            <div className="col-span-2">
               <label htmlFor="imgChoice" className="mb-1 font-semibold">
                 이미지 넣기:
               </label>
@@ -1160,32 +1144,37 @@ const DiaryCoverPage: React.FC = () => {
                 ref={fileInputRef}
               />
             </div>
-            <UnsplashImageSearch handleSelectImage={handleSelectImage} handleDeselectElement={handleDeselectElement} />
+            <UnsplashImageSearch
+              handleSelectImage={handleSelectImage}
+              handleDeselectElement={handleDeselectElement}
+              handleCloseMenu={handleCloseMenu}
+            />
           </div>
         );
-      case 'Elements':
-        return <div>요소 준비중입니다</div>;
-      case 'Upload':
-        return <div></div>;
+
       case 'Background':
         return (
-          <div>
-            <label htmlFor="colorPicker" className="mr-2 font-semibold">
-              기본 색상 선택 :
-            </label>
-            <input
-              type="color"
-              id="colorPicker"
-              value={coverBackgroundColor.startsWith('url(') ? '#ffffff' : coverBackgroundColor}
-              onChange={handleBackgroundColorChange}
-              className="border border-gray-300 rounded w-16"
-            />
+          <div className="grid gap-4">
+            <div className="col-span-2">
+              <label htmlFor="colorPicker" className="font-semibold block mb-2">
+                기본 색상 선택:
+              </label>
+              <input
+                type="color"
+                id="colorPicker"
+                value={coverBackgroundColor.startsWith('url(') ? '#ffffff' : coverBackgroundColor}
+                onChange={handleBackgroundColorChange}
+                className="border border-gray-300 rounded w-full"
+              />
+            </div>
             <UnsplashBackgroundSearch
               handleBackgroundImageChange={handleBackgroundImageChange}
               handleDeselectElement={handleDeselectElement}
+              handleCloseMenu={handleCloseMenu}
             />
           </div>
         );
+
       case 'Edit':
         return (
           <div>
@@ -1193,21 +1182,21 @@ const DiaryCoverPage: React.FC = () => {
               onClick={handleDownload}
               className="mb-2 px-2 py-1 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300 w-full"
             >
-              커버 다운로드
+              표지 다운로드
             </button>
             {isEditMode ? (
               <button
                 onClick={handleUpdateDiary}
                 className="mb-2 px-2 py-1 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded transition duration-300 w-full"
               >
-                커버 수정
+                표지 수정
               </button>
             ) : (
               <button
                 onClick={handleSaveCover}
                 className="mb-2 px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded transition duration-300 w-full"
               >
-                커버 저장
+                표지 저장
               </button>
             )}
             {isEditMode && (
@@ -1215,15 +1204,12 @@ const DiaryCoverPage: React.FC = () => {
                 onClick={handleResetDiary}
                 className="mb-2 px-2 py-1 bg-red-500 hover:bg-red-600 text-white font-semibold rounded transition duration-300 w-full"
               >
-                커버 초기화
+                표지 초기화
               </button>
             )}
           </div>
         );
-      case 'Layers':
-        return <div>레이어 준비중입니다</div>;
-      case 'Resize':
-        return <div>크기 조정</div>;
+
       default:
         return null;
     }
@@ -1290,155 +1276,144 @@ const DiaryCoverPage: React.FC = () => {
     }
   };
 
+  const handleCloseMenu = () => {
+    setSelectedMenu(null);
+
+    if (trRef.current && coverSelectedElement) {
+      trRef.current.nodes([coverSelectedElement]);
+      trRef.current.getLayer()?.batchDraw();
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleCloseMenu();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   return (
-    <div className="flex h-full relative mt-[10rem]">
-      <div ref={sidebarRef} className="relative z-5">
+    <div className="flex flex-col h-full relative">
+      <div className="sticky top-0 z-20">
         <DiaryCoverSidebar handleSelectMenu={handleSelectMenu} handleDeleteElement={handleDeleteElement} />
-        {selectedMenu && (
-          <div className="absolute top-0 left-full w-[18rem] h-full bg-gray-100 shadow-lg p-6 overflow-y-auto z-10">
-            <button
-              onClick={() => setSelectedMenu(null)}
-              className="absolute right-2 top-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full px-2 py-0.3 transition duration-300"
-            >
-              X
-            </button>
-            <div className="mt-10">{renderMenuContent()}</div>
-          </div>
-        )}
       </div>
-      <div className="relative flex-grow flex z-0">
-        <div className="flex flex-col overflow-hidden w-full">
-          <div className="flex-grow flex justify-center items-center overflow-auto">
-            <div className="w-full max-w-[48rem] mr-4">
-              <div className="grid aspect-w-2 aspect-h-3 w-full">
-                <Stage
-                  className="col-start-1 col-end-2 row-start-1 row-end-2 w-full h-full"
+      {selectedMenu && (
+        <div className="absolute top-[5rem] left-0 w-full max-h-[30rem] bg-gray-100 shadow-lg p-4 z-20 transition-transform duration-300 ease-in-out overflow-y-auto">
+          {renderMenuContent()}
+        </div>
+      )}
+      <div className="flex-grow flex justify-center items-center mt-[-5rem]">
+        <div className="w-full max-w-[45rem] ">
+          <div className="grid aspect-w-2 aspect-h-3 w-full">
+            <Stage
+              className="col-start-1 col-end-2 row-start-1 row-end-2 w-full h-full"
+              width={coverStageSize.width}
+              height={coverStageSize.height}
+              ref={stageRef}
+              onClick={handleStageClick}
+            >
+              <Layer>
+                <Rect
+                  x={0}
+                  y={0}
                   width={coverStageSize.width}
                   height={coverStageSize.height}
-                  ref={stageRef}
-                  onClick={handleStageClick}
-                >
-                  <Layer>
-                    {/* 배경 색 또는 패턴 */}
-                    <Rect
-                      x={0}
-                      y={0}
-                      width={coverStageSize.width}
-                      height={coverStageSize.height}
-                      fillPatternImage={
-                        coverBackgroundColor.startsWith('http')
-                          ? (() => {
-                              const img = new window.Image();
-                              img.src = coverBackgroundColor;
-                              return img;
-                            })()
-                          : undefined
-                      }
-                      fill={coverBackgroundColor.startsWith('http') ? undefined : coverBackgroundColor}
-                    />
-
-                    {/* 언스플레쉬 이미지 */}
-                    {unsplashImage && loadedUnsplashImage && (
-                      <KonvaImage
-                        image={loadedUnsplashImage}
-                        x={unsplashImagePosition.x * coverScale}
-                        y={unsplashImagePosition.y * coverScale}
-                        width={unsplashImageSize.width}
-                        height={unsplashImageSize.height}
-                        draggable
-                        ref={unsplashImageRef}
-                        onDragEnd={handleUnsplashImageChange}
-                        onTransformEnd={handleUnsplashImageTransform}
-                        onClick={handleUnsplashImageSelect}
-                        scaleX={unsplashScale}
-                        scaleY={unsplashScale}
-                        rotation={unsplashImageRotation}
-                      />
-                    )}
-
-                    {/* 로컬 이미지 */}
-                    {coverImage && loadedImage && (
-                      <KonvaImage
-                        image={loadedImage}
-                        x={coverImagePosition.x * coverScale}
-                        y={coverImagePosition.y * coverScale}
-                        width={coverImageSize.width}
-                        height={coverImageSize.height}
-                        draggable
-                        ref={coverImageRef}
-                        onDragEnd={handleImageChange}
-                        onTransformEnd={handleImageTransform}
-                        onClick={handleImageSelect}
-                        scaleX={coverScale}
-                        scaleY={coverScale}
-                        rotation={coverImageRotation}
-                      />
-                    )}
-
-                    {/* 타이틀 텍스트 */}
-                    <Text
-                      text={coverTitle ?? ''}
-                      fontSize={coverTitleFontSize}
-                      x={coverTitlePosition.x * coverScale}
-                      y={coverTitlePosition.y * coverScale}
-                      width={coverTitleWidth}
-                      fill="black"
-                      draggable
-                      ref={textRef}
-                      onDragEnd={() =>
-                        setCoverTitlePosition({ x: textRef.current?.x() ?? 0, y: textRef.current?.y() ?? 0 })
-                      }
-                      onTransformEnd={handleTextTransform}
-                      onClick={handleTextSelect}
-                      onDblClick={handleTextDblClick}
-                      onDblTap={handleTextDblClick} // 모바일 환경에서 더블 탭 처리
-                      scaleX={coverScale}
-                      scaleY={coverScale}
-                      rotation={coverTitleRotation}
-                    />
-
-                    {/* 선택된 요소에 대한 트랜스포머 */}
-                    {coverSelectedElement && (
-                      <Transformer
-                        ref={trRef}
-                        nodes={[coverSelectedElement]} // 현재 선택된 요소에만 트랜스포머 적용
-                        boundBoxFunc={(oldBox, newBox) => ({
-                          ...newBox,
-                          width: Math.max(20, newBox.width),
-                          height: Math.max(20, newBox.height)
-                        })}
-                        resizeEnabled={true}
-                        enabledAnchors={[
-                          'top-left',
-                          'top-right',
-                          'bottom-left',
-                          'bottom-right',
-                          'middle-left',
-                          'middle-right'
-                        ]}
-                      />
-                    )}
-                  </Layer>
-                </Stage>
-              </div>
-            </div>
-
-            <div className="flex flex-col items-start max-w-[10rem] w-full"></div>
+                  fillPatternImage={
+                    coverBackgroundColor.startsWith('http')
+                      ? (() => {
+                          const img = new window.Image();
+                          img.src = coverBackgroundColor;
+                          return img;
+                        })()
+                      : undefined
+                  }
+                  fill={coverBackgroundColor.startsWith('http') ? undefined : coverBackgroundColor}
+                />
+                {unsplashImage && loadedUnsplashImage && (
+                  <KonvaImage
+                    image={loadedUnsplashImage}
+                    x={unsplashImagePosition.x * coverScale}
+                    y={unsplashImagePosition.y * coverScale}
+                    width={unsplashImageSize.width}
+                    height={unsplashImageSize.height}
+                    draggable
+                    ref={unsplashImageRef}
+                    onDragEnd={handleUnsplashImageChange}
+                    onTransformEnd={handleUnsplashImageTransform}
+                    onClick={handleUnsplashImageSelect}
+                    scaleX={unsplashScale}
+                    scaleY={unsplashScale}
+                    rotation={unsplashImageRotation}
+                  />
+                )}
+                {coverImage && loadedImage && (
+                  <KonvaImage
+                    image={loadedImage}
+                    x={coverImagePosition.x * coverScale}
+                    y={coverImagePosition.y * coverScale}
+                    width={coverImageSize.width}
+                    height={coverImageSize.height}
+                    draggable
+                    ref={coverImageRef}
+                    onDragEnd={handleImageChange}
+                    onTransformEnd={handleImageTransform}
+                    onClick={handleImageSelect}
+                    scaleX={coverScale}
+                    scaleY={coverScale}
+                    rotation={coverImageRotation}
+                  />
+                )}
+                <Text
+                  text={coverTitle ?? ''}
+                  fontSize={coverTitleFontSize}
+                  x={coverTitlePosition.x * coverScale}
+                  y={coverTitlePosition.y * coverScale}
+                  width={coverTitleWidth}
+                  fill="black"
+                  draggable
+                  ref={textRef}
+                  onDragEnd={() =>
+                    setCoverTitlePosition({ x: textRef.current?.x() ?? 0, y: textRef.current?.y() ?? 0 })
+                  }
+                  onTransformEnd={handleTextTransform}
+                  onClick={handleTextSelect}
+                  onDblClick={handleTextDblClick}
+                  onDblTap={handleTextDblClick}
+                  scaleX={coverScale}
+                  scaleY={coverScale}
+                  rotation={coverTitleRotation}
+                />
+                {coverSelectedElement && (
+                  <Transformer
+                    ref={trRef}
+                    nodes={[coverSelectedElement]}
+                    boundBoxFunc={(oldBox, newBox) => ({
+                      ...newBox,
+                      width: Math.max(20, newBox.width),
+                      height: Math.max(20, newBox.height)
+                    })}
+                    resizeEnabled={true}
+                    enabledAnchors={[
+                      'top-left',
+                      'top-right',
+                      'bottom-left',
+                      'bottom-right',
+                      'middle-left',
+                      'middle-right'
+                    ]}
+                  />
+                )}
+              </Layer>
+            </Stage>
           </div>
         </div>
       </div>
-
-      {/* 삭제 버튼 렌더링 */}
-      {/* {coverSelectedElement && (
-        <button
-          className="absolute top-4 right-8 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 z-10 flex items-center space-x-2"
-          onClick={handleDeleteElement}
-        >
-          <FaTrash className="text-white" />
-          <span className="text-[1rem] font-medium">선택 요소 삭제</span>
-        </button>
-      )} */}
-
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
           <img src="/images/loading.gif" alt="Loading" width={200} height={200} />

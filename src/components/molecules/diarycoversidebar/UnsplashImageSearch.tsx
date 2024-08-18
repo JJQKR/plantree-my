@@ -4,9 +4,14 @@ import { fetchImages, UnsplashImage } from '../../../lib/utils/unsplash';
 interface UnsplashImageSearchProps {
   handleSelectImage: (imageUrl: string) => void;
   handleDeselectElement: () => void;
+  handleCloseMenu: () => void;
 }
 
-const UnsplashImageSearch: React.FC<UnsplashImageSearchProps> = ({ handleSelectImage, handleDeselectElement }) => {
+const UnsplashImageSearch: React.FC<UnsplashImageSearchProps> = ({
+  handleSelectImage,
+  handleDeselectElement,
+  handleCloseMenu
+}) => {
   const [query, setQuery] = useState(() => sessionStorage.getItem('unsplashQuery') || '');
   const [images, setImages] = useState<UnsplashImage[]>(() => {
     const savedImages = sessionStorage.getItem('unsplashImages');
@@ -80,47 +85,57 @@ const UnsplashImageSearch: React.FC<UnsplashImageSearchProps> = ({ handleSelectI
     sessionStorage.setItem('unsplashPage', page.toString());
   }, [page]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleCloseMenu(); // Escape 키가 눌리면 메뉴를 닫음
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleCloseMenu]);
+
   return (
     <div>
-      <p className="text-center text-sm font-bold">Photos by UnSplash</p>
-      <form onSubmit={handleSubmit} className="text-center my-4">
+      <p className="text-center text-sm font-bold mb-4">Photos by UnSplash</p>
+      <form onSubmit={handleSubmit} className="flex mb-4">
         <input
           type="text"
           value={query}
-          onFocus={handleDeselectElement} //포커스 시 트랜스폼 해제
+          onFocus={handleDeselectElement}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search for images"
-          className="my-2 px-2 py-1 border rounded w-full"
+          className="flex-grow px-2 py-1 border rounded-l  mr-4"
         />
-        <button
-          type="submit"
-          className="my-3 px-2 py-1 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300"
-        >
+        <button type="submit" className="px-4 py-1 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-r">
           검색하기
         </button>
       </form>
-      <div>
+      <div className="grid grid-cols-4 gap-2">
         {images.map((image, index) => (
           <img
             key={`image-${image.id}-${index}`}
             src={image.urls.thumb}
             alt={image.alt_description}
             onClick={() => handleSelectImage(image.urls.regular)}
-            className="cursor-pointer my-2"
+            className="cursor-pointer w-full h-auto"
           />
         ))}
-        {loading && <p>Loading...</p>}
-        {!loading && images.length > 0 && hasMore && (
-          <button
-            onClick={handleLoadMore}
-            className="mt-2 px-2 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300"
-          >
-            더보기
-          </button>
-        )}
-        {!loading && images.length === 0 && <p>검색결과가 없습니다.</p>}
-        {!loading && !hasMore && images.length > 0 && <p>더 이상 결과가 없습니다.</p>}
       </div>
+      {loading && <p>Loading...</p>}
+      {!loading && images.length > 0 && hasMore && (
+        <button
+          onClick={handleLoadMore}
+          className="mt-2 px-2 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300 w-full"
+        >
+          더보기
+        </button>
+      )}
+      {!loading && images.length === 0 && <p>검색결과가 없습니다.</p>}
+      {!loading && !hasMore && images.length > 0 && <p>더 이상 결과가 없습니다.</p>}
     </div>
   );
 };
