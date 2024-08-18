@@ -13,7 +13,7 @@ const Header: React.FC<MainHeaderProps> = ({ toggleSidebar, toggleGrid }) => {
   const { gridView } = useStore();
 
   return (
-    <header className="fixed flex justify-between items-center w-full h-[8rem] p-4 bg-white shadow-md z-50">
+    <header className="fixed flex justify-between items-center w-full h-[8rem] sm:h-[5rem] p-4 bg-white shadow-md z-50">
       <SideButton onClick={toggleSidebar}>Menu</SideButton>
       <div className="flex-grow flex justify-center">
         <Link href="/member/hub">
@@ -22,6 +22,7 @@ const Header: React.FC<MainHeaderProps> = ({ toggleSidebar, toggleGrid }) => {
             alt="Logo"
             width={250} // 너비를 rem으로 변환
             height={20} // 높이를 rem으로 변환
+            className="sm:w-[15rem] sm:w-[10rem]"
           />
         </Link>
       </div>
