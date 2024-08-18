@@ -25,7 +25,7 @@ const Header: React.FC<MainHeaderProps> = ({ toggleSidebar, toggleGrid }) => {
       </SideButton>
       <div className="flex-grow flex justify-center">
         <Link href="/member/hub">
-          <Image src="/images/Plantree.png" alt="Logo" width={250} height={20} className="sm:w-[15rem] sm:w-[10rem]" />
+          <Image src="/images/Plantree.png" alt="Logo" width={250} height={20} className="sm:w-[18rem] sm:h-[4rem]" />
         </Link>
       </div>
       <GridToggleButton onClick={toggleGrid} gridView={gridView} />
