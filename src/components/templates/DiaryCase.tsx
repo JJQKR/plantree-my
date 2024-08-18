@@ -334,8 +334,8 @@ const DiaryCase: React.FC = () => {
                 )}
               </Swiper>
             ) : (
-              <div className="w-[48rem] h-[72rem] bg-white">
-                <SwiperSlide className="flex items-center justify-center sm:w-[32rem] sm:h-[50rem]  text-2xl font-bold text-black">
+              <div className="flex items-center justify-center sm:w-[32rem] sm:h-[50rem] w-[48rem] h-[72rem] bg-white">
+                <SwiperSlide className="flex items-center justify-center text-2xl font-bold text-black">
                   <button
                     onClick={handleCreateDiary}
                     className="flex flex-col items-center justify-center text-center"
