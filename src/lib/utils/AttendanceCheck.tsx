@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/supabase/client';
 import useUserStore from '@/stores/user.store';
 import LevelUp from './LevelUp';
+import Swal from 'sweetalert2';
 
 const AttendanceCheck = () => {
   const { userId, attendance, setAttendance } = useUserStore((state) => state);
@@ -64,7 +65,12 @@ const AttendanceCheck = () => {
 
           setAttendance(newAttendanceCount);
           setHasCheckedToday(true); // 오늘 출석 체크 완료 표시
-          alert(`오늘도 플랜트리와 함께 하시네요!\n누적 출석 횟수 ${newAttendanceCount}회입니다.`);
+          Swal.fire({
+            title: '변경 성공',
+            text: `오늘도 플랜트리와 함께 하시네요!\n누적 출석 횟수 ${newAttendanceCount}회입니다.`,
+            icon: 'info',
+            confirmButtonText: '확인'
+          });
         } else {
           setAttendance(userData.attendance);
           setHasCheckedToday(true); // 이미 출석 체크된 경우에도 표시
