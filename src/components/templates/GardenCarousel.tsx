@@ -6,7 +6,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
-import { EffectCoverflow, Pagination } from 'swiper/modules';
+import { Pagination } from 'swiper/modules';
 import useUserStore from '@/stores/user.store';
 import Image from 'next/image';
 
@@ -30,14 +30,8 @@ const GardenCarousel: React.FC = () => {
     {
       id: 1,
       content: (
-        <div style={{ width: '98rem', height: '48rem' }} className="relative">
-          <Image
-            src="/images/garden1.png"
-            alt="garden1"
-            fill
-            style={{ objectFit: 'cover' }}
-            className="rounded-bl-[2rem] rounded-br-[2rem]"
-          />
+        <div className="relative w-[98rem] h-[48rem] sm:w-[38rem] sm:h-[18.7rem] rounded-bl-[2rem] rounded-br-[2rem]">
+          <Image src="/images/garden1.png" alt="garden1" fill className="object-cover" />
         </div>
       ),
       name: '씨앗'
@@ -45,14 +39,8 @@ const GardenCarousel: React.FC = () => {
     {
       id: 2,
       content: (
-        <div style={{ width: '98rem', height: '48rem' }} className="relative">
-          <Image
-            src="/images/garden2.png"
-            alt="garden2"
-            fill
-            style={{ objectFit: 'cover' }}
-            className="rounded-bl-[2rem] rounded-br-[2rem]"
-          />
+        <div className="relative w-[98rem] h-[48rem] sm:w-[38rem] sm:h-[18.7rem] rounded-bl-[2rem] rounded-br-[2rem]">
+          <Image src="/images/garden2.png" alt="garden2" fill className="object-cover" />
         </div>
       ),
       name: '새싹'
@@ -60,14 +48,8 @@ const GardenCarousel: React.FC = () => {
     {
       id: 3,
       content: (
-        <div style={{ width: '98rem', height: '48rem' }} className="relative">
-          <Image
-            src="/images/garden3.jpg"
-            alt="garden3"
-            fill
-            style={{ objectFit: 'cover' }}
-            className="rounded-bl-[2rem] rounded-br-[2rem]"
-          />
+        <div className="relative w-[98rem] h-[48rem] sm:w-[38rem] sm:h-[18.7rem] rounded-bl-[2rem] rounded-br-[2rem]">
+          <Image src="/images/garden3.jpg" alt="garden3" fill className="object-cover" />
         </div>
       ),
       name: '풀'
@@ -75,14 +57,8 @@ const GardenCarousel: React.FC = () => {
     {
       id: 4,
       content: (
-        <div style={{ width: '98rem', height: '48rem' }} className="relative">
-          <Image
-            src="/images/garden4.png"
-            alt="garden4"
-            fill
-            style={{ objectFit: 'cover' }}
-            className="rounded-bl-[2rem] rounded-br-[2rem]"
-          />
+        <div className="relative w-[98rem] h-[48rem] sm:w-[38rem] sm:h-[18.7rem] rounded-bl-[2rem] rounded-br-[2rem]">
+          <Image src="/images/garden4.png" alt="garden4" fill className="object-cover" />
         </div>
       ),
       name: '묘목'
@@ -90,14 +66,8 @@ const GardenCarousel: React.FC = () => {
     {
       id: 5,
       content: (
-        <div style={{ width: '98rem', height: '48rem' }} className="relative">
-          <Image
-            src="/images/garden5.jpg"
-            alt="garden5"
-            fill
-            style={{ objectFit: 'cover' }}
-            className="rounded-bl-[2rem] rounded-br-[2rem]"
-          />
+        <div className="relative w-[98rem] h-[48rem] sm:w-[38rem] sm:h-[18.7rem] rounded-bl-[2rem] rounded-br-[2rem]">
+          <Image src="/images/garden5.jpg" alt="garden5" fill className="object-cover" />
         </div>
       ),
       name: '나무'
@@ -105,14 +75,8 @@ const GardenCarousel: React.FC = () => {
     {
       id: 6,
       content: (
-        <div style={{ width: '98rem', height: '48rem' }} className="relative">
-          <Image
-            src="/images/garden6.png"
-            alt="garden6"
-            fill
-            style={{ objectFit: 'cover' }}
-            className="rounded-bl-[2rem] rounded-br-[2rem]"
-          />
+        <div className="relative w-[98rem] h-[48rem] sm:w-[38rem] sm:h-[18.7rem] rounded-bl-[2rem] rounded-br-[2rem]">
+          <Image src="/images/garden6.png" alt="garden6" fill className="object-cover" />
         </div>
       ),
       name: '열매'
@@ -166,7 +130,7 @@ const GardenCarousel: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="w-[98rem] h-[48rem]">
+      <div className="w-[98rem] h-[48rem] sm:w-[38rem] sm:h-[18.7rem]">
         <Swiper
           spaceBetween={0}
           grabCursor={true}
@@ -175,12 +139,10 @@ const GardenCarousel: React.FC = () => {
           pagination={pagination}
           modules={[Pagination]}
           style={{ marginTop: 0, paddingTop: 0 }}
-          // 이거 왜 지맘대로 없어졌었을까
-          // style={{ marginTop: 0, paddingTop: 0 }}
         >
           {displayStages.map((stage) => (
             <SwiperSlide key={stage.id}>
-              <div className="w-[98rem] h-[48rem] rounded-bl-[2rem] rounded-br-[2rem] overflow-hidden">
+              <div className="w-[98rem] h-[48rem] sm:w-[38rem] sm:h-[18.7rem] rounded-bl-[2rem] rounded-br-[2rem] overflow-hidden">
                 {stage.content}
               </div>
             </SwiperSlide>
@@ -223,6 +185,16 @@ const GardenCarousel: React.FC = () => {
           margin-bottom: 2rem !important;
           margin-top: -2rem !important; /* This will move the bullet upwards */
           z-index: 10;
+        }
+
+        @media (max-width: 767px) {
+          .custom-bullet,
+          .swiper-pagination-bullet-active.custom-bullet {
+            width: 4.1rem;
+            height: 2.599rem;
+            font-size: 1.6rem;
+            margin-bottom: 0.2rem !important;
+          }
         }
 
         img {

@@ -122,7 +122,9 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <p className="w-[2.4rem] h-[2.4rem] text-[2.4rem] sm:w-[2rem] sm:h-[2rem] sm:text-[2rem] text-[#008A02] flex items-center ml-[2rem] sm:ml-[1.6rem]">
               <FaHome />
             </p>
-            <p className="flex-grow text-[1.6rem] sm:text-[1.4rem] font-semibold text-[#008A02] text-center">홈</p>
+            <p className="flex-grow text-[1.6rem] sm:text-[1.4rem] font-semibold text-[#008A02] text-center">
+              플랜트리 홈페이지
+            </p>
           </div>
         </Link>
 
@@ -161,7 +163,7 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   <li key={cover.id}>
                     <Link
                       href={`/member/diary/${cover.diary_id}/parchment`}
-                      className="pl-[2rem] w-[24rem] h-[5.2rem] sm:w-[2rem] sm:h-[4.8rem] text-[1.5rem] sm:text-[1.4rem] flex items-center mt-[1.2rem] sm:mt-[0.8rem] rounded-[1.2rem] text-black"
+                      className="pl-[2rem] w-[24rem] h-[5.2rem] sm:w-[20rem] sm:h-[4.8rem] text-[1.5rem] sm:text-[1.4rem] flex items-center mt-[1.2rem] sm:mt-[0.8rem] rounded-[1.2rem] text-black"
                       style={{
                         backgroundColor: cover.cover_bg_color || 'bg-white',
                         backgroundImage: cover.cover_bg_color ? `url(${cover.cover_bg_color})` : 'none',
