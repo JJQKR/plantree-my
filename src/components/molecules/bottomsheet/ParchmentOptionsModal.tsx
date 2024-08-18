@@ -159,22 +159,54 @@ const ParchmentOptionsModal: React.FC = () => {
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
       onClick={toggleParchmentOptionModal}
     >
-      <div className="bg-white p-4 rounded shadow-lg w-[85%] max-w-4xl" onClick={(e) => e.stopPropagation()}>
-        <h2 className="mb-4 text-lg font-semibold">속지 선택</h2>
-        <div className="grid grid-cols-4 gap-4">
-          {parchments.map((parchment) => (
-            <div key={parchment.id} className="border p-2 cursor-pointer" onClick={() => handleAddPage(parchment)}>
-              <img src={parchment.url} alt={`Page ${parchment.id}`} />
-            </div>
-          ))}
-          {/* 4개 이상의 파치먼트 옵션이 생기면 생성
+      {windowWidth < 768 ? (
+        <div
+          className="bg-white rounded-[2rem]  w-[38rem] h-[56.7rem] py-[2rem] px-[2.4rem] flex flex-col gap-[0.8rem]"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <h2 className="text-[2.2rem] font-[600]">속지 추가</h2>
+          <div className="grid grid-cols-2 gap-[1rem] ">
+            {parchments.map((parchment) => (
+              <div
+                key={parchment.id}
+                className="w-[16rem] h-[24rem] border-[0.15rem] border-[#008A02] cursor-pointer relative flex items-end justify-center"
+                onClick={() => handleAddPage(parchment)}
+              >
+                <div className="absolute top-[1.2rem] h-[2.5rem] bg-[#008A02] rounded-[0.4rem] flex justify-center items-center text-white">
+                  <div className=" h-[2.2rem] px-[0.85rem] text-[1.4rem]">{parchment.name}</div>
+                </div>
+                <img src={parchment.url} alt={`Page ${parchment.id}`} />
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div
+          className="bg-white rounded-[2rem]  w-[77.9rem] h-[47.25rem] p-[4rem] flex flex-col gap-[2rem]"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <h2 className="text-[2.8rem] font-[600]">속지 선택</h2>
+          <div className="flex flex-row justify-center gap-[1rem] ">
+            {parchments.map((parchment) => (
+              <div
+                key={parchment.id}
+                className="w-[22.5rem] h-[33.75rem] border-[0.2rem] border-[#008A02] cursor-pointer relative flex items-end justify-center"
+                onClick={() => handleAddPage(parchment)}
+              >
+                <div className="absolute top-[1.2rem] h-[2.5rem] bg-[#008A02] rounded-[0.4rem] flex justify-center items-center text-white">
+                  <div className=" h-[2.2rem] px-[1.2rem] text-[1.8rem]">{parchment.name}</div>
+                </div>
+                <img src={parchment.url} alt={`Page ${parchment.id}`} />
+              </div>
+            ))}
+            {/* 4개 이상의 파치먼트 옵션이 생기면 생성
            {parchments.slice(currentOptionPage, currentOptionPage + 4).map((parchment) => (
             <div key={parchment.id} className="border p-2 cursor-pointer" onClick={() => handleAddPage(parchment)}>
               <img src={parchment.url} alt={`Page ${parchment.id}`} />
             </div>
           ))} */}
-        </div>
-        {/*  4개 이상의 파치먼트 옵션이 생기면 생성
+          </div>
+          {/*  4개 이상의 파치먼트 옵션이 생기면 생성
 
         <div className="flex justify-between mt-4">
           <button
@@ -192,7 +224,8 @@ const ParchmentOptionsModal: React.FC = () => {
             다음
           </button>
         </div> */}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
