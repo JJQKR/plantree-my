@@ -47,7 +47,7 @@ const BadgeCollection: React.FC = () => {
       <div className="bg-white rounded-[2rem] w-[90rem] h-[32.4rem]">
         <div className="flex flex-row justify-between w-[90rem] h-[32.4rem]">
           {badgesState.slice(0, 4).map((badge, index) => (
-            <div key={index} className="relative" style={{ width: '208px', height: '324px' }}>
+            <div key={index} className="relative w-[20.8rem] h-[32.4rem]">
               <Image
                 src={badge.content}
                 alt={badge.isObtained ? 'Obtained Badge' : 'Unobtained Badge'}
