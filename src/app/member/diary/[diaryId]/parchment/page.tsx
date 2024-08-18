@@ -6,7 +6,6 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import useBottomSheetStore from '@/stores/bottomsheet.store';
 import ParchmentOptionsModal from '@/components/molecules/bottomsheet/ParchmentOptionsModal';
-import ParchmentPageFrame from '@/components/templates/ParchmentPage/PcParchmentPageFrame';
 import PcParchmentPageFrame from '@/components/templates/ParchmentPage/PcParchmentPageFrame';
 import MoParchmentPageFrame from '@/components/templates/ParchmentPage/MoParchmentPageFrame';
 
