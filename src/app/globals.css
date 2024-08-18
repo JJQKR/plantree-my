@@ -14,7 +14,7 @@ html {
   font-size: 10px;
 }
 
-@media (max-width: 1278px) {
+@media (min-width: 768px) and (max-width: 1278px) {
   html {
     font-size: 8px;
   }
@@ -32,20 +32,6 @@ body {
 
 #app {
   height: 100%;
-}
-
-.swiper {
-  width: 100%;
-  margin-top: 5rem; /* 50px = 5rem */
-  padding-bottom: 5rem; /* 50px = 5rem */
-}
-
-.swiper-slide {
-  display: flex;
-  align-items: center; /* 카드 내부의 내용 중앙 정렬 */
-  justify-content: center;
-  padding: 0; /* 슬라이드 사이의 간격 조정 */
-  z-index: 0 !important;
 }
 
 .custom-height {
@@ -90,4 +76,74 @@ body {
   width: 35rem;
   height: 50rem;
   object-fit: cover;
+}
+
+.round-color-input {
+  width: 2.5rem;
+  height: 2.9rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+}
+
+.round-color-input::-webkit-color-swatch {
+  border-radius: 50%;
+  border: none;
+}
+
+.square-color-input {
+  width: 4.5rem;
+  height: 3rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+}
+
+.square-color-input::-webkit-color-swatch {
+  border-radius: 0.36rem;
+  border: none;
+}
+
+.checkbox {
+  transform: scale(1.53);
+}
+
+@media (max-width: 767px) {
+  .round-color-input {
+    width: 1.6rem;
+    height: 2rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    border: none;
+  }
+
+  .round-color-input::-webkit-color-swatch {
+    border-radius: 50%;
+    border: none;
+  }
+
+  .square-color-input {
+    width: 3.1rem;
+    height: 2.2rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    border: none;
+  }
+
+  .square-color-input::-webkit-color-swatch {
+    border-radius: 0.36rem;
+    border: none;
+  }
+
+  .checkbox {
+    transform: scale(1);
+  }
 }

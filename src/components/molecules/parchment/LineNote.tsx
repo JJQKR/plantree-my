@@ -23,11 +23,11 @@ export interface NoteLine {
 
 const LineNote = ({ id }: LineNoteProps) => {
   const [lines, setLines] = useState<NoteLine[]>(
-    Array.from({ length: 16 }, () => ({ text: '', fontSize: 25, textColor: '#000000' }))
+    Array.from({ length: 20 }, () => ({ text: '', fontSize: 16, textColor: '#000000' }))
   );
   const [lineColor, setLineColor] = useState('#000000');
-  const [lineThickness, setLineThickness] = useState(1);
-  const [bgColor, setBgColor] = useState('#ffffff');
+  const [lineThickness, setLineThickness] = useState(0.9);
+  const [bgColor, setBgColor] = useState('#F0F3EB');
   const [globalTextColor, setGlobalTextColor] = useState('#000000');
   const [diaryId, setDiaryId] = useState('');
   const { mutate: deletePage, isPending, isError } = useDeletePage();
@@ -45,7 +45,7 @@ const LineNote = ({ id }: LineNoteProps) => {
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
     if (context) {
-      context.font = `${fontSize}px sans-serif`;
+      context.font = `${fontSize} sans-serif`;
       return context.measureText(text).width;
     }
     return 0;
@@ -174,7 +174,7 @@ const LineNote = ({ id }: LineNoteProps) => {
       } else if (data) {
         setLineColor(data?.line_color || '#000000');
         setLineThickness(data?.line_thickness || 1);
-        setBgColor(data?.bg_color || '#ffffff');
+        setBgColor(data?.bg_color || '#F0F3EB');
         setGlobalTextColor(data?.global_text_color || '#000000');
         setDiaryId(data?.diary_id || '');
 
@@ -247,23 +247,27 @@ const LineNote = ({ id }: LineNoteProps) => {
   };
 
   return (
-    <div className={`w-[50rem] ${isEditMode ? 'h-[75rem]' : 'h-[70.2rem]'} bg-white border-[0.1rem] border-[#C7D2B0]`}>
+    <div
+      className={`sm:w-[32.5rem] w-[45rem] ${
+        isEditMode ? 'sm:h-[48.7rem] h-[67.5rem]' : 'sm:h-[45.6rem] h-[63rem]'
+      } bg-white border-[0.1rem] border-[#C7D2B0]`}
+    >
       <div className="mx-auto w-full">
         {isEditMode ? (
-          <div className="bg-[#EDF1E6] w-full h-[4.8rem] py-[1.2rem] px-[1.5rem] flex flex-row justify-between">
-            <div className="text-[1.8rem] text-[#496E00] font-[600]">
+          <div className="bg-[#EDF1E6] w-full sm:h-[3.1rem] h-[4.32rem] sm:pt-[0.8rem] pt-[1.1rem] sm:px-[1.5rem] px-[1.35rem] border-b-[0.1rem] border-[#C7D2B0] flex flex-row justify-between">
+            <div className="sm:text-[1.2rem] text-[1.62rem] text-[#496E00] font-[600]">
               {index} Page_{changeStyleName()} (수정중)
             </div>
             <div>
               <button
-                className="text-[2.4rem] text-[#496E00] hover:text-black mr-[1.2rem]"
+                className="sm:text-[1.6rem] text-[2.16rem] text-[#496E00] hover:text-black mr-[1.08rem]"
                 onClick={updateData}
                 title="클릭해서 저장!"
               >
                 <FaSave />
               </button>
               <button
-                className="text-[2.4rem] text-[#496E00] hover:text-black"
+                className="sm:text-[1.6rem] text-[2.16rem] text-[#496E00] hover:text-black"
                 onClick={handleDelete}
                 title="클릭하면 삭제!"
               >
@@ -271,68 +275,65 @@ const LineNote = ({ id }: LineNoteProps) => {
               </button>
             </div>
           </div>
-        ) : null}
+        ) : (
+          <div className="sm:h-[3.1rem] h-[4.32rem]"></div>
+        )}
       </div>
       {isEditMode ? (
-        <div className="flex flex-row gap-[0.3rem] mt-[1.25rem] bg-white">
-          <div className="flex gap-[0.3rem]">
-            <label className="block ml-[1.3rem]">
-              배경 색상
-              <input
-                type="color"
-                value={bgColor}
-                onChange={(e) => setBgColor(e.target.value)}
-                className="ml-[0.1rem] p-[0.1rem] border-0 bg-white"
-              />
-            </label>
-            <div className="flex">
-              <label className="block">
-                텍스트 색상
-                <input
-                  type="color"
-                  value={globalTextColor}
-                  onChange={(e) => setGlobalTextColor(e.target.value)}
-                  className="ml-[0.1rem] p-[0.1rem] border-0 bg-white"
-                />
-              </label>
-            </div>
-            <label className="block">
-              줄 색상
-              <input
-                type="color"
-                value={lineColor}
-                onChange={(e) => setLineColor(e.target.value)}
-                className="ml-[0.2rem] p-[0.1rem] border-0 bg-white"
-              />
-            </label>
-            <label className="block">
-              줄 굵기
-              <select
-                value={lineThickness}
-                onChange={(e) => setLineThickness(parseInt(e.target.value))}
-                className="ml-[0.3rem] p-[0.30rem] border bg-white"
-              >
-                <option value="1">얇음</option>
-                <option value="2">보통</option>
-                <option value="3">굵음</option>
-              </select>
-            </label>
-          </div>
+        <div className="flex flex-row justify-evenly sm:gap-[1rem] gap-[1.5rem] sm:mt-[1.3rem] mt-[1.8rem] sm:mx-[1.5rem] mx-[1.8rem]">
+          <label className="sm:text-[0.78rem] text-[1.08rem] flex flex-row sm:gap-[0.3rem] gap-[0.5rem] text-[#008A02] items-center font-[600]">
+            배경 색상
+            <input
+              type="color"
+              value={bgColor}
+              onChange={(e) => setBgColor(e.target.value)}
+              className="square-color-input "
+            />
+          </label>
+          <label className="sm:text-[0.78rem] text-[1.08rem] flex flex-row sm:gap-[0.3rem] gap-[0.5rem] text-[#008A02] items-center font-[600]">
+            텍스트 색상
+            <input
+              type="color"
+              value={globalTextColor}
+              onChange={(e) => setGlobalTextColor(e.target.value)}
+              className="square-color-input"
+            />
+          </label>
+          <label className="sm:text-[0.78rem] text-[1.08rem] flex flex-row sm:gap-[0.3rem] gap-[0.5rem] text-[#008A02] items-center font-[600]">
+            줄 색상
+            <input
+              type="color"
+              value={lineColor}
+              onChange={(e) => setLineColor(e.target.value)}
+              className="square-color-input"
+            />
+          </label>
+          <label className="sm:text-[0.78rem] text-[1.08rem] flex flex-row sm:gap-[0.3rem] gap-[0.5rem] text-[#008A02] items-center font-[600]">
+            줄 굵기
+            <select
+              value={lineThickness}
+              onChange={(e) => setLineThickness(parseInt(e.target.value))}
+              className="p-[0.2rem] border bg-white text-black w-[5rem]"
+            >
+              <option value="1">얇음</option>
+              <option value="2">보통</option>
+              <option value="3">굵음</option>
+            </select>
+          </label>
         </div>
       ) : null}
       <div
-        className="p-[0.4rem] ml-[0.3rem] mr-[0.3rem] mt-[1.25rem]"
+        className={`sm:mx-[1.3rem] mx-[1.8rem] mt-[1.25rem] min-h-[55rem] sm:min-h-[39rem]`}
         style={{
-          backgroundColor: bgColor,
-          minHeight: '65rem'
+          backgroundColor: bgColor
         }}
       >
-        <div className="relative w-full overflow-hidden" style={{ height: '65rem' }}>
+        <div className="w-full overflow-hidden h-[55rem] sm:h-[39rem]">
           {lines.map((line, index) => (
             <div
               key={index}
-              className={`relative`}
-              style={{ height: '3.8rem', borderBottom: `${lineThickness / 10}rem solid ${lineColor}` }}
+              className={`h-[2.75rem] sm:h-[1.95rem]`}
+              style={{ borderBottom: `${lineThickness / 10}rem solid ${lineColor}` }}
             >
               <input
                 type="text"
@@ -341,9 +342,9 @@ const LineNote = ({ id }: LineNoteProps) => {
                 ref={(el) => {
                   inputRefs.current[index] = el;
                 }}
-                className="text-xl absolute top-0 left-0 w-full h-[4rem] border-none outline-none bg-transparent"
+                className="fixed-width-input h-[2.75rem] sm:h-[2rem] border-none outline-none bg-transparent sm:text-[1rem] text-[1.5rem]"
                 style={{
-                  fontSize: `${line.fontSize / 10}rem`,
+                  // fontSize: `${(line.fontSize * 0.5) / 10}rem`,
                   color: globalTextColor,
                   width: '100%'
                 }}
