@@ -89,20 +89,20 @@ const MyPage: React.FC = () => {
             <BadgeCollection />
           </div>
 
-          <div className="flex items-center justify-between  font-semibold text-[2.4rem] my-[2.4rem] pl-[2.8rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[8.6rem]">
+          <div className="flex items-center justify-between font-semibold text-[2.4rem] sm:text-[1.8rem] my-[2.4rem] pl-[2.8rem] sm:my-[2rem] sm:pl-[2.4rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[8.6rem] sm:w-[38rem] sm:h-[6.3rem]">
             <p>계정 정보</p>
-            <p className="text-[2rem] mr-[2.4rem]">{email}</p>
+            <p className="text-[2rem] sm:text-[1.5rem] mr-[2.4rem] sm:mr-[2.4rem]">{email}</p>
             {/* {isAccountBarModalOpen && <AccountBarModal />} */}
           </div>
 
           <NicknameButton>
             <button
               onClick={handleToggleNicknameModal}
-              className="flex items-center justify-between  font-semibold text-[2.4rem] my-[2.4rem] pl-[2.8rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[8.6rem]"
+              className="flex items-center justify-between  font-semibold text-[2.4rem] sm:text-[1.8rem] my-[2.4rem] pl-[2.8rem] sm:my-[2rem] sm:pl-[2.4rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[8.6rem] sm:w-[38rem] sm:h-[6.3rem]"
             >
               <div>닉네임 변경</div>
               <div className="text-[#008A02]">
-                <FaChevronRight className="text-[3.2rem] mr-[2.8rem]" />
+                <FaChevronRight className="text-[3.2rem] mr-[2.8rem] sm:text-[2.4rem] sm:mr-[2.4rem]" />
               </div>
               {isNicknameModalOpen && <NicknameModal />}
             </button>
@@ -110,11 +110,11 @@ const MyPage: React.FC = () => {
           <WithdrawalButton>
             <button
               onClick={handleToggleWithdrawalModal}
-              className="flex items-center justify-between  font-semibold text-[2.4rem] my-[2.4rem] pl-[2.8rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[8.6rem] "
+              className="flex items-center justify-between font-semibold text-[2.4rem] sm:text-[1.8rem] my-[2.4rem] pl-[2.8rem] sm:my-[2rem] sm:pl-[2.4rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[8.6rem] sm:w-[38rem] sm:h-[6.3rem]"
             >
               <div>회원 탈퇴</div>
               <div className="text-[#008A02]">
-                <FaChevronRight className="text-[3.2rem] mr-[2.8rem]" />
+                <FaChevronRight className="text-[3.2rem] mr-[2.8rem] sm:text-[2.4rem] sm:mr-[2.4rem]" />
               </div>
               {isWithdrawalModalOpen && <WithdrawalModal />}
             </button>
