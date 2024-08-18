@@ -1267,14 +1267,6 @@ const DiaryCoverPage: React.FC = () => {
     }
   }, [coverBackgroundColor]);
 
-  const handleToggleUnderline = () => {
-    // 밑줄 추가/제거하는 로직
-  };
-
-  const handleToggleStrikethrough = () => {
-    // 취소선 추가/제거하는 로직
-  };
-
   const fontWeightsMap: { [fontFamily: string]: number[] } = {
     Arial: [100, 400, 700],
     Verdana: [400, 700],
