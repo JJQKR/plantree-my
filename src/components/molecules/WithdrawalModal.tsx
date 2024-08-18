@@ -5,6 +5,7 @@ import { supabase } from '@/supabase/client';
 import React, { useState } from 'react';
 import useUserStore from '@/stores/user.store';
 import Swal from 'sweetalert2';
+import { FaTimes } from 'react-icons/fa';
 
 const WithdrawalModal: React.FC = () => {
   const { nickname, membershipDays } = useUserStore((state) => state);
@@ -110,7 +111,7 @@ const WithdrawalModal: React.FC = () => {
                   onClick={toggleWithdrawalModal}
                   type="button"
                 >
-                  &#10005;
+                  <FaTimes />
                 </button>
               </div>
               <div className="flex-col text-start text-[1.8rem] font-semibold">
