@@ -1299,126 +1299,147 @@ const DiaryCoverPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col h-full relative">
-      <div className="sticky top-0 z-20">
-        <DiaryCoverSidebar handleSelectMenu={handleSelectMenu} handleDeleteElement={handleDeleteElement} />
-      </div>
-      {selectedMenu && (
-        <div className="absolute top-[5rem] left-0 w-full max-h-[30rem] bg-gray-100 shadow-lg p-4 z-20 transition-transform duration-300 ease-in-out overflow-y-auto">
-          {renderMenuContent()}
+    <div className="w-full h-full mt-[8rem]">
+      <div className="flex flex-col h-full relative mb-[8rem]">
+        {/* 다이어리 제목 수정 중 박스 */}
+        <div className="w-full h-[8.5rem] flex items-center justify-center text-[#496200] font-semibold text-[2.8rem] z-20">
+          <span className="text-black">[</span>
+          <span className="text-black overflow-hidden text-ellipsis whitespace-nowrap max-w-[300px] inline-block">
+            {coverTitle}
+          </span>
+          <span className="text-black">]</span>
+          <span className="text-[#496200]"> 수정 중</span>
         </div>
-      )}
-      <div className="flex-grow flex justify-center items-center mt-[-5rem]">
-        <div className="w-full max-w-[45rem] ">
-          <div className="grid aspect-w-2 aspect-h-3 w-full">
-            <Stage
-              className="col-start-1 col-end-2 row-start-1 row-end-2 w-full h-full"
-              width={coverStageSize.width}
-              height={coverStageSize.height}
-              ref={stageRef}
-              onClick={handleStageClick}
-            >
-              <Layer>
-                <Rect
-                  x={0}
-                  y={0}
-                  width={coverStageSize.width}
-                  height={coverStageSize.height}
-                  fillPatternImage={
-                    coverBackgroundColor.startsWith('http')
-                      ? (() => {
-                          const img = new window.Image();
-                          img.src = coverBackgroundColor;
-                          return img;
-                        })()
-                      : undefined
-                  }
-                  fill={coverBackgroundColor.startsWith('http') ? undefined : coverBackgroundColor}
-                />
-                {unsplashImage && loadedUnsplashImage && (
-                  <KonvaImage
-                    image={loadedUnsplashImage}
-                    x={unsplashImagePosition.x * coverScale}
-                    y={unsplashImagePosition.y * coverScale}
-                    width={unsplashImageSize.width}
-                    height={unsplashImageSize.height}
-                    draggable
-                    ref={unsplashImageRef}
-                    onDragEnd={handleUnsplashImageChange}
-                    onTransformEnd={handleUnsplashImageTransform}
-                    onClick={handleUnsplashImageSelect}
-                    scaleX={unsplashScale}
-                    scaleY={unsplashScale}
-                    rotation={unsplashImageRotation}
+
+        {/* 사이드바 메뉴 */}
+        <div className="z-20">
+          <DiaryCoverSidebar handleSelectMenu={handleSelectMenu} handleDeleteElement={handleDeleteElement} />
+        </div>
+
+        {selectedMenu && (
+          <div className="absolute top-[14rem] left-0 w-full max-h-[30rem] bg-gray-100 shadow-lg p-4 z-20 transition-transform duration-300 ease-in-out overflow-y-auto">
+            {renderMenuContent()}
+          </div>
+        )}
+
+        {/* flex-grow 영역 */}
+        <div className="flex-grow flex justify-center items-center mt-[-5.6rem]">
+          <div className="w-full max-w-[45rem]">
+            <div className="grid aspect-w-2 aspect-h-3 w-full">
+              <Stage
+                className="col-start-1 col-end-2 row-start-1 row-end-2 w-full h-full"
+                width={coverStageSize.width}
+                height={coverStageSize.height}
+                ref={stageRef}
+                onClick={handleStageClick}
+                onTouchEnd={handleStageClick}
+              >
+                <Layer>
+                  <Rect
+                    x={0}
+                    y={0}
+                    width={coverStageSize.width}
+                    height={coverStageSize.height}
+                    fillPatternImage={
+                      coverBackgroundColor.startsWith('http')
+                        ? (() => {
+                            const img = new window.Image();
+                            img.src = coverBackgroundColor;
+                            return img;
+                          })()
+                        : undefined
+                    }
+                    fill={coverBackgroundColor.startsWith('http') ? undefined : coverBackgroundColor}
                   />
-                )}
-                {coverImage && loadedImage && (
-                  <KonvaImage
-                    image={loadedImage}
-                    x={coverImagePosition.x * coverScale}
-                    y={coverImagePosition.y * coverScale}
-                    width={coverImageSize.width}
-                    height={coverImageSize.height}
+                  {unsplashImage && loadedUnsplashImage && (
+                    <KonvaImage
+                      image={loadedUnsplashImage}
+                      x={unsplashImagePosition.x * coverScale}
+                      y={unsplashImagePosition.y * coverScale}
+                      width={unsplashImageSize.width}
+                      height={unsplashImageSize.height}
+                      draggable
+                      ref={unsplashImageRef}
+                      onDragEnd={handleUnsplashImageChange}
+                      onTransformEnd={handleUnsplashImageTransform}
+                      onClick={handleUnsplashImageSelect}
+                      onTouchEnd={handleUnsplashImageSelect}
+                      scaleX={unsplashScale}
+                      scaleY={unsplashScale}
+                      rotation={unsplashImageRotation}
+                    />
+                  )}
+                  {coverImage && loadedImage && (
+                    <KonvaImage
+                      image={loadedImage}
+                      x={coverImagePosition.x * coverScale}
+                      y={coverImagePosition.y * coverScale}
+                      width={coverImageSize.width}
+                      height={coverImageSize.height}
+                      draggable
+                      ref={coverImageRef}
+                      onDragEnd={handleImageChange}
+                      onTransformEnd={handleImageTransform}
+                      onClick={handleImageSelect}
+                      onTouchEnd={handleImageSelect}
+                      scaleX={coverScale}
+                      scaleY={coverScale}
+                      rotation={coverImageRotation}
+                    />
+                  )}
+                  <Text
+                    text={coverTitle ?? ''}
+                    fontSize={coverTitleFontSize}
+                    x={coverTitlePosition.x * coverScale}
+                    y={coverTitlePosition.y * coverScale}
+                    width={coverTitleWidth}
+                    fill="black"
                     draggable
-                    ref={coverImageRef}
-                    onDragEnd={handleImageChange}
-                    onTransformEnd={handleImageTransform}
-                    onClick={handleImageSelect}
+                    ref={textRef}
+                    onDragEnd={() =>
+                      setCoverTitlePosition({ x: textRef.current?.x() ?? 0, y: textRef.current?.y() ?? 0 })
+                    }
+                    onTransformEnd={handleTextTransform}
+                    onClick={handleTextSelect}
+                    onTouchEnd={handleTextSelect}
+                    onDblClick={handleTextDblClick}
+                    onDblTap={handleTextDblClick}
                     scaleX={coverScale}
                     scaleY={coverScale}
-                    rotation={coverImageRotation}
+                    rotation={coverTitleRotation}
                   />
-                )}
-                <Text
-                  text={coverTitle ?? ''}
-                  fontSize={coverTitleFontSize}
-                  x={coverTitlePosition.x * coverScale}
-                  y={coverTitlePosition.y * coverScale}
-                  width={coverTitleWidth}
-                  fill="black"
-                  draggable
-                  ref={textRef}
-                  onDragEnd={() =>
-                    setCoverTitlePosition({ x: textRef.current?.x() ?? 0, y: textRef.current?.y() ?? 0 })
-                  }
-                  onTransformEnd={handleTextTransform}
-                  onClick={handleTextSelect}
-                  onDblClick={handleTextDblClick}
-                  onDblTap={handleTextDblClick}
-                  scaleX={coverScale}
-                  scaleY={coverScale}
-                  rotation={coverTitleRotation}
-                />
-                {coverSelectedElement && (
-                  <Transformer
-                    ref={trRef}
-                    nodes={[coverSelectedElement]}
-                    boundBoxFunc={(oldBox, newBox) => ({
-                      ...newBox,
-                      width: Math.max(20, newBox.width),
-                      height: Math.max(20, newBox.height)
-                    })}
-                    resizeEnabled={true}
-                    enabledAnchors={[
-                      'top-left',
-                      'top-right',
-                      'bottom-left',
-                      'bottom-right',
-                      'middle-left',
-                      'middle-right'
-                    ]}
-                  />
-                )}
-              </Layer>
-            </Stage>
+                  {coverSelectedElement && (
+                    <Transformer
+                      ref={trRef}
+                      nodes={[coverSelectedElement]}
+                      boundBoxFunc={(oldBox, newBox) => ({
+                        ...newBox,
+                        width: Math.max(20, newBox.width),
+                        height: Math.max(20, newBox.height)
+                      })}
+                      resizeEnabled={true}
+                      enabledAnchors={[
+                        'top-left',
+                        'top-right',
+                        'bottom-left',
+                        'bottom-right',
+                        'middle-left',
+                        'middle-right'
+                      ]}
+                    />
+                  )}
+                </Layer>
+              </Stage>
+            </div>
           </div>
         </div>
+
+        {loading && (
+          <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
+            <img src="/images/loading.gif" alt="Loading" width={200} height={200} />
+          </div>
+        )}
       </div>
-      {loading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
-          <img src="/images/loading.gif" alt="Loading" width={200} height={200} />
-        </div>
-      )}
     </div>
   );
 };
