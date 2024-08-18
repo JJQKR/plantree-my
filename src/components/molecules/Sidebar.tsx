@@ -92,7 +92,7 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     <div className="relative w-[12rem] h-[12rem] sm:w-[9.8rem] sm:h-[9.8rem]">
                       <Image
                         src="/images/levelNotSet.png"
-                        alt="garden1"
+                        alt="levelNotSet"
                         fill
                         style={{ objectFit: 'contain' }}
                         className="rounded-full w-[12rem] h-[12rem] sm:w-[9.8rem] sm:h-[9.8rem]"
