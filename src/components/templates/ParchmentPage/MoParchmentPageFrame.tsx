@@ -14,7 +14,6 @@ import { FaChevronCircleRight } from 'react-icons/fa';
 import { FaChevronCircleLeft } from 'react-icons/fa';
 import useBottomSheetStore from '@/stores/bottomsheet.store';
 import Swal from 'sweetalert2';
-import PcParchmentCase from './PcParchmentCase';
 import MoParchmentCase from './MoParchmentCase';
 
 type ParchmentType = 'tenMinPlanner' | 'lineNote' | 'blankNote';
@@ -28,7 +27,7 @@ const changeDbName = (parchmentStyle: ParchmentType) => {
   return dbTableName[parchmentStyle];
 };
 
-export default function ParchmentPageFrame() {
+export default function MoParchmentPageFrame() {
   const router = useRouter();
   const { diaryId } = useParams<{ diaryId: string }>();
   const [coverTitle, setCoverTitle] = useState('');
@@ -39,13 +38,6 @@ export default function ParchmentPageFrame() {
   const { offEditMode } = useEditModeStore((state) => state);
   const { currentPageIndex, setCurrentPageIndex } = usePageStore((state) => state);
   const { setActiveCardIndices } = useBottomSheetStore((state) => state);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   // 커버 타이틀 가져오는 코드
   useEffect(() => {
@@ -57,7 +49,7 @@ export default function ParchmentPageFrame() {
       getCoverTitle();
     }
     offEditMode();
-    setActiveCardIndices([0, 1]);
+    setActiveCardIndices([0]);
     setCurrentPageIndex(0);
   }, [diaryId]);
 
@@ -111,25 +103,15 @@ export default function ParchmentPageFrame() {
   // 앞페이지로 이동합니다.
   const handlePrevPage = () => {
     if (currentPageIndex < 1) return;
-    if (currentPageIndex % 2 !== 0) {
-      setCurrentPageIndex(currentPageIndex - 3);
-      setActiveCardIndices([currentPageIndex - 3, currentPageIndex - 2]);
-    } else if (currentPageIndex % 2 === 0) {
-      setCurrentPageIndex(currentPageIndex - 2);
-      setActiveCardIndices([currentPageIndex - 2, currentPageIndex - 1]);
-    }
+    setCurrentPageIndex(currentPageIndex - 1);
+    setActiveCardIndices([currentPageIndex - 1]);
   };
 
   // 뒷페이지로 이동합니다.
   const handleNextPage = () => {
-    if (currentPageIndex + 2 < pages!.length) {
-      if (currentPageIndex % 2 !== 0) {
-        setCurrentPageIndex(currentPageIndex + 3);
-        setActiveCardIndices([currentPageIndex + 3, currentPageIndex + 4]);
-      } else if (currentPageIndex % 2 === 0) {
-        setCurrentPageIndex(currentPageIndex + 2);
-        setActiveCardIndices([currentPageIndex + 2, currentPageIndex + 3]);
-      }
+    if (currentPageIndex + 1 < pages!.length) {
+      setCurrentPageIndex(currentPageIndex + 1);
+      setActiveCardIndices([currentPageIndex + 1]);
     } else if (pages![currentPageIndex]) {
       Swal.fire({
         title: '더이상 페이지가 없습니다. 추가하시겠습니까?',
@@ -157,63 +139,57 @@ export default function ParchmentPageFrame() {
   }
 
   return (
-    <div className="flex flex-row items-center justify-center bg-slate-200 sm:w-[37.8rem] w-[128rem] mt-[9.9rem]">
+    <div className="relative flex flex-row justify-center w-[37.8rem] mt-[9.9rem]">
       <div
         onClick={handlePrevPage}
-        className={`sm:text-[2rem] text-[3.2rem] cursor-pointer ${
-          currentPageIndex < 2 ? 'text-[#BEBEBE]' : 'text-[#008A02]'
+        className={`absolute top-[33rem] left-[-1rem] text-[2rem] cursor-pointer ${
+          currentPageIndex < 1 ? 'text-[#BEBEBE]' : 'text-[#008A02]'
         }`}
       >
         <FaChevronCircleLeft />
       </div>
-      <div className="sm:w-[37.8rem] w-[90rem] mx-[4.3rem] sm:mx-[-2rem]">
-        <div className="flex sm:flex-col gap-[1.2rem] flex-row justify-between ">
-          <div className="flex flex-row w-[72rem]">
+      <div className="w-[37.8rem]">
+        <div className="flex flex-col gap-[1.2rem] justify-between ">
+          <div className="flex flex-row w-[37.8rem]">
             <span
-              className="flex flex-row sm:text-[2.4rem] text-[3.5rem] sm:w-[2.4rem] w-[4.8rem] items-center justify-center cursor-pointer text-[#008A02]"
+              className="flex flex-row text-[2.4rem] w-[2.4rem] items-center justify-center cursor-pointer text-[#008A02]"
               onClick={goToHub}
             >
               <FaChevronLeft />
             </span>
-            <span className="text-[2rem] sm:text-[3.2rem] w-[50rem] px-[1rem] font-[600]">{coverTitle}</span>
+            <span className="text-[2rem] w-[35.4rem] px-[1rem] font-[600]">{coverTitle}</span>
           </div>
           <div className="flex flex-row gap-3 justify-end ">
             <button
               onClick={addPage}
-              className="sm:w-[5.5rem] sm:h-[2.8rem] w-[9.2rem] h-[4.8rem] border-[0.1rem] sm:rounded-[0.8rem] rounded-[1rem] border-[#565656] text-[#565656] sm:text-[1.1rem] text-[1.6rem] cursor-pointer"
+              className=" w-[5.5rem] h-[2.8rem] border-[0.1rem] rounded-[0.8rem] border-[#565656] text-[#565656] text-[1.1rem] cursor-pointer"
             >
               속지추가
             </button>
             <button
               onClick={goToDiaryCoverPage}
-              className="sm:w-[5.5rem] sm:h-[2.8rem] w-[9.2rem] h-[4.8rem] border-[0.1rem] sm:rounded-[0.8rem] rounded-[1rem] border-[#008A02] text-[#008A02] sm:text-[1.1rem] text-[1.6rem] cursor-pointer"
+              className="h-[2.8rem] w-[5.5rem]  border-[0.1rem] rounded-[0.8rem]  border-[#008A02] text-[#008A02] text-[1.1rem] cursor-pointer"
             >
               표지수정
             </button>
             <button
               onClick={deleteDiary}
-              className=" sm:w-[7.6rem] sm:text-[1.1rem] text-[1.6rem] w-[12.3rem] sm:h-[2.8rem] h-[4.8rem] border-[0.1rem] cursor-pointer sm:rounded-[0.8rem] rounded-[1rem] border-[#D90000] text-[#D90000]"
+              className=" w-[7.6rem] text-[1.1rem] h-[2.8rem] border-[0.1rem] cursor-pointer rounded-[0.8rem] border-[#D90000] text-[#D90000]"
             >
               다이어리 삭제
             </button>
           </div>
         </div>
         <div className="flex flex-row items-center justify-center">
-          {windowWidth > 767 ? (
-            <div className="w-[90rem] h-[69.5rem] mx-[3.24rem] my-[3.87rem]">
-              <PcParchmentCase diaryId={diaryId} currentPageIndex={currentPageIndex} />
-            </div>
-          ) : (
-            <div className="w-[32.5rem] h-[50rem] mx-[0.8rem] my-[2.4rem] ">
-              <MoParchmentCase diaryId={diaryId} currentPageIndex={currentPageIndex} />
-            </div>
-          )}
+          <div className="w-[32.5rem] h-[50rem] mx-[0.8rem] my-[2.4rem] ">
+            <MoParchmentCase diaryId={diaryId} currentPageIndex={currentPageIndex} />
+          </div>
         </div>
       </div>
       <div
         onClick={handleNextPage}
-        className={`sm:text-[2rem] text-[3.2rem] ${
-          currentPageIndex + 2 < pages!.length ? 'text-[#008A02]' : 'text-[#BEBEBE]'
+        className={`absolute top-[33rem] right-[-1rem] text-[2rem] ${
+          currentPageIndex + 1 < pages!.length ? 'text-[#008A02]' : 'text-[#BEBEBE]'
         } cursor-pointer`}
       >
         <FaChevronCircleRight />
