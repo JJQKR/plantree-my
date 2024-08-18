@@ -143,21 +143,21 @@ export default function MoParchmentPageFrame() {
       <div
         onClick={handlePrevPage}
         className={`absolute top-[33rem] left-[-1rem] text-[2rem] cursor-pointer ${
-          currentPageIndex < 2 ? 'text-[#BEBEBE]' : 'text-[#008A02]'
+          currentPageIndex < 1 ? 'text-[#BEBEBE]' : 'text-[#008A02]'
         }`}
       >
         <FaChevronCircleLeft />
       </div>
       <div className="w-[37.8rem]">
         <div className="flex flex-col gap-[1.2rem] justify-between ">
-          <div className="flex flex-row w-[72rem]">
+          <div className="flex flex-row w-[37.8rem]">
             <span
               className="flex flex-row text-[2.4rem] w-[2.4rem] items-center justify-center cursor-pointer text-[#008A02]"
               onClick={goToHub}
             >
               <FaChevronLeft />
             </span>
-            <span className="text-[3.2rem] w-[50rem] px-[1rem] font-[600]">{coverTitle}</span>
+            <span className="text-[2rem] w-[35.4rem] px-[1rem] font-[600]">{coverTitle}</span>
           </div>
           <div className="flex flex-row gap-3 justify-end ">
             <button
@@ -189,7 +189,7 @@ export default function MoParchmentPageFrame() {
       <div
         onClick={handleNextPage}
         className={`absolute top-[33rem] right-[-1rem] text-[2rem] ${
-          currentPageIndex + 2 < pages!.length ? 'text-[#008A02]' : 'text-[#BEBEBE]'
+          currentPageIndex + 1 < pages!.length ? 'text-[#008A02]' : 'text-[#BEBEBE]'
         } cursor-pointer`}
       >
         <FaChevronCircleRight />
