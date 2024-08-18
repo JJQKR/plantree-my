@@ -91,7 +91,7 @@ const ParchmentOptionsModal: React.FC = () => {
         line_thickness: 0,
         bg_color: '',
         global_text_color: '',
-        lines: Array.from({ length: 16 }, () => ({ text: '', fontSize: 16, textColor: '#000000' })),
+        lines: Array.from({ length: 20 }, () => ({ text: '', fontSize: 16, textColor: '#000000' })),
         diary_id: diaryId
       };
       await supabase.from('line_note').insert(newLineNote);

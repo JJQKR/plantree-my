@@ -64,8 +64,8 @@ const Timetable = ({ selectedColorTodo, timetable, setTimetable }: TimetableProp
   };
 
   return (
-    <div className=" w-full h-[48.6rem]" onMouseUp={handleMouseUp}>
-      <table className="border-collapse w-full text-[1.1rem] font-[700] text-[#BEBEBE] h-full">
+    <div className=" w-full sm:h-[35.4rem] h-[48.6rem]" onMouseUp={handleMouseUp}>
+      <table className="border-collapse w-full sm:text-[0.83rem] text-[1.1rem] font-[700] text-[#BEBEBE] h-full">
         <tbody>
           {Array.from({ length: rows }, (_, rowIndex) => (
             <tr key={rowIndex}>

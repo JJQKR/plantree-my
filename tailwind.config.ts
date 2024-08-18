@@ -8,9 +8,8 @@ const config: Config = {
   ],
   theme: {
     screens: {
-      sm: { min: '428px', max: '767px' }
+      sm: { max: '767px' }
     },
-
     extend: {
       colors: {
         'custom-green': '#e5eed6',
