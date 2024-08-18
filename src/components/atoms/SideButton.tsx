@@ -9,9 +9,9 @@ const SideButton: React.FC<SideButtonProps> = ({ onClick, sideView }) => {
       className="p-2 bg-transparent border-none outline-none rounded transition duration-300 flex items-center justify-center"
     >
       {sideView ? (
-        <TiThMenu className="text-[4rem] text-[#008a02] transition-colors duration-300 hover:text-[#006201]" />
+        <TiThMenu className="text-[4rem] text-[#008a02] sm:text-[3rem] transition-colors duration-300 hover:text-[#006201] " />
       ) : (
-        <TiThMenuOutline className="text-[4rem] text-[#008a02] transition-colors duration-300 hover:text-[#006201]" />
+        <TiThMenuOutline className="text-[4rem] text-[#008a02] sm:text-[3rem] transition-colors duration-300 hover:text-[#006201]" />
       )}
     </button>
   );
