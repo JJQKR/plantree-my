@@ -1,14 +1,18 @@
 import { SideButtonProps } from '@/types/main';
 import React from 'react';
-import { TiThMenuOutline } from 'react-icons/ti';
+import { TiThMenu, TiThMenuOutline } from 'react-icons/ti';
 
-const SideButton: React.FC<SideButtonProps> = ({ onClick }) => {
+const SideButton: React.FC<SideButtonProps> = ({ onClick, sideView }) => {
   return (
     <button
       onClick={onClick}
-      className="p-2 bg-transparent border-none outline-none hover:bg-gray-200 rounded transition duration-300"
+      className="p-2 bg-transparent border-none outline-none rounded transition duration-300 flex items-center justify-center"
     >
-      <TiThMenuOutline className="text-[4rem] text-green-400 sm:text-[2.5rem]" />
+      {sideView ? (
+        <TiThMenu className="text-[4rem] text-[#008a02] sm:text-[3rem] transition-colors duration-300 hover:text-[#006201] " />
+      ) : (
+        <TiThMenuOutline className="text-[4rem] text-[#008a02] sm:text-[3rem] transition-colors duration-300 hover:text-[#006201]" />
+      )}
     </button>
   );
 };
