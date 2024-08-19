@@ -11,7 +11,7 @@ import Image from 'next/image';
 
 const InfoModal = () => {
   const { isInfoModalOpen, toggleInfoModal } = useInfoModalStore((state) => state);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowWidth, setWindowWidth] = useState(1920);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
