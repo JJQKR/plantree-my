@@ -4,11 +4,13 @@ import { fetchImages, UnsplashImage } from '../../../lib/utils/unsplash';
 interface UnsplashBackgroundSearchProps {
   handleBackgroundImageChange: (imageUrl: string) => void;
   handleDeselectElement: () => void;
+  handleCloseMenu: () => void;
 }
 
 const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({
   handleBackgroundImageChange,
-  handleDeselectElement
+  handleDeselectElement,
+  handleCloseMenu
 }) => {
   const [query, setQuery] = useState(() => sessionStorage.getItem('backgroundQuery') || 'gradient');
   const [images, setImages] = useState<UnsplashImage[]>(() => {
@@ -74,46 +76,56 @@ const UnsplashBackgroundSearch: React.FC<UnsplashBackgroundSearchProps> = ({
     fetchImagesFromUnsplash(true); // 새로운 검색어로 첫 페이지 이미지 가져오기
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleCloseMenu();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleCloseMenu]);
+
   return (
     <div>
-      <p className="text-center text-sm font-bold">Photos by UnSplash</p>
-      <form onSubmit={handleSearch} className="text-center my-4">
+      <p className="text-center text-sm font-bold mb-4">Photos by UnSplash</p>
+      <form onSubmit={handleSearch} className="flex mb-4">
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={handleDeselectElement}
           placeholder="Search for images"
-          className="my-2 px-2 py-1 border rounded w-full"
+          className="flex-grow px-2 py-1 border rounded-l"
         />
-        <button
-          type="submit"
-          className="my-3 px-2 py-1 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300"
-        >
+        <button type="submit" className="px-4 py-1 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-r">
           검색하기
         </button>
       </form>
-      <div>
+      <div className="grid grid-cols-4 gap-2">
         {images.map((image, index) => (
           <img
             key={`background-${image.id}-${index}`}
             src={image.urls.thumb}
             alt={image.alt_description}
             onClick={() => handleBackgroundImageChange(image.urls.regular)}
-            className="cursor-pointer my-2"
+            className="cursor-pointer w-full h-auto"
           />
         ))}
-        {loading && <p>Loading...</p>}
-        {!loading && hasMore && (
-          <button
-            onClick={handleLoadMore}
-            className="mt-2 px-2 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300"
-          >
-            더보기
-          </button>
-        )}
-        {!loading && !hasMore && <p>더 이상 결과가 없습니다.</p>}
       </div>
+      {loading && <p>Loading...</p>}
+      {!loading && hasMore && (
+        <button
+          onClick={handleLoadMore}
+          className="mt-2 px-2 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded transition duration-300 w-full"
+        >
+          더보기
+        </button>
+      )}
+      {!loading && !hasMore && <p>더 이상 결과가 없습니다.</p>}
     </div>
   );
 };
