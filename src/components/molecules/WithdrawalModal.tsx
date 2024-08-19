@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import useUserStore from '@/stores/user.store';
 import Swal from 'sweetalert2';
 import { FaTimes } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
 
 const WithdrawalModal: React.FC = () => {
   const { nickname, membershipDays } = useUserStore((state) => state);
@@ -20,6 +21,11 @@ const WithdrawalModal: React.FC = () => {
     if (e.key === ' ') {
       e.preventDefault(); // 스페이스바의 기본 동작 방지
     }
+  };
+
+  const router = useRouter();
+  const redirectToHome = () => {
+    router.push('/');
   };
 
   const [goodbye, setGoodbye] = useState('');
@@ -75,7 +81,7 @@ const WithdrawalModal: React.FC = () => {
         });
 
         toggleWithdrawalModal();
-        window.location.href = '/';
+        redirectToHome();
         // 추가로 로그아웃 처리
         await supabase.auth.signOut();
       }
