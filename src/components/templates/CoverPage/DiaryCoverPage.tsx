@@ -382,17 +382,17 @@ const DiaryCoverPage: React.FC = () => {
       const node = coverImageRef.current;
       const scaleX = node.scaleX();
       const scaleY = node.scaleY();
-      const newWidth = coverImageSize.width * scaleX;
-      const newHeight = coverImageSize.height * scaleY;
+      const scale = Math.max(scaleX, scaleY);
 
-      node.scaleX(1);
-      node.scaleY(1);
+      const newWidth = coverImageSize.width * scale;
+      const newHeight = coverImageSize.height * scale;
 
       setCoverImageSize({ width: newWidth, height: newHeight });
       setCoverImagePosition({ x: node.x(), y: node.y() });
       setCoverImageRotation(node.rotation());
 
-      node.getLayer()?.batchDraw();
+      node.scaleX(1);
+      node.scaleY(1);
     }
   };
 
@@ -401,17 +401,17 @@ const DiaryCoverPage: React.FC = () => {
       const node = unsplashImageRef.current;
       const scaleX = node.scaleX();
       const scaleY = node.scaleY();
-      const newWidth = unsplashImageSize.width * scaleX;
-      const newHeight = unsplashImageSize.height * scaleY;
+      const scale = Math.max(scaleX, scaleY);
 
-      node.scaleX(1);
-      node.scaleY(1);
+      const newWidth = unsplashImageSize.width * scale;
+      const newHeight = unsplashImageSize.height * scale;
 
       setUnsplashImageSize({ width: newWidth, height: newHeight });
       setUnsplashImagePosition({ x: node.x(), y: node.y() });
       setUnsplashImageRotation(node.rotation());
 
-      node.getLayer()?.batchDraw();
+      node.scaleX(1);
+      node.scaleY(1);
     }
   };
 
@@ -480,51 +480,15 @@ const DiaryCoverPage: React.FC = () => {
     }
   };
 
-  // 이벤트에서 스케일링을 반영한 좌표 계산
-  const getScaledPosition = (node: Konva.Node) => {
-    const stage = node.getStage();
-    if (!stage) {
-      console.error('Stage not found');
-      return { x: node.x(), y: node.y() };
-    }
-
-    // TODO: 얘가 안변하는 이유??
-    const scaleX = stage.scaleX();
-    const scaleY = stage.scaleY();
-    const absolutePosition = node.getAbsolutePosition();
-
-    console.log('ScaleX:', scaleX, 'ScaleY:', scaleY);
-    console.log('Absolute Position:', absolutePosition);
-
-    return {
-      x: absolutePosition.x / scaleX,
-      y: absolutePosition.y / scaleY
-    };
-  };
-
   // 이미지 선택 시 호출되는 함수
   const handleImageSelect = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
     e.cancelBubble = true;
-    const node = coverImageRef.current;
-    if (node && trRef.current) {
-      const scaledPosition = getScaledPosition(node);
-      node.position(scaledPosition);
-      trRef.current.nodes([node]);
-      trRef.current.getLayer()?.batchDraw();
-    }
     setCoverSelectedElement(coverImageRef.current);
     handleCloseMenu();
   };
 
   const handleUnsplashImageSelect = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
     e.cancelBubble = true;
-    const node = unsplashImageRef.current;
-    if (node && trRef.current) {
-      const { x, y } = getScaledPosition(node);
-      node.position({ x, y });
-      trRef.current.nodes([node]);
-      trRef.current.getLayer()?.batchDraw();
-    }
     setCoverSelectedElement(unsplashImageRef.current);
     handleCloseMenu();
   };
@@ -532,15 +496,6 @@ const DiaryCoverPage: React.FC = () => {
   // 텍스트 선택 시 호출되는 함수
   const handleTextSelect = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
     e.cancelBubble = true;
-    const node = textRef.current;
-    if (node && trRef.current) {
-      // 2. scaledPosition -> x, y => 이 값 알아보기
-      const scaledPosition = getScaledPosition(node);
-      node.position(scaledPosition);
-      trRef.current.nodes([node]);
-      // TODO: 다시 그리기??
-      trRef.current.getLayer()?.batchDraw();
-    }
     setCoverSelectedElement(textRef.current);
     handleCloseMenu();
   };
@@ -562,6 +517,18 @@ const DiaryCoverPage: React.FC = () => {
         trRef.current.nodes([]);
         trRef.current.getLayer()?.batchDraw();
       }
+      // 빈 곳을 클릭하면 메뉴를 닫습니다.
+      handleCloseMenu();
+    } else {
+      const clickedNode = e.target;
+      setCoverSelectedElement(clickedNode);
+      if (trRef.current) {
+        // 트랜스포머에 스케일과 위치를 적용
+        trRef.current.nodes([clickedNode]);
+        trRef.current.scale({ x: coverScale, y: coverScale });
+        trRef.current.getLayer()?.batchDraw();
+      }
+      // 클릭한 요소가 있더라도 메뉴를 닫습니다.
       handleCloseMenu();
     }
   };
@@ -945,26 +912,23 @@ const DiaryCoverPage: React.FC = () => {
 
         if (window.innerWidth <= 767) {
           containerWidth = 325;
+          containerHeight = 487.5;
         } else if (window.innerWidth <= 1278) {
           containerWidth = 360;
+          containerHeight = 540;
         } else {
           containerWidth = 450;
+          containerHeight = 675;
         }
-
-        containerHeight = containerWidth * 1.5; // 2:3 비율 적용
-
-        const scaleX = containerWidth / 450;
-        const scaleY = scaleX;
+        const newScale = containerWidth / 450;
 
         setCoverStageSize({ width: containerWidth, height: containerHeight });
-        setCoverScale(scaleX);
+        setCoverScale(newScale);
 
         if (stageRef.current) {
           stageRef.current.width(containerWidth);
           stageRef.current.height(containerHeight);
-          stageRef.current.scale({ x: scaleX, y: scaleY });
-
-          console.log('Stage ScaleX:', stageRef.current.scaleX(), 'Stage ScaleY:', stageRef.current.scaleY());
+          stageRef.current.scale({ x: newScale, y: newScale });
 
           stageRef.current.container().style.width = `${containerWidth}px`;
           stageRef.current.container().style.height = `${containerHeight}px`;
@@ -1476,12 +1440,9 @@ const DiaryCoverPage: React.FC = () => {
                   {coverSelectedElement && (
                     <Transformer
                       ref={trRef}
-                      // TODO: nodes 선택된 element인 듯?
                       nodes={[coverSelectedElement]}
-                      // TODO: 테두리 그려주는 것???? -> 무슨 코드인지 알아보기
                       boundBoxFunc={(oldBox, newBox) => ({
                         ...newBox,
-                        // 이거 높이, 너비 잘못 잡혔나?
                         width: Math.max(20, newBox.width),
                         height: Math.max(20, newBox.height)
                       })}
