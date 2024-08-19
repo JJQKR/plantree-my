@@ -24,15 +24,26 @@ type ParamTypes = {
 
 const DiaryCoverPage: React.FC = () => {
   const router = useRouter();
-  const userId = useUserStore((state) => state.userId);
+  const [userId, setUserId] = useState<string | null>(null);
   const { mutate: createDiary } = useCreateDiary();
   const setDiaryId = useDiaryStore((state) => state.setDiaryId);
 
   const { diaryId } = useParams<ParamTypes>();
-  if (!userId) {
-    console.error(' userId가 비어 있습니다.');
-    return;
-  }
+
+  useEffect(() => {
+    const storedUserId = localStorage.getItem('userId');
+    if (storedUserId) {
+      setUserId(storedUserId);
+    } else {
+      const userIdFromStore = useUserStore.getState().userId;
+      if (userIdFromStore) {
+        setUserId(userIdFromStore);
+        localStorage.setItem('userId', userIdFromStore);
+      } else {
+        console.error('userId가 없습니다.');
+      }
+    }
+  }, []);
 
   const {
     coverTitle,
@@ -1236,12 +1247,12 @@ const DiaryCoverPage: React.FC = () => {
       case 'Edit':
         return (
           <div>
-            <button
+            {/* <button
               onClick={handleDownload}
               className="mb-2 px-2 py-1 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300 w-full"
             >
               표지 다운로드
-            </button>
+            </button> */}
             {isEditMode ? (
               <button
                 onClick={handleUpdateDiary}
@@ -1354,7 +1365,7 @@ const DiaryCoverPage: React.FC = () => {
         {/* 다이어리 제목 수정 중 박스 */}
         <div className="w-full h-[8.5rem] flex items-center justify-center text-[#496200] font-semibold text-[2.8rem] sm:text-[1.8rem] z-10">
           <span className="text-black">[</span>
-          <span className="text-black overflow-hidden text-ellipsis whitespace-nowrap max-w-[300px] sm:max-w-[200px] inline-block">
+          <span className="text-black overflow-hidden text-ellipsis whitespace-nowrap max-w-[27rem] sm:max-w-[18rem] inline-block">
             {coverTitle}
           </span>
           <span className="text-black">]&nbsp;</span>
