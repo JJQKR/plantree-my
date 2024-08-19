@@ -17,6 +17,7 @@ import useUserStore from '@/stores/user.store';
 // import AccountBarModal from '@/components/molecules/AccountBarModal';
 import { FaChevronLeft } from 'react-icons/fa';
 import { FaChevronRight } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
 
 const MyPage: React.FC = () => {
   const {
@@ -29,6 +30,8 @@ const MyPage: React.FC = () => {
     // isAccountBarModalOpen,
     // toggleAccountBarModal
   } = useMyModalStore((state) => state);
+
+  const router = useRouter();
 
   const handleToggleBadgeModal = () => {
     toggleBadgeModal();
@@ -47,7 +50,8 @@ const MyPage: React.FC = () => {
 
   const { email } = useUserStore((state) => state);
   const toBack = () => {
-    window.history.back();
+    // window.history.back();
+    router.back();
   };
 
   return (

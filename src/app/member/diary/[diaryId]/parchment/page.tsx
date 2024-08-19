@@ -23,7 +23,7 @@ import MoParchmentPageFrame from '@/components/templates/ParchmentPage/MoParchme
 
 const DiaryParchment = () => {
   const { bottomSheetList, isSheetOpen, toggleSheet, moveCard } = useBottomSheetStore();
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowWidth, setWindowWidth] = useState(1920);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
