@@ -157,7 +157,6 @@ const DiaryCase: React.FC = () => {
     bottom: '8rem', // 페이지네이션을 카드 하단에 배치
     textAlign: 'center'
   };
-
   return (
     <div className="flex-grow flex items-center justify-center transition-all duration-300 mt-8 sm:mb-[20rem]">
       {gridView ? (

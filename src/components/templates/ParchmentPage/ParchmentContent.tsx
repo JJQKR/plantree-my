@@ -49,15 +49,25 @@ const ParchmentContent = ({ page, diaryId }: ShowContentsProps) => {
     });
   };
 
-  const deletePage = async (style: string) => {
-    deleteDbPage(page.content_id);
-    if (style === 'tenMinPlanner') {
-      deleteDbTenMinPlanner(page.content_id);
-    } else if (style === 'lineNote') {
-      await supabase.from('line_note').delete().eq('id', page.content_id);
-    } else if (style === 'blankNote') {
-      await supabase.from('blank_note').delete().eq('id', page.content_id);
-    }
+  const deletePage = (style: string) => {
+    Swal.fire({
+      title: `${pageStyle()}를 삭제하시겠습니까?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: '예',
+      cancelButtonText: '아니오'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteDbPage(page.content_id);
+        if (style === 'tenMinPlanner') {
+          deleteDbTenMinPlanner(page.content_id);
+        } else if (style === 'lineNote') {
+          supabase.from('line_note').delete().eq('id', page.content_id);
+        } else if (style === 'blankNote') {
+          supabase.from('blank_note').delete().eq('id', page.content_id);
+        }
+      }
+    });
   };
 
   if (isPending) <div>로딩중...</div>;

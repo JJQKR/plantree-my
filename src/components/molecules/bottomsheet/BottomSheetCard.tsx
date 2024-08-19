@@ -26,7 +26,7 @@ const BottomSheetCard: React.FC<BottomSheetCardProps> = ({ page, moveCard, onTog
   const { setCurrentPageIndex } = usePageStore((state) => state);
   const { activeCardIndices, setActiveCardIndices } = useBottomSheetStore((state) => state);
 
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowWidth, setWindowWidth] = useState(1920);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
