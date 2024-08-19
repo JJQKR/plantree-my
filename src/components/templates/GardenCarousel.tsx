@@ -49,7 +49,7 @@ const GardenCarousel: React.FC = () => {
       id: 3,
       content: (
         <div className="relative w-[98rem] h-[48rem] sm:w-[38rem] sm:h-[18.7rem] rounded-bl-[2rem] rounded-br-[2rem]">
-          <Image src="/images/garden3.jpg" alt="garden3" fill className="object-cover" />
+          <Image src="/images/garden3.png" alt="garden3" fill className="object-cover" />
         </div>
       ),
       name: '풀'
@@ -67,7 +67,7 @@ const GardenCarousel: React.FC = () => {
       id: 5,
       content: (
         <div className="relative w-[98rem] h-[48rem] sm:w-[38rem] sm:h-[18.7rem] rounded-bl-[2rem] rounded-br-[2rem]">
-          <Image src="/images/garden5.jpg" alt="garden5" fill className="object-cover" />
+          <Image src="/images/garden5.png" alt="garden5" fill className="object-cover" />
         </div>
       ),
       name: '나무'
