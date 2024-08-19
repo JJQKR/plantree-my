@@ -32,15 +32,16 @@ const Header: React.FC<MainHeaderProps> = ({ toggleSidebar, toggleGrid }) => {
         <SideButton onClick={handleSideButtonClick} sideView={sideView}>
           Menu
         </SideButton>
-        <div className="flex-grow flex justify-center">
+        <div className="flex-grow flex justify-center items-center text-center">
           <Link href="/member/hub">
-            <Image
-              src="/images/Plantree.png"
-              alt="Logo"
-              width={250} // 너비를 rem으로 변환
-              height={20} // 높이를 rem으로 변환
-              className="sm:w-[15rem] sm:w-[10rem]"
-            />
+            <div className="flex justify-center items-center sm:w-[10rem] sm:h-[0.8rem] w-[25rem] h-[2rem]">
+              <Image
+                src="/images/Plantree.png"
+                alt="Logo"
+                width={250} // 너비를 rem으로 변환
+                height={20} // 높이를 rem으로 변환
+              />
+            </div>
           </Link>
         </div>
         <GridToggleButton onClick={toggleGrid} gridView={gridView} />
