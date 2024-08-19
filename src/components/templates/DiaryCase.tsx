@@ -167,7 +167,7 @@ const DiaryCase: React.FC = () => {
                 <div
                   key={cover.cover_id}
                   className="flex flex-col items-center justify-center cursor-pointer"
-                  onClick={() => handleDiaryClick(cover.diary_id as string)}
+                  onPointerUp={() => handleDiaryClick(cover.diary_id as string)} // onPointerUp으로 변경
                 >
                   <div className="relative flex flex-col items-center justify-center w-full h-full rounded shadow-md overflow-hidden">
                     <Stage
@@ -261,7 +261,7 @@ const DiaryCase: React.FC = () => {
                   cover.cover_id ? (
                     <SwiperSlide
                       key={cover.cover_id}
-                      onClick={() => handleDiaryClick(cover.diary_id as string)}
+                      onPointerUp={() => handleDiaryClick(cover.diary_id as string)} // onPointerUp으로 변경
                       className="flex items-center justify-center cursor-pointer sm:w-[32rem] sm:h-[50rem] w-[48rem] h-[72rem]"
                       style={{
                         backgroundColor: cover.cover_bg_color,
