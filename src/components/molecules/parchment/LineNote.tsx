@@ -27,7 +27,7 @@ const LineNote = ({ id }: LineNoteProps) => {
   );
   const [lineColor, setLineColor] = useState('#000000');
   const [lineThickness, setLineThickness] = useState(0.9);
-  const [bgColor, setBgColor] = useState('#F0F3EB');
+  const [bgColor, setBgColor] = useState('transparent');
   const [globalTextColor, setGlobalTextColor] = useState('#000000');
   const [diaryId, setDiaryId] = useState('');
   const { mutate: deletePage, isPending, isError } = useDeletePage();
@@ -217,7 +217,7 @@ const LineNote = ({ id }: LineNoteProps) => {
       } else if (data) {
         setLineColor(data?.line_color || '#000000');
         setLineThickness(data?.line_thickness || 1);
-        setBgColor(data?.bg_color || '#F0F3EB');
+        setBgColor(data?.bg_color || '#transparent');
         setGlobalTextColor(data?.global_text_color || '#000000');
         setDiaryId(data?.diary_id || '');
 
