@@ -388,7 +388,7 @@ const DiaryCase: React.FC = () => {
           <div className="swiper-pagination" style={paginationStyle}></div>
         </div>
       )}
-      <div className="fixed sm:bottom-[0.5rem] sm:right-[4rem] sm:mb-[10rem] bottom-[3rem] right-[2rem]">
+      <div className="fixed sm:bottom-[0.5rem] sm:right-[4rem] sm:mb-[7rem] bottom-[3rem] right-[2rem]">
         {!gridView && <CreateDiaryButton onClick={handleCreateDiary} />}
       </div>
       {loading && ( // 로딩 애니메이션 표시
