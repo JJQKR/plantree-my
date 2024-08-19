@@ -57,11 +57,11 @@ const LandingMain = () => {
   };
 
   return (
-    <main className="w-[120rem] max-w-full mx-auto px-4 sm:w-[48rem] lg:w-[120rem] bg-white text-black flex flex-col flex-grow items-center justify-center">
+    <main className="w-[80rem] max-w-full mx-auto px-4 bg-white text-black flex flex-col flex-grow items-center justify-center">
       <div className="w-full relative mb-[1.2rem] image-container">
-        <div className="relative rounded-2xl mt-[0.3rem] w-full h-[30rem] sm:h-[45rem] lg:h-[45rem]">
+        <div className="relative rounded-2xl mt-[0.3rem] w-full h-[30rem]">
           <Image
-            src="/images/main11.jpg"
+            src="/images/랜딩페이지_메인히어로.png"
             alt="Main Image"
             fill
             className="rounded-2xl object-cover"
@@ -70,200 +70,137 @@ const LandingMain = () => {
         </div>
         <div className="overlay"></div>
       </div>
-      <div className="text-center mb-[1.2rem]">
-        <p className="text-4xl sm:text-5xl lg:text-5xl font-black mb-[0.4rem]">소중한 우리의 일상을</p>
-        <p className="text-4xl sm:text-5xl lg:text-5xl font-black mb-[0.4rem] text-green-500">
-          자유롭게<span className="text-black">,</span> 재미있게<span className="text-black">,</span> 언제 어디서나
-        </p>
-        <p className="text-4xl sm:text-5xl lg:text-5xl font-black mb-[0.7rem]">기록하는 새로운 방법</p>
-        <p className="text-6xl sm:text-7xl lg:text-7xl font-black mb-[0.8rem]">
-          <span className="text-green-600">
-            Plan<span className="text-green-400">tree</span>
-          </span>{' '}
-          에 오신것을 환영합니다!
-        </p>
-      </div>
 
-      <section className="w-full max-w-[80rem] mx-auto mt-[4.1rem] mb-[4.1rem]">
-        <div className="flex flex-col-reverse lg:flex-row items-start mt-[0.4rem] w-full justify-center">
-          <div className="order-2 lg:order-1 w-full sm:w-[48rem] lg:w-[45.625rem] h-[30rem] sm:h-[37.75rem] relative mb-8 lg:mb-0 lg:mr-[5rem]">
+      <p className="w-[21.7rem] h-[3.5rem] pt-2 pl-7 rounded-2xl bg-green-600 text-white text-[1.6rem] font-bold">
+        플랜트리를 소개합니다💬
+      </p>
+
+      <section className="w-full max-w-[80rem] mx-auto mt-[4.1rem] mb-[4.1rem] flex flex-row sm:flex-col sm:items-center sm:justify-between">
+        <div className="w-[45.625rem] h-[30rem] relative mb-8 mr-5">
+          <Image
+            src="/images/랜딩페이지_PC1.jpg"
+            alt="Main Image"
+            fill
+            className="rounded-2xl shadow-xl object-cover"
+            sizes="(max-width: 1280px) 100vw, 45.625rem"
+          />
+        </div>
+        <div className="w-[30rem] flex flex-col font-normal">
+          <div className="mt-[2.2rem] ">
+            <span className="text-2xl text-center font-bold">
+              <p>
+                플랜트리는 <span className="text-green-600">원하는 템플릿</span>을 이용해
+              </p>{' '}
+              <p>
+                나만의 <span className="text-green-600">다이어리를 꾸미고</span>
+              </p>{' '}
+              <p>
+                나의 <span className="text-green-600">일상을 한 권의 책처럼</span>
+              </p>{' '}
+              <p>만들 수 있는 서비스입니다.</p>
+            </span>
+          </div>
+          <div className="w-[30rem] h-[12.125rem] relative mb-3">
             <Image
-              src="/images/mainse3.png"
-              alt="Main Image"
+              src="/images/랜딩페이지_Review1.png"
+              alt="Review Image"
               fill
-              className="rounded-2xl shadow-xl object-cover"
+              className="rounded-2xl object-cover"
               sizes="(max-width: 1280px) 100vw, 45.625rem"
             />
           </div>
-          <div className="order-1 lg:order-2 w-full sm:w-[48rem] lg:w-[30rem] flex flex-col font-normal">
-            <div className="mt-[1.1rem] mb-[3rem]">
-              <p className="font-extrabold text-3xl text-green-600 mb-[0.4rem] mt-[1.1rem]">플랜트리는</p>
-              <p className="text-1xl">유저분들의 다양한 일상을 기록할 수 있는</p>
-              <p className="text-1xl">온라인 다이어리 서비스 입니다.</p>
-            </div>
-            <div className="mt-[0.6rem]">
-              <p className="text-1xl">
-                라이프 스타일에 맞는 템플릿을 선택하고, 직접 꾸미면서 오프라인에서 느꼈던 다꾸 감성을 온라인으로도
-                느껴보실 수 있어요.
-              </p>
-            </div>
-            <div className="w-full sm:w-[48rem] lg:w-[30rem] h-[12.125rem] mt-[0.6rem] border-2 border-green-700 rounded-lg p-[0.5rem] bg-transparent flex">
-              <div className="flex flex-col items-center ml-[0.5rem] mt-[0.5rem]">
-                <div className="relative w-[5rem] h-[5rem] rounded-full overflow-hidden mt-[1rem]">
-                  <Image
-                    src="/images/mainavatar4.jpg"
-                    alt="Profile Image"
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1280px) 100vw, 5rem"
-                  />
-                </div>
-                <div className="mt-[0.2rem] text-center">
-                  <p className="text-xl font-bold">Boyoung</p>
-                  <p className="text-sm text-gray-600">FE</p>
-                </div>
-              </div>
-              <div className="w-full sm:w-[48rem] lg:w-[30rem] ml-[0.6rem] mt-[0.5rem] flex flex-col items-center text-gray-600 text-base">
-                <p className="">평소 다이어리를 쓰면서 하루를 정리하는 편인데,</p>
-                <p>손글씨가 안 이뻐서 다꾸 하는 맛이 없었어요..</p>
-                <p>이번 프로젝트를 기획하면서</p>
-                <p>UX/UI 적으로도 사용하기 쉬우면서도</p>
-                <p>최대한 다꾸 감성을 느낄 수 있도록</p>
-                <p>유저의 자유도를 높힌 서비스를 기획 해봤어요!</p>
-              </div>
-            </div>
-            <a
-              href="/member/hub"
-              className="font-black bg-green-600 text-white px-[0.6rem] py-[0.5rem] rounded-lg mt-[0.4rem] text-center hover:bg-green-900 shadow-2xl"
-              onClick={(e) => handleLinkClick(e, '/member/hub')}
-            >
-              자유롭게 다이어리를 꾸며볼까요?
-            </a>
-          </div>
+          <a
+            href="/member/hub"
+            className="w-[30rem] h-[4.75rem] font-black bg-green-600 text-white px-[0.6rem] py-[0.5rem] rounded-lg text-center hover:bg-green-900 shadow-2xl"
+            onClick={(e) => handleLinkClick(e, '/member/hub')}
+          >
+            <div className="mt-3">다이어리를 만들어볼까요?</div>
+          </a>
         </div>
       </section>
 
-      <section className="w-full max-w-[80rem] mx-auto mt-[4.1rem] mb-[4.1rem]">
-        <div className="flex flex-col lg:flex-row-reverse items-start mt-[0.4rem] w-full justify-center">
-          <div className="w-full sm:w-[48rem] lg:w-[45.625rem] h-[30rem] sm:h-[37.75rem] relative ml-0 lg:ml-[5rem] mb-8 lg:mb-0">
+      <section className="w-full max-w-[80rem] mx-auto mt-[4.1rem] mb-[4.1rem] flex flex-row-reverse sm:flex-col sm:items-center sm:justify-between">
+        <div className="w-[45.625rem] h-[30rem] relative mb-8">
+          <Image
+            src="/images/랜딩페이지_PC2.jpg"
+            alt="Main Image"
+            fill
+            className="rounded-2xl shadow-xl object-cover"
+            sizes="(max-width: 1280px) 100vw, 45.625rem"
+          />
+        </div>
+        <div className="w-[30rem] flex flex-col font-normal">
+          <div className="mt-[2.2rem]">
+            <span className="text-2xl text-center font-bold">
+              <p>씨앗이었던 내가 열매가 되었다고?</p>{' '}
+              <p>
+                다이어를 <span className="text-green-600">만들고 꾸밀수록</span>
+              </p>
+              <p>
+                <span className="text-green-600">귀여운 이미지와 뱃지</span>를 얻으며
+              </p>
+              <p>
+                <span className="text-green-600">소소한 재미를</span> 찾아보세요.
+              </p>
+            </span>
+          </div>
+          <div className="w-[30rem] h-[12.125rem] relative mb-3">
             <Image
-              src="/images/mainse21.png"
-              alt="Main Image"
+              src="/images/랜딩페이지_Review2.png"
+              alt="Review Image"
               fill
-              className="rounded-2xl shadow-xl object-cover"
+              className="rounded-2xl object-cover"
               sizes="(max-width: 1280px) 100vw, 45.625rem"
             />
           </div>
-          <div className="w-full sm:w-[48rem] lg:w-[30rem] flex flex-col font-normal text-right">
-            <div className="mt-[1.1rem] mb-[3rem]">
-              <p className="font-extrabold text-3xl text-green-600 mb-[0.4rem] mt-[1.1rem]">
-                기억나무와 함께 일상을 기록해요
-              </p>
-              <p className="text-1xl">
-                Plantree 에는 기억나무가 있어요! 처음엔 씨앗의 모습이지만 저희와 함께 다이어리를 만들고 일상을 기록하다
-                보면 나무가 될거에요!
-              </p>
-            </div>
-            <div className="mt-[0.6rem]">
-              <p className="text-1xl">
-                써보고 싶었지만 의지력이 약했던 P도! 기록하고 회상하며 일상을 루틴하게 사는 J도! 모두 재밌게 일상을
-                기록해볼 수 있어요.
-              </p>
-            </div>
-            <div className="w-full sm:w-[48rem] lg:w-[30rem] h-[12.125rem] mt-[0.6rem] border-2 border-green-700 rounded-lg p-[0.5rem] bg-transparent flex">
-              <div className="flex flex-col items-center ml-[0.5rem] mt-[0.5rem]">
-                <div className="relative w-[5rem] h-[5rem] rounded-full overflow-hidden mt-[1rem]">
-                  <Image
-                    src="/images/mainavatar2.jpg"
-                    alt="Profile Image"
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1280px) 100vw, 5rem"
-                  />
-                </div>
-                <div className="mt-[0.2rem] text-center">
-                  <p className="text-xl font-bold">Hoondolla</p>
-                  <p className="text-sm text-gray-600">FE</p>
-                </div>
-              </div>
-              <div className="w-full sm:w-[48rem] lg:w-[30rem] ml-[0.6rem] mt-[1.3rem] flex flex-col items-center text-gray-600 text-base">
-                <p className="text-md text-center">
-                  솔직히 저는 다이어리를 주로 사용하진 않는 편이에요. 그래서 이번 프로젝트에 임할 때 낯선 사람들도
-                  익숙하게 느끼게 해보자 라는 마인드를 가지고 내가 생각하기에도 한 번 써보고 싶다 라고 느낄만한 서비스를
-                  만들고자 했습니다.
-                </p>
-              </div>
-            </div>
-            <a
-              href="/member/hub"
-              className="font-black bg-green-600 text-white px-[0.6rem] py-[0.5rem] rounded-lg mt-[0.4rem] text-center hover:bg-green-900 shadow-2xl"
-              onClick={(e) => handleLinkClick(e, '/member/hub')}
-            >
-              기억나무와 함께 일상을 기록해볼까요?
-            </a>
-          </div>
+          <a
+            href="/member/hub"
+            className="w-[30rem] h-[4.75rem] font-black bg-green-600 text-white px-[0.6rem] py-[0.5rem] rounded-lg text-center hover:bg-green-900 shadow-2xl"
+            onClick={(e) => handleLinkClick(e, '/member/hub')}
+          >
+            <div className="mt-3">다이어리를 만들어볼까요?</div>
+          </a>
         </div>
       </section>
 
-      <section className="w-full max-w-[80rem] mx-auto mt-[4.1rem] mb-[4.1rem]">
-        <div className="flex flex-col lg:flex-row items-start mt-[0.4rem] w-full justify-center">
-          <div className="w-full sm:w-[48rem] lg:w-[45.625rem] h-[30rem] sm:h-[37.75rem] relative mr-0 lg:mr-[5rem] mb-8 lg:mb-0">
+      <section className="w-full max-w-[80rem] mx-auto mt-[4.1rem] mb-[4.1rem] flex flex-row sm:flex-col sm:items-center sm:justify-between">
+        <div className="w-[45.625rem] h-[30rem] relative mb-8">
+          <Image
+            src="/images/랜딩페이지_PC3.jpg"
+            alt="Main Image"
+            fill
+            className="rounded-2xl shadow-xl object-cover"
+            sizes="(max-width: 1280px) 100vw, 45.625rem"
+          />
+        </div>
+        <div className="w-[30rem] flex flex-col font-normal">
+          <div className="mt-[3rem]">
+            <span className="text-2xl text-center font-bold">
+              <p>
+                플랜트리는 <span className="text-green-600">반응형 웹서비스</span>에요!
+              </p>{' '}
+              <p>
+                PC, 태블릿, 모바일 <span className="text-green-600">언제 어디서든지</span>
+              </p>{' '}
+              <p>일상을 기록할 수 있어요.</p>
+            </span>
+          </div>
+          <div className="w-[30rem] h-[12.125rem] relative mb-3">
             <Image
-              src="/images/mainse4.jpg"
-              alt="Main Image"
+              src="/images/랜딩페이지_Review1.png"
+              alt="Review Image"
               fill
-              className="rounded-2xl shadow-xl object-cover"
+              className="rounded-2xl object-cover"
               sizes="(max-width: 1280px) 100vw, 45.625rem"
             />
           </div>
-          <div className="w-full sm:w-[48rem] lg:w-[30rem] flex flex-col font-normal">
-            <div className="mt-[1.1rem] mb-[3rem]">
-              <p className="font-extrabold text-3xl text-green-600 mb-[0.4rem] mt-[1.1rem]">
-                원하는 기기로 이용하세요!
-              </p>
-              <p className="text-1xl">
-                태블릿으로 영상을 보다가도, PC로 게임을 하다가도 기기 지원이 어려워 핸드폰을 찾아 헤멘 기억, 다들 한
-                번씩 있지 않으신가요?
-              </p>
-            </div>
-            <div className="mt-[0.6rem]">
-              <p className="text-1xl">
-                우리의 일상이 빠르게 추억이 될 수 있도록, 기록이 귀찮은 일이 되지 않도록 Plantree는 PC, 태블릿, 모바일
-                환경에서도 사용할 수 있어요.
-              </p>
-            </div>
-            <div className="w-full sm:w-[48rem] lg:w-[30rem] h-[12.125rem] mt-[0.6rem] border-2 border-green-700 rounded-lg p-[0.5rem] bg-transparent flex">
-              <div className="flex flex-col items-center ml-[0.5rem] mt-[0.5rem]">
-                <div className="relative w-[5rem] h-[5rem] rounded-full overflow-hidden mt-[1rem]">
-                  <Image
-                    src="/images/mainavatar1.jpg"
-                    alt="Profile Image"
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1280px) 100vw, 5rem"
-                  />
-                </div>
-                <div className="mt-[0.2rem] text-center">
-                  <p className="text-xl font-bold">Insu</p>
-                  <p className="text-sm text-gray-600">FE</p>
-                </div>
-              </div>
-              <div className="w-full sm:w-[48rem] lg:w-[30rem] ml-[0.6rem] mt-[1.3rem] flex flex-col items-center text-gray-600 text-base">
-                <p>
-                  평소 다이어리를 쓰면서 하루를 정리하는 편인데, 손글씨가 안 이뻐서 다꾸 하는 맛이 없었어요.. 이번
-                  프로젝트를 기획하면서 UX/UI 적으로도 사용하기 쉬우면서도 최대한 다꾸 감성을 느낄 수 있도록 유저의
-                  자유도를 높힌 서비스를 기획 해봤어요!
-                </p>
-              </div>
-            </div>
-            <a
-              href="/member/hub"
-              className="font-black bg-green-600 text-white px-[0.6rem] py-[0.5rem] rounded-lg mt-[0.4rem] text-center hover:bg-green-900 shadow-2xl"
-              onClick={(e) => handleLinkClick(e, '/member/hub')}
-            >
-              Plantree 를 사용해볼까요?
-            </a>
-          </div>
+          <a
+            href="/member/hub"
+            className="w-[30rem] h-[4.75rem] font-black bg-green-600 text-white px-[0.6rem] py-[0.5rem] rounded-lg text-center hover:bg-green-900 shadow-2xl"
+            onClick={(e) => handleLinkClick(e, '/member/hub')}
+          >
+            <div className="mt-3">다이어리를 만들어볼까요?</div>
+          </a>
         </div>
       </section>
 

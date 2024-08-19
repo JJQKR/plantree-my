@@ -9,7 +9,6 @@ interface UserState {
   setLevelId: (levelId: string | null) => void; // levelId 설정 함수 추가
   updatedLevelId: string | null;
   setUpdatedLevelId: (updatedLevelid: string | null) => void;
-
   membershipDays: number | null;
   setMembershipDays: (membershipDays: number | null) => void;
   attendance: number;
