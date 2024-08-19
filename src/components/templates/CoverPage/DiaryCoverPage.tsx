@@ -29,8 +29,8 @@ const DiaryCoverPage: React.FC = () => {
   const setDiaryId = useDiaryStore((state) => state.setDiaryId);
 
   const { diaryId } = useParams<ParamTypes>();
-  if (!diaryId || !userId) {
-    console.error('diaryId 또는 userId가 비어 있습니다.');
+  if (!userId) {
+    console.error(' userId가 비어 있습니다.');
     return;
   }
 
