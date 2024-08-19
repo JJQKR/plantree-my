@@ -171,7 +171,7 @@ const GardenCarousel: React.FC = () => {
           font-size: 2rem;
           margin-bottom: 2rem !important;
           margin-top: -2rem !important; /* This will move the bullet upwards */
-          z-index: 10;
+          /* z-index: 1; */
         }
 
         .swiper-pagination-bullet-active.custom-bullet {
@@ -184,7 +184,7 @@ const GardenCarousel: React.FC = () => {
           font-size: 2rem;
           margin-bottom: 2rem !important;
           margin-top: -2rem !important; /* This will move the bullet upwards */
-          z-index: 10;
+          /* z-index: 1; */
         }
 
         @media (max-width: 767px) {
