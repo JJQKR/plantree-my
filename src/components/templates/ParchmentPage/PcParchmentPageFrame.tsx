@@ -165,7 +165,7 @@ export default function PcParchmentPageFrame() {
             >
               <FaChevronLeft />
             </span>
-            <span className="text-[2rem]  w-[50rem] px-[1rem] font-[600]">{coverTitle}</span>
+            <span className="text-[2.8rem]  w-[50rem] px-[1rem] font-[600]">{coverTitle}</span>
           </div>
           <div className="flex flex-row gap-3 justify-end ">
             <button

@@ -139,14 +139,17 @@ const Todolist = ({
                 backgroundColor: selectedColorTodo?.id === todo.id ? todo.color : 'transparent'
               }}
             >
-              <div className="flex gap-[0.2rem]">
-                <input
-                  type="color"
-                  className="round-color-input"
-                  value={todo.color}
-                  onChange={(e) => changeTodoColor(todo.id, e)}
-                  disabled={!isEditMode}
-                />
+              <div className="flex gap-[0.7rem]">
+                <div className="relative sm:w-[1.3rem] sm:h-[1.3rem] w-[1.8rem] h-[1.8rem] border-[0.1rem] border-black rounded-full flex items-center justify-center">
+                  <input
+                    type="color"
+                    className="round-color-input "
+                    value={todo.color}
+                    onChange={(e) => changeTodoColor(todo.id, e)}
+                    disabled={!isEditMode}
+                  />
+                </div>
+
                 <input
                   type="checkbox"
                   checked={todo.isDone}
@@ -167,16 +170,26 @@ const Todolist = ({
                   }}
                   onKeyUp={(e) => endEdit(todo.id, e)}
                   disabled={!isEditMode}
+                  placeholder="할일을 입력해주세요"
                   className=" sm:w-[10.9rem] w-[15.3rem] overflow-y-auto resize-none sm:text-[0.9rem] text-[1.26rem] p-[0.45rem] "
                 />
               ) : (
                 <div>
-                  <div
-                    className="sm:min-h-[2rem] min-h-[2.88rem] sm:w-[10.5rem] w-[15.3rem] whitespace-pre-wrap break-words break-all flex items-center"
-                    onClick={() => isEditMode && handleSelectTodo(todo)}
-                  >
-                    {todo.text || ''}
-                  </div>
+                  {todo.text ? (
+                    <div
+                      className="sm:min-h-[2rem] min-h-[2.88rem] sm:w-[10.5rem] w-[15.3rem] whitespace-pre-wrap break-words break-all flex items-center"
+                      onClick={() => isEditMode && handleSelectTodo(todo)}
+                    >
+                      {todo.text}
+                    </div>
+                  ) : (
+                    <div
+                      className="sm:min-h-[2rem] min-h-[2.88rem] sm:w-[10.5rem] w-[15.3rem] flex items-center text-gray-400"
+                      onClick={() => isEditMode && handleSelectTodo(todo)}
+                    >
+                      할일을 입력해주세요
+                    </div>
+                  )}
                 </div>
               )}
               <div className="flex items-center">
