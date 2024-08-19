@@ -255,6 +255,7 @@ const BlankNote = ({ id }: BlankNoteProps) => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   disabled={!isEditMode}
+                  placeholder="제목을 입력해주세요"
                 />
               </label>
             </div>
