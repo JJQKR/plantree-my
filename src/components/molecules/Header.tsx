@@ -34,7 +34,7 @@ const Header: React.FC<MainHeaderProps> = ({ toggleSidebar, toggleGrid }) => {
         </SideButton>
         <div className="flex-grow flex justify-center items-center text-center">
           <Link href="/member/hub">
-            <div className="sm:w-[10rem] sm:h-[0.8rem] w-[25rem] h-[2rem]">
+            <div className="flex justify-center items-center sm:w-[10rem] sm:h-[0.8rem] w-[25rem] h-[2rem]">
               <Image
                 src="/images/Plantree.png"
                 alt="Logo"
