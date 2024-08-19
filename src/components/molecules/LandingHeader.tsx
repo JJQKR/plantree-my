@@ -73,7 +73,7 @@ const LandingHeader = () => {
         </h1>
         <div className="flex gap-4">
           {isLoggedIn ? (
-            <button className="px-4 py-2 bg-red-500 rounded hover:bg-red-700 font-bold" onClick={handleLogout}>
+            <button className="px-4 py-2 bg-red-500 rounded hover:bg-red-700 font-bold sm:mr-6" onClick={handleLogout}>
               로그아웃
             </button>
           ) : (
