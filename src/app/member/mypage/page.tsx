@@ -31,8 +31,6 @@ const MyPage: React.FC = () => {
     // toggleAccountBarModal
   } = useMyModalStore((state) => state);
 
-  const router = useRouter();
-
   const handleToggleBadgeModal = () => {
     toggleBadgeModal();
   };
@@ -48,9 +46,9 @@ const MyPage: React.FC = () => {
   //   toggleAccountBarModal();
   // };
 
+  const router = useRouter();
   const { email } = useUserStore((state) => state);
   const toBack = () => {
-    // window.history.back();
     router.back();
   };
 
