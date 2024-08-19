@@ -27,7 +27,7 @@ const MyPageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="fixed flex justify-between items-center w-full h-[8rem] p-4 bg-white shadow-md z-50">
+      <header className="fixed flex justify-between items-center w-full h-[8rem] p-4 bg-white shadow-md z-30">
         <SideButton onClick={handleSideButtonClick} sideView={sideView}>
           Menu
         </SideButton>
