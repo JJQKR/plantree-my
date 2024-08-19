@@ -66,7 +66,7 @@ const LandingHeader = () => {
               src="/images/Plantree.png"
               alt="Logo"
               fill
-              className="object-contain"
+              className="object-contain sm:ml-6"
               sizes="(max-width: 1280px) 100vw, 20rem"
             />
           </div>
