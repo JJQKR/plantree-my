@@ -198,7 +198,7 @@ const DiaryCase: React.FC = () => {
                   className="flex flex-col items-center justify-center cursor-pointer"
                   onPointerUp={(e) => {
                     const cardElement = e.currentTarget;
-                    if (e.clientY < cardElement.offsetTop + cardElement.offsetHeight / 2) {
+                    if (e.clientY < cardElement.offsetTop + cardElement.offsetHeight / 1.5) {
                       // 상단 절반 클릭 시
                       handleDiaryClick(cover.diary_id as string);
                     }
