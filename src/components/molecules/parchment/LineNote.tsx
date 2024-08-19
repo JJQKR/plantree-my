@@ -95,6 +95,49 @@ const LineNote = ({ id }: LineNoteProps) => {
     [lines, measureTextWidth]
   );
 
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+      if (e.key === 'Enter' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        const nextLineIndex = index + 1;
+        if (nextLineIndex < lines.length) {
+          if (inputRefs.current[nextLineIndex]) {
+            inputRefs.current[nextLineIndex]!.focus();
+            inputRefs.current[nextLineIndex]!.setSelectionRange(0, 0);
+          }
+        }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        const prevLineIndex = index - 1;
+        if (prevLineIndex >= 0 && inputRefs.current[prevLineIndex]) {
+          inputRefs.current[prevLineIndex]!.focus();
+          inputRefs.current[prevLineIndex]!.setSelectionRange(
+            lines[prevLineIndex].text.length,
+            lines[prevLineIndex].text.length
+          );
+        }
+      } else if (e.key === 'Backspace' && lines[index].text === '') {
+        e.preventDefault();
+        const prevLineIndex = index - 1;
+        if (prevLineIndex >= 0) {
+          const newLines = [...lines];
+          newLines[prevLineIndex].text += newLines[index].text;
+          newLines[index].text = '';
+          setLines(newLines);
+
+          if (inputRefs.current[prevLineIndex]) {
+            inputRefs.current[prevLineIndex]!.focus();
+            inputRefs.current[prevLineIndex]!.setSelectionRange(
+              lines[prevLineIndex].text.length,
+              lines[prevLineIndex].text.length
+            );
+          }
+        }
+      }
+    },
+    [lines]
+  );
+
   useEffect(() => {
     inputRefs.current.forEach((input, index) => {
       if (input) {
@@ -339,12 +382,12 @@ const LineNote = ({ id }: LineNoteProps) => {
                 type="text"
                 value={line.text}
                 onChange={(e) => handleTextChange(index, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, index)} // 키보드 이벤트 핸들러 추가
                 ref={(el) => {
                   inputRefs.current[index] = el;
                 }}
                 className="fixed-width-input h-[2.75rem] sm:h-[2rem] border-none outline-none bg-transparent sm:text-[1rem] text-[1.5rem]"
                 style={{
-                  // fontSize: `${(line.fontSize * 0.5) / 10}rem`,
                   color: globalTextColor,
                   width: '100%'
                 }}
