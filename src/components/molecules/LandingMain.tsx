@@ -58,14 +58,12 @@ const LandingMain = () => {
 
   return (
     <main className="w-[80rem] max-w-full mx-auto px-4 bg-white text-black flex flex-col flex-grow items-center justify-center">
-      <div className="w-full relative mb-[1.2rem] image-container">
-        <div className="relative rounded-2xl mt-[0.3rem] w-full h-[30rem]">
-          <Image
+      <div className=" relative image-cover">
+        <div className="relative mb-[1.2rem] w-full h-auto sm:w-[100%] sm:h-auto sm overflow-hidden rounded-2xl">
+          <img
             src="/images/랜딩페이지_메인히어로.png"
             alt="Main Image"
-            fill
-            className="rounded-2xl object-cover"
-            sizes="(max-width: 1280px) 100vw, 120rem"
+            className="w-full h-auto object-contain object-left sm:w-[100%] "
           />
         </div>
         <div className="overlay"></div>
@@ -76,7 +74,7 @@ const LandingMain = () => {
       </p>
 
       <section className="w-full max-w-[80rem] mx-auto mt-[4.1rem] mb-[4.1rem] flex flex-row sm:flex-col sm:items-center sm:justify-between">
-        <div className="w-[45.625rem] h-[30rem] relative mb-8 mr-5 sm:w-[40.625rem] sm:h-[25rem]">
+        <div className="w-[45.625rem] h-[30rem] relative mb-8 sm:w-[35.625rem] sm:h-[20rem]">
           <Image
             src="/images/랜딩페이지_PC1.jpg"
             alt="Main Image"
@@ -85,7 +83,7 @@ const LandingMain = () => {
             sizes="(max-width: 1280px) 100vw, 45.625rem"
           />
         </div>
-        <div className="w-[30rem] flex flex-col font-normal">
+        <div className="w-[30rem] flex flex-col font-normal ml-5">
           <div className="mt-[2.2rem] ">
             <span className="text-2xl text-center font-bold">
               <p>
@@ -120,7 +118,7 @@ const LandingMain = () => {
       </section>
 
       <section className="w-full max-w-[80rem] mx-auto mt-[4.1rem] mb-[4.1rem] flex flex-row-reverse sm:flex-col sm:items-center sm:justify-between">
-        <div className="w-[45.625rem] h-[30rem] relative mb-8 ml-5 sm:w-[40.625rem] sm:h-[25rem]">
+        <div className="w-[45.625rem] h-[30rem] relative mb-8 sm:w-[35.625rem] sm:h-[20rem]">
           <Image
             src="/images/랜딩페이지_PC2.jpg"
             alt="Main Image"
@@ -129,7 +127,7 @@ const LandingMain = () => {
             sizes="(max-width: 1280px) 100vw, 45.625rem"
           />
         </div>
-        <div className="w-[30rem] flex flex-col font-normal">
+        <div className="w-[30rem] flex flex-col font-normal mr-5">
           <div className="mt-[2.2rem]">
             <span className="text-2xl text-center font-bold">
               <p>씨앗이었던 내가 열매가 되었다고?</p>{' '}
@@ -164,7 +162,7 @@ const LandingMain = () => {
       </section>
 
       <section className="w-full max-w-[80rem] mx-auto mt-[4.1rem] mb-[4.1rem] flex flex-row sm:flex-col sm:items-center sm:justify-between">
-        <div className="w-[45.625rem] h-[30rem] relative mb-8 mr-5 sm:w-[40.625rem] sm:h-[25rem]">
+        <div className="w-[45.625rem] h-[30rem] relative mb-8 sm:w-[35.625rem] sm:h-[20rem]">
           <Image
             src="/images/랜딩페이지_PC3.jpg"
             alt="Main Image"
@@ -173,7 +171,7 @@ const LandingMain = () => {
             sizes="(max-width: 1280px) 100vw, 45.625rem"
           />
         </div>
-        <div className="w-[30rem] flex flex-col font-normal">
+        <div className="w-[30rem] flex flex-col font-normal ml-5">
           <div className="mt-[3rem]">
             <span className="text-2xl text-center font-bold">
               <p>
@@ -187,7 +185,7 @@ const LandingMain = () => {
           </div>
           <div className="w-[30rem] h-[12.125rem] relative mb-3 sm:mt-[3rem]">
             <Image
-              src="/images/랜딩페이지_Review1.png"
+              src="/images/랜딩페이지_Review3.png"
               alt="Review Image"
               fill
               className="rounded-2xl object-cover"
