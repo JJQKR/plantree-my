@@ -23,12 +23,13 @@ type BottomSheetCardProps = {
 
 const BottomSheetCard: React.FC<BottomSheetCardProps> = ({ page, moveCard, onToggle, pages }) => {
   const ref = React.useRef(null);
-  const { setCurrentPageIndex } = usePageStore((state) => state);
+  const { currentPageIndex, setCurrentPageIndex } = usePageStore((state) => state);
   const { activeCardIndices, setActiveCardIndices } = useBottomSheetStore((state) => state);
 
-  const [windowWidth, setWindowWidth] = useState(1920);
+  const [windowWidth, setWindowWidth] = useState(0);
 
   useEffect(() => {
+    setWindowWidth(window.innerWidth);
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -79,6 +80,8 @@ const BottomSheetCard: React.FC<BottomSheetCardProps> = ({ page, moveCard, onTog
   };
 
   const isActive = activeCardIndices?.includes(pages.indexOf(page));
+
+  console.log(currentPageIndex);
 
   return (
     <div

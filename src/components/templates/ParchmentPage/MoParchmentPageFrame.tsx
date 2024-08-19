@@ -139,18 +139,18 @@ export default function MoParchmentPageFrame() {
   }
 
   return (
-    <div className="relative flex flex-row justify-center w-[37.8rem] mt-[9.9rem]">
+    <div className="relative flex flex-row justify-center w-[37.5rem] mt-[9.9rem]">
       <div
         onClick={handlePrevPage}
-        className={`absolute top-[33rem] left-[-1rem] text-[2rem] cursor-pointer ${
+        className={`absolute top-[33rem] left-0 text-[2rem] cursor-pointer ${
           currentPageIndex < 1 ? 'text-[#BEBEBE]' : 'text-[#008A02]'
         }`}
       >
         <FaChevronCircleLeft />
       </div>
-      <div className="w-[37.8rem]">
+      <div className="w-[37.5rem]">
         <div className="flex flex-col gap-[1.2rem] justify-between ">
-          <div className="flex flex-row w-[37.8rem]">
+          <div className="flex flex-row w-[27em]">
             <span
               className="flex flex-row text-[2.4rem] w-[2.4rem] items-center justify-center cursor-pointer text-[#008A02]"
               onClick={goToHub}
@@ -188,7 +188,7 @@ export default function MoParchmentPageFrame() {
       </div>
       <div
         onClick={handleNextPage}
-        className={`absolute top-[33rem] right-[-1rem] text-[2rem] ${
+        className={`absolute top-[33rem] right-0 text-[2rem] ${
           currentPageIndex + 1 < pages!.length ? 'text-[#008A02]' : 'text-[#BEBEBE]'
         } cursor-pointer`}
       >
