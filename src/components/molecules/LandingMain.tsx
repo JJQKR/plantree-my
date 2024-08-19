@@ -74,7 +74,7 @@ const LandingMain = () => {
       </p>
 
       <section className="w-full max-w-[80rem] mx-auto mt-[4.1rem] mb-[4.1rem] flex flex-row sm:flex-col sm:items-center sm:justify-between">
-        <div className="w-[45.625rem] h-[30rem] relative mb-8 sm:w-[40.625rem] sm:h-[25rem]">
+        <div className="w-[45.625rem] h-[30rem] relative mb-8 sm:w-[35.625rem] sm:h-[20rem]">
           <Image
             src="/images/랜딩페이지_PC1.jpg"
             alt="Main Image"
@@ -118,7 +118,7 @@ const LandingMain = () => {
       </section>
 
       <section className="w-full max-w-[80rem] mx-auto mt-[4.1rem] mb-[4.1rem] flex flex-row-reverse sm:flex-col sm:items-center sm:justify-between">
-        <div className="w-[45.625rem] h-[30rem] relative mb-8 sm:w-[40.625rem] sm:h-[25rem]">
+        <div className="w-[45.625rem] h-[30rem] relative mb-8 sm:w-[35.625rem] sm:h-[20rem]">
           <Image
             src="/images/랜딩페이지_PC2.jpg"
             alt="Main Image"
@@ -162,7 +162,7 @@ const LandingMain = () => {
       </section>
 
       <section className="w-full max-w-[80rem] mx-auto mt-[4.1rem] mb-[4.1rem] flex flex-row sm:flex-col sm:items-center sm:justify-between">
-        <div className="w-[45.625rem] h-[30rem] relative mb-8 sm:w-[40.625rem] sm:h-[25rem]">
+        <div className="w-[45.625rem] h-[30rem] relative mb-8 sm:w-[35.625rem] sm:h-[20rem]">
           <Image
             src="/images/랜딩페이지_PC3.jpg"
             alt="Main Image"
