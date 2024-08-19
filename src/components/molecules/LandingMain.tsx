@@ -185,7 +185,7 @@ const LandingMain = () => {
           </div>
           <div className="w-[30rem] h-[12.125rem] relative mb-3 sm:mt-[3rem]">
             <Image
-              src="/images/랜딩페이지_Review1.png"
+              src="/images/랜딩페이지_Review3.png"
               alt="Review Image"
               fill
               className="rounded-2xl object-cover"
