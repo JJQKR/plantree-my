@@ -6,9 +6,17 @@ import Sidebar from '../molecules/Sidebar';
 import Link from 'next/link';
 import Image from 'next/image';
 import SideButton from '../atoms/SideButton';
+import { FaInfoCircle } from 'react-icons/fa';
+import useInfoModalStore from '@/stores/info.madal.store';
+import InfoModal from '../molecules/InfoModal';
 
 const MyPageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { sidebarOpen, toggleSidebar } = useStore(); // 상태와 상태 변경 함수 가져오기
+  const { toggleInfoModal } = useInfoModalStore((state) => state);
+
+  const showInfo = () => {
+    toggleInfoModal();
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -23,6 +31,9 @@ const MyPageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
               height={20} // 원하는 높이
             />
           </Link>
+        </div>
+        <div onClick={showInfo} className="text-[4rem] sm:text-[2.4rem] text-[#008A02] ">
+          <FaInfoCircle className="text-[4rem] sm:text-[2.4rem] text-[#008A02]" />
         </div>
       </header>
       <div className="flex flex-grow">
@@ -41,6 +52,7 @@ const MyPageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
             onClick={toggleSidebar} // 오버레이를 클릭하면 사이드바가 닫히도록 설정
           />
         )}
+        <InfoModal />
       </div>
     </div>
   );

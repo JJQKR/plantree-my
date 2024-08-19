@@ -79,8 +79,8 @@ body {
 }
 
 .round-color-input {
-  width: 2.5rem;
-  height: 2.9rem;
+  width: 5rem;
+  height: 2rem;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -114,8 +114,8 @@ body {
 
 @media (max-width: 767px) {
   .round-color-input {
-    width: 1.6rem;
-    height: 2rem;
+    width: 3rem;
+    height: 1.5rem;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
