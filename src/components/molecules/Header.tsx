@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import SideButton from '../atoms/SideButton';
 import GridToggleButton from '../atoms/GridToggleButton';
 import { MainHeaderProps } from '@/types/main';
@@ -12,7 +12,13 @@ import useInfoModalStore from '@/stores/info.madal.store';
 import InfoModal from './InfoModal';
 
 const Header: React.FC<MainHeaderProps> = ({ toggleSidebar, toggleGrid }) => {
-  // 상태 가져오기
+  const [sideView, setSideView] = useState(false); // 상태 관리
+
+  const handleSideButtonClick = () => {
+    setSideView(!sideView); // 상태 토글
+    toggleSidebar(); // 사이드바 토글
+  };
+
   const { gridView } = useStore();
   const { toggleInfoModal } = useInfoModalStore((state) => state);
 
@@ -23,7 +29,9 @@ const Header: React.FC<MainHeaderProps> = ({ toggleSidebar, toggleGrid }) => {
   return (
     <div>
       <header className="fixed flex justify-between items-center w-full h-[8rem] sm:h-[5rem] p-4 bg-white shadow-md z-50">
-        <SideButton onClick={toggleSidebar}>Menu</SideButton>
+        <SideButton onClick={handleSideButtonClick} sideView={sideView}>
+          Menu
+        </SideButton>
         <div className="flex-grow flex justify-center">
           <Link href="/member/hub">
             <Image

@@ -333,15 +333,15 @@ const DiaryCase: React.FC = () => {
                 )}
               </Swiper>
             ) : (
-              <SwiperSlide className="flex items-center justify-center sm:w-[32rem] sm:h-[50rem] w-[48rem] h-[72rem] bg-white text-2xl font-bold text-black">
+              <div className="flex items-center justify-center sm:w-[32rem] sm:h-[50rem] w-[48rem] h-[72rem] bg-white">
                 <button
                   onClick={handleCreateDiary}
-                  className="flex flex-col items-center justify-center text-center"
+                  className="flex flex-col items-center justify-center text-center font-bold text-[2rem]"
                   style={{ transform: 'none' }}
                 >
                   +<br /> 다이어리 생성
                 </button>
-              </SwiperSlide>
+              </div>
             )}
           </div>
           <div className="swiper-pagination" style={paginationStyle}></div>

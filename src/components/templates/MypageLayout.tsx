@@ -1,7 +1,7 @@
 'use client';
 
 import { useStore } from '@/stores/sidebar.store';
-import React from 'react';
+import React, { useState } from 'react';
 import Sidebar from '../molecules/Sidebar';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -18,10 +18,19 @@ const MyPageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     toggleInfoModal();
   };
 
+  const [sideView, setSideView] = useState(false); // 상태 관리
+
+  const handleSideButtonClick = () => {
+    setSideView(!sideView); // 상태 토글
+    toggleSidebar(); // 사이드바 토글
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <header className="fixed flex justify-between items-center w-full h-[8rem] p-4 bg-white shadow-md z-50">
-        <SideButton onClick={toggleSidebar}>Menu</SideButton>
+        <SideButton onClick={handleSideButtonClick} sideView={sideView}>
+          Menu
+        </SideButton>
         <div className="flex-grow flex justify-center">
           <Link href="/member/hub">
             <Image
