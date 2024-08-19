@@ -78,7 +78,7 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       <FetchMembershipDays />
 
       <div className="fixed top-0 left-0 w-[32rem] h-full sm:w-[24rem] sm:h-full bg-[#E6F3E6] text-white z-20">
-        <div className="fixed top-[16rem]">
+        <div className="fixed top-[8rem] sm:top-[4rem]">
           <div className="pl-[4rem] pr-[4rem] sm:pl-[2rem] sm:pr-[2rem]">
             <h2 className="mt-[4rem] text-[#727272] text-[1.6rem] sm-text-[1.4rem] font-semibold">내 정보</h2>
             <nav>
