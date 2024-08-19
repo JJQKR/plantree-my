@@ -21,7 +21,7 @@ const BadgeModal: React.FC = () => {
   return (
     <>
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+        className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50"
         onClick={handleBackGroundClick}
       >
         <div className="bg-white p-[4rem] sm:px-[2.4rem] sm:py-[1.6rem] rounded-[2rem] sm:rounded-[1.8rem] w-[94.8rem] h-[81.2rem] sm:w-[38rem] sm:h-[79.805rem]">
