@@ -28,7 +28,7 @@ const ParchmentOptionsModal: React.FC = () => {
   const { mutate: createTenMinPlanner } = useCreateTenMinPlanner();
   const { currentPageIndex, setCurrentPageIndex } = usePageStore((state) => state);
   const { activeCardIndices, setActiveCardIndices } = useBottomSheetStore((state) => state);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowWidth, setWindowWidth] = useState(1920);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
