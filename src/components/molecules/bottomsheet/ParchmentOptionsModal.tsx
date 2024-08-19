@@ -28,9 +28,10 @@ const ParchmentOptionsModal: React.FC = () => {
   const { mutate: createTenMinPlanner } = useCreateTenMinPlanner();
   const { currentPageIndex, setCurrentPageIndex } = usePageStore((state) => state);
   const { activeCardIndices, setActiveCardIndices } = useBottomSheetStore((state) => state);
-  const [windowWidth, setWindowWidth] = useState(1920);
+  const [windowWidth, setWindowWidth] = useState(0);
 
   useEffect(() => {
+    setWindowWidth(window.innerWidth);
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -63,19 +64,24 @@ const ParchmentOptionsModal: React.FC = () => {
     createPage(newPage);
 
     const currentIndex = (index: number) => {
-      if (index === 1) {
+      if (windowWidth < 768) {
         return index - 1;
-      } else if (index % 2 === 0) {
-        return index - 2;
       } else {
-        return index - 1;
+        if (index === 1) {
+          return index - 1;
+        } else if (index % 2 === 0) {
+          return index - 2;
+        } else {
+          return index - 1;
+        }
       }
     };
 
-    setCurrentPageIndex(currentIndex(newPage.index));
     if (windowWidth < 768) {
+      setCurrentPageIndex(currentIndex(newPage.index));
       setActiveCardIndices([currentIndex(newPage.index)]);
     } else {
+      setCurrentPageIndex(currentIndex(newPage.index));
       setActiveCardIndices([currentIndex(newPage.index), currentIndex(newPage.index) + 1]);
     }
 
@@ -159,7 +165,7 @@ const ParchmentOptionsModal: React.FC = () => {
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
       onClick={toggleParchmentOptionModal}
     >
-      {windowWidth < 768 ? (
+      <div className="sm:block hidden">
         <div
           className="bg-white rounded-[2rem]  w-[38rem] h-[56.7rem] py-[2rem] px-[2.4rem] flex flex-col gap-[0.8rem]"
           onClick={(e) => e.stopPropagation()}
@@ -180,7 +186,8 @@ const ParchmentOptionsModal: React.FC = () => {
             ))}
           </div>
         </div>
-      ) : (
+      </div>
+      <div className="sm:hidden block">
         <div
           className="bg-white rounded-[2rem]  w-[77.9rem] h-[47.25rem] p-[4rem] flex flex-col gap-[2rem]"
           onClick={(e) => e.stopPropagation()}
@@ -225,7 +232,7 @@ const ParchmentOptionsModal: React.FC = () => {
           </button>
         </div> */}
         </div>
-      )}
+      </div>
     </div>
   );
 };

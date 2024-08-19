@@ -1,7 +1,7 @@
 import BlankNote from '@/components/molecules/parchment/BlankNote';
 import LineNote from '@/components/molecules/parchment/LineNote';
 import TenMinPlanner from '@/components/molecules/parchment/TenMinPlanner';
-import { PageType } from '@/stores/pages.store';
+import usePageStore, { PageType } from '@/stores/pages.store';
 import { FaRegEdit } from 'react-icons/fa';
 import React from 'react';
 import { useDeletePage, usePageToDiaryId } from '@/lib/hooks/usePages';
@@ -20,6 +20,7 @@ const ParchmentContent = ({ page, diaryId }: ShowContentsProps) => {
   const { data: pages, isPending } = usePageToDiaryId(diaryId);
   const { mutate: deleteDbPage } = useDeletePage();
   const { mutate: deleteDbTenMinPlanner } = useDeleteTenMinPlanner();
+  const { setCurrentPageIndex } = usePageStore((state) => state);
   const router = useRouter();
 
   const pageStyle = () => {
@@ -49,7 +50,7 @@ const ParchmentContent = ({ page, diaryId }: ShowContentsProps) => {
     });
   };
 
-  const deletePage = (style: string) => {
+  const deletePage = (page: PageType) => {
     Swal.fire({
       title: `${pageStyle()}를 삭제하시겠습니까?`,
       icon: 'question',
@@ -59,11 +60,11 @@ const ParchmentContent = ({ page, diaryId }: ShowContentsProps) => {
     }).then((result) => {
       if (result.isConfirmed) {
         deleteDbPage(page.content_id);
-        if (style === 'tenMinPlanner') {
+        if (page.parchment_style === 'tenMinPlanner') {
           deleteDbTenMinPlanner(page.content_id);
-        } else if (style === 'lineNote') {
+        } else if (page.parchment_style === 'lineNote') {
           supabase.from('line_note').delete().eq('id', page.content_id);
-        } else if (style === 'blankNote') {
+        } else if (page.parchment_style === 'blankNote') {
           supabase.from('blank_note').delete().eq('id', page.content_id);
         }
       }
@@ -92,7 +93,7 @@ const ParchmentContent = ({ page, diaryId }: ShowContentsProps) => {
           </button>
           <button
             className="sm:text-[1.6rem] text-[2.16rem] text-[#496E00]  hover:text-black"
-            onClick={() => deletePage(page.parchment_style)}
+            onClick={() => deletePage(page)}
           >
             <FaTrashAlt />
           </button>
