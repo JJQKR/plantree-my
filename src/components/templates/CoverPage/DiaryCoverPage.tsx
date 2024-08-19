@@ -382,17 +382,17 @@ const DiaryCoverPage: React.FC = () => {
       const node = coverImageRef.current;
       const scaleX = node.scaleX();
       const scaleY = node.scaleY();
-      const scale = Math.max(scaleX, scaleY);
+      const newWidth = coverImageSize.width * scaleX;
+      const newHeight = coverImageSize.height * scaleY;
 
-      const newWidth = coverImageSize.width * scale;
-      const newHeight = coverImageSize.height * scale;
+      node.scaleX(1);
+      node.scaleY(1);
 
       setCoverImageSize({ width: newWidth, height: newHeight });
       setCoverImagePosition({ x: node.x(), y: node.y() });
       setCoverImageRotation(node.rotation());
 
-      node.scaleX(1);
-      node.scaleY(1);
+      node.getLayer()?.batchDraw();
     }
   };
 
@@ -401,17 +401,17 @@ const DiaryCoverPage: React.FC = () => {
       const node = unsplashImageRef.current;
       const scaleX = node.scaleX();
       const scaleY = node.scaleY();
-      const scale = Math.max(scaleX, scaleY);
+      const newWidth = unsplashImageSize.width * scaleX;
+      const newHeight = unsplashImageSize.height * scaleY;
 
-      const newWidth = unsplashImageSize.width * scale;
-      const newHeight = unsplashImageSize.height * scale;
+      node.scaleX(1);
+      node.scaleY(1);
 
       setUnsplashImageSize({ width: newWidth, height: newHeight });
       setUnsplashImagePosition({ x: node.x(), y: node.y() });
       setUnsplashImageRotation(node.rotation());
 
-      node.scaleX(1);
-      node.scaleY(1);
+      node.getLayer()?.batchDraw();
     }
   };
 
@@ -480,20 +480,67 @@ const DiaryCoverPage: React.FC = () => {
     }
   };
 
+  // 이벤트에서 스케일링을 반영한 좌표 계산
+  const getScaledPosition = (node: Konva.Node) => {
+    const stage = node.getStage();
+    if (!stage) {
+      console.error('Stage not found');
+      return { x: node.x(), y: node.y() };
+    }
+
+    // TODO: 얘가 안변하는 이유??
+    const scaleX = stage.scaleX();
+    const scaleY = stage.scaleY();
+    const absolutePosition = node.getAbsolutePosition();
+
+    console.log('ScaleX:', scaleX, 'ScaleY:', scaleY);
+    console.log('Absolute Position:', absolutePosition);
+
+    return {
+      x: absolutePosition.x / scaleX,
+      y: absolutePosition.y / scaleY
+    };
+  };
+
+  // 이미지 선택 시 호출되는 함수
   const handleImageSelect = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
     e.cancelBubble = true;
+    const node = coverImageRef.current;
+    if (node && trRef.current) {
+      const scaledPosition = getScaledPosition(node);
+      node.position(scaledPosition);
+      trRef.current.nodes([node]);
+      trRef.current.getLayer()?.batchDraw();
+    }
     setCoverSelectedElement(coverImageRef.current);
     handleCloseMenu();
   };
 
   const handleUnsplashImageSelect = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
     e.cancelBubble = true;
+    const node = unsplashImageRef.current;
+    if (node && trRef.current) {
+      const { x, y } = getScaledPosition(node);
+      node.position({ x, y });
+      trRef.current.nodes([node]);
+      trRef.current.getLayer()?.batchDraw();
+    }
     setCoverSelectedElement(unsplashImageRef.current);
     handleCloseMenu();
   };
 
+  // 텍스트 선택 시 호출되는 함수
   const handleTextSelect = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
     e.cancelBubble = true;
+    const node = textRef.current;
+    if (node && trRef.current) {
+      // 2. scaledPosition -> x, y => 이 값 알아보기
+      const scaledPosition = getScaledPosition(node);
+      node.position(scaledPosition);
+      trRef.current.nodes([node]);
+      // TODO: 다시 그리기??
+      trRef.current.getLayer()?.batchDraw();
+    }
     setCoverSelectedElement(textRef.current);
     handleCloseMenu();
   };
@@ -502,6 +549,7 @@ const DiaryCoverPage: React.FC = () => {
     setCoverBackgroundColor(e.target.value);
   };
 
+  // Stage에서 클릭 이벤트 처리
   const handleStageClick = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
     const clickedOnEmpty =
       e.target === e.target.getStage() ||
@@ -510,12 +558,10 @@ const DiaryCoverPage: React.FC = () => {
 
     if (clickedOnEmpty) {
       setCoverSelectedElement(null);
-
       if (trRef.current) {
         trRef.current.nodes([]);
         trRef.current.getLayer()?.batchDraw();
       }
-
       handleCloseMenu();
     }
   };
@@ -897,27 +943,29 @@ const DiaryCoverPage: React.FC = () => {
         let containerWidth = containerElement.offsetWidth;
         let containerHeight;
 
-        // 767px 이하일 때 사이즈 조정
         if (window.innerWidth <= 767) {
           containerWidth = 325;
-          containerHeight = 487.5;
         } else if (window.innerWidth <= 1278) {
           containerWidth = 360;
-          containerHeight = 540;
         } else {
           containerWidth = 450;
-          containerHeight = 675;
         }
 
-        const newScale = containerWidth / 450;
+        containerHeight = containerWidth * 1.5; // 2:3 비율 적용
+
+        const scaleX = containerWidth / 450;
+        const scaleY = scaleX;
 
         setCoverStageSize({ width: containerWidth, height: containerHeight });
-        setCoverScale(newScale);
+        setCoverScale(scaleX);
 
         if (stageRef.current) {
           stageRef.current.width(containerWidth);
           stageRef.current.height(containerHeight);
-          stageRef.current.scale({ x: newScale, y: newScale });
+          stageRef.current.scale({ x: scaleX, y: scaleY });
+
+          console.log('Stage ScaleX:', stageRef.current.scaleX(), 'Stage ScaleY:', stageRef.current.scaleY());
+
           stageRef.current.container().style.width = `${containerWidth}px`;
           stageRef.current.container().style.height = `${containerHeight}px`;
           stageRef.current.batchDraw();
@@ -1324,8 +1372,8 @@ const DiaryCoverPage: React.FC = () => {
           <span className="text-black overflow-hidden text-ellipsis whitespace-nowrap max-w-[300px] sm:max-w-[200px] inline-block">
             {coverTitle}
           </span>
-          <span className="text-black">]</span>
-          <span className="text-[#496200]"> 수정 중</span>
+          <span className="text-black">]&nbsp;</span>
+          <span className="text-[#496200]">수정 중</span>
         </div>
 
         {/* 사이드바 메뉴 */}
@@ -1405,6 +1453,7 @@ const DiaryCoverPage: React.FC = () => {
                   <Text
                     text={coverTitle ?? ''}
                     fontSize={coverTitleFontSize * coverScale}
+                    // coverTitlePosition.x * coverScale 실제 콘솔 찍어서 화면 비율이 줄어든 x,y도 위치 잘 이동하는지 확인 필요
                     x={coverTitlePosition.x * coverScale}
                     y={coverTitlePosition.y * coverScale}
                     width={coverTitleWidth * coverScale}
@@ -1427,9 +1476,12 @@ const DiaryCoverPage: React.FC = () => {
                   {coverSelectedElement && (
                     <Transformer
                       ref={trRef}
+                      // TODO: nodes 선택된 element인 듯?
                       nodes={[coverSelectedElement]}
+                      // TODO: 테두리 그려주는 것???? -> 무슨 코드인지 알아보기
                       boundBoxFunc={(oldBox, newBox) => ({
                         ...newBox,
+                        // 이거 높이, 너비 잘못 잡혔나?
                         width: Math.max(20, newBox.width),
                         height: Math.max(20, newBox.height)
                       })}

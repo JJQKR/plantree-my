@@ -32,6 +32,9 @@ const DiaryCase: React.FC = () => {
   const [loadedBackgroundImages, setLoadedBackgroundImages] = useState<HTMLImageElement[]>([]);
   const [unsplashImages, setUnsplashImages] = useState<HTMLImageElement[]>([]);
   const [loading, setLoading] = useState(true); // 로딩 상태 초기화
+  const [diaryCardWidth, setDiaryCardWidth] = useState(480);
+  const [diaryCardHeight, setDiaryCardHeight] = useState(720);
+  const [swiperStyle, setSwiperStyle] = useState({ width: '108rem', height: '72rem' });
 
   // Supabase에서 세션 정보를 가져오는 함수
   const fetchSession = async () => {
@@ -157,6 +160,32 @@ const DiaryCase: React.FC = () => {
     bottom: '8rem', // 페이지네이션을 카드 하단에 배치
     textAlign: 'center'
   };
+
+  // 화면 크기에 따라 스타일을 업데이트하는 함수
+  const updateStyles = () => {
+    if (window.innerWidth <= 768) {
+      setDiaryCardWidth(320);
+      setDiaryCardHeight(480);
+      setSwiperStyle({ width: '42rem', height: '62rem' });
+    } else {
+      setDiaryCardWidth(480);
+      setDiaryCardHeight(720);
+      setSwiperStyle({ width: '108rem', height: '72rem' });
+    }
+  };
+
+  useEffect(() => {
+    // 초기 렌더링 시 스타일 설정
+    updateStyles();
+
+    // 창 크기 변경 시 스타일 업데이트
+    window.addEventListener('resize', updateStyles);
+
+    return () => {
+      window.removeEventListener('resize', updateStyles);
+    };
+  }, []);
+
   return (
     <div className="flex-grow flex items-center justify-center transition-all duration-300 mt-8 sm:mb-[20rem]">
       {gridView ? (
@@ -167,7 +196,7 @@ const DiaryCase: React.FC = () => {
                 <div
                   key={cover.cover_id}
                   className="flex flex-col items-center justify-center cursor-pointer"
-                  onClick={() => handleDiaryClick(cover.diary_id as string)}
+                  onPointerUp={() => handleDiaryClick(cover.diary_id as string)} // onPointerUp으로 변경
                 >
                   <div className="relative flex flex-col items-center justify-center w-full h-full rounded shadow-md overflow-hidden">
                     <Stage
@@ -239,7 +268,7 @@ const DiaryCase: React.FC = () => {
       ) : (
         // 스와이프 뷰에서 다이어리 커버 표시
         <div>
-          <div className="w-full h-full mt-[10rem] pb-[10rem] flex items-center justify-center">
+          <div className="relative flex items-center justify-center mb-[10rem] sm:mb-[10rem] sm:mt-[0.1rem] mt-[10rem]">
             {diaryCovers.length > 0 ? (
               <Swiper
                 effect="coverflow"
@@ -255,13 +284,13 @@ const DiaryCase: React.FC = () => {
                 }}
                 pagination={{ clickable: true, el: '.swiper-pagination' }}
                 modules={[EffectCoverflow, Pagination]}
-                className="sm:w-[32rem] sm:h-[50rem] w-[95rem] h-[72rem]"
+                style={swiperStyle}
               >
                 {diaryCovers.map((cover, index) =>
                   cover.cover_id ? (
                     <SwiperSlide
                       key={cover.cover_id}
-                      onClick={() => handleDiaryClick(cover.diary_id as string)}
+                      onPointerUp={() => handleDiaryClick(cover.diary_id as string)} // onPointerUp으로 변경
                       className="flex items-center justify-center cursor-pointer sm:w-[32rem] sm:h-[50rem] w-[48rem] h-[72rem]"
                       style={{
                         backgroundColor: cover.cover_bg_color,
@@ -273,10 +302,10 @@ const DiaryCase: React.FC = () => {
                       }}
                     >
                       <Stage
-                        width={cover.cover_stage_size.width}
-                        height={cover.cover_stage_size.height}
-                        scaleX={cover.cover_scale}
-                        scaleY={cover.cover_scale}
+                        width={diaryCardWidth}
+                        height={diaryCardHeight}
+                        scaleX={diaryCardWidth / cover.cover_stage_size.width}
+                        scaleY={diaryCardHeight / cover.cover_stage_size.height}
                       >
                         <Layer>
                           <Rect
