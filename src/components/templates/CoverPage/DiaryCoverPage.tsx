@@ -1324,8 +1324,8 @@ const DiaryCoverPage: React.FC = () => {
           <span className="text-black overflow-hidden text-ellipsis whitespace-nowrap max-w-[300px] sm:max-w-[200px] inline-block">
             {coverTitle}
           </span>
-          <span className="text-black">]</span>
-          <span className="text-[#496200]"> 수정 중</span>
+          <span className="text-black">]&nbsp;</span>
+          <span className="text-[#496200]">수정 중</span>
         </div>
 
         {/* 사이드바 메뉴 */}

@@ -151,8 +151,8 @@ body {
 /* cover */
 .stage-wrapper {
   width: 100%;
-  max-width: 450px; /* 최대 너비 설정 */
-  margin: 0 auto; /* 가운데 정렬 */
+  max-width: 450px;
+  margin: 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -160,7 +160,7 @@ body {
 
 .stage-container {
   width: 100%;
-  max-width: 450px; /* 최대 너비 설정 */
+  max-width: 450px;
   aspect-ratio: 2 / 3; /* 2:3 비율 유지 */
   overflow: hidden;
   display: flex;
@@ -181,13 +181,13 @@ body {
 @media (max-width: 1278px) {
   .stage-wrapper,
   .stage-container {
-    max-width: 360px; /* 1278px 이하에서 최대 너비 360px로 제한 */
+    max-width: 360px;
   }
 }
 
 @media (max-width: 767px) {
   .stage-wrapper,
   .stage-container {
-    max-width: 325px; /* 767px 이하에서 최대 너비 325px로 제한 */
+    max-width: 325px;
   }
 }
