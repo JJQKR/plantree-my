@@ -57,7 +57,7 @@ const MyPageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         {/* 배경 오버레이 추가 */}
         {sidebarOpen && (
           <div
-            className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-40"
+            className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-10"
             onClick={toggleSidebar} // 오버레이를 클릭하면 사이드바가 닫히도록 설정
           />
         )}
