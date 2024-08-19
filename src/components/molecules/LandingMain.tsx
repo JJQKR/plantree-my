@@ -58,14 +58,12 @@ const LandingMain = () => {
 
   return (
     <main className="w-[80rem] max-w-full mx-auto px-4 bg-white text-black flex flex-col flex-grow items-center justify-center">
-      <div className="w-full relative mb-[1.2rem] image-container">
-        <div className="relative rounded-2xl mt-[0.3rem] w-full h-[30rem]">
-          <Image
+      <div className=" relative image-cover">
+        <div className="relative mb-[1.2rem] w-full h-auto sm:w-[100%] sm:h-auto sm overflow-hidden rounded-2xl">
+          <img
             src="/images/랜딩페이지_메인히어로.png"
             alt="Main Image"
-            fill
-            className="rounded-2xl object-cover"
-            sizes="(max-width: 1280px) 100vw, 120rem"
+            className="w-full h-auto object-contain object-left sm:w-[100%] "
           />
         </div>
         <div className="overlay"></div>
