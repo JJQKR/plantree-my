@@ -76,13 +76,13 @@ type DiaryCoverState = {
 };
 
 export const useDiaryCoverStore = create<DiaryCoverState>((set, get) => ({
-  coverTitle: null,
+  coverTitle: '표지를 작성해 주세요',
   setCoverTitle: (title) => set({ coverTitle: title }),
-  coverTitlePosition: { x: 120, y: 150 },
+  coverTitlePosition: { x: 90, y: 270 },
   setCoverTitlePosition: (position) => set({ coverTitlePosition: position }),
   coverTitleFontSize: 30,
   setCoverTitleFontSize: (size) => set({ coverTitleFontSize: size }),
-  coverTitleWidth: 260,
+  coverTitleWidth: 290,
   setCoverTitleWidth: (width) => set({ coverTitleWidth: width }),
   coverTitleRotation: 0,
   setCoverTitleRotation: (rotation) => set({ coverTitleRotation: rotation }),
@@ -110,7 +110,7 @@ export const useDiaryCoverStore = create<DiaryCoverState>((set, get) => ({
   setCoverSelectedElement: (element) => set({ coverSelectedElement: element }),
   coverScale: 1,
   setCoverScale: (scale) => set({ coverScale: scale }),
-  coverStageSize: { width: 480, height: 720 },
+  coverStageSize: { width: 450, height: 675 },
   setCoverStageSize: (size) => set({ coverStageSize: size }),
   tempImageUrl: null,
   setTempImageUrl: (url) => set({ tempImageUrl: url }),
@@ -128,10 +128,10 @@ export const useDiaryCoverStore = create<DiaryCoverState>((set, get) => ({
   // 리셋 텍스트
   resetTextProperties: () =>
     set({
-      coverTitle: null,
-      coverTitlePosition: { x: 120, y: 150 },
+      coverTitle: '표지를 작성해 주세요',
+      coverTitlePosition: { x: 90, y: 270 },
       coverTitleFontSize: 30,
-      coverTitleWidth: 260,
+      coverTitleWidth: 290,
       coverTitleRotation: 0,
       coverTitleFontFamily: 'Arial',
       coverTitleFontStyle: 'normal',
