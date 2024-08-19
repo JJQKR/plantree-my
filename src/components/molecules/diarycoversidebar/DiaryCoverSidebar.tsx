@@ -8,7 +8,7 @@ type DiaryCoverSidebarProps = {
 
 const DiaryCoverSidebar: React.FC<DiaryCoverSidebarProps> = ({ handleSelectMenu, handleDeleteElement }) => {
   return (
-    <div className="w-full h-[5.5rem] sm:h-[4rem] bg-[#EDF1E6] text-black border-b-[.1rem] flex flex-row justify-between">
+    <div className="w-full h-[5.6rem] sm:h-[4rem] bg-[#EDF1E6] text-black border-b-[.1rem] flex flex-row justify-between">
       <div className="flex flex-row justify-between w-full h-full p-[1.08rem] sm:p-[0.5rem]">
         <div className="flex flex-row">
           <div

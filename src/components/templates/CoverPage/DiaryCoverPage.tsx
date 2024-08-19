@@ -29,6 +29,10 @@ const DiaryCoverPage: React.FC = () => {
   const setDiaryId = useDiaryStore((state) => state.setDiaryId);
 
   const { diaryId } = useParams<ParamTypes>();
+  if (!diaryId || !userId) {
+    console.error('diaryId 또는 userId가 비어 있습니다.');
+    return;
+  }
 
   const {
     coverTitle,
@@ -416,16 +420,19 @@ const DiaryCoverPage: React.FC = () => {
   };
 
   const handleTextDblClick = (e: KonvaEventObject<MouseEvent>) => {
+    // 텍스트 노드와 관련된 정보를 가져옴
     const textNode = e.target as Konva.Text;
     const textPosition = textNode.absolutePosition();
     const stageBox = stageRef.current!.container().getBoundingClientRect();
     const rotation = textNode.rotation();
 
-    textNode.hide();
+    textNode.hide(); // 기존 텍스트를 숨김
 
+    // 텍스트를 편집할 textarea 생성
     const textarea = document.createElement('textarea');
     document.body.appendChild(textarea);
 
+    // textarea 스타일 설정
     textarea.value = textNode.text();
     textarea.style.position = 'absolute';
     textarea.style.top = `${stageBox.top + textPosition.y + window.scrollY}px`;
@@ -445,57 +452,73 @@ const DiaryCoverPage: React.FC = () => {
     textarea.style.transformOrigin = 'left top';
     textarea.style.textAlign = textNode.align();
     textarea.style.transform = `rotate(${rotation}deg)`;
+
     const fill = textNode.fill();
     if (typeof fill === 'string') {
       textarea.style.color = fill;
     }
 
+    // textarea 참조를 저장
     textareaRef.current = textarea;
 
     textarea.focus();
 
+    // textarea에 키다운 및 블러 이벤트 리스너 추가
     textarea.addEventListener('keydown', handleKeyDown);
     textarea.addEventListener('blur', handleTextareaBlur);
   };
 
+  // 키다운 이벤트 핸들러
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Escape') {
       handleTextareaBlur();
     }
   };
 
+  // 텍스트 편집이 종료될 때 호출되는 함수
   const handleTextareaBlur = () => {
     if (textareaRef.current) {
       const newText = textareaRef.current.value;
       setCoverTitle(newText);
+
       const textNode = textRef.current;
       if (textNode) {
         textNode.show();
         textNode.text(newText);
       }
-      if (textareaRef.current.parentNode) {
-        textareaRef.current.parentNode.removeChild(textareaRef.current);
-      }
-      textareaRef.current = null;
+
+      // setTimeout을 사용하여 DOM에서 안전하게 제거
+      setTimeout(() => {
+        if (textareaRef.current && textareaRef.current.parentNode) {
+          try {
+            textareaRef.current.parentNode.removeChild(textareaRef.current);
+          } catch (error) {
+            console.error('Failed to remove textarea:', error);
+          }
+        }
+        textareaRef.current = null;
+        setCoverSelectedElement(null);
+      }, 0);
     }
   };
 
-  // 이미지 선택 시 호출되는 함수
+  // 이미지를 클릭할 때 텍스트 편집 모드를 종료
   const handleImageSelect = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
-    e.cancelBubble = true;
+    handleTextareaBlur(); // 텍스트 편집 모드를 종료
     setCoverSelectedElement(coverImageRef.current);
     handleCloseMenu();
   };
 
+  // 언스플래시 이미지를 클릭할 때 텍스트 편집 모드를 종료
   const handleUnsplashImageSelect = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
-    e.cancelBubble = true;
+    handleTextareaBlur(); // 텍스트 편집 모드를 종료
     setCoverSelectedElement(unsplashImageRef.current);
     handleCloseMenu();
   };
 
-  // 텍스트 선택 시 호출되는 함수
+  // 텍스트를 선택할 때 텍스트 편집 모드를 종료
   const handleTextSelect = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
-    e.cancelBubble = true;
+    handleTextareaBlur(); // 텍스트 편집 모드를 종료
     setCoverSelectedElement(textRef.current);
     handleCloseMenu();
   };
@@ -512,23 +535,21 @@ const DiaryCoverPage: React.FC = () => {
         stageRef.current?.getChildren()[0].getChildren()[0] === e.target);
 
     if (clickedOnEmpty) {
+      handleTextareaBlur(); // 텍스트 편집 모드를 종료
       setCoverSelectedElement(null);
       if (trRef.current) {
         trRef.current.nodes([]);
         trRef.current.getLayer()?.batchDraw();
       }
-      // 빈 곳을 클릭하면 메뉴를 닫습니다.
       handleCloseMenu();
     } else {
       const clickedNode = e.target;
       setCoverSelectedElement(clickedNode);
       if (trRef.current) {
-        // 트랜스포머에 스케일과 위치를 적용
         trRef.current.nodes([clickedNode]);
         trRef.current.scale({ x: coverScale, y: coverScale });
         trRef.current.getLayer()?.batchDraw();
       }
-      // 클릭한 요소가 있더라도 메뉴를 닫습니다.
       handleCloseMenu();
     }
   };
@@ -1331,7 +1352,7 @@ const DiaryCoverPage: React.FC = () => {
     <div className="w-full h-full mt-[8rem]">
       <div className="flex flex-col h-full relative mb-[8rem]">
         {/* 다이어리 제목 수정 중 박스 */}
-        <div className="w-full h-[8.5rem] flex items-center justify-center text-[#496200] font-semibold text-[2.8rem] sm:text-[1.8rem] z-20">
+        <div className="w-full h-[8.5rem] flex items-center justify-center text-[#496200] font-semibold text-[2.8rem] sm:text-[1.8rem] z-10">
           <span className="text-black">[</span>
           <span className="text-black overflow-hidden text-ellipsis whitespace-nowrap max-w-[300px] sm:max-w-[200px] inline-block">
             {coverTitle}
@@ -1341,7 +1362,7 @@ const DiaryCoverPage: React.FC = () => {
         </div>
 
         {/* 사이드바 메뉴 */}
-        <div className="z-20 sm:mb-[1.6rem]">
+        <div className="z-10 sm:mb-[1.6rem]">
           <DiaryCoverSidebar handleSelectMenu={handleSelectMenu} handleDeleteElement={handleDeleteElement} />
         </div>
 
