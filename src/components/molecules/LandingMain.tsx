@@ -76,7 +76,7 @@ const LandingMain = () => {
       </p>
 
       <section className="w-full max-w-[80rem] mx-auto mt-[4.1rem] mb-[4.1rem] flex flex-row sm:flex-col sm:items-center sm:justify-between">
-        <div className="w-[45.625rem] h-[30rem] relative mb-8 mr-5">
+        <div className="w-[45.625rem] h-[30rem] relative mb-8 mr-5 sm:w-[40.625rem] sm:h-[25rem]">
           <Image
             src="/images/랜딩페이지_PC1.jpg"
             alt="Main Image"
@@ -100,7 +100,7 @@ const LandingMain = () => {
               <p>만들 수 있는 서비스입니다.</p>
             </span>
           </div>
-          <div className="w-[30rem] h-[12.125rem] relative mb-3">
+          <div className="w-[30rem] h-[12.125rem] relative mb-3 sm:mt-[3rem]">
             <Image
               src="/images/랜딩페이지_Review1.png"
               alt="Review Image"
@@ -120,7 +120,7 @@ const LandingMain = () => {
       </section>
 
       <section className="w-full max-w-[80rem] mx-auto mt-[4.1rem] mb-[4.1rem] flex flex-row-reverse sm:flex-col sm:items-center sm:justify-between">
-        <div className="w-[45.625rem] h-[30rem] relative mb-8">
+        <div className="w-[45.625rem] h-[30rem] relative mb-8 ml-5 sm:w-[40.625rem] sm:h-[25rem]">
           <Image
             src="/images/랜딩페이지_PC2.jpg"
             alt="Main Image"
@@ -144,7 +144,7 @@ const LandingMain = () => {
               </p>
             </span>
           </div>
-          <div className="w-[30rem] h-[12.125rem] relative mb-3">
+          <div className="w-[30rem] h-[12.125rem] relative mb-3 sm:mt-[3rem]">
             <Image
               src="/images/랜딩페이지_Review2.png"
               alt="Review Image"
@@ -164,7 +164,7 @@ const LandingMain = () => {
       </section>
 
       <section className="w-full max-w-[80rem] mx-auto mt-[4.1rem] mb-[4.1rem] flex flex-row sm:flex-col sm:items-center sm:justify-between">
-        <div className="w-[45.625rem] h-[30rem] relative mb-8">
+        <div className="w-[45.625rem] h-[30rem] relative mb-8 mr-5 sm:w-[40.625rem] sm:h-[25rem]">
           <Image
             src="/images/랜딩페이지_PC3.jpg"
             alt="Main Image"
@@ -185,7 +185,7 @@ const LandingMain = () => {
               <p>일상을 기록할 수 있어요.</p>
             </span>
           </div>
-          <div className="w-[30rem] h-[12.125rem] relative mb-3">
+          <div className="w-[30rem] h-[12.125rem] relative mb-3 sm:mt-[3rem]">
             <Image
               src="/images/랜딩페이지_Review1.png"
               alt="Review Image"
