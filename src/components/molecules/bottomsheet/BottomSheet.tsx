@@ -23,9 +23,7 @@ type ParamTypes = {
 };
 
 const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheetList, moveCard }) => {
-  const router = useRouter();
   const { diaryId } = useParams<ParamTypes>();
-  const pathname = usePathname();
   const scrollRef = useRef<HTMLDivElement>(null);
   const { data: pages, isPending } = usePageToDiaryId(diaryId);
 
