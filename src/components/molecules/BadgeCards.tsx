@@ -47,7 +47,7 @@ const BadgeCards: React.FC = () => {
       {badgesState.map((badge, index) => (
         <div
           key={index}
-          className="relative w-[20.8rem] h-[32.4rem] m-[0.8rem] sm:w-[15.47rem] sm:h-[23.035rem] sm:mx-[0.8rem]"
+          className="relative w-[20.8rem] h-[32.4rem] m-[0.8rem] sm:m-[0.4rem] sm:w-[10rem] sm:h-[17.2rem] sm:mx-[0.8rem]"
         >
           <Image
             src={badge.content}

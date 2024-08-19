@@ -11,13 +11,6 @@ import Image from 'next/image';
 
 const InfoModal = () => {
   const { isInfoModalOpen, toggleInfoModal } = useInfoModalStore((state) => state);
-  const [windowWidth, setWindowWidth] = useState(1920);
-
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const closeInfoModal = () => {
     toggleInfoModal();
@@ -37,7 +30,7 @@ const InfoModal = () => {
           }
         `}
       </style>
-      {windowWidth < 768 ? (
+      <div className="sm:block hidden">
         <div
           className="bg-white rounded-[2rem] w-[38rem] h-[59.4rem] px-[2.4rem] py-[1.6rem] flex flex-col gap-[1rem]"
           onClick={(e) => e.stopPropagation()}
@@ -70,7 +63,8 @@ const InfoModal = () => {
             </Swiper>
           </div>
         </div>
-      ) : (
+      </div>
+      <div className="sm:hidden block">
         <div
           className="bg-white rounded-[2rem]  w-[93.2rem] h-[61.1rem] p-[4rem] flex flex-col gap-[1.45rem]"
           onClick={(e) => e.stopPropagation()}
@@ -103,7 +97,7 @@ const InfoModal = () => {
             </Swiper>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
