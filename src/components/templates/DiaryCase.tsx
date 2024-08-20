@@ -198,8 +198,10 @@ const DiaryCase: React.FC = () => {
                   className="flex flex-col items-center justify-center cursor-pointer"
                   onPointerUp={(e) => {
                     const cardElement = e.currentTarget;
-                    if (e.clientY < cardElement.offsetTop + cardElement.offsetHeight / 1.5) {
-                      // 상단 절반 클릭 시
+                    const isSmallScreen = window.innerWidth <= 768; // sm 기준에 따른 조건 추가
+                    const clickThreshold = isSmallScreen ? cardElement.offsetHeight : cardElement.offsetHeight / 1.5; // sm 기준에서는 카드 전체 클릭 허용
+                    if (e.clientY < cardElement.offsetTop + clickThreshold) {
+                      // 상단 절반 클릭 시 혹은 sm 기준에서는 전체 클릭 시
                       handleDiaryClick(cover.diary_id as string);
                     }
                   }}
@@ -298,8 +300,12 @@ const DiaryCase: React.FC = () => {
                       key={cover.cover_id}
                       onPointerUp={(e) => {
                         const cardElement = e.currentTarget;
-                        if (e.clientY < cardElement.offsetTop + cardElement.offsetHeight / 1.5) {
-                          // 상단 절반 클릭 시
+                        const isSmallScreen = window.innerWidth <= 768; // sm 기준에 따른 조건 추가
+                        const clickThreshold = isSmallScreen
+                          ? cardElement.offsetHeight
+                          : cardElement.offsetHeight / 1.5; // sm 기준에서는 카드 전체 클릭 허용
+                        if (e.clientY < cardElement.offsetTop + clickThreshold) {
+                          // 상단 절반 클릭 시 혹은 sm 기준에서는 전체 클릭 시
                           handleDiaryClick(cover.diary_id as string);
                         }
                       }}
