@@ -6,7 +6,6 @@ import { BsPersonFillGear } from 'react-icons/bs';
 import { FaHome } from 'react-icons/fa';
 import useUserStore from '@/stores/user.store';
 import AttendanceCheck from '@/lib/utils/AttendanceCheck';
-import FetchUserData from '@/lib/utils/FetchUserData';
 import ProfileStages from './ProfileStages';
 import { supabase } from '@/supabase/client';
 import { DiaryCover } from '@/types/main';
@@ -73,7 +72,6 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   return (
     <>
-      <FetchUserData />
       <AttendanceCheck />
       <FetchMembershipDays />
 
