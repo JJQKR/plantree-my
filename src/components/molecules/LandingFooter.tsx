@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { FaGithub, FaArrowUp } from 'react-icons/fa';
+import { FaGithub, FaArrowUp, FaLinkedin } from 'react-icons/fa';
 import Link from 'next/link';
 
 const LandingFooter = () => {
@@ -52,49 +52,55 @@ const LandingFooter = () => {
         </div>
 
         <div className="flex flex-wrap justify-center gap-4 max-w-[80rem] mt-1">
-          <div className="flex flex-row items-center gap-[1.1rem]">
+          <div className="flex flex-row items-center gap-[2rem]">
             <h2 className="text-lg font-bold">FE</h2>
             <p>이보영</p>
             <Link href="https://github.com/osoon9295" target="_blank" rel="noopener noreferrer">
-              <FaGithub className="text-3xl hover:text-white" />
+              <FaGithub className="text-3xl text-white hover:text-gray-400" />
             </Link>
           </div>
-          <div className="flex flex-row items-center gap-[1.1rem]">
+          <div className="flex flex-row items-center gap-[2rem]">
             <h2 className="text-lg font-bold">FE</h2>
             <p>강연주</p>
             <Link href="https://github.com/JJQKR" target="_blank" rel="noopener noreferrer">
-              <FaGithub className="text-3xl hover:text-white" />
+              <FaGithub className="text-3xl text-white hover:text-gray-400" />
             </Link>
           </div>
-          <div className="flex flex-row items-center gap-[1.1rem]">
+          <div className="flex flex-row items-center gap-[2rem]">
             <h2 className="text-lg font-bold">FE</h2>
             <p>김재훈</p>
             <Link href="https://github.com/hoondolla" target="_blank" rel="noopener noreferrer">
-              <FaGithub className="text-3xl hover:text-white" />
+              <FaGithub className="text-3xl text-white hover:text-gray-400" />
             </Link>
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-4 max-w-[80rem] mt-4">
-          <div className="flex flex-row items-center gap-[1.1rem]">
+        <div className="flex flex-wrap justify-center gap-4 max-w-[80rem] mt-4 ml-[rem]">
+          <div className="flex flex-row items-center gap-[2rem]">
             <h2 className="text-lg font-bold">FE</h2>
             <p>박영수</p>
             <Link href="https://github.com/youngsupark1" target="_blank" rel="noopener noreferrer">
-              <FaGithub className="text-3xl hover:text-white" />
+              <FaGithub className="text-3xl text-white hover:text-gray-400" />
             </Link>
           </div>
-          <div className="flex flex-row items-center gap-[1.1rem]">
+          <div className="flex flex-row items-center gap-[2rem]">
             <h2 className="text-lg font-bold">FE</h2>
             <p>유인수</p>
             <Link href="https://github.com/YISYISYISYIS" target="_blank" rel="noopener noreferrer">
-              <FaGithub className="text-3xl hover:text-white" />
+              <FaGithub className="text-3xl text-white hover:text-gray-400" />
             </Link>
           </div>
-          <div className="flex flex-row items-center gap-[1.1rem]">
-            <h2 className="text-lg font-bold">DE</h2>
+          <div className="flex flex-row items-center gap-[2rem]">
+            <h2 className="text-lg font-bold tracking-[-0.08rem]">DE</h2>
             <p>황민균</p>
-            <Link href="https://notion.so" target="_blank" rel="noopener noreferrer">
-              <FaGithub className="text-3xl hover:text-white" />
+            {/* <img src="/images/Notion.png" alt="Notion Logo" className="w-8 h-8" /> */}
+            <Link
+              href="https://www.linkedin.com/in/%EB%AF%BC%EA%B7%A0-%ED%99%A9-289a632a7/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-[0.5rem]"
+            >
+              <FaLinkedin className="text-3xl text-white hover:text-gray-400" />
             </Link>
           </div>
         </div>

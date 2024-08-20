@@ -24,11 +24,26 @@ type ParamTypes = {
 
 const DiaryCoverPage: React.FC = () => {
   const router = useRouter();
-  const userId = useUserStore((state) => state.userId);
+  const [userId, setUserId] = useState<string | null>(null);
   const { mutate: createDiary } = useCreateDiary();
   const setDiaryId = useDiaryStore((state) => state.setDiaryId);
 
   const { diaryId } = useParams<ParamTypes>();
+
+  useEffect(() => {
+    const storedUserId = localStorage.getItem('userId');
+    if (storedUserId) {
+      setUserId(storedUserId);
+    } else {
+      const userIdFromStore = useUserStore.getState().userId;
+      if (userIdFromStore) {
+        setUserId(userIdFromStore);
+        localStorage.setItem('userId', userIdFromStore);
+      } else {
+        console.error('userId가 없습니다.');
+      }
+    }
+  }, []);
 
   const {
     coverTitle,
@@ -382,17 +397,17 @@ const DiaryCoverPage: React.FC = () => {
       const node = coverImageRef.current;
       const scaleX = node.scaleX();
       const scaleY = node.scaleY();
-      const newWidth = coverImageSize.width * scaleX;
-      const newHeight = coverImageSize.height * scaleY;
+      const scale = Math.max(scaleX, scaleY);
 
-      node.scaleX(1);
-      node.scaleY(1);
+      const newWidth = coverImageSize.width * scale;
+      const newHeight = coverImageSize.height * scale;
 
       setCoverImageSize({ width: newWidth, height: newHeight });
       setCoverImagePosition({ x: node.x(), y: node.y() });
       setCoverImageRotation(node.rotation());
 
-      node.getLayer()?.batchDraw();
+      node.scaleX(1);
+      node.scaleY(1);
     }
   };
 
@@ -401,31 +416,34 @@ const DiaryCoverPage: React.FC = () => {
       const node = unsplashImageRef.current;
       const scaleX = node.scaleX();
       const scaleY = node.scaleY();
-      const newWidth = unsplashImageSize.width * scaleX;
-      const newHeight = unsplashImageSize.height * scaleY;
+      const scale = Math.max(scaleX, scaleY);
 
-      node.scaleX(1);
-      node.scaleY(1);
+      const newWidth = unsplashImageSize.width * scale;
+      const newHeight = unsplashImageSize.height * scale;
 
       setUnsplashImageSize({ width: newWidth, height: newHeight });
       setUnsplashImagePosition({ x: node.x(), y: node.y() });
       setUnsplashImageRotation(node.rotation());
 
-      node.getLayer()?.batchDraw();
+      node.scaleX(1);
+      node.scaleY(1);
     }
   };
 
   const handleTextDblClick = (e: KonvaEventObject<MouseEvent>) => {
+    // 텍스트 노드와 관련된 정보를 가져옴
     const textNode = e.target as Konva.Text;
     const textPosition = textNode.absolutePosition();
     const stageBox = stageRef.current!.container().getBoundingClientRect();
     const rotation = textNode.rotation();
 
-    textNode.hide();
+    textNode.hide(); // 기존 텍스트를 숨김
 
+    // 텍스트를 편집할 textarea 생성
     const textarea = document.createElement('textarea');
     document.body.appendChild(textarea);
 
+    // textarea 스타일 설정
     textarea.value = textNode.text();
     textarea.style.position = 'absolute';
     textarea.style.top = `${stageBox.top + textPosition.y + window.scrollY}px`;
@@ -445,102 +463,73 @@ const DiaryCoverPage: React.FC = () => {
     textarea.style.transformOrigin = 'left top';
     textarea.style.textAlign = textNode.align();
     textarea.style.transform = `rotate(${rotation}deg)`;
+
     const fill = textNode.fill();
     if (typeof fill === 'string') {
       textarea.style.color = fill;
     }
 
+    // textarea 참조를 저장
     textareaRef.current = textarea;
 
     textarea.focus();
 
+    // textarea에 키다운 및 블러 이벤트 리스너 추가
     textarea.addEventListener('keydown', handleKeyDown);
     textarea.addEventListener('blur', handleTextareaBlur);
   };
 
+  // 키다운 이벤트 핸들러
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Escape') {
       handleTextareaBlur();
     }
   };
 
+  // 텍스트 편집이 종료될 때 호출되는 함수
   const handleTextareaBlur = () => {
     if (textareaRef.current) {
       const newText = textareaRef.current.value;
       setCoverTitle(newText);
+
       const textNode = textRef.current;
       if (textNode) {
         textNode.show();
         textNode.text(newText);
       }
-      if (textareaRef.current.parentNode) {
-        textareaRef.current.parentNode.removeChild(textareaRef.current);
-      }
-      textareaRef.current = null;
+
+      // setTimeout을 사용하여 DOM에서 안전하게 제거
+      setTimeout(() => {
+        if (textareaRef.current && textareaRef.current.parentNode) {
+          try {
+            textareaRef.current.parentNode.removeChild(textareaRef.current);
+          } catch (error) {
+            console.error('Failed to remove textarea:', error);
+          }
+        }
+        textareaRef.current = null;
+        setCoverSelectedElement(null);
+      }, 0);
     }
   };
 
-  // 이벤트에서 스케일링을 반영한 좌표 계산
-  const getScaledPosition = (node: Konva.Node) => {
-    const stage = node.getStage();
-    if (!stage) {
-      console.error('Stage not found');
-      return { x: node.x(), y: node.y() };
-    }
-
-    // TODO: 얘가 안변하는 이유??
-    const scaleX = stage.scaleX();
-    const scaleY = stage.scaleY();
-    const absolutePosition = node.getAbsolutePosition();
-
-    console.log('ScaleX:', scaleX, 'ScaleY:', scaleY);
-    console.log('Absolute Position:', absolutePosition);
-
-    return {
-      x: absolutePosition.x / scaleX,
-      y: absolutePosition.y / scaleY
-    };
-  };
-
-  // 이미지 선택 시 호출되는 함수
+  // 이미지를 클릭할 때 텍스트 편집 모드를 종료
   const handleImageSelect = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
-    e.cancelBubble = true;
-    const node = coverImageRef.current;
-    if (node && trRef.current) {
-      const scaledPosition = getScaledPosition(node);
-      node.position(scaledPosition);
-      trRef.current.nodes([node]);
-      trRef.current.getLayer()?.batchDraw();
-    }
+    handleTextareaBlur(); // 텍스트 편집 모드를 종료
     setCoverSelectedElement(coverImageRef.current);
     handleCloseMenu();
   };
 
+  // 언스플래시 이미지를 클릭할 때 텍스트 편집 모드를 종료
   const handleUnsplashImageSelect = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
-    e.cancelBubble = true;
-    const node = unsplashImageRef.current;
-    if (node && trRef.current) {
-      const { x, y } = getScaledPosition(node);
-      node.position({ x, y });
-      trRef.current.nodes([node]);
-      trRef.current.getLayer()?.batchDraw();
-    }
+    handleTextareaBlur(); // 텍스트 편집 모드를 종료
     setCoverSelectedElement(unsplashImageRef.current);
     handleCloseMenu();
   };
 
-  // 텍스트 선택 시 호출되는 함수
+  // 텍스트를 선택할 때 텍스트 편집 모드를 종료
   const handleTextSelect = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
-    e.cancelBubble = true;
-    const node = textRef.current;
-    if (node && trRef.current) {
-      // 2. scaledPosition -> x, y => 이 값 알아보기
-      const scaledPosition = getScaledPosition(node);
-      node.position(scaledPosition);
-      trRef.current.nodes([node]);
-      // TODO: 다시 그리기??
-      trRef.current.getLayer()?.batchDraw();
-    }
+    handleTextareaBlur(); // 텍스트 편집 모드를 종료
     setCoverSelectedElement(textRef.current);
     handleCloseMenu();
   };
@@ -557,9 +546,19 @@ const DiaryCoverPage: React.FC = () => {
         stageRef.current?.getChildren()[0].getChildren()[0] === e.target);
 
     if (clickedOnEmpty) {
+      handleTextareaBlur(); // 텍스트 편집 모드를 종료
       setCoverSelectedElement(null);
       if (trRef.current) {
         trRef.current.nodes([]);
+        trRef.current.getLayer()?.batchDraw();
+      }
+      handleCloseMenu();
+    } else {
+      const clickedNode = e.target;
+      setCoverSelectedElement(clickedNode);
+      if (trRef.current) {
+        trRef.current.nodes([clickedNode]);
+        trRef.current.scale({ x: coverScale, y: coverScale });
         trRef.current.getLayer()?.batchDraw();
       }
       handleCloseMenu();
@@ -938,42 +937,30 @@ const DiaryCoverPage: React.FC = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      const containerElement = document.querySelector<HTMLElement>('.stage-wrapper');
-      if (containerElement) {
-        let containerWidth = containerElement.offsetWidth;
-        let containerHeight;
+      if (stageRef.current) {
+        const containerWidth = window.innerWidth;
+        const containerHeight = window.innerHeight;
 
-        if (window.innerWidth <= 767) {
-          containerWidth = 325;
-        } else if (window.innerWidth <= 1278) {
-          containerWidth = 360;
-        } else {
-          containerWidth = 450;
-        }
+        // 원하는 기준 해상도에 따른 비율 계산
+        const scale = Math.min(
+          containerWidth / 450, // 기준 너비
+          containerHeight / 675 // 기준 높이
+        );
 
-        containerHeight = containerWidth * 1.5; // 2:3 비율 적용
+        stageRef.current.width(450 * scale); // 기준 해상도에 스케일 적용
+        stageRef.current.height(675 * scale);
+        stageRef.current.scale({ x: scale, y: scale });
 
-        const scaleX = containerWidth / 450;
-        const scaleY = scaleX;
-
-        setCoverStageSize({ width: containerWidth, height: containerHeight });
-        setCoverScale(scaleX);
-
-        if (stageRef.current) {
-          stageRef.current.width(containerWidth);
-          stageRef.current.height(containerHeight);
-          stageRef.current.scale({ x: scaleX, y: scaleY });
-
-          console.log('Stage ScaleX:', stageRef.current.scaleX(), 'Stage ScaleY:', stageRef.current.scaleY());
-
-          stageRef.current.container().style.width = `${containerWidth}px`;
-          stageRef.current.container().style.height = `${containerHeight}px`;
-          stageRef.current.batchDraw();
-        }
+        // HTML 요소의 스타일도 조정하여 실제 화면 크기에 맞게 설정
+        stageRef.current.container().style.width = `${450 * scale}px`;
+        stageRef.current.container().style.height = `${675 * scale}px`;
       }
     };
 
+    // 초기 실행
     handleResize();
+
+    // 창 크기 변경 시마다 handleResize 실행
     window.addEventListener('resize', handleResize);
 
     return () => {
@@ -1251,12 +1238,12 @@ const DiaryCoverPage: React.FC = () => {
       case 'Edit':
         return (
           <div>
-            <button
+            {/* <button
               onClick={handleDownload}
               className="mb-2 px-2 py-1 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded transition duration-300 w-full"
             >
               표지 다운로드
-            </button>
+            </button> */}
             {isEditMode ? (
               <button
                 onClick={handleUpdateDiary}
@@ -1367,9 +1354,9 @@ const DiaryCoverPage: React.FC = () => {
     <div className="w-full h-full mt-[8rem]">
       <div className="flex flex-col h-full relative mb-[8rem]">
         {/* 다이어리 제목 수정 중 박스 */}
-        <div className="w-full h-[8.5rem] flex items-center justify-center text-[#496200] font-semibold text-[2.8rem] sm:text-[1.8rem] z-20">
+        <div className="w-full h-[8.5rem] flex items-center justify-center text-[#496200] font-semibold text-[2.8rem] sm:text-[1.8rem] z-10">
           <span className="text-black">[</span>
-          <span className="text-black overflow-hidden text-ellipsis whitespace-nowrap max-w-[300px] sm:max-w-[200px] inline-block">
+          <span className="text-black overflow-hidden text-ellipsis whitespace-nowrap max-w-[27rem] sm:max-w-[18rem] inline-block">
             {coverTitle}
           </span>
           <span className="text-black">]&nbsp;</span>
@@ -1377,7 +1364,7 @@ const DiaryCoverPage: React.FC = () => {
         </div>
 
         {/* 사이드바 메뉴 */}
-        <div className="z-20 sm:mb-[1.6rem]">
+        <div className="z-10 sm:mb-[1.6rem]">
           <DiaryCoverSidebar handleSelectMenu={handleSelectMenu} handleDeleteElement={handleDeleteElement} />
         </div>
 
@@ -1476,12 +1463,9 @@ const DiaryCoverPage: React.FC = () => {
                   {coverSelectedElement && (
                     <Transformer
                       ref={trRef}
-                      // TODO: nodes 선택된 element인 듯?
                       nodes={[coverSelectedElement]}
-                      // TODO: 테두리 그려주는 것???? -> 무슨 코드인지 알아보기
                       boundBoxFunc={(oldBox, newBox) => ({
                         ...newBox,
-                        // 이거 높이, 너비 잘못 잡혔나?
                         width: Math.max(20, newBox.width),
                         height: Math.max(20, newBox.height)
                       })}

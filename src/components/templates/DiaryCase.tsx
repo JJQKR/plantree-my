@@ -165,7 +165,7 @@ const DiaryCase: React.FC = () => {
   const updateStyles = () => {
     if (window.innerWidth <= 768) {
       setDiaryCardWidth(320);
-      setDiaryCardHeight(480);
+      setDiaryCardHeight(500);
       setSwiperStyle({ width: '42rem', height: '62rem' });
     } else {
       setDiaryCardWidth(480);
@@ -196,7 +196,13 @@ const DiaryCase: React.FC = () => {
                 <div
                   key={cover.cover_id}
                   className="flex flex-col items-center justify-center cursor-pointer"
-                  onPointerUp={() => handleDiaryClick(cover.diary_id as string)} // onPointerUp으로 변경
+                  onPointerUp={(e) => {
+                    const cardElement = e.currentTarget;
+                    if (e.clientY < cardElement.offsetTop + cardElement.offsetHeight / 1.5) {
+                      // 상단 절반 클릭 시
+                      handleDiaryClick(cover.diary_id as string);
+                    }
+                  }}
                 >
                   <div className="relative flex flex-col items-center justify-center w-full h-full rounded shadow-md overflow-hidden">
                     <Stage
@@ -290,7 +296,13 @@ const DiaryCase: React.FC = () => {
                   cover.cover_id ? (
                     <SwiperSlide
                       key={cover.cover_id}
-                      onPointerUp={() => handleDiaryClick(cover.diary_id as string)} // onPointerUp으로 변경
+                      onPointerUp={(e) => {
+                        const cardElement = e.currentTarget;
+                        if (e.clientY < cardElement.offsetTop + cardElement.offsetHeight / 1.5) {
+                          // 상단 절반 클릭 시
+                          handleDiaryClick(cover.diary_id as string);
+                        }
+                      }}
                       className="flex items-center justify-center cursor-pointer sm:w-[32rem] sm:h-[50rem] w-[48rem] h-[72rem]"
                       style={{
                         backgroundColor: cover.cover_bg_color,
@@ -362,7 +374,7 @@ const DiaryCase: React.FC = () => {
                 )}
               </Swiper>
             ) : (
-              <div className="flex items-center justify-center sm:w-[32rem] sm:h-[50rem] w-[48rem] h-[72rem] bg-white">
+              <div className="flex items-center justify-center sm:w-[32rem] sm:h-[50rem] sm:mt-[10rem] w-[48rem] h-[72rem] bg-white">
                 <button
                   onClick={handleCreateDiary}
                   className="flex flex-col items-center justify-center text-center font-bold text-[2rem]"
@@ -376,12 +388,12 @@ const DiaryCase: React.FC = () => {
           <div className="swiper-pagination" style={paginationStyle}></div>
         </div>
       )}
-      <div className="fixed sm:bottom-[12rem] sm:right-[4rem] sm:mb-[10rem] bottom-[3rem] right-[2rem]">
+      <div className="fixed sm:bottom-[0.5rem] sm:right-[4rem] sm:mb-[7rem] bottom-[3rem] right-[2rem] z-20">
         {!gridView && <CreateDiaryButton onClick={handleCreateDiary} />}
       </div>
       {loading && ( // 로딩 애니메이션 표시
-        <div className="fixed inset-0 flex items-center justify-center">
-          <img src="/images/loading.gif" alt="Loading" width={200} height={200} />
+        <div className="fixed inset-0 flex items-center justify-center w-screen h-screen bg-[#F9FCF9]">
+          <img src="/images/loading.gif" alt="Loading" width={150} height={150} />
         </div>
       )}
     </div>

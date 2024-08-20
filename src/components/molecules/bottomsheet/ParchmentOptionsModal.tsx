@@ -11,6 +11,7 @@ import { useCreatePage, usePageToDiaryId } from '@/lib/hooks/usePages';
 import { useCreateTenMinPlanner } from '@/lib/hooks/useTenMinPlanner';
 import { supabase } from '@/supabase/client';
 import useBottomSheetStore from '@/stores/bottomsheet.store';
+import { useCreateLineNote } from '@/lib/hooks/useLineNote';
 
 type ParamTypes = {
   [key: string]: string;
@@ -20,16 +21,17 @@ type ParamTypes = {
 const ParchmentOptionsModal: React.FC = () => {
   const { diaryId } = useParams<ParamTypes>();
   const { isParchmentOptionModalOpen, toggleParchmentOptionModal } = useParchmentModalStore((state) => state);
-  // const { addPage, pages, setPageIndex } = usePageStore((state) => state);
   const { addTenMinPlanner } = useTenMinPlannerStore();
   const { userId } = useUserStore((state) => state);
   const { mutate: createPage } = useCreatePage();
   const { data: pages } = usePageToDiaryId(diaryId);
   const { mutate: createTenMinPlanner } = useCreateTenMinPlanner();
+  const { mutate: createLineNote } = useCreateLineNote();
   const { currentPageIndex, setCurrentPageIndex } = usePageStore((state) => state);
   const { activeCardIndices, setActiveCardIndices } = useBottomSheetStore((state) => state);
   const [windowWidth, setWindowWidth] = useState(0);
 
+  console.log(userId);
   useEffect(() => {
     setWindowWidth(window.innerWidth);
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -39,28 +41,26 @@ const ParchmentOptionsModal: React.FC = () => {
 
   // * 4개 이상의 파치먼트 옵션이 생기면 생성
   // const [currentOptionPage, setCurrentOptionPage] = useState(0);
-
   // parchment 옵션을 클릭하면 생성되는 페이지
   const handleAddPage = async (parchment: ParchmentType) => {
     const pageId = uuid();
     const contentId = uuid();
 
-    // function getNextIndex(pages: PageType[]) {
-    //   const maxIndex = pages.reduce((max: number, page: PageType) => {
-    //     return page.index > max ? page.index : max;
-    //   }, 0);
+    function getNextIndex(pages: PageType[]) {
+      const maxIndex = pages.reduce((max: number, page: PageType) => {
+        return page.index > max ? page.index : max;
+      }, 0);
 
-    //   return maxIndex + 1;
-    // }
+      return maxIndex + 1;
+    }
 
     const newPage = {
       id: pageId,
       content_id: contentId,
       parchment_style: parchment.parchmentStyle,
       diary_id: diaryId,
-      index: pages ? pages.length + 1 : 0
+      index: pages ? getNextIndex(pages) : 0
     };
-
     createPage(newPage);
 
     const currentIndex = (index: number) => {
@@ -77,11 +77,11 @@ const ParchmentOptionsModal: React.FC = () => {
       }
     };
 
+    setCurrentPageIndex(currentIndex(newPage.index));
+    console.log(currentIndex(newPage.index));
     if (windowWidth < 768) {
-      setCurrentPageIndex(currentIndex(newPage.index));
       setActiveCardIndices([currentIndex(newPage.index)]);
     } else {
-      setCurrentPageIndex(currentIndex(newPage.index));
       setActiveCardIndices([currentIndex(newPage.index), currentIndex(newPage.index) + 1]);
     }
 
@@ -98,7 +98,6 @@ const ParchmentOptionsModal: React.FC = () => {
         user_id: userId,
         todo_list: []
       };
-      // await supabase.from('ten_min_planner').insert(newTenMinPlanner);
       createTenMinPlanner(newTenMinPlanner);
     } else if (parchment.parchmentStyle === 'lineNote') {
       const newLineNote = {
@@ -111,7 +110,7 @@ const ParchmentOptionsModal: React.FC = () => {
         lines: Array.from({ length: 20 }, () => ({ text: '', fontSize: 16, textColor: '#000000' })),
         diary_id: diaryId
       };
-      await supabase.from('line_note').insert(newLineNote);
+      createLineNote(newLineNote);
     } else if (parchment.parchmentStyle === 'blankNote') {
       const newBlankNote = {
         id: contentId,
@@ -125,10 +124,6 @@ const ParchmentOptionsModal: React.FC = () => {
       };
       await supabase.from('blank_note').insert(newBlankNote);
     }
-
-    // DB에 속지 추가
-    // contentId
-    // 그냥 추가
     addTenMinPlanner({
       id: contentId,
       date: '',
