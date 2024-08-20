@@ -66,10 +66,10 @@ const LandingMain = () => {
             className="w-full h-auto object-contain object-left sm:w-[100%] "
           />
         </div>
-        <div className="overlay"></div>
+        {/* <div className="overlay"></div> */}
       </div>
 
-      <p className="w-[21.7rem] h-[3.5rem] pt-2 pl-7 rounded-2xl bg-green-600 text-white text-[1.6rem] font-bold">
+      <p className="w-[21.7rem] h-[3.5rem] pt-2 pl-7 mt-5 rounded-2xl bg-green-600 text-white text-[1.6rem] font-bold">
         플랜트리를 소개합니다💬
       </p>
 
@@ -156,7 +156,7 @@ const LandingMain = () => {
             className="w-[30rem] h-[4.75rem] font-black bg-green-600 text-white px-[0.6rem] py-[0.5rem] rounded-lg text-center hover:bg-green-900 shadow-2xl"
             onClick={(e) => handleLinkClick(e, '/member/hub')}
           >
-            <div className="mt-3">다이어리를 만들어볼까요?</div>
+            <div className="mt-3">기억나무를 보러갈까요?</div>
           </a>
         </div>
       </section>
@@ -197,7 +197,7 @@ const LandingMain = () => {
             className="w-[30rem] h-[4.75rem] font-black bg-green-600 text-white px-[0.6rem] py-[0.5rem] rounded-lg text-center hover:bg-green-900 shadow-2xl"
             onClick={(e) => handleLinkClick(e, '/member/hub')}
           >
-            <div className="mt-3">다이어리를 만들어볼까요?</div>
+            <div className="mt-3">반응형을 체험하러 가볼까요?</div>
           </a>
         </div>
       </section>
