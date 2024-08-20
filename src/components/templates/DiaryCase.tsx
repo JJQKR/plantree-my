@@ -310,7 +310,7 @@ const DiaryCase: React.FC = () => {
                         const cardElement = e.currentTarget;
                         const isSmallScreen = window.innerWidth <= 768;
                         const clickThreshold = isSmallScreen
-                          ? cardElement.offsetHeight / 1.2
+                          ? cardElement.offsetHeight / 2
                           : cardElement.offsetHeight / 1.5;
                         if (e.clientY < cardElement.offsetTop + clickThreshold) {
                           handleDiaryClick(cover.diary_id as string);
