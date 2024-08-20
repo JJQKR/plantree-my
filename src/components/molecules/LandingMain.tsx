@@ -69,7 +69,7 @@ const LandingMain = () => {
         {/* <div className="overlay"></div> */}
       </div>
 
-      <p className="w-[21.7rem] h-[3.5rem] pt-2 pl-7 mt-5 rounded-2xl bg-green-600 text-white text-[1.6rem] font-bold text-center sm:text-center">
+      <p className="w-[21.7rem] h-[3.5rem] pt-2 pl-7 pb-2 mt-5 rounded-2xl bg-green-600 text-white text-[1.6rem] font-bold flex items-center sm:flex sm:items-center">
         플랜트리를 소개합니다💬
       </p>
 
