@@ -202,7 +202,7 @@ const LandingMain = () => {
         </div>
       </section>
 
-      {loading && (
+      {/* {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-white">
           <div className="relative w-[20rem] h-[20rem]">
             <Image
@@ -214,7 +214,7 @@ const LandingMain = () => {
             />
           </div>
         </div>
-      )}
+      )} */}
       {showPlantreeLoginModal && (
         <PlantreeLoginModal
           onClose={() => setShowPlantreeLoginModal(false)}

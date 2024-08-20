@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import FetchUserData from '@/lib/utils/FetchUserData';
+// import FetchUserData from '@/lib/utils/FetchUserData';
 import FetchMembershipDays from '@/lib/utils/FetchMembershipDays';
 import useUserStore from '@/stores/user.store';
 import ProfileStages from '../molecules/ProfileStages';
@@ -28,7 +28,7 @@ const GrowthSummary = () => {
 
   return (
     <>
-      <FetchUserData />
+      {/* <FetchUserData /> */}
       <AttendanceCheck />
       <FetchMembershipDays />
 

@@ -53,7 +53,6 @@ export default function PcParchmentPageFrame() {
     setCurrentPageIndex(0);
   }, [diaryId]);
 
-  // 다이어리를 삭제 :  db diary 삭제 , db pages 삭제 , db cover 삭제, db Parchments 삭제
   const deleteDiary = async () => {
     Swal.fire({
       title: '정말 다이어리를 삭제하시겠습니까?',
@@ -142,7 +141,13 @@ export default function PcParchmentPageFrame() {
   };
 
   if (isPending) {
-    return <div>로딩중</div>;
+    return (
+      <div>
+        <div className="fixed inset-0 flex items-center justify-center w-screen h-screen bg-[#F9FCF9]">
+          <img src="/images/loading.gif" alt="Loading" width={150} height={150} />
+        </div>
+      </div>
+    );
   }
   if (isError) {
     return <div>오류 발생</div>;

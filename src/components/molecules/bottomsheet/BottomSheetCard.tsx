@@ -81,8 +81,6 @@ const BottomSheetCard: React.FC<BottomSheetCardProps> = ({ page, moveCard, onTog
 
   const isActive = activeCardIndices?.includes(pages.indexOf(page));
 
-  console.log(currentPageIndex);
-
   return (
     <div
       ref={ref}

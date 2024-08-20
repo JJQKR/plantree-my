@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { ReactQueryClientProvider } from '@/providers/query.provider';
-import Header from '@/components/molecules/Header';
+import UserProvider from '@/lib/utils/FetchUserData';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,9 +18,11 @@ export default function RootLayout({
 }>) {
   return (
     <ReactQueryClientProvider>
-      <html lang="en">
-        <body className={`${inter.className} font-sans`}>{children}</body>
-      </html>
+      <UserProvider>
+        <html lang="en">
+          <body className={`${inter.className} font-sans`}>{children}</body>
+        </html>
+      </UserProvider>
     </ReactQueryClientProvider>
   );
 }

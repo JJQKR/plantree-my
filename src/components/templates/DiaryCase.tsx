@@ -392,8 +392,8 @@ const DiaryCase: React.FC = () => {
         {!gridView && <CreateDiaryButton onClick={handleCreateDiary} />}
       </div>
       {loading && ( // 로딩 애니메이션 표시
-        <div className="fixed inset-0 flex items-center justify-center">
-          <img src="/images/loading.gif" alt="Loading" width={200} height={200} />
+        <div className="fixed inset-0 flex items-center justify-center w-screen h-screen bg-[#F9FCF9]">
+          <img src="/images/loading.gif" alt="Loading" width={150} height={150} />
         </div>
       )}
     </div>
