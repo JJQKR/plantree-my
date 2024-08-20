@@ -31,19 +31,19 @@ const DiaryCoverPage: React.FC = () => {
   const { diaryId } = useParams<ParamTypes>();
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem('userId');
-    if (storedUserId) {
-      setUserId(storedUserId);
+  const storedUserId = sessionStorage.getItem('userId');
+  if (storedUserId) {
+    setUserId(storedUserId);
+  } else {
+    const userIdFromStore = useUserStore.getState().userId;
+    if (userIdFromStore) {
+      setUserId(userIdFromStore);
+      sessionStorage.setItem('userId', userIdFromStore); // 세션스토리지에 저장
     } else {
-      const userIdFromStore = useUserStore.getState().userId;
-      if (userIdFromStore) {
-        setUserId(userIdFromStore);
-        localStorage.setItem('userId', userIdFromStore);
-      } else {
-        console.error('userId가 없습니다.');
-      }
+      console.error('userId가 없습니다.');
     }
-  }, []);
+  }
+}, []);
 
   const {
     coverTitle,
