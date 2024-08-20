@@ -160,15 +160,6 @@ body {
   position: relative;
 }
 
-.stage-container canvas {
-  /* width: 100% !important; */
-  /* height: 100%; */
-  /* display: block;
-  position: absolute;
-  top: 0;
-  left: 0; */
-}
-
 @media (max-width: 1278px) {
   .stage-container {
     max-width: 360px;
