@@ -277,6 +277,13 @@ const DiaryCase: React.FC = () => {
         // 스와이프 뷰에서 다이어리 커버 표시
         <div>
           <div className="relative flex items-center justify-center mb-[10rem] sm:mb-[10rem] sm:mt-[0.1rem] mt-[10rem]">
+            <style>
+              {`
+          .swiper-pagination-bullet {
+            background: #008A02 !important; /* 활성화된 불렛 색상 */
+          }
+        `}
+            </style>
             {diaryCovers.length > 0 ? (
               <Swiper
                 effect="coverflow"

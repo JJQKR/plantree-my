@@ -8,7 +8,10 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Plantree',
-  description: '효율적이고 풍부한 일상의 러닝메이트, 나만의 커스텀 다이어리'
+  description: '효율적이고 풍부한 일상의 러닝메이트, 나만의 커스텀 다이어리',
+  icons: {
+    icon: '/images/favicon.png'
+  }
 };
 
 export default function RootLayout({
