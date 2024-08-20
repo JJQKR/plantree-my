@@ -165,7 +165,7 @@ const DiaryCase: React.FC = () => {
   const updateStyles = () => {
     if (window.innerWidth <= 768) {
       setDiaryCardWidth(320);
-      setDiaryCardHeight(480);
+      setDiaryCardHeight(500);
       setSwiperStyle({ width: '42rem', height: '62rem' });
     } else {
       setDiaryCardWidth(480);
@@ -198,7 +198,7 @@ const DiaryCase: React.FC = () => {
                   className="flex flex-col items-center justify-center cursor-pointer"
                   onPointerUp={(e) => {
                     const cardElement = e.currentTarget;
-                    if (e.clientY < cardElement.offsetTop + cardElement.offsetHeight / 2) {
+                    if (e.clientY < cardElement.offsetTop + cardElement.offsetHeight / 1.5) {
                       // 상단 절반 클릭 시
                       handleDiaryClick(cover.diary_id as string);
                     }
@@ -388,7 +388,7 @@ const DiaryCase: React.FC = () => {
           <div className="swiper-pagination" style={paginationStyle}></div>
         </div>
       )}
-      <div className="fixed sm:bottom-[12rem] sm:right-[4rem] sm:mb-[10rem] bottom-[3rem] right-[2rem]">
+      <div className="fixed sm:bottom-[0.5rem] sm:right-[4rem] sm:mb-[7rem] bottom-[3rem] right-[2rem] z-20">
         {!gridView && <CreateDiaryButton onClick={handleCreateDiary} />}
       </div>
       {loading && ( // 로딩 애니메이션 표시

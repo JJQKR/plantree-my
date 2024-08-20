@@ -152,7 +152,7 @@ body {
 .stage-container {
   width: 100%;
   max-width: 450px;
-  height: auto;
+  max-height: 675px;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -160,23 +160,16 @@ body {
   position: relative;
 }
 
-.stage-container canvas {
-  width: 100% !important;
-  height: auto !important;
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
 @media (max-width: 1278px) {
   .stage-container {
     max-width: 360px;
+    max-height: 540px;
   }
 }
 
 @media (max-width: 767px) {
   .stage-container {
     max-width: 325px;
+    max-height: 487.5px;
   }
 }
