@@ -28,7 +28,7 @@ const LandingAboutUS = () => {
           </div>
           <div className="w-[23.75rem] h-[38rem] flex flex-col items-center sm:w-[11.2rem] sm:h-[11.2rem] sm:items-center">
             <Image
-              src="/images/aboutus2.png"
+              src="/images/랜딩페이지_Carrousel_2.png"
               alt="About Us"
               width={237.5}
               height={237.5}
@@ -42,7 +42,7 @@ const LandingAboutUS = () => {
           </div>
           <div className="w-[23.75rem] h-[38rem] flex flex-col items-center sm:w-[11.2rem] sm:h-[11.2rem] sm:items-center">
             <Image
-              src="/images/aboutus3.png"
+              src="/images/랜딩페이지_Carrousel_3.png"
               alt="About Us"
               width={237.5}
               height={237.5}
