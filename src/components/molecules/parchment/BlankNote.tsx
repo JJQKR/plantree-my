@@ -237,8 +237,8 @@ const BlankNote = ({ id }: BlankNoteProps) => {
         <div className="flex flex-col sm:gap-[1.56rem] gap-[2.16rem]">
           {isEditMode ? (
             <div className="flex justify-between sm:w-[14.3rem] w-[19.8rem] ">
-              <label className="flex sm:w-[6.5rem] w-[9rem] sm:h-[1.43rem] h-[1.98rem] justify-between items-center">
-                <p className="text-forestGreen font-[600] sm:text-[0.78rem] text-[1.08rem]">배경 색상</p>
+              <label className="flex sm:w-[5.5rem] w-[10rem] sm:h-[1.43rem] h-[1.98rem] justify-between items-center">
+                <p className="text-forestGreen font-[600] sm:text-[0.78rem] w-[5rem] text-[1.08rem]">배경 색상</p>
                 <input
                   type="color"
                   value={bgColor}
@@ -247,10 +247,8 @@ const BlankNote = ({ id }: BlankNoteProps) => {
                   disabled={!isEditMode}
                 />
               </label>
-              <label className="flex sm:w-[6.5rem] w-[9.9rem] sm:h-[1.43rem] h-[1.98rem] justify-between items-center">
-                <p className="text-forestGreen font-[600] sm:w-[3.8rem] w-[5rem] sm:text-[0.78rem] text-[1.08rem] ">
-                  텍스트 색상
-                </p>
+              <label className="flex sm:w-[6.5rem] w-[12rem] sm:h-[1.43rem] h-[1.98rem] justify-between items-center">
+                <p className="text-forestGreen font-[600] w-[6.5rem] sm:text-[0.78rem] text-[1.08rem] ">텍스트 색상</p>
                 <input
                   type="color"
                   value={globalTextColor}
