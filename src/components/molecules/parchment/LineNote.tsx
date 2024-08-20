@@ -341,9 +341,9 @@ const LineNote = ({ id }: LineNoteProps) => {
         )}
       </div>
       {isEditMode ? (
-        <div className="flex flex-row justify-evenly sm:gap-[1rem] gap-[1.5rem] sm:mt-[1.3rem] mt-[1.8rem] sm:mx-[1.5rem] mx-[1.8rem]">
-          <label className="sm:text-[0.78rem] text-[1.08rem] flex flex-row sm:gap-[0.3rem] gap-[0.5rem] text-[#008A02] items-center font-[600]">
-            배경 색상
+        <div className="flex flex-row justify-evenly sm:gap-[0.3rem] gap-[0.8rem] sm:mt-[1.3rem] mt-[1.8rem] sm:mx-[1.5rem] mx-[1.8rem]">
+          <label className="sm:text-[0.78rem] text-[1.08rem] flex flex-row text-[#008A02] items-center font-[600]">
+            <p className="w-[5rem] sm:w-[3.5rem]">배경 색상</p>
             <input
               type="color"
               value={bgColor}
@@ -351,8 +351,8 @@ const LineNote = ({ id }: LineNoteProps) => {
               className="square-color-input "
             />
           </label>
-          <label className="sm:text-[0.78rem] text-[1.08rem] flex flex-row sm:gap-[0.3rem] gap-[0.5rem] text-[#008A02] items-center font-[600]">
-            텍스트 색상
+          <label className="sm:text-[0.78rem] text-[1.08rem] flex flex-row text-[#008A02] items-center font-[600]">
+            <p className="w-[6rem] sm:w-[4.3rem] ">텍스트 색상</p>
             <input
               type="color"
               value={globalTextColor}
@@ -360,8 +360,8 @@ const LineNote = ({ id }: LineNoteProps) => {
               className="square-color-input"
             />
           </label>
-          <label className="sm:text-[0.78rem] text-[1.08rem] flex flex-row sm:gap-[0.3rem] gap-[0.5rem] text-[#008A02] items-center font-[600]">
-            줄 색상
+          <label className="sm:text-[0.78rem] text-[1.08rem] flex flex-row text-[#008A02] items-center font-[600]">
+            <p className="w-[4rem] sm:w-[3rem] ">줄 색상</p>
             <input
               type="color"
               value={lineColor}
@@ -369,12 +369,12 @@ const LineNote = ({ id }: LineNoteProps) => {
               className="square-color-input"
             />
           </label>
-          <label className="sm:text-[0.78rem] text-[1.08rem] flex flex-row sm:gap-[0.3rem] gap-[0.5rem] text-[#008A02] items-center font-[600]">
-            줄 굵기
+          <label className="sm:text-[0.78rem] text-[1.08rem] flex flex-row text-[#008A02] items-center font-[600]">
+            <p className="w-[4rem] sm:w-[3rem]">줄 굵기</p>
             <select
               value={lineThickness}
               onChange={(e) => setLineThickness(parseInt(e.target.value))}
-              className="p-[0.2rem] border bg-white text-black w-[5rem]"
+              className="border bg-white text-black w-[6rem] sm:w-[5rem]"
             >
               <option value="1">얇음</option>
               <option value="2">보통</option>
