@@ -14,7 +14,11 @@ const MoParchmentCase = ({ diaryId, currentPageIndex }: DiaryContentsProps) => {
 
   if (isPending) {
     // TODO: skeleton
-    return '로딩중';
+    return (
+      <div className="fixed inset-0 flex items-center justify-center w-screen h-screen bg-[#F9FCF9]">
+        <img src="/images/loading.gif" alt="Loading" width={150} height={150} />
+      </div>
+    );
   }
   if (isError) return;
 
