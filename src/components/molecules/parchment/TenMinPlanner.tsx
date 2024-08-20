@@ -6,11 +6,13 @@ import Timetable from './Timetable';
 import { supabase } from '@/supabase/client';
 import { TodoType } from '@/api/tenMinPlanner.api';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useDeletePage } from '@/lib/hooks/usePages';
+import { useDeletePage, usePageToDiaryId, useUpdatePage } from '@/lib/hooks/usePages';
 import useEditModeStore from '@/stores/editMode.store';
 import { FaSave } from 'react-icons/fa';
 import { FaTrashAlt } from 'react-icons/fa';
 import Swal from 'sweetalert2';
+import { AddPageType } from '@/api/pages.api';
+import { useDeleteTenMinPlanner } from '@/lib/hooks/useTenMinPlanner';
 
 interface TenMinPlannerProps {
   id: string;
@@ -46,10 +48,12 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
   const [selectedColorTodo, setSelectedColorTodo] = useState<Todo | null>(null);
   const { isEditMode } = useEditModeStore((state) => state);
   const searchParams = useSearchParams();
-  const index = searchParams.get('index');
+  const index = Number(searchParams.get('index'));
   const style = searchParams.get('style');
-
+  const { data: pages } = usePageToDiaryId(diaryId);
+  const { mutate: updateDbPage } = useUpdatePage();
   const { mutate: deletePage, isPending, isError } = useDeletePage();
+  const { mutate: deleteTenMinPlanner } = useDeleteTenMinPlanner();
   const router = useRouter();
 
   // db에서 현재 데이터 가져오기
@@ -171,16 +175,9 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
       cancelButtonText: '아니오'
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const { error: tenMinPlannerError } = await supabase.from('ten_min_planner').delete().eq('id', id);
+        deleteTenMinPlanner(id);
         deletePage(id);
-        if (tenMinPlannerError) {
-          Swal.fire({
-            title: '삭제 실패!',
-            text: '삭제 중 오류가 발생했습니다: ' + tenMinPlannerError.message,
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
-        } else if (isError) {
+        if (isError) {
           Swal.fire({
             title: '삭제 실패!',
             text: '삭제 중 오류가 발생했습니다',
@@ -196,6 +193,11 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
           });
           router.replace(`/member/diary/${diaryId}/parchment`);
         }
+        pages?.map((p: AddPageType) => {
+          if (p.content_id !== id && p.index > index) {
+            updateDbPage({ id: p.id, updatePage: { ...p, index: p.index - 1 } });
+          }
+        });
       }
     });
   };
@@ -210,10 +212,20 @@ const TenMinPlanner = ({ id }: TenMinPlannerProps) => {
     }
   };
 
+  if (isPending) {
+    return (
+      <div>
+        <div className="fixed inset-0 flex items-center justify-center w-screen h-screen bg-[#F9FCF9]">
+          <img src="/images/loading.gif" alt="Loading" width={150} height={150} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`sm:w-[32.5rem] w-[45rem] ${
-        isEditMode ? 'sm:h-[48.7rem] h-[67.5rem]' : 'sm:h-[45.6rem] h-[63rem]'
+        isEditMode ? 'sm:h-[48.7rem] h-[67.5rem]' : 'sm:h-[45.6rem] h-[63.2rem]'
       } bg-white border-[0.1rem] border-[#C7D2B0]`}
     >
       <div className="mx-auto w-full">

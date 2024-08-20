@@ -23,9 +23,7 @@ type ParamTypes = {
 };
 
 const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheetList, moveCard }) => {
-  const router = useRouter();
   const { diaryId } = useParams<ParamTypes>();
-  const pathname = usePathname();
   const scrollRef = useRef<HTMLDivElement>(null);
   const { data: pages, isPending } = usePageToDiaryId(diaryId);
 
@@ -93,11 +91,11 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onToggle, bottomSheet
           </div>
           <div
             onClick={handleAddPageModal}
-            className="border-[#6D8B33] border-[0.1rem] rounded-[0.4rem] p-4 sm:w-[5.5rem] w-[6.5rem] sm:h-[3rem] h-[3.6rem] flex-none cursor-pointer z-30 flex items-center justify-center" // z-index 설정
+            className="border-[#6D8B33] border-[0.1rem] rounded-[0.4rem] sm:w-[5.5rem] w-[6.5rem] sm:h-[3rem] h-[3.6rem] flex-none cursor-pointer z-30 flex items-center justify-center" // z-index 설정
           >
-            <div className="sm:text-[1.2rem] text-[1.5rem] h-[1.8rem] font-[700] flex flex-row justify-end items-center text-[#6D8B33] ">
+            <div className="sm:text-[1.1rem] text-[1.3rem] sm:h-[1.4rem] h-[1.8rem] font-[700] flex flex-row justify-end items-center text-[#6D8B33] ">
               <FaPlus />
-              <div className=" sm:h-[1.4rem]">추가</div>
+              <div className="sm:h-[1.4rem] h-[1.6rem] tracking-tight">추가</div>
             </div>
           </div>
         </div>

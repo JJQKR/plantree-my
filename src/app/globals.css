@@ -149,19 +149,10 @@ body {
 }
 
 /* cover */
-.stage-wrapper {
-  width: 100%;
-  max-width: 450px; /* 최대 너비 설정 */
-  margin: 0 auto; /* 가운데 정렬 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .stage-container {
   width: 100%;
-  max-width: 450px; /* 최대 너비 설정 */
-  aspect-ratio: 2 / 3; /* 2:3 비율 유지 */
+  max-width: 450px;
+  max-height: 675px;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -169,25 +160,16 @@ body {
   position: relative;
 }
 
-.stage-container canvas {
-  width: 100% !important;
-  height: 100% !important;
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
 @media (max-width: 1278px) {
-  .stage-wrapper,
   .stage-container {
-    max-width: 360px; /* 1278px 이하에서 최대 너비 360px로 제한 */
+    max-width: 360px;
+    max-height: 540px;
   }
 }
 
 @media (max-width: 767px) {
-  .stage-wrapper,
   .stage-container {
-    max-width: 325px; /* 767px 이하에서 최대 너비 325px로 제한 */
+    max-width: 325px;
+    max-height: 487.5px;
   }
 }

@@ -27,21 +27,18 @@ const MyPageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="fixed flex justify-between items-center w-full h-[8rem] p-4 bg-white shadow-md z-50">
+      <header className="fixed flex justify-between items-center w-full h-[8rem] sm:h-[5rem] p-4 sm:p-1 bg-white shadow-md z-30">
         <SideButton onClick={handleSideButtonClick} sideView={sideView}>
           Menu
         </SideButton>
-        <div className="flex-grow flex justify-center">
+        <div className="flex-grow flex justify-center items-center text-center">
           <Link href="/member/hub">
-            <Image
-              src="/images/Plantree.png"
-              alt="Logo"
-              width={250} // 원하는 너비
-              height={20} // 원하는 높이
-            />
+            <div className="flex justify-center items-center sm:w-[10rem] sm:h-[0.8rem] w-[25rem] h-[2rem]">
+              <Image src="/images/Plantree.png" alt="Logo" width={250} height={20} />
+            </div>
           </Link>
         </div>
-        <div onClick={showInfo} className="text-[4rem] sm:text-[2.4rem] text-[#008A02] ">
+        <div onClick={showInfo} className="text-[4rem] sm:text-[2.4rem] text-[#008A02]">
           <FaInfoCircle className="text-[4rem] sm:text-[2.4rem] text-[#008A02]" />
         </div>
       </header>
@@ -54,12 +51,8 @@ const MyPageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         >
           {children}
         </main>
-        {/* 배경 오버레이 추가 */}
         {sidebarOpen && (
-          <div
-            className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-40"
-            onClick={toggleSidebar} // 오버레이를 클릭하면 사이드바가 닫히도록 설정
-          />
+          <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-10" onClick={toggleSidebar} />
         )}
         <InfoModal />
       </div>
