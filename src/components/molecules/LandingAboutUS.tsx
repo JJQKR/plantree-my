@@ -6,7 +6,7 @@ const LandingAboutUS = () => {
     <div className="bg-custom-green w-full h-[43.625rem] sm:h-[32.4375rem] flex items-center justify-center py-16 sm:py-8">
       <div className="w-[73rem] flex flex-col items-center justify-center">
         <div className="mb-[3.5rem] mt-[10rem] sm:mt-0">
-          <p className="w-[21.7rem] h-[3.5rem] pt-3 pl-5 rounded-2xl bg-green-800 text-white text-[1.5rem] font-bold">
+          <p className="w-[21.7rem] h-[3.5rem] pt-3 pl-5 pb-3 rounded-2xl bg-green-800 text-white text-[1.5rem] font-bold flex items-center sm:flex sm:items-center">
             플랜트리 팀을 소개합니다✋🏻
           </p>
         </div>
