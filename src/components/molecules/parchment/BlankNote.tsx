@@ -3,12 +3,13 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { supabase } from '@/supabase/client';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useDeletePage } from '@/lib/hooks/usePages';
+import { useDeletePage, usePageToDiaryId, usePages, useUpdatePage } from '@/lib/hooks/usePages';
 import useEditModeStore from '@/stores/editMode.store';
 import { FaSave } from 'react-icons/fa';
 import { FaTrashAlt } from 'react-icons/fa';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { AddPageType } from '@/api/pages.api';
 
 interface BlankNoteProps {
   id: string;
@@ -21,7 +22,6 @@ const BlankNote = ({ id }: BlankNoteProps) => {
   const [date, setDate] = useState('');
   const [title, setTitle] = useState('');
   const [currentHeight, setCurrentHeight] = useState(0);
-  // const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [originalContent, setOriginalContent] = useState({
     bgColor: '#ffffff',
     globalTextColor: '#000000',
@@ -30,11 +30,13 @@ const BlankNote = ({ id }: BlankNoteProps) => {
     title: ''
   });
   const [diaryId, setDiaryId] = useState('');
+  const { data: pages } = usePageToDiaryId(diaryId);
   const { mutate: deletePage, isPending, isError } = useDeletePage();
+  const { mutate: updateDbPage } = useUpdatePage();
   const { isEditMode } = useEditModeStore((state) => state);
 
   const searchParams = useSearchParams();
-  const index = searchParams.get('index');
+  const index = Number(searchParams.get('index'));
   const style = searchParams.get('style');
 
   const router = useRouter();
@@ -140,6 +142,16 @@ const BlankNote = ({ id }: BlankNoteProps) => {
     router.replace(`/member/diary/${diaryId}/parchment`);
   };
 
+  if (isPending) {
+    return (
+      <div>
+        <div className="fixed inset-0 flex items-center justify-center w-screen h-screen bg-[#F9FCF9]">
+          <img src="/images/loading.gif" alt="Loading" width={150} height={150} />
+        </div>
+      </div>
+    );
+  }
+
   const handleDelete = async () => {
     if (confirm('내용을 삭제 하시겠습니까?')) {
       const { error: blankNoteError } = await supabase.from('blank_note').delete().eq('id', id);
@@ -153,25 +165,30 @@ const BlankNote = ({ id }: BlankNoteProps) => {
         router.push(`/member/diary/${diaryId}/parchment`);
       }
     }
+    pages?.map((p: AddPageType) => {
+      if (p.content_id !== id && p.index > index) {
+        updateDbPage({ id: p.id, updatePage: { ...p, index: p.index - 1 } });
+      }
+    });
   };
 
-  const handleEditModeToggle = () => {
-    if (isEditMode) {
-      setBgColor(originalContent.bgColor);
-      setGlobalTextColor(originalContent.globalTextColor);
-      setContent(originalContent.content);
-      setDate(originalContent.date);
-      setTitle(originalContent.title);
-    } else {
-      setOriginalContent({
-        bgColor: bgColor,
-        globalTextColor: globalTextColor,
-        content: content,
-        date: date,
-        title: title
-      });
-    }
-  };
+  // const handleEditModeToggle = () => {
+  //   if (isEditMode) {
+  //     setBgColor(originalContent.bgColor);
+  //     setGlobalTextColor(originalContent.globalTextColor);
+  //     setContent(originalContent.content);
+  //     setDate(originalContent.date);
+  //     setTitle(originalContent.title);
+  //   } else {
+  //     setOriginalContent({
+  //       bgColor: bgColor,
+  //       globalTextColor: globalTextColor,
+  //       content: content,
+  //       date: date,
+  //       title: title
+  //     });
+  //   }
+  // };
 
   const changeStyleName = () => {
     if (style === 'tenMinPlanner') {
@@ -186,12 +203,12 @@ const BlankNote = ({ id }: BlankNoteProps) => {
   return (
     <div
       className={`sm:w-[32.5rem] w-[45rem] ${
-        isEditMode ? 'sm:h-[48.7rem] h-[67.5rem]' : 'sm:h-[45.6rem] h-[63rem]'
+        isEditMode ? 'sm:h-[48.7rem] h-[67.5rem]' : 'sm:h-[45.6rem] h-[63.2rem]'
       } bg-white border-[0.1rem] border-[#C7D2B0]`}
     >
       <div className="mx-auto w-full">
         {isEditMode ? (
-          <div className="bg-[#EDF1E6] w-full sm:h-[3.1rem] h-[4.32rem] sm:pt-[0.8rem] pt-[1.1rem] sm:px-[1.5rem] px-[1.35rem] border-b-[0.1rem] border-[#C7D2B0] flex flex-row justify-between">
+          <div className="bg-[#EDF1E6] w-full sm:h-[3.1rem] h-[4.3rem] sm:pt-[0.8rem] pt-[1.1rem] sm:px-[1.5rem] px-[1.35rem] border-b-[0.1rem] border-[#C7D2B0] flex flex-row justify-between items-center">
             <div className="sm:text-[1.2rem] text-[1.62rem] text-[#496E00] font-[600]">
               {index} Page_{changeStyleName()} (수정중)
             </div>

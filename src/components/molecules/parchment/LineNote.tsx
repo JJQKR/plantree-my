@@ -1,6 +1,6 @@
 'use client';
 
-import { useDeletePage } from '@/lib/hooks/usePages';
+import { useDeletePage, usePageToDiaryId, useUpdatePage } from '@/lib/hooks/usePages';
 import { isNoteLineArray } from '@/lib/utils/noteLineConfirmArray';
 import useEditModeStore from '@/stores/editMode.store';
 import { supabase } from '@/supabase/client';
@@ -10,6 +10,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { FaSave } from 'react-icons/fa';
 import { FaTrashAlt } from 'react-icons/fa';
+import { AddPageType } from '@/api/pages.api';
 
 interface LineNoteProps {
   id: string;
@@ -30,11 +31,13 @@ const LineNote = ({ id }: LineNoteProps) => {
   const [bgColor, setBgColor] = useState('transparent');
   const [globalTextColor, setGlobalTextColor] = useState('#000000');
   const [diaryId, setDiaryId] = useState('');
+  const { data: pages } = usePageToDiaryId(diaryId);
   const { mutate: deletePage, isPending, isError } = useDeletePage();
+  const { mutate: updateDbPage } = useUpdatePage();
   const { isEditMode } = useEditModeStore((state) => state);
 
   const searchParams = useSearchParams();
-  const index = searchParams.get('index');
+  const index = Number(searchParams.get('index'));
   const style = searchParams.get('style');
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -272,7 +275,13 @@ const LineNote = ({ id }: LineNoteProps) => {
             icon: 'success',
             confirmButtonText: 'OK'
           });
-          console.log(diaryId);
+
+          pages?.map((p: AddPageType) => {
+            if (p.content_id !== id && p.index > index) {
+              updateDbPage({ id: p.id, updatePage: { ...p, index: p.index - 1 } });
+            }
+          });
+
           router.push(`/member/diary/${diaryId}/parchment`);
         }
       }
@@ -289,19 +298,28 @@ const LineNote = ({ id }: LineNoteProps) => {
     }
   };
 
+  if (isPending) {
+    return (
+      <div>
+        <div className="fixed inset-0 flex items-center justify-center w-screen h-screen bg-[#F9FCF9]">
+          <img src="/images/loading.gif" alt="Loading" width={150} height={150} />
+        </div>
+      </div>
+    );
+  }
   return (
     <div
       className={`sm:w-[32.5rem] w-[45rem] ${
-        isEditMode ? 'sm:h-[48.7rem] h-[67.5rem]' : 'sm:h-[45.6rem] h-[63rem]'
+        isEditMode ? 'sm:h-[48.7rem] h-[67.5rem]' : 'sm:h-[45.6rem] h-[63.2rem]'
       } bg-white border-[0.1rem] border-[#C7D2B0]`}
     >
       <div className="mx-auto w-full">
         {isEditMode ? (
-          <div className="bg-[#EDF1E6] w-full sm:h-[3.1rem] h-[4.32rem] sm:pt-[0.8rem] pt-[1.1rem] sm:px-[1.5rem] px-[1.35rem] border-b-[0.1rem] border-[#C7D2B0] flex flex-row justify-between">
-            <div className="sm:text-[1.2rem] text-[1.62rem] text-[#496E00] font-[600]">
+          <div className="bg-[#EDF1E6] w-full sm:h-[3.1rem] h-[4.3rem] sm:pt-[0.8rem] pt-[1rem] sm:px-[1.5rem] px-[1.35rem] border-b-[0.1rem] border-[#C7D2B0] flex flex-row justify-between">
+            <div className="sm:text-[1.2rem] text-[1.62rem] text-[#496E00] font-[600] ">
               {index} Page_{changeStyleName()} (수정중)
             </div>
-            <div>
+            <div className="flex justify-between">
               <button
                 className="sm:text-[1.6rem] text-[2.16rem] text-[#496E00] hover:text-black mr-[1.08rem]"
                 onClick={updateData}
