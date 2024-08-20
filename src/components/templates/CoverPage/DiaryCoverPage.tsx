@@ -937,39 +937,30 @@ const DiaryCoverPage: React.FC = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      const containerElement = document.querySelector<HTMLElement>('.stage-wrapper');
-      if (containerElement) {
-        let containerWidth = containerElement.offsetWidth;
-        let containerHeight;
+      if (stageRef.current) {
+        const containerWidth = window.innerWidth;
+        const containerHeight = window.innerHeight;
 
-        if (window.innerWidth <= 767) {
-          containerWidth = 325;
-          containerHeight = 487.5;
-        } else if (window.innerWidth <= 1278) {
-          containerWidth = 360;
-          containerHeight = 540;
-        } else {
-          containerWidth = 450;
-          containerHeight = 675;
-        }
-        const newScale = containerWidth / 450;
+        // 원하는 기준 해상도에 따른 비율 계산
+        const scale = Math.min(
+          containerWidth / 450, // 기준 너비
+          containerHeight / 675 // 기준 높이
+        );
 
-        setCoverStageSize({ width: containerWidth, height: containerHeight });
-        setCoverScale(newScale);
+        stageRef.current.width(450 * scale); // 기준 해상도에 스케일 적용
+        stageRef.current.height(675 * scale);
+        stageRef.current.scale({ x: scale, y: scale });
 
-        if (stageRef.current) {
-          stageRef.current.width(containerWidth);
-          stageRef.current.height(containerHeight);
-          stageRef.current.scale({ x: newScale, y: newScale });
-
-          stageRef.current.container().style.width = `${containerWidth}px`;
-          stageRef.current.container().style.height = `${containerHeight}px`;
-          stageRef.current.batchDraw();
-        }
+        // HTML 요소의 스타일도 조정하여 실제 화면 크기에 맞게 설정
+        stageRef.current.container().style.width = `${450 * scale}px`;
+        stageRef.current.container().style.height = `${675 * scale}px`;
       }
     };
 
+    // 초기 실행
     handleResize();
+
+    // 창 크기 변경 시마다 handleResize 실행
     window.addEventListener('resize', handleResize);
 
     return () => {
