@@ -51,7 +51,7 @@ const LandingFooter = () => {
           </Link>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-4 max-w-[80rem] mt-1">
+        <div className="sm:grid sm:grid-cols-1 flex flex-wrap justify-center gap-4 max-w-[80rem] mt-1">
           <div className="flex flex-row items-center gap-[2rem]">
             <h2 className="text-lg font-bold">FE</h2>
             <p>이보영</p>
@@ -75,7 +75,7 @@ const LandingFooter = () => {
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-4 max-w-[80rem] mt-4 ml-[rem]">
+        <div className="sm:grid sm:grid-cols-1 flex flex-wrap justify-center gap-4 max-w-[80rem] mt-4 ml-[rem]">
           <div className="flex flex-row items-center gap-[2rem]">
             <h2 className="text-lg font-bold">FE</h2>
             <p>박영수</p>
@@ -93,7 +93,6 @@ const LandingFooter = () => {
           <div className="flex flex-row items-center gap-[2rem]">
             <h2 className="text-lg font-bold tracking-[-0.08rem]">DE</h2>
             <p>황민균</p>
-            {/* <img src="/images/Notion.png" alt="Notion Logo" className="w-8 h-8" /> */}
             <Link
               href="https://www.linkedin.com/in/%EB%AF%BC%EA%B7%A0-%ED%99%A9-289a632a7/"
               target="_blank"
