@@ -69,9 +69,9 @@ const LandingMain = () => {
         {/* <div className="overlay"></div> */}
       </div>
 
-      <p className="w-[21.7rem] h-[3.5rem] pt-2 pl-7 pb-2 mt-5 rounded-2xl bg-green-600 text-white text-[1.6rem] font-bold flex items-center sm:flex sm:items-center">
-        플랜트리를 소개합니다💬
-      </p>
+      <div className="w-[21.7rem] h-[3.5rem] pt-2 pb-2 mt-5 rounded-2xl bg-green-600 text-white text-[1.6rem] font-bold sm:flex sm:items-center">
+        <p className="w-fit mx-auto ">플랜트리를 소개합니다💬</p>
+      </div>
 
       <section className="w-full max-w-[80rem] mx-auto mt-[4.1rem] mb-[4.1rem] flex flex-row sm:flex-col sm:items-center sm:justify-between">
         <div className="w-[45.625rem] h-[30rem] relative mb-8 sm:w-[35.625rem] sm:h-[20rem]">
