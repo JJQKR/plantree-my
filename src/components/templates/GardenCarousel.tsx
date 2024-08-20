@@ -31,7 +31,7 @@ const GardenCarousel: React.FC = () => {
       id: 1,
       content: (
         <div className="relative w-[98rem] h-[48rem] sm:w-[38rem] sm:h-[18.7rem] rounded-bl-[2rem] rounded-br-[2rem]">
-          <Image src="/images/garden1.png" alt="garden1" fill className="object-cover" />
+          <Image src="/images/garden1.jpg" alt="garden1" fill className="object-cover" />
         </div>
       ),
       name: '씨앗'
@@ -40,7 +40,7 @@ const GardenCarousel: React.FC = () => {
       id: 2,
       content: (
         <div className="relative w-[98rem] h-[48rem] sm:w-[38rem] sm:h-[18.7rem] rounded-bl-[2rem] rounded-br-[2rem]">
-          <Image src="/images/garden2.png" alt="garden2" fill className="object-cover" />
+          <Image src="/images/garden2.jpg" alt="garden2" fill className="object-cover" />
         </div>
       ),
       name: '새싹'
@@ -49,7 +49,7 @@ const GardenCarousel: React.FC = () => {
       id: 3,
       content: (
         <div className="relative w-[98rem] h-[48rem] sm:w-[38rem] sm:h-[18.7rem] rounded-bl-[2rem] rounded-br-[2rem]">
-          <Image src="/images/garden3.png" alt="garden3" fill className="object-cover" />
+          <Image src="/images/garden3.jpg" alt="garden3" fill className="object-cover" />
         </div>
       ),
       name: '풀'
@@ -58,7 +58,7 @@ const GardenCarousel: React.FC = () => {
       id: 4,
       content: (
         <div className="relative w-[98rem] h-[48rem] sm:w-[38rem] sm:h-[18.7rem] rounded-bl-[2rem] rounded-br-[2rem]">
-          <Image src="/images/garden4.png" alt="garden4" fill className="object-cover" />
+          <Image src="/images/garden4.jpg" alt="garden4" fill className="object-cover" />
         </div>
       ),
       name: '묘목'
@@ -67,7 +67,7 @@ const GardenCarousel: React.FC = () => {
       id: 5,
       content: (
         <div className="relative w-[98rem] h-[48rem] sm:w-[38rem] sm:h-[18.7rem] rounded-bl-[2rem] rounded-br-[2rem]">
-          <Image src="/images/garden5.png" alt="garden5" fill className="object-cover" />
+          <Image src="/images/garden5.jpg" alt="garden5" fill className="object-cover" />
         </div>
       ),
       name: '나무'
@@ -76,7 +76,7 @@ const GardenCarousel: React.FC = () => {
       id: 6,
       content: (
         <div className="relative w-[98rem] h-[48rem] sm:w-[38rem] sm:h-[18.7rem] rounded-bl-[2rem] rounded-br-[2rem]">
-          <Image src="/images/garden6.png" alt="garden6" fill className="object-cover" />
+          <Image src="/images/garden6.jpg" alt="garden6" fill className="object-cover" />
         </div>
       ),
       name: '열매'
