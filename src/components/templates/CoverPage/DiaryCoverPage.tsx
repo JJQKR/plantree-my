@@ -31,19 +31,19 @@ const DiaryCoverPage: React.FC = () => {
   const { diaryId } = useParams<ParamTypes>();
 
   useEffect(() => {
-  const storedUserId = sessionStorage.getItem('userId');
-  if (storedUserId) {
-    setUserId(storedUserId);
-  } else {
-    const userIdFromStore = useUserStore.getState().userId;
-    if (userIdFromStore) {
-      setUserId(userIdFromStore);
-      sessionStorage.setItem('userId', userIdFromStore); // 세션스토리지에 저장
+    const storedUserId = sessionStorage.getItem('userId');
+    if (storedUserId) {
+      setUserId(storedUserId);
     } else {
-      console.error('userId가 없습니다.');
+      const userIdFromStore = useUserStore.getState().userId;
+      if (userIdFromStore) {
+        setUserId(userIdFromStore);
+        sessionStorage.setItem('userId', userIdFromStore); // 세션스토리지에 저장
+      } else {
+        console.error('userId가 없습니다.');
+      }
     }
-  }
-}, []);
+  }, []);
 
   const {
     coverTitle,
@@ -937,23 +937,39 @@ const DiaryCoverPage: React.FC = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      if (stageRef.current) {
-        const containerWidth = window.innerWidth;
-        const containerHeight = window.innerHeight;
+      const containerElement = document.querySelector<HTMLElement>('.stage-wrapper');
+      if (containerElement) {
+        let containerWidth = containerElement.offsetWidth;
+        let containerHeight;
 
-        // 원하는 기준 해상도에 따른 비율 계산
-        const scale = Math.min(
-          containerWidth / 450, // 기준 너비
-          containerHeight / 675 // 기준 높이
-        );
+        // 화면 크기에 따라 너비와 높이 설정
+        if (window.innerWidth <= 767) {
+          containerWidth = 325;
+          containerHeight = 487.5;
+        } else if (window.innerWidth <= 1278) {
+          containerWidth = 360;
+          containerHeight = 540;
+        } else {
+          containerWidth = 450;
+          containerHeight = 675;
+        }
 
-        stageRef.current.width(450 * scale); // 기준 해상도에 스케일 적용
-        stageRef.current.height(675 * scale);
-        stageRef.current.scale({ x: scale, y: scale });
+        // 스케일 계산
+        const newScale = containerWidth / 450;
 
-        // HTML 요소의 스타일도 조정하여 실제 화면 크기에 맞게 설정
-        stageRef.current.container().style.width = `${450 * scale}px`;
-        stageRef.current.container().style.height = `${675 * scale}px`;
+        // 상태 업데이트
+        setCoverStageSize({ width: containerWidth, height: containerHeight });
+        setCoverScale(newScale);
+
+        // Stage 크기와 스케일 설정
+        if (stageRef.current) {
+          stageRef.current.width(containerWidth);
+          stageRef.current.height(containerHeight);
+          stageRef.current.scale({ x: newScale, y: newScale });
+          stageRef.current.container().style.width = `${containerWidth}px`;
+          stageRef.current.container().style.height = `${containerHeight}px`;
+          stageRef.current.batchDraw();
+        }
       }
     };
 
