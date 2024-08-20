@@ -68,7 +68,6 @@
 
 # 허브 페이지
 ![1](https://github.com/user-attachments/assets/558034a8-d873-409f-819b-ea2d5d87a364)
-![2](https://github.com/user-attachments/assets/aa304e22-ed57-4424-b72b-57035ef9a34a)
 ![4](https://github.com/user-attachments/assets/3db8b514-6896-403e-8496-46bbe412461d)
 
 # 마이 페이지
