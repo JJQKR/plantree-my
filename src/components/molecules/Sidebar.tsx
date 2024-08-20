@@ -26,6 +26,9 @@ const Sidebar: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     if (error) {
       console.error('로그아웃 실패:', error);
     } else {
+      // 세션 스토리지에서 userId 제거
+      sessionStorage.removeItem('userId');
+
       setIsLoggedIn(false);
       Swal.fire({
         title: '로그아웃 성공!',
