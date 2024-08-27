@@ -11,6 +11,7 @@ const BadgeCollection: React.FC = () => {
     totalBadges.map((badgeGroup) => ({
       ...badgeGroup[1],
       content: badgeGroup[1].content.replace('true', 'false')
+      //replace는 사실상 불필요하지만 안전하게 false만 가져오기 위함
     }))
   );
 
@@ -55,7 +56,7 @@ const BadgeCollection: React.FC = () => {
 
     handleResize(); // 초기 실행 시 현재 화면 크기에 따라 설정
 
-    window.addEventListener('resize', handleResize); // 화면 크기 변경 시 실행
+    window.addEventListener('resize', handleResize); // 화면 크기 변경 시 실행, 변경 하나하나에 다 반응해서 성능떨어짐
     return () => window.removeEventListener('resize', handleResize); // 이벤트 리스너 정리
   }, []);
 
