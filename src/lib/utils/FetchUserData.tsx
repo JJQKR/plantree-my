@@ -23,6 +23,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         setEmail(user.email ?? null);
 
         // TODO: supabase users 한 번만 가져와도 되지 않습니까? 예?
+        // TODO: 맞습니다...
+
         const { data: nicknameData, error: nicknameError } = await supabase
           .from('users')
           .select('nickname')
@@ -73,6 +75,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   return <>{children}</>;
 };
+
+export default UserProvider;
 
 // const FetchUserData = () => {
 //   const { setUserId, setNickname, setLevelName, setAttendance, setEmail } = useUserStore((state) => state);
@@ -141,5 +145,3 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
 //   return null;
 // };
-
-export default UserProvider;

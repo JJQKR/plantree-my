@@ -1,16 +1,5 @@
 'use client';
 
-// 개방폐쇄원칙(OCP, Open-Closed Principle)은
-// "소프트웨어 엔티티(클래스, 모듈, 함수 등)는 확장에는 열려 있어야 하고, 수정에는 닫혀 있어야 한다"는 원칙입니다.
-// 이 원칙을 적용하려면 코드가 새로운 기능을 추가할 때 기존 코드를 변경하지 않고도 확장 가능해야 합니다.
-
-// 현재 코드를 개방폐쇄원칙에 맞게 리팩터링하기 위해서는 조건을 평가하는 로직을 외부로 분리하고,
-// 이 로직을 쉽게 확장할 수 있도록 만들어야 합니다.
-// 아래는 badgeConditions 배열을 활용하여 이 원칙을 적용한 코드입니다.
-
-// 이건 알겠는데, 배지 획득 조건이 결국 supabaseDB에 들어가 있고
-// 그걸 충족하느냐 마느냐를 판단해서 코드를 돌리고 싶다면???
-
 import useUserStore from '@/stores/user.store';
 import { useMemo } from 'react';
 import { totalBadges } from '../atoms/TotalBadges';
