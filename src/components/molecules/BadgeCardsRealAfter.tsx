@@ -17,7 +17,7 @@ const badgeConditions = [
     condition: (membershipDays: number | null) => membershipDays !== null && membershipDays >= 7
   },
   {
-    idPart: '안녕하세요',
+    idPart: '찐친',
     condition: (membershipDays: number | null) => membershipDays !== null && membershipDays >= 30
   }
 ];
@@ -30,9 +30,8 @@ const BadgeCardsRealAfter: React.FC = () => {
       const badge = { ...badgeGroup[1] }; //무조건 false인 애
       const matchingCondition = badgeConditions.find((cond) => badge.id.includes(cond.idPart));
       //여기는 직접 문자열을 입력하는 게 아니라 cond.idPart로 리팩토링 완료!
-      const isObtained = matchingCondition //id 일치하는 애를 찾고 걔의 획득 여부 true, false를 보자는 건데
-        ? //이거 좀 이상하지 않나?
-          matchingCondition.condition(badge.id.includes(matchingCondition.idPart) ? diaryCount : membershipDays)
+      const isObtained = matchingCondition //id 일치하는 애를 찾고 걔의 획득 여부 true, false를 보자는 건데 이거 좀 이상하지 않나?
+        ? matchingCondition.condition(badge.id.includes(matchingCondition.idPart) ? diaryCount : membershipDays)
         : false;
       //근데 지금 보니까 이 로직에도 문제가 있네
       //기준이 되는 데이터가 diaryCount나 membershipDays외에 더 추가가 되면 어쩔 건데?
