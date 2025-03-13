@@ -1,0 +1,175 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#__next {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 10px;
+}
+
+@media (min-width: 768px) and (max-width: 1278px) {
+  html {
+    font-size: 8px;
+  }
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto; /* 화면 중앙에 배치 */
+  background: #fafafa;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 1.4rem; /* 14px = 1.4rem */
+  color: #000;
+}
+
+#app {
+  height: 100%;
+}
+
+.custom-height {
+  height: 80vh;
+}
+
+.shadow-b {
+  box-shadow: 0 0.4rem 0.2rem -0.2rem rgba(0, 0, 0, 0.1); /* 4px 2px -2px = 0.4rem 0.2rem -0.2rem */
+}
+
+.image-container {
+  position: relative;
+  display: inline-block;
+}
+
+.overlay {
+  /* 랜딩 이미지 그라데이션 처리 */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.5),
+    rgba(255, 255, 255, 0) 50%,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 1)
+  );
+  border-radius: 0.5rem; /* 5px = 0.5rem */
+}
+
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+.image-size {
+  width: 35rem;
+  height: 50rem;
+  object-fit: cover;
+}
+
+.round-color-input {
+  width: 5rem;
+  height: 2rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+}
+
+.round-color-input::-webkit-color-swatch {
+  border-radius: 50%;
+  border: none;
+}
+
+.square-color-input {
+  width: 4.5rem;
+  height: 3rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+}
+
+.square-color-input::-webkit-color-swatch {
+  border-radius: 0.36rem;
+  border: none;
+}
+
+.checkbox {
+  transform: scale(1.53);
+}
+
+@media (max-width: 767px) {
+  .round-color-input {
+    width: 3rem;
+    height: 1.5rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    border: none;
+  }
+
+  .round-color-input::-webkit-color-swatch {
+    border-radius: 50%;
+    border: none;
+  }
+
+  .square-color-input {
+    width: 3.1rem;
+    height: 2.2rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    border: none;
+  }
+
+  .square-color-input::-webkit-color-swatch {
+    border-radius: 0.36rem;
+    border: none;
+  }
+
+  .checkbox {
+    transform: scale(1);
+  }
+}
+
+/* cover */
+.stage-container {
+  width: 100%;
+  max-width: 450px;
+  max-height: 675px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+@media (max-width: 1278px) {
+  .stage-container {
+    max-width: 360px;
+    max-height: 540px;
+  }
+}
+
+@media (max-width: 767px) {
+  .stage-container {
+    max-width: 325px;
+    max-height: 487.5px;
+  }
+}

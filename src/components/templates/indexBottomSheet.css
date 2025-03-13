@@ -1,0 +1,19 @@
+.IndexBottomSheet {
+  z-index: 50;
+}
+
+.page-container {
+  height: 80vh;
+  width: 90vw;
+  margin: 0 auto;
+}
+
+#backdrop {
+  z-index: 50;
+}
+
+button {
+  z-index: 60;
+  width: 100%;
+  text-align: center;
+}
