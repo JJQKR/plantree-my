@@ -22,6 +22,8 @@ const LandingMain = () => {
     window.location.href = href;
   };
 
+  // 🐡 25.03.13 주석처리함
+
   // const handleLinkClick = async (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
   //   e.preventDefault();
   //   setLoading(true);`
