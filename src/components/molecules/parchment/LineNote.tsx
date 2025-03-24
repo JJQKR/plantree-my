@@ -45,6 +45,12 @@ const LineNote = ({ id }: LineNoteProps) => {
   const router = useRouter();
 
   const measureTextWidth = useCallback((text: string, fontSize: number) => {
+    // 서버사이드에서 임시 추정치 반환
+    if (typeof window === 'undefined') {
+      return text.length * (fontSize / 2);
+    }
+
+    // 클라이언트사이드 canvas 사용 유지
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
     if (context) {
