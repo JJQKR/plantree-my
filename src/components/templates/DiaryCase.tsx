@@ -18,6 +18,7 @@ import { supabase } from '@/supabase/client';
 import { getCoversByUserId } from '@/services/diarycover.service';
 import { CoverData, Position, Size } from '@/types/main';
 
+// 클라이언트에서만 불러오도록 설정 (ssr 방지)
 const DiaryCase: React.FC = () => {
   const { userId, setUserId } = useUserStore((state) => state); // 사용자 상태를 관리하는 훅
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true); // 로그인 상태를 관리하는 상태

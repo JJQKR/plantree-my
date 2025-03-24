@@ -1,5 +1,5 @@
 'use client';
-
+import dynamic from 'next/dynamic';
 import React, { useEffect } from 'react';
 import { useStore } from '@/stores/sidebar.store';
 import DiaryCase from '@/components/templates/DiaryCase';
@@ -7,6 +7,10 @@ import Swal from 'sweetalert2';
 import '@/app/globals.css'; // 전역 스타일 시트 임포트
 
 const HomePage = () => {
+  // DiaryCase를 클라이언트 전용으로 불러옴 (SSR 방지!)
+  const DiaryCase = dynamic(() => import('@/components/templates/DiaryCase'), {
+    ssr: false
+  });
   const { sidebarOpen } = useStore(); // 사이드바의 열림 상태를 가져옵니다.
 
   useEffect(() => {
