@@ -158,7 +158,7 @@ const LoginModal: React.FC<{ onClose: () => void; onSignupClick: () => void }> =
       }).then(() => {
         onClose();
         window.location.reload();
-        window.location.href = 'http://plantreeforest.com/member/hub';
+        window.location.href = '/member/hub';
       });
     } catch (error) {
       console.error('로그인 실패:', error);

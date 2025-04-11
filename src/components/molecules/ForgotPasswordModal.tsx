@@ -20,7 +20,7 @@ const ForgotPasswordModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
     event.preventDefault();
     try {
       const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: 'https://www.plantreeforest.com/member/reset-password?token=YOUR_TOKEN'
+        redirectTo: window.location.origin + '/member/reset-password?token=YOUR_TOKEN'
       });
       if (error) throw error;
       setMessage('인증 메일이 전송되었습니다.');
