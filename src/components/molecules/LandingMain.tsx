@@ -29,12 +29,6 @@ const LandingMain = () => {
     setShowSignupModal(false);
     setShowLoginModal(true);
   };
-  // const handleLinkClick = async (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-  //   e.preventDefault();
-  //   alert('클릭됨!');
-  // 인증 확인 없이 바로 해당 페이지로 이동
-  // window.location.href = href;
-  // };
 
   // 🐡 25.03.13 주석처리함
   // 🐡 25.04.11 다시 살림
