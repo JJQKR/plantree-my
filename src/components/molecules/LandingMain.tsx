@@ -15,41 +15,6 @@ const LandingMain = () => {
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleLinkClick = async (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    alert('클릭됨!');
-    // 인증 확인 없이 바로 해당 페이지로 이동
-    window.location.href = href;
-  };
-
-  // 🐡 25.03.13 주석처리함
-
-  // const handleLinkClick = async (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-  //   e.preventDefault();
-  //   setLoading(true);`
-
-  //   const {
-  //     data: { user }
-  //   } = await supabase.auth.getUser();
-  //   if (user) {
-  //     window.location.href = href;`
-  //   } else {
-  //     setLoading(false);
-  //     Swal.fire({
-  //       title: '로그인이 필요합니다',
-  //       text: '이 기능을 사용하려면 로그인이 필요합니다.',
-  //       icon: 'warning',
-  //       showCancelButton: true,
-  //       confirmButtonText: '로그인',
-  //       cancelButtonText: '취소'
-  //     }).then((result) => {
-  //       if (result.isConfirmed) {
-  //         setShowPlantreeLoginModal(true);
-  //       }
-  //     });
-  //   }
-  // };
-
   const handlePlantreeLoginClick = () => {
     setShowPlantreeLoginModal(false);
     setShowLoginModal(true);
@@ -63,6 +28,41 @@ const LandingMain = () => {
   const handleSignupSuccess = () => {
     setShowSignupModal(false);
     setShowLoginModal(true);
+  };
+  // const handleLinkClick = async (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  //   e.preventDefault();
+  //   alert('클릭됨!');
+  // 인증 확인 없이 바로 해당 페이지로 이동
+  // window.location.href = href;
+  // };
+
+  // 🐡 25.03.13 주석처리함
+  // 🐡 25.04.11 다시 살림
+
+  const handleLinkClick = async (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const {
+      data: { user }
+    } = await supabase.auth.getUser();
+    if (user) {
+      window.location.href = href;
+    } else {
+      setLoading(false);
+      Swal.fire({
+        title: '로그인이 필요합니다',
+        text: '이 기능을 사용하려면 로그인이 필요합니다.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: '로그인',
+        cancelButtonText: '취소'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setShowPlantreeLoginModal(true);
+        }
+      });
+    }
   };
 
   return (
