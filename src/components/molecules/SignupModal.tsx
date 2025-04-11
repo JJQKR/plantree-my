@@ -91,6 +91,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
       return;
     }
 
+    // 가입 로직 시작
     try {
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
@@ -101,10 +102,11 @@ const SignupModal: React.FC<SignupModalProps> = ({ onClose, onSignupSuccess }) =
           }
         }
       });
+
       if (authError) {
         if (authError.message.includes('User already registered')) {
           Swal.fire({
-            title: '이미 사용중인 이메일 입니다.',
+            title: '이미 사용중인 이메일입니다.',
             icon: 'error',
             confirmButtonText: 'OK'
           });

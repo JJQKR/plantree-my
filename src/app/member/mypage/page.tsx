@@ -98,28 +98,28 @@ const MyPage: React.FC = () => {
           </div>
 
           <NicknameButton>
-            <button
+            <div
               onClick={handleToggleNicknameModal}
-              className="flex items-center justify-between  font-semibold text-[2.4rem] sm:text-[1.8rem] my-[2.4rem] pl-[2.8rem] sm:my-[2rem] sm:pl-[2.4rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[8.6rem] sm:w-[38rem] sm:h-[6.3rem]"
+              className="hover:cursor-pointer flex items-center justify-between font-semibold text-[2.4rem] sm:text-[1.8rem] my-[2.4rem] pl-[2.8rem] sm:my-[2rem] sm:pl-[2.4rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[8.6rem] sm:w-[38rem] sm:h-[6.3rem]"
             >
               <div>닉네임 변경</div>
               <div className="text-[#008A02]">
                 <FaChevronRight className="text-[3.2rem] mr-[2.8rem] sm:text-[2.4rem] sm:mr-[2.4rem]" />
               </div>
               {isNicknameModalOpen && <NicknameModal />}
-            </button>
+            </div>
           </NicknameButton>
           <WithdrawalButton>
-            <button
+            <div
               onClick={handleToggleWithdrawalModal}
-              className="flex items-center justify-between font-semibold text-[2.4rem] sm:text-[1.8rem] my-[2.4rem] pl-[2.8rem] sm:my-[2rem] sm:pl-[2.4rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[8.6rem] sm:w-[38rem] sm:h-[6.3rem]"
+              className="hover:cursor-pointer flex items-center justify-between font-semibold text-[2.4rem] sm:text-[1.8rem] my-[2.4rem] pl-[2.8rem] sm:my-[2rem] sm:pl-[2.4rem] bg-white rounded-[2rem] shadow-md w-[98rem] h-[8.6rem] sm:w-[38rem] sm:h-[6.3rem]"
             >
               <div>회원 탈퇴</div>
               <div className="text-[#008A02]">
                 <FaChevronRight className="text-[3.2rem] mr-[2.8rem] sm:text-[2.4rem] sm:mr-[2.4rem]" />
               </div>
               {isWithdrawalModalOpen && <WithdrawalModal />}
-            </button>
+            </div>
           </WithdrawalButton>
         </div>
       </div>
