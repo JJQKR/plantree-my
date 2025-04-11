@@ -41,6 +41,7 @@ const LandingMain = () => {
 
   const handleLinkClick = async (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
+    alert('머냐고배포');
     setLoading(true);
 
     const {
