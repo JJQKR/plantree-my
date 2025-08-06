@@ -30,34 +30,33 @@ const LandingMain = () => {
     setShowLoginModal(true);
   };
 
-  // 🐡 25.03.13 주석처리함
-  // 🐡 25.04.11 다시 살림
+  // ⭐️ 25.08.06 주석처리함
 
   const handleLinkClick = async (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
-    alert('배포됏냐고');
+    alert('배포된거만 확인');
     setLoading(true);
 
-    const {
-      data: { user }
-    } = await supabase.auth.getUser();
-    if (user) {
-      window.location.href = href;
-    } else {
-      setLoading(false);
-      Swal.fire({
-        title: '로그인이 필요합니다',
-        text: '이 기능을 사용하려면 로그인이 필요합니다.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: '로그인',
-        cancelButtonText: '취소'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          setShowPlantreeLoginModal(true);
-        }
-      });
-    }
+    // const {
+    //   data: { user }
+    // } = await supabase.auth.getUser();
+    // if (user) {
+    //   window.location.href = href;
+    // } else {
+    //   setLoading(false);
+    //   Swal.fire({
+    //     title: '로그인이 필요합니다',
+    //     text: '이 기능을 사용하려면 로그인이 필요합니다.',
+    //     icon: 'warning',
+    //     showCancelButton: true,
+    //     confirmButtonText: '로그인',
+    //     cancelButtonText: '취소'
+    //   }).then((result) => {
+    //     if (result.isConfirmed) {
+    //       setShowPlantreeLoginModal(true);
+    //     }
+    //   });
+    // }
   };
 
   return (
