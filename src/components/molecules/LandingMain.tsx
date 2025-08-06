@@ -13,7 +13,7 @@ const LandingMain = () => {
   const [showPlantreeLoginModal, setShowPlantreeLoginModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   const handlePlantreeLoginClick = () => {
     setShowPlantreeLoginModal(false);
@@ -35,8 +35,7 @@ const LandingMain = () => {
   const handleLinkClick = async (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     alert('배포된거만 확인');
-    setLoading(true);
-
+    // setLoading(true);
     // const {
     //   data: { user }
     // } = await supabase.auth.getUser();
