@@ -31,10 +31,11 @@ const LandingMain = () => {
   };
 
   // ⭐️ 25.08.06 주석처리함
-
   const handleLinkClick = async (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     alert('배포된거만 확인');
+    window.location.href = href;
+
     // setLoading(true);
     // const {
     //   data: { user }
